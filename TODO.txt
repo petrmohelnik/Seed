@@ -1,0 +1,7 @@
+kazdy script bude dedit z interfacu a vsechny budou nekde ulozeny a budou se nad nima provolovat metody
+drzet je bude scena, bude nejaka templatova metoda jako CreateRenderer, tovarna, ktera to vytvori, zaregistruje a preda do objektu
+ten script bude mit ulozeny v sobe objekt, kterymu je prirazen, ten objekt se tam preda pri AddScript
+ten objekt bude mit metody jako GetComponentTransform atd se kteryma muze skript pracovat
+objekty bue drzet scena a ta nad nima bude volat OnUpdate metody a ty si to prevolaj na sovje skripty nebo CameraObjekt si to ohandluje sam
+LightObjekt bude taky specialni objekt
+objekty budou mit parenty a childreny a to bude mit vliv na transformaci
