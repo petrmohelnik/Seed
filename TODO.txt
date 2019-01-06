@@ -1,5 +1,4 @@
-drzet je bude scena, bude nejaka templatova metoda jako CreateRenderer, tovarna, ktera to vytvori, zaregistruje a preda do objektu
-ten script bude mit ulozeny v sobe objekt, kterymu je prirazen, ten objekt se tam preda pri AddScript
 ten objekt bude mit metody jako GetComponentTransform atd se kteryma muze skript pracovat
 objekty budou mit parenty a childreny a to bude mit vliv na transformaci
 engine by mohl mit statickou metodu napr getLights, kteoru by si volal renderer
+sceneDefinition se bude predavat do metody init scene

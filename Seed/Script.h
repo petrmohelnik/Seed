@@ -1,6 +1,7 @@
 #pragma once
+#include "Component.h"
 
-class Script
+class Script : public Component
 {
 public:
 	virtual ~Script() = default;

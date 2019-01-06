@@ -1,37 +1,21 @@
 #include "Object.h"
-#include "Script.h"
+#include "Transform.h"
 #include "Renderer.h"
+#include "Script.h"
 
 Object::Object()
 {
-}
-
-void Object::Start()
-{
-	for (const auto& script : scripts)
-	{
-		script->Start();
-	}
-}
-
-void Object::OnFrameUpdate()
-{
-	for (const auto& script : scripts)
-	{
-		script->OnFrameUpdate();
-	}
-}
-
-void Object::End()
-{
-	for (const auto& script : scripts)
-	{
-		script->End();
-	}
+	transform = std::make_shared<Transform>();
 }
 
 void Object::SetRenderer(std::shared_ptr<Renderer> renderer_)
 {
 	renderer = renderer_;
 	renderer->SetObject(weak_from_this());
+}
+
+void Object::AddScript(std::shared_ptr<Script> script)
+{
+	scripts.push_back(script);
+	script->SetObject(weak_from_this());
 }

@@ -1,7 +1,14 @@
 #pragma once
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/string_cast.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
 #include <vector>
@@ -9,3 +16,4 @@
 #include <algorithm>
 #include <memory>
 #include <cassert>
+#include <type_traits>

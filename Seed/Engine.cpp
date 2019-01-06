@@ -1,6 +1,6 @@
 #include "Engine.h"
 
-Engine::Engine() : window(input, time)
+Engine::Engine() : window(input, time), objects(&scene), components(&scene)
 {
 }
 
@@ -16,8 +16,9 @@ void Engine::Work()
 	{
 		window.PollInputs();
 		window.UpdateTime();
-		activeScene->OnFrameUpdate();
-		activeScene->Render();
+		scene.OnFrameUpdate();
+		scene.CleanObjects();
+		scene.Render();
 		window.Swap();
 	}
 }
