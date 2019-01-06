@@ -16,16 +16,8 @@ void Engine::Work()
 	{
 		window.PollInputs();
 		window.UpdateTime();
-		OnFrameUpdate();
-		Render();
+		activeScene->OnFrameUpdate();
+		activeScene->Render();
 		window.Swap();
 	}
-}
-
-void Engine::OnFrameUpdate()
-{
-}
-
-void Engine::Render()
-{
 }

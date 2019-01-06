@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Input.h"
 
 std::set<SDL_Keycode> Input::keyPressed;
