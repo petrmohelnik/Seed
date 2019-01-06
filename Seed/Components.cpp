@@ -22,21 +22,15 @@ void Components::OnFrameUpdate()
 
 void Components::Render()
 {
-    for (const auto& renderer : renderers)
-    {
-        renderer.lock()->Render();
-    }
+    pipeline.Render();
 }
 
 void Components::CleanComponents()
 {
+    pipeline.CleanRenderers();
+
     std::remove_if(std::begin(scripts), std::end(scripts), [] (const auto& script)
     {
         return script.expired();
-    });
-
-    std::remove_if(std::begin(renderers), std::end(renderers), [] (const auto& renderer)
-    {
-        return renderer.expired();
     });
 }

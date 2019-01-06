@@ -3,7 +3,9 @@
 Engine::Engine() 
     : window(input, time)
     , components(input, time, objects)
-    , scene(objects, components)
+    , objects(components)
+    , sceneDefinition(objects, components)
+    , scene(sceneDefinition, objects, components)
 {
 }
 
@@ -15,6 +17,8 @@ void Engine::CreateWindow()
 
 void Engine::Work()
 {
+    scene.Initialize("Default");
+
 	while (1)
 	{
 		window.PollInputs();

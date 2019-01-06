@@ -5,6 +5,7 @@
 #include "Objects.h"
 #include "Components.h"
 #include "Scene.h"
+#include "SceneDefinition.h"
 
 class Engine
 {
@@ -17,6 +18,7 @@ public:
 private:
 	SDLWindow window;
 	Scene scene;
+    SceneDefinition sceneDefinition;
 
 	Input input;
 	Time time;

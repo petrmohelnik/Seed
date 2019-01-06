@@ -1,12 +1,20 @@
 #include "Scene.h"
+#include "SceneDefinition.h"
 #include "Objects.h"
 #include "Components.h"
 
-Scene::Scene(Objects& objects,
+Scene::Scene(SceneDefinition& sceneDefinition,
+             Objects& objects,
              Components& components)
-    : objects(objects)
+    : sceneDefinition(sceneDefinition)
+    , objects(objects)
     , components(components)
 {
+}
+
+void Scene::Initialize(std::string scene)
+{
+    sceneDefinition.InitializeScene(scene);
 }
 
 void Scene::OnFrameUpdate()

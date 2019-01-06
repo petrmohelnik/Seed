@@ -9,6 +9,10 @@ Object::Object(Components& components)
 	transform = std::make_shared<Transform>();
 }
 
+void Object::Initialize()
+{
+}
+
 void Object::SetRenderer(std::shared_ptr<Renderer> renderer_)
 {
 	renderer = renderer_;

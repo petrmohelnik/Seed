@@ -31,7 +31,9 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Objects.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RenderingPipeline.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneDefinition.cpp" />
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="SDLWindow.cpp" />
     <ClCompile Include="Seed.cpp" />
@@ -43,8 +45,11 @@
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraObject.h" />
+    <ClInclude Include="CameraScript.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Components.h" />
+    <ClInclude Include="DefaultScene.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -56,6 +61,8 @@
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Objects.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RenderingPipeline.h" />
+    <ClInclude Include="SceneDefinition.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Scene.h" />

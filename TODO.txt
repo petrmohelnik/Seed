@@ -1,8 +1,12 @@
-RenderingPipeline
-sceneDefinition se bude predavat do metody init scene
-vytvorit CameraObject
+camera sama nic dealt nebude
+bude objekt player a ten bude mit script, ktery se bude pohybovat
+camera bude mit transformaci jako parenta
+camear asi ani nebude deedit z objektu
+vytvorit CameraObject - bude rozsirovat interface objektu
+bude specialne ulozenej ve scene
+bude mozne se na nej dostat ze skriptu a z neho ho nastavovat
+script bude pracovat s camerouObjektem, ktery bude mit spceialni interface
+nema object drzet vsechno v jednom vektoru a pristupovat na to podle typu?
+nemusim to predavat v parameterech, stati statciky getery?
 
-ten objekt bude mit metody jako GetComponentTransform atd se kteryma muze skript pracovat
 objekty budou mit parenty a childreny a to bude mit vliv na transformaci
-engine by mohl mit statickou metodu napr getLights, kterou by si volal renderer
-nad objektem zavolat GetComponent s typem, pujde to ze skriptu

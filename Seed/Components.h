@@ -1,4 +1,5 @@
 #pragma once
+#include "RenderingPipeline.h"
 #include "Renderer.h"
 #include "Script.h"
 
@@ -13,14 +14,14 @@ public:
                Time& time,
                Objects& objects);
 
-protected:
-    friend class Scene;
-	
     template<typename T>
 	std::shared_ptr<T> CreateRenderer();
 	template<typename T>
 	std::shared_ptr<T> CreateScript();
 
+protected:
+    friend class Scene;
+	
     void OnFrameUpdate();
     void Render();
     void CleanComponents();
@@ -30,7 +31,7 @@ private:
     Time& time;
     Objects& objects;
 
-    std::vector<std::weak_ptr<Renderer>> renderers;
+    RenderingPipeline pipeline;
     std::vector<std::weak_ptr<Script>> scripts;
 };
 
@@ -38,8 +39,8 @@ template<typename T>
 inline std::shared_ptr<T> Components::CreateRenderer()
 {
 	static_assert(std::is_base_of<Renderer, T>::value, "T must be derived from Renderer");
-	auto renderer =  std::make_shared<T>();
-    renderers.push_back(renderer);
+	auto renderer =  std::make_shared<T>(input, time);
+    pipeline.AddRenderer(renderer);
 	return renderer;
 }
 
