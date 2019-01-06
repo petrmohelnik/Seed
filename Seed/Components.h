@@ -1,20 +1,37 @@
 #pragma once
 #include "Renderer.h"
 #include "Script.h"
-#include "Scene.h"
+
+class Input;
+class Time;
+class Objects;
 
 class Components
 {
 public:
-	Components(Scene* scene_);
+	Components(Input& input,
+               Time& time,
+               Objects& objects);
 
+protected:
+    friend class Scene;
+	
+    template<typename T>
+	std::shared_ptr<T> CreateRenderer();
 	template<typename T>
-	static std::shared_ptr<T> CreateRenderer();
-	template<typename T>
-	static std::shared_ptr<T> CreateScript();
+	std::shared_ptr<T> CreateScript();
+
+    void OnFrameUpdate();
+    void Render();
+    void CleanComponents();
 
 private:
-	static Scene* scene;
+    Input& input;
+    Time& time;
+    Objects& objects;
+
+    std::vector<std::weak_ptr<Renderer>> renderers;
+    std::vector<std::weak_ptr<Script>> scripts;
 };
 
 template<typename T>
@@ -22,7 +39,7 @@ inline std::shared_ptr<T> Components::CreateRenderer()
 {
 	static_assert(std::is_base_of<Renderer, T>::value, "T must be derived from Renderer");
 	auto renderer =  std::make_shared<T>();
-	scene->RegisterRenderer(renderer);
+    renderers.push_back(renderer);
 	return renderer;
 }
 
@@ -30,7 +47,7 @@ template<typename T>
 inline std::shared_ptr<T> Components::CreateScript()
 {
 	static_assert(std::is_base_of<Script, T>::value, "T must be derived from Script");
-	auto script = std::make_shared<T>();
-	scene->RegisterScript(script);
+	auto script = std::make_shared<T>(input, time, objects);
+    scripts.push_back(script);
 	return script;
 }

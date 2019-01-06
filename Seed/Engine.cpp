@@ -1,6 +1,9 @@
 #include "Engine.h"
 
-Engine::Engine() : window(input, time), objects(&scene), components(&scene)
+Engine::Engine() 
+    : window(input, time)
+    , components(input, time, objects)
+    , scene(objects, components)
 {
 }
 

@@ -16,10 +16,11 @@ public:
 
 private:
 	SDLWindow window;
+	Scene scene;
+
 	Input input;
 	Time time;
 	Objects objects;
 	Components components;
-	Scene scene;
 };
 

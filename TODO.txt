@@ -1,4 +1,8 @@
+RenderingPipeline
+sceneDefinition se bude predavat do metody init scene
+vytvorit CameraObject
+
 ten objekt bude mit metody jako GetComponentTransform atd se kteryma muze skript pracovat
 objekty budou mit parenty a childreny a to bude mit vliv na transformaci
-engine by mohl mit statickou metodu napr getLights, kteoru by si volal renderer
-sceneDefinition se bude predavat do metody init scene
+engine by mohl mit statickou metodu napr getLights, kterou by si volal renderer
+nad objektem zavolat GetComponent s typem, pujde to ze skriptu

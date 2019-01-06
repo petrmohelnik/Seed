@@ -4,7 +4,7 @@
 class MeshRenderer : public Renderer
 {
 public:
-	MeshRenderer();
+    using Renderer::Renderer;
 
 	void Render() override;
 };

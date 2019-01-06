@@ -30,7 +30,9 @@
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Objects.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Script.cpp" />
     <ClCompile Include="SDLWindow.cpp" />
     <ClCompile Include="Seed.cpp" />
     <ClCompile Include="stdafx.cpp">

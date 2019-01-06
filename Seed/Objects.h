@@ -1,16 +1,16 @@
 #pragma once
 #include "Scene.h"
 
+class Object;
+
 class Objects
 {
 public:
-	Objects(Scene* scene_);
-
 	template<typename T>
-	static std::shared_ptr<T> CreateObject();
+	std::shared_ptr<T> CreateObject();
 
 private:
-	static Scene* scene;
+    std::vector<std::shared_ptr<Object>> objects;
 };
 
 template<typename T>
@@ -18,6 +18,6 @@ inline std::shared_ptr<T> Objects::CreateObject()
 {
 	static_assert(std::is_base_of<Object, T>::value, "T must be derived from Object");
 	auto object = std::make_shared<T>();
-	scene->AddObject(object);
+    objects.push_back(object);
 	return object;
 }

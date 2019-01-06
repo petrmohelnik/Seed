@@ -1,11 +1,5 @@
 #include "Input.h"
 
-std::set<SDL_Keycode> Input::keyPressed;
-
-Input::Input()
-{
-}
-
 void Input::AddInput(SDL_Event event)
 {
 	switch (event.type)

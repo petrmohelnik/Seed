@@ -1,14 +1,17 @@
 #pragma once
+
 class Object;
 
 class Component
 {
 public:
-	Component();
 	virtual ~Component() = default;
 
-	void SetObject(std::weak_ptr<Object> parentObject);
 	std::shared_ptr<Object> GetObject();
+
+protected:
+    friend class Object;
+	void SetObject(std::weak_ptr<Object> parentObject);
 
 private:
 	std::weak_ptr<Object> object;

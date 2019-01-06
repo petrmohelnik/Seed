@@ -1,9 +1,5 @@
 #include "Component.h"
 
-Component::Component()
-{
-}
-
 void Component::SetObject(std::weak_ptr<Object> parentObject)
 {
 	object = parentObject;

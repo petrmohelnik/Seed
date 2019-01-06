@@ -3,7 +3,8 @@
 #include "Renderer.h"
 #include "Script.h"
 
-Object::Object()
+Object::Object(Components& components) 
+    : components(components)
 {
 	transform = std::make_shared<Transform>();
 }
