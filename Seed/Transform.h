@@ -1,9 +1,11 @@
 #pragma once
+#include "Component.h"
 
-class Transform
+class Transform : public Component
 {
 public:
 
 private:
-	glm::mat4 matrix = glm::mat4(1.0);
+    glm::mat3 position;
+    glm::mat3 rotation;
 };

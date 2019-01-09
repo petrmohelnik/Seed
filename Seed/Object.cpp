@@ -13,10 +13,15 @@ void Object::Initialize()
 {
 }
 
-void Object::SetRenderer(std::shared_ptr<Renderer> renderer_)
+void Object::AddRenderer(std::shared_ptr<Renderer> renderer_)
 {
 	renderer = renderer_;
 	renderer->SetObject(weak_from_this());
+}
+
+void Object::AddCamera(std::shared_ptr<Camera> camera_)
+{
+    camera = camera_;
 }
 
 void Object::AddScript(std::shared_ptr<Script> script)

@@ -1,6 +1,7 @@
 #pragma once
 #include "RenderingPipeline.h"
 #include "Renderer.h"
+#include "Camera.h"
 #include "Script.h"
 
 class Input;
@@ -16,6 +17,7 @@ public:
 
     template<typename T>
 	std::shared_ptr<T> CreateRenderer();
+    std::shared_ptr<Camera> CreateCamera();
 	template<typename T>
 	std::shared_ptr<T> CreateScript();
 
@@ -42,6 +44,13 @@ inline std::shared_ptr<T> Components::CreateRenderer()
 	auto renderer =  std::make_shared<T>(input, time);
     pipeline.AddRenderer(renderer);
 	return renderer;
+}
+
+inline std::shared_ptr<Camera> Components::CreateCamera()
+{
+    auto camera = std::make_shared<Camera>();
+    pipeline.AddCamera(camera);
+    return camera;
 }
 
 template<typename T>
