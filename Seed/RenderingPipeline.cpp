@@ -13,6 +13,11 @@ void RenderingPipeline::AddCamera(std::weak_ptr<Camera> camera)
     cameras.push_back(camera);
 }
 
+void RenderingPipeline::AddLight(std::weak_ptr<Light> light)
+{
+    lights.push_back(light);
+}
+
 void RenderingPipeline::Render()
 {
     for (const auto& renderer : renderers)

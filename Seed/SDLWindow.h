@@ -14,7 +14,7 @@ public:
 	void Swap();
 
 private:
-	SDL_Window* window;
+    SDL_Window* window = nullptr;
 	SDL_GLContext context;
 	Input& input;
 	Time& time;

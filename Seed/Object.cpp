@@ -1,31 +1,40 @@
 #include "Object.h"
 #include "Transform.h"
 #include "Renderer.h"
+#include "Audio.h"
 #include "Script.h"
 
 Object::Object(Components& components) 
     : components(components)
 {
-	transform = std::make_shared<Transform>();
+	transform = std::make_shared<Transform>(weak_from_this());
 }
 
 void Object::Initialize()
 {
 }
 
-void Object::AddRenderer(std::shared_ptr<Renderer> renderer_)
+Camera* Object::AddCamera()
 {
-	renderer = renderer_;
-	renderer->SetObject(weak_from_this());
+    camera = components.CreateCamera(weak_from_this());
+    return camera.get();
 }
 
-void Object::AddCamera(std::shared_ptr<Camera> camera_)
+Light* Object::AddLight()
 {
-    camera = camera_;
+    light = components.CreateLight(weak_from_this());
+    return light.get();
 }
 
-void Object::AddScript(std::shared_ptr<Script> script)
+Audio* Object::AddAudio()
 {
-	scripts.push_back(script);
-	script->SetObject(weak_from_this());
+    auto audio = components.CreateAudio(weak_from_this());
+    audios.push_back(audio);
+    return audio.get();
+}
+
+Rigidbody* Object::AddRigidbody()
+{
+    rigidbody = components.CreateRigidbody(weak_from_this());
+    return rigidbody.get();
 }

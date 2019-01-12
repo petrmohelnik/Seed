@@ -1,8 +1,8 @@
 #include "Component.h"
+#include "Object.h"
 
-void Component::SetObject(std::weak_ptr<Object> parentObject)
+Component::Component(std::weak_ptr<Object> object) : object(object)
 {
-	object = parentObject;
 }
 
 std::shared_ptr<Object> Component::GetObject()

@@ -3,10 +3,12 @@
 #include "Time.h"
 #include "Objects.h"
 
-Script::Script(Input& input, 
+Script::Script(std::weak_ptr<Object> object,
+               Input& input,
                Time& time,               
                Objects& objects) 
-    : input(input)
+    : Component(object)
+    , input(input)
     , time(time)
     , objects(objects)
 {

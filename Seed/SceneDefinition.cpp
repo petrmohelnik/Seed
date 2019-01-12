@@ -3,17 +3,15 @@
 #include "SceneDefinition.h"
 #include "DefaultScene.h"
 
-SceneDefinition::SceneDefinition(Objects& objects,
-                                 Components& components)
+SceneDefinition::SceneDefinition(Objects& objects)
     : objects(objects)
-    , components(components)
 {
 }
 
 void SceneDefinition::InitializeScene(std::string scene)
 {
     if (scene == "Default")
-        DefaultScene(objects, components);
+        DefaultScene(objects);
     else
         throw std::exception("Scene does not exist");
 }

@@ -1,11 +1,9 @@
-pokud zadnej objekt nevytvori kameru, tak se nic nevyrenderuje
-kamera pouziva transformaci toho objektu jehoz je komponentou
-bude objekt player a ten bude mit script, ktery se bude pohybovat podle klaves a tim hybat camerou
-script bude pracovat s camerouObjektem, ktery bude mit spceialni interface
-
-nemusim to predavat v parameterech, stati statciky getery?
-
 objekty budou mit parenty a childreny a to bude mit vliv na transformaci
 objekty se budou mazat az pri praci, ne zvlast v clean metode, aby se to neprochazelo dvakrat
+ale destroyed objekty se smazou az po updatech abych to nemazal nekomu pod rukama
 
 objekty vyhledavat podle mena, ne typu, misto typu se da udelat singleton objekt
+nebo podle tagu
+
+addcomponent taky pres template? v unity je to moznost, takhle je to nekonzistentni
+zmenit jenom v object.h to je interface pro skript, v components neni potreba

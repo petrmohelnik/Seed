@@ -1,17 +1,23 @@
 #pragma once
-
-class Objects;
-class Components;
+#include "Objects.h"
+#include "Components.h"
+#include "Object.h"
+#include "Transform.h"
+#include "MeshRenderer.h"
+#include "Camera.h"
+#include "Light.h"
+#include "Audio.h"
+#include "Collider.h"
+#include "Rigidbody.h"
+#include "Script.h"
 
 class SceneDefinition
 {
 public:
-    SceneDefinition(Objects& objects,
-                    Components& components);
+    SceneDefinition(Objects& objects);
 
     void InitializeScene(std::string scene);
 
 private:
     Objects& objects;
-    Components& components;
 };

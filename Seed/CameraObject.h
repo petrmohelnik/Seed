@@ -12,5 +12,5 @@ public:
 
 void CameraObject::Initialize()
 {
-    AddScript(components.CreateScript<CameraScript>());
+    AddScript<CameraScript>();
 }

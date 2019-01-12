@@ -1,8 +1,9 @@
 #pragma once
 #include "Component.h"
 
-class Camera final : public Component
+class Collider : public Component
 {
 public:
     using Component::Component;
+    virtual ~Collider() = default;
 };

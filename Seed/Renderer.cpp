@@ -2,9 +2,11 @@
 #include "Input.h"
 #include "Time.h"
 
-Renderer::Renderer(Input& input,
+Renderer::Renderer(std::weak_ptr<Object> object,
+                   Input& input,
                    Time& time)
-    : input(input)
+    : Component(object)
+    , input(input)
     , time(time)
 {
 }
