@@ -34,14 +34,19 @@ bool Object::ContainsTag(const std::string & tag)
 void Object::Destroy()
 {
     objects.RegisterForDestruction(id);
-    renderer->RegisterForDestruction();
-    camera->RegisterForDestruction();
-    light->RegisterForDestruction();
+    transform->DestroyAllChildren();
+    if(renderer)
+        renderer->RegisterForDestruction();
+    if(camera)
+        camera->RegisterForDestruction();
+    if(light)
+        light->RegisterForDestruction();
     for (const auto& audio : audios)
         audio->RegisterForDestruction();
     for (const auto& collider : colliders)
         collider->RegisterForDestruction();
-    rigidbody->Destroy();
+    if(rigidbody)
+        rigidbody->RegisterForDestruction();
     for (const auto& script : scripts)
         script->RegisterForDestruction();
 }
@@ -57,11 +62,11 @@ void Object::RegisterForComponentDestruction()
 
 void Object::DestroyComponents()
 {
-    if(renderer->IsRegisteredForDestruction())
+    if(renderer && renderer->IsRegisteredForDestruction())
         renderer.reset();
-    if (camera->IsRegisteredForDestruction())
+    if (camera && camera->IsRegisteredForDestruction())
         camera.reset();
-    if (light->IsRegisteredForDestruction())
+    if (light && light->IsRegisteredForDestruction())
         light.reset();
     std::experimental::erase_if(audios, [](const std::unique_ptr<Audio>& audio)
     {
@@ -71,7 +76,7 @@ void Object::DestroyComponents()
     {
         return collider->IsRegisteredForDestruction();
     });
-    if (rigidbody->IsRegisteredForDestruction())
+    if (rigidbody && rigidbody->IsRegisteredForDestruction())
         rigidbody.reset();
     std::experimental::erase_if(scripts, [](const std::unique_ptr<Script>& script)
     {

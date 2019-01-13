@@ -1,6 +1,7 @@
 #include "Objects.h"
 #include "Object.h"
 #include "Components.h"
+#include "Transform.h"
 
 Objects::UniqueId Objects::uniqueId = 0;
 
@@ -65,6 +66,7 @@ void Objects::Destroy()
 
     for (const auto& id : objectsToBeDestroyed)
     {
+        objects[id]->GetComponent<Transform>()->GetParent()->CleanChildren();
         objects.erase(id);
     }
     objectsToBeDestroyed.clear();

@@ -11,3 +11,15 @@ void PhysicsEngine::AddRigidbody(Rigidbody* rigidbody)
 {
     rigidbodies.push_back(rigidbody);
 }
+
+void PhysicsEngine::CleanComponents()
+{
+    std::experimental::erase_if(colliders, [](const auto collider)
+    {
+        return collider->IsRegisteredForDestruction();
+    });
+    std::experimental::erase_if(rigidbodies, [](const auto rigidbody)
+    {
+        return rigidbody->IsRegisteredForDestruction();
+    });
+}

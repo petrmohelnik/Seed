@@ -1,6 +1,3 @@
-objekty mohou mit parenty a childreny a to bude mit vliv na transformaci
-pri destroy se museji smazat i deti rodice
-
 load assimp
 
 render

@@ -14,7 +14,7 @@ protected:
     void AddCollider(Collider* collider);
     void AddRigidbody(Rigidbody* rigidbody);
 
-    void CleanComponents() {};
+    void CleanComponents();
 
 private:
     std::vector<Collider*> colliders;

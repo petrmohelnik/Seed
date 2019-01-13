@@ -1,6 +1,7 @@
 #include "RenderingPipeline.h"
 #include "Renderer.h"
 #include "Camera.h"
+#include "Light.h"
 
 Camera* RenderingPipeline::mainCamera;
 
@@ -43,11 +44,11 @@ void RenderingPipeline::CleanComponents()
     {
         return renderer->IsRegisteredForDestruction();
     });
-    std::experimental::erase_if(renderers, [](const auto light)
+    std::experimental::erase_if(lights, [](const auto light)
     {
         return light->IsRegisteredForDestruction();
     });
-    std::experimental::erase_if(renderers, [](const auto camera)
+    std::experimental::erase_if(cameras, [](const auto camera)
     {
         return camera->IsRegisteredForDestruction();
     });
