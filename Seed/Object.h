@@ -11,7 +11,7 @@ class Collider;
 class Rigidbody;
 class Script;
 
-class Object : public std::enable_shared_from_this<Object>
+class Object
 {
 public:
 	Object(std::string name, Objects& objects, Components& components);
@@ -64,14 +64,14 @@ protected:
     void DestroyComponents();
 
 private:
-	std::shared_ptr<Transform> transform;
-	std::shared_ptr<Renderer> renderer;
-    std::shared_ptr<Camera> camera;
-    std::shared_ptr<Light> light;
-    std::vector<std::shared_ptr<Audio>> audios;
-    std::vector<std::shared_ptr<Collider>> colliders;
-    std::shared_ptr<Rigidbody> rigidbody;
-	std::vector<std::shared_ptr<Script>> scripts;
+	std::unique_ptr<Transform> transform;
+	std::unique_ptr<Renderer> renderer;
+    std::unique_ptr<Camera> camera;
+    std::unique_ptr<Light> light;
+    std::vector<std::unique_ptr<Audio>> audios;
+    std::vector<std::unique_ptr<Collider>> colliders;
+    std::unique_ptr<Rigidbody> rigidbody;
+	std::vector<std::unique_ptr<Script>> scripts;
 
     Objects::UniqueId id;
     std::string name;
@@ -81,13 +81,14 @@ private:
 };
 
 template<class T, typename std::enable_if<std::is_base_of<Renderer, T>::value>::type*>
-inline T * Object::AddComponent()
+inline T* Object::AddComponent()
 {
     if (renderer)
         throw std::runtime_error("Object: " + name + "already contains Renderer");
-    auto rendererT = components.CreateRenderer<T>(weak_from_this());
-    renderer = rendererT;
-    return rendererT.get();
+    auto rendererT = components.CreateRenderer<T>(this);
+    auto rendererTRawPtr = rendererT.get();
+    renderer = std::move(rendererT);
+    return rendererTRawPtr;
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Camera, T>::value>::type*>
@@ -95,7 +96,7 @@ inline T * Object::AddComponent()
 {
     if (camera)
         throw std::runtime_error("Object: " + name + "already contains Camera");
-    camera = components.CreateCamera(weak_from_this());
+    camera = components.CreateCamera(this);
     return camera.get();
 }
 
@@ -104,23 +105,23 @@ inline T * Object::AddComponent()
 {
     if (light)
         throw std::runtime_error("Object: " + name + "already contains Light");
-    light = components.CreateLight(weak_from_this());
+    light = components.CreateLight(this);
     return light.get();
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Audio, T>::value>::type*>
 inline T * Object::AddComponent()
 {
-    auto audio = components.CreateAudio(weak_from_this());
-    audios.push_back(audio);
+    auto audio = components.CreateAudio(this);
+    audios.push_back(std::move(audio));
     return audio.get();
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Collider, T>::value>::type*>
 inline T * Object::AddComponent()
 {
-    auto collider = components.CreateCollider<T>(weak_from_this());
-    colliders.push_back(collider);
+    auto collider = components.CreateCollider<T>(this);
+    colliders.push_back(std::move(collider));
     return collider.get();
 }
 
@@ -129,15 +130,15 @@ inline T * Object::AddComponent()
 {
     if (rigidbody)
         throw std::runtime_error("Object: " + name + "already contains Rigidbody");
-    rigidbody = components.CreateRigidbody(weak_from_this());
+    rigidbody = components.CreateRigidbody(this);
     return rigidbody.get();
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type*>
 inline T * Object::AddComponent()
 {
-    auto script = components.CreateScript<T>(weak_from_this());
-    scripts.push_back(script);
+    auto script = components.CreateScript<T>(this);
+    scripts.push_back(std::move(script));
     return script.get();
 }
 

@@ -7,7 +7,7 @@ class Time;
 class Renderer : public Component
 {
 public:
-    Renderer(std::weak_ptr<Object> object,
+    Renderer(Object* object,
              Input& input,
              Time& time);
 	virtual ~Renderer() = default;

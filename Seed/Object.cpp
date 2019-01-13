@@ -7,7 +7,7 @@
 Object::Object(std::string name, Objects& objects, Components& components)
     : name(std::move(name)), objects(objects), components(components)
 {
-	transform = std::make_shared<Transform>(weak_from_this());
+	transform = std::make_unique<Transform>(this);
     id = objects.CreateUniqueId();
 }
 
@@ -34,6 +34,16 @@ bool Object::ContainsTag(const std::string & tag)
 void Object::Destroy()
 {
     objects.RegisterForDestruction(id);
+    renderer->RegisterForDestruction();
+    camera->RegisterForDestruction();
+    light->RegisterForDestruction();
+    for (const auto& audio : audios)
+        audio->RegisterForDestruction();
+    for (const auto& collider : colliders)
+        collider->RegisterForDestruction();
+    rigidbody->Destroy();
+    for (const auto& script : scripts)
+        script->RegisterForDestruction();
 }
 
 void Object::Initialize()
@@ -53,17 +63,17 @@ void Object::DestroyComponents()
         camera.reset();
     if (light->IsRegisteredForDestruction())
         light.reset();
-    std::experimental::erase_if(audios, [](const std::shared_ptr<Audio>& audio)
+    std::experimental::erase_if(audios, [](const std::unique_ptr<Audio>& audio)
     {
         return audio->IsRegisteredForDestruction();
     });
-    std::experimental::erase_if(colliders, [](const std::shared_ptr<Collider>& collider)
+    std::experimental::erase_if(colliders, [](const std::unique_ptr<Collider>& collider)
     {
         return collider->IsRegisteredForDestruction();
     });
     if (rigidbody->IsRegisteredForDestruction())
         rigidbody.reset();
-    std::experimental::erase_if(scripts, [](const std::shared_ptr<Script>& script)
+    std::experimental::erase_if(scripts, [](const std::unique_ptr<Script>& script)
     {
         return script->IsRegisteredForDestruction();
     });

@@ -16,7 +16,7 @@ void Components::OnFrameUpdate()
 {
     for (const auto& script : scripts)
     {
-        script.lock()->OnFrameUpdate();
+        script->OnFrameUpdate();
     }
 }
 
@@ -30,12 +30,12 @@ void Components::CleanComponents()
     pipeline.CleanComponents();
     physics.CleanComponents();
 
-    std::experimental::erase_if(audios, [](const auto& audio)
+    std::experimental::erase_if(audios, [](const auto audio)
     {
-        return audio.expired();
+        return audio->IsRegisteredForDestruction();
     });
-    std::experimental::erase_if(scripts, [] (const auto& script)
+    std::experimental::erase_if(scripts, [] (const auto script)
     {
-        return script.expired();
+        return script->IsRegisteredForDestruction();
     });
 }

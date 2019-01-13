@@ -1,19 +1,20 @@
 #include "RenderingPipeline.h"
 #include "Renderer.h"
+#include "Camera.h"
 
-std::weak_ptr<Camera> RenderingPipeline::mainCamera;
+Camera* RenderingPipeline::mainCamera;
 
-void RenderingPipeline::AddRenderer(std::weak_ptr<Renderer> renderer)
+void RenderingPipeline::AddRenderer(Renderer* renderer)
 {
     renderers.push_back(renderer);
 }
 
-void RenderingPipeline::AddCamera(std::weak_ptr<Camera> camera)
+void RenderingPipeline::AddCamera(Camera* camera)
 {
     cameras.push_back(camera);
 }
 
-void RenderingPipeline::AddLight(std::weak_ptr<Light> light)
+void RenderingPipeline::AddLight(Light* light)
 {
     lights.push_back(light);
 }
@@ -22,35 +23,34 @@ void RenderingPipeline::Render()
 {
     for (const auto& renderer : renderers)
     {
-        renderer.lock()->Render();
+        renderer->Render();
     }
 }
 
-void RenderingPipeline::SetMainCamera(std::weak_ptr<Camera> camera)
+void RenderingPipeline::SetMainCamera(Camera* camera)
 {
     mainCamera = camera;
 }
 
 Camera* RenderingPipeline::MainCamera()
 {
-    if(auto cameraSharedPtr = mainCamera.lock())
-        return cameraSharedPtr.get();
-    return nullptr;
+    return mainCamera;
 }
 
 void RenderingPipeline::CleanComponents()
 {
-    std::experimental::erase_if(renderers, [](const auto& renderer)
+    std::experimental::erase_if(renderers, [](const auto renderer)
     {
-        auto test = renderer.expired();
-        return renderer.expired();
+        return renderer->IsRegisteredForDestruction();
     });
-    std::experimental::erase_if(renderers, [](const auto& light)
+    std::experimental::erase_if(renderers, [](const auto light)
     {
-        return light.expired();
+        return light->IsRegisteredForDestruction();
     });
-    std::experimental::erase_if(renderers, [](const auto& camera)
+    std::experimental::erase_if(renderers, [](const auto camera)
     {
-        return camera.expired();
+        return camera->IsRegisteredForDestruction();
     });
+    if (mainCamera && mainCamera->IsRegisteredForDestruction())
+        mainCamera = nullptr;
 }

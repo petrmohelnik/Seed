@@ -9,7 +9,7 @@ class PhysicsEngine;
 class Script : public Component
 {
 public:
-	Script(std::weak_ptr<Object> object,
+	Script(Object* object,
            Input& input,
            Time& time,
 	       Objects& objects,

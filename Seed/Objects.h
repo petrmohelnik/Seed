@@ -30,7 +30,7 @@ protected:
 private:
     Components& components;
 
-    std::unordered_map<UniqueId, std::shared_ptr<Object>> objects;
+    std::unordered_map<UniqueId, std::unique_ptr<Object>> objects;
     std::set<UniqueId> objectsToBeDestroyed;
     std::set<UniqueId> objectsToDestroyComponents;
 
@@ -41,10 +41,11 @@ template<typename T>
 T* Objects::CreateObject(const std::string& name)
 {
 	static_assert(std::is_base_of<Object, T>::value, "T must be derived from Object");
-	auto object = std::make_shared<T>(name, *this, components);
-    objects.insert({ object->GetUniqueId(), object });
-    object->Initialize();
-	return object.get();
+	auto object = std::make_unique<T>(name, *this, components);
+    auto objectRawPtr = object.get();
+    objects.insert({ object->GetUniqueId(), std::move(object) });
+    objectRawPtr->Initialize();
+	return objectRawPtr;
 }
 
 template<typename T>

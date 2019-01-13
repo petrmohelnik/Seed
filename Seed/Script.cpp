@@ -3,7 +3,7 @@
 #include "Time.h"
 #include "Objects.h"
 
-Script::Script(std::weak_ptr<Object> object,
+Script::Script(Object* object,
                Input& input,
                Time& time,               
                Objects& objects,
