@@ -33,13 +33,24 @@ void RenderingPipeline::SetMainCamera(std::weak_ptr<Camera> camera)
 
 Camera* RenderingPipeline::MainCamera()
 {
-    return mainCamera.lock().get();
+    if(auto cameraSharedPtr = mainCamera.lock())
+        return cameraSharedPtr.get();
+    return nullptr;
 }
 
-void RenderingPipeline::CleanRenderers()
+void RenderingPipeline::CleanComponents()
 {
-    std::remove_if(std::begin(renderers), std::end(renderers), [](const auto& renderer)
+    std::experimental::erase_if(renderers, [](const auto& renderer)
     {
+        auto test = renderer.expired();
         return renderer.expired();
+    });
+    std::experimental::erase_if(renderers, [](const auto& light)
+    {
+        return light.expired();
+    });
+    std::experimental::erase_if(renderers, [](const auto& camera)
+    {
+        return camera.expired();
     });
 }

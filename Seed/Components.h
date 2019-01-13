@@ -1,6 +1,6 @@
 #pragma once
 #include "RenderingPipeline.h"
-#include "PhysicsSystem.h"
+#include "PhysicsEngine.h"
 #include "Renderer.h"
 #include "Camera.h"
 #include "Light.h"
@@ -45,7 +45,7 @@ private:
     Objects& objects;
 
     RenderingPipeline pipeline;
-    PhysicsSystem physics;
+    PhysicsEngine physics;
     std::vector<std::weak_ptr<Audio>> audios;
     std::vector<std::weak_ptr<Script>> scripts;
 };
@@ -100,7 +100,7 @@ template<typename T>
 inline std::shared_ptr<T> Components::CreateScript(std::weak_ptr<Object> object)
 {
 	static_assert(std::is_base_of<Script, T>::value, "T must be derived from Script");
-	auto script = std::make_shared<T>(object, input, time, objects);
+	auto script = std::make_shared<T>(object, input, time, objects, physics);
     scripts.push_back(script);
 	return script;
 }

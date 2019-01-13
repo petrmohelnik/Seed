@@ -29,5 +29,6 @@ void Scene::Render()
 
 void Scene::CleanObjects()
 {
+    objects.Destroy();
     components.CleanComponents();
 }

@@ -17,3 +17,6 @@
 #include <memory>
 #include <cassert>
 #include <type_traits>
+#include <unordered_map>
+#include <unordered_set>
+#include <experimental/vector>

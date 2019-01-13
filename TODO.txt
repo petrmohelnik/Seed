@@ -1,9 +1,6 @@
 objekty budou mit parenty a childreny a to bude mit vliv na transformaci
-objekty se budou mazat az pri praci, ne zvlast v clean metode, aby se to neprochazelo dvakrat
-ale destroyed objekty se smazou az po updatech abych to nemazal nekomu pod rukama
+mazat i decka
 
-objekty vyhledavat podle mena, ne typu, misto typu se da udelat singleton objekt
-nebo podle tagu
+load assimp
 
-addcomponent taky pres template? v unity je to moznost, takhle je to nekonzistentni
-zmenit jenom v object.h to je interface pro skript, v components neni potreba
+render

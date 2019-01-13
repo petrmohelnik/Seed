@@ -1,10 +1,10 @@
 #pragma once
 #include "Component.h"
 
-class Object;
 class Input;
 class Time;
 class Objects;
+class PhysicsEngine;
 
 class Script : public Component
 {
@@ -12,7 +12,8 @@ public:
 	Script(std::weak_ptr<Object> object,
            Input& input,
            Time& time,
-	       Objects& objects);
+	       Objects& objects,
+           PhysicsEngine& physics);
 	virtual ~Script() = default;
 	
 	virtual void Start() {};
@@ -23,4 +24,5 @@ private:
     Input& input;
     Time& time;
     Objects& objects;
+    PhysicsEngine& physics;
 };

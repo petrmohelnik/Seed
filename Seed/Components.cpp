@@ -27,9 +27,14 @@ void Components::Render()
 
 void Components::CleanComponents()
 {
-    pipeline.CleanRenderers();
+    pipeline.CleanComponents();
+    physics.CleanComponents();
 
-    std::remove_if(std::begin(scripts), std::end(scripts), [] (const auto& script)
+    std::experimental::erase_if(audios, [](const auto& audio)
+    {
+        return audio.expired();
+    });
+    std::experimental::erase_if(scripts, [] (const auto& script)
     {
         return script.expired();
     });

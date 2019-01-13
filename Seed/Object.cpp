@@ -4,37 +4,67 @@
 #include "Audio.h"
 #include "Script.h"
 
-Object::Object(Components& components) 
-    : components(components)
+Object::Object(std::string name, Objects& objects, Components& components)
+    : name(std::move(name)), objects(objects), components(components)
 {
 	transform = std::make_shared<Transform>(weak_from_this());
+    id = objects.CreateUniqueId();
+}
+
+Objects::UniqueId Object::GetUniqueId()
+{
+    return id;
+}
+
+std::string Object::GetName()
+{
+    return name;
+}
+
+void Object::AddTag(const std::string& tag)
+{
+    tags.insert(tag);
+}
+
+bool Object::ContainsTag(const std::string & tag)
+{
+    return tags.count(name) != 0;
+}
+
+void Object::Destroy()
+{
+    objects.RegisterForDestruction(id);
 }
 
 void Object::Initialize()
 {
 }
 
-Camera* Object::AddCamera()
+void Object::RegisterForComponentDestruction()
 {
-    camera = components.CreateCamera(weak_from_this());
-    return camera.get();
+    objects.RegisterForComponentDestruction(id);
 }
 
-Light* Object::AddLight()
+void Object::DestroyComponents()
 {
-    light = components.CreateLight(weak_from_this());
-    return light.get();
-}
-
-Audio* Object::AddAudio()
-{
-    auto audio = components.CreateAudio(weak_from_this());
-    audios.push_back(audio);
-    return audio.get();
-}
-
-Rigidbody* Object::AddRigidbody()
-{
-    rigidbody = components.CreateRigidbody(weak_from_this());
-    return rigidbody.get();
+    if(renderer->IsRegisteredForDestruction())
+        renderer.reset();
+    if (camera->IsRegisteredForDestruction())
+        camera.reset();
+    if (light->IsRegisteredForDestruction())
+        light.reset();
+    std::experimental::erase_if(audios, [](const std::shared_ptr<Audio>& audio)
+    {
+        return audio->IsRegisteredForDestruction();
+    });
+    std::experimental::erase_if(colliders, [](const std::shared_ptr<Collider>& collider)
+    {
+        return collider->IsRegisteredForDestruction();
+    });
+    if (rigidbody->IsRegisteredForDestruction())
+        rigidbody.reset();
+    std::experimental::erase_if(scripts, [](const std::shared_ptr<Script>& script)
+    {
+        return script->IsRegisteredForDestruction();
+    });
 }

@@ -12,5 +12,5 @@ public:
 
 void CameraObject::Initialize()
 {
-    AddScript<CameraScript>();
+    AddComponent<CameraScript>();
 }

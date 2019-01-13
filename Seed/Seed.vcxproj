@@ -34,7 +34,7 @@
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Objects.cpp" />
-    <ClCompile Include="PhysicsSystem.cpp" />
+    <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
@@ -70,7 +70,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Objects.h" />
-    <ClInclude Include="PhysicsSystem.h" />
+    <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderingPipeline.h" />
     <ClInclude Include="Rigidbody.h" />

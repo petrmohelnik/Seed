@@ -6,10 +6,12 @@
 Script::Script(std::weak_ptr<Object> object,
                Input& input,
                Time& time,               
-               Objects& objects) 
+               Objects& objects,
+               PhysicsEngine& physics)
     : Component(object)
     , input(input)
     , time(time)
     , objects(objects)
+    , physics(physics)
 {
 }

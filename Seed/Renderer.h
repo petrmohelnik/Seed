@@ -1,7 +1,6 @@
 #pragma once
 #include "Component.h"
 
-class Object;
 class Input;
 class Time;
 
