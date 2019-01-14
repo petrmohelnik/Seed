@@ -21,8 +21,9 @@ public:
                Objects& objects);
 
 protected:
-    friend class Scene;
+    friend class Objects;
     friend class Object;
+    friend class Scene;
 
     template<typename T>
 	std::unique_ptr<T> CreateRenderer(Object* object);

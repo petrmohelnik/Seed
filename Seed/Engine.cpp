@@ -24,7 +24,7 @@ void Engine::Work()
 		window.PollInputs();
 		window.UpdateTime();
 		scene.OnFrameUpdate();
-		scene.CleanObjects();
+        objects.UpdateForDestruction();
 		scene.Render();
 		window.Swap();
 	}

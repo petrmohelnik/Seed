@@ -1,3 +1,9 @@
+prece jenom bych asi mel ty componenty v object dat do kolekce - proc ne?
+
 load assimp
+meshRenderer bude mit Model,
+ten se tam preda pres SetModel
+v Model budou staticky metody jako createSphere, loadFromFile, loadFromAssimpScene...
+model bude mit kolekci meshu, kde kazdy bude mit shader a podle nej bude mesh nekde zaregistrovan a renderovan
 
 render

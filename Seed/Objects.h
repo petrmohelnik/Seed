@@ -16,25 +16,15 @@ public:
     template<typename T>
     std::vector<T*> GetObjects();
 
-    using UniqueId = unsigned long;
-
 protected:
-    friend class Object;
-    friend class Scene;
+    friend class Engine;
 
-    void RegisterForDestruction(UniqueId uniqueId);
-    void RegisterForComponentDestruction(UniqueId uniqueId);
-    UniqueId CreateUniqueId();
-    void Destroy();
+    void UpdateForDestruction();
 
 private:
     Components& components;
 
-    std::unordered_map<UniqueId, std::unique_ptr<Object>> objects;
-    std::set<UniqueId> objectsToBeDestroyed;
-    std::set<UniqueId> objectsToDestroyComponents;
-
-    static UniqueId uniqueId;
+    std::unordered_map<std::string, std::unique_ptr<Object>> objects;
 };
 
 template<typename T>
@@ -43,7 +33,7 @@ T* Objects::CreateObject(const std::string& name)
 	static_assert(std::is_base_of<Object, T>::value, "T must be derived from Object");
 	auto object = std::make_unique<T>(name, *this, components);
     auto objectRawPtr = object.get();
-    objects.insert({ object->GetUniqueId(), std::move(object) });
+    objects.insert({ name, std::move(object) });
     objectRawPtr->Initialize();
 	return objectRawPtr;
 }

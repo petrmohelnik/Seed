@@ -3,17 +3,18 @@
 #include "Renderer.h"
 #include "Audio.h"
 #include "Script.h"
+#include "Time.h"
 
 Object::Object(std::string name, Objects& objects, Components& components)
     : name(std::move(name)), objects(objects), components(components)
 {
 	transform = std::make_unique<Transform>(this);
-    id = objects.CreateUniqueId();
 }
 
-Objects::UniqueId Object::GetUniqueId()
+Object::~Object()
 {
-    return id;
+    if(auto parent = transform->GetParent())
+        parent->CleanChildren();
 }
 
 std::string Object::GetName()
@@ -31,55 +32,88 @@ bool Object::ContainsTag(const std::string & tag)
     return tags.count(name) != 0;
 }
 
-void Object::Destroy()
+void Object::Destroy(Uint32 delay)
 {
-    objects.RegisterForDestruction(id);
-    transform->DestroyAllChildren();
-    if(renderer)
-        renderer->RegisterForDestruction();
-    if(camera)
-        camera->RegisterForDestruction();
-    if(light)
-        light->RegisterForDestruction();
-    for (const auto& audio : audios)
-        audio->RegisterForDestruction();
-    for (const auto& collider : colliders)
-        collider->RegisterForDestruction();
-    if(rigidbody)
-        rigidbody->RegisterForDestruction();
-    for (const auto& script : scripts)
-        script->RegisterForDestruction();
+    if(timeToDestruction >= static_cast<Sint32>(delay))
+        timeToDestruction = static_cast<Sint32>(delay);
+    registeredForDestruction = true;
 }
 
 void Object::Initialize()
 {
 }
 
-void Object::RegisterForComponentDestruction()
+bool Object::UpdateForDestruction()
 {
-    objects.RegisterForComponentDestruction(id);
+    if(registeredForDestruction)
+        timeToDestruction -= Time::GetDelta();
+
+    if (registeredForDestruction && timeToDestruction <= 0)
+    {
+        transform->DestroyAllChildren();
+        transform->Destroy();
+        if (renderer)
+            renderer->Destroy();
+        if (camera)
+            camera->Destroy();
+        if (light)
+            light->Destroy();
+        for (const auto& audio : audios)
+            audio->Destroy();
+        for (const auto& collider : colliders)
+            collider->Destroy();
+        if (rigidbody)
+            rigidbody->Destroy();
+        for (const auto& script : scripts)
+            script->Destroy();
+
+        return true;
+    }
+
+    bool isSomeComponentDestroyed = false;
+    if (renderer)
+        isSomeComponentDestroyed = renderer->UpdateForDestruction() || isSomeComponentDestroyed;
+    if (camera)
+        isSomeComponentDestroyed = camera->UpdateForDestruction() || isSomeComponentDestroyed;
+    if (light)
+        isSomeComponentDestroyed = light->UpdateForDestruction() || isSomeComponentDestroyed;
+    for (const auto& audio : audios)
+        isSomeComponentDestroyed = audio->UpdateForDestruction() || isSomeComponentDestroyed;
+    for (const auto& collider : colliders)
+        isSomeComponentDestroyed = collider->UpdateForDestruction() || isSomeComponentDestroyed;
+    if (rigidbody)
+        isSomeComponentDestroyed = rigidbody->UpdateForDestruction() || isSomeComponentDestroyed;
+    for (const auto& script : scripts)
+        isSomeComponentDestroyed = script->UpdateForDestruction() || isSomeComponentDestroyed;
+
+    return isSomeComponentDestroyed;
 }
 
-void Object::DestroyComponents()
+bool Object::DoDestruction()
 {
-    if(renderer && renderer->IsRegisteredForDestruction())
+    if (registeredForDestruction && timeToDestruction <= 0)
+        return true;
+
+    if (renderer && renderer->ToBeDestroyed())
         renderer.reset();
-    if (camera && camera->IsRegisteredForDestruction())
+    if (camera && camera->ToBeDestroyed())
         camera.reset();
-    if (light && light->IsRegisteredForDestruction())
+    if (light && light->ToBeDestroyed())
         light.reset();
     std::experimental::erase_if(audios, [](const std::unique_ptr<Audio>& audio)
     {
-        return audio->IsRegisteredForDestruction();
+        return audio->ToBeDestroyed();
     });
     std::experimental::erase_if(colliders, [](const std::unique_ptr<Collider>& collider)
     {
-        return collider->IsRegisteredForDestruction();
+        return collider->ToBeDestroyed();
     });
-    if (rigidbody && rigidbody->IsRegisteredForDestruction())
+    if (rigidbody && rigidbody->ToBeDestroyed())
         rigidbody.reset();
     std::experimental::erase_if(scripts, [](const std::unique_ptr<Script>& script)
     {
-        return script->IsRegisteredForDestruction();
+        return script->ToBeDestroyed();
     });
+
+    return false;
 }

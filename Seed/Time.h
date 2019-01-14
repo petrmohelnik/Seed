@@ -3,14 +3,14 @@
 class Time
 {
 public:
-	Uint32 GetDeltaTime();
+	static Uint32 GetDelta();
 
 protected:
     friend class SDLWindow;
 	void UpdateTime(Uint32 time);
 
 private:
-	Uint32 previousTime;
-	Uint32 currentTime;
+	static Uint32 previousTime;
+    static Uint32 currentTime;
 };
 

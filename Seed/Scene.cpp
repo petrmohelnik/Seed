@@ -26,9 +26,3 @@ void Scene::Render()
 {
     components.Render();
 }
-
-void Scene::CleanObjects()
-{
-    components.CleanComponents();
-    objects.Destroy();
-}

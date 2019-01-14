@@ -15,7 +15,6 @@ public:
 
 	void OnFrameUpdate();
 	void Render();
-	void CleanObjects();
 
 private:
     SceneDefinition& sceneDefinition;

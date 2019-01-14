@@ -32,10 +32,10 @@ void Components::CleanComponents()
 
     std::experimental::erase_if(audios, [](const auto audio)
     {
-        return audio->IsRegisteredForDestruction();
+        return audio->ToBeDestroyed();
     });
     std::experimental::erase_if(scripts, [] (const auto script)
     {
-        return script->IsRegisteredForDestruction();
+        return script->ToBeDestroyed();
     });
 }

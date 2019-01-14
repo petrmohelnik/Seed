@@ -1,5 +1,6 @@
 #include "Component.h"
 #include "Object.h"
+#include "Time.h"
 
 Component::Component(Object* object) : object(object)
 {
@@ -10,18 +11,24 @@ Object* Component::GetObject()
     return object;
 }
 
-void Component::Destroy()
+void Component::Destroy(Uint32 delay)
 {
-    toBeDestroyed = true;
-    GetObject()->RegisterForComponentDestruction();
+    if (timeToDestruction >= static_cast<Sint32>(delay))
+        timeToDestruction = static_cast<Sint32>(delay);
+    registeredForDestruction = true;
 }
 
-bool Component::IsRegisteredForDestruction()
+bool Component::UpdateForDestruction()
 {
-    return toBeDestroyed;
+    if (!registeredForDestruction)
+        return false;
+
+    timeToDestruction -= Time::GetDelta();
+
+    return timeToDestruction <= 0;
 }
 
-void Component::RegisterForDestruction()
+bool Component::ToBeDestroyed()
 {
-    toBeDestroyed = true;
+    return registeredForDestruction && timeToDestruction <= 0;
 }

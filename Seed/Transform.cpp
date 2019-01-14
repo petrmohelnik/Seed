@@ -20,9 +20,11 @@ void Transform::SetParent(Object* parent_)
 
 void Transform::DestroyAllChildren()
 {
-    RegisterForDestruction();
     for (const auto& child : children)
+    {
         child->GetObject()->Destroy();
+        child->GetObject()->UpdateForDestruction();
+    }
 }
 
 void Transform::CleanChildren()
@@ -31,7 +33,7 @@ void Transform::CleanChildren()
         return;
     std::experimental::erase_if(children, [](const auto& child)
     {
-        return child->IsRegisteredForDestruction();
+        return child->ToBeDestroyed();
     });
 }
 

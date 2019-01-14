@@ -13,7 +13,7 @@ void DefaultScene(Objects& objects)
     cameraObject3->GetComponent<Transform>()->SetParent(cameraObject2->GetComponent<Transform>());
     cameraObject4->GetComponent<Transform>()->SetParent(cameraObject2->GetComponent<Transform>());
     cameraObject->AddTag("tag");
-    cameraObject->AddComponent<Light>();
+    cameraObject->AddComponent<Light>()->Destroy(16000);;
     cameraObject4->AddComponent<Camera>();
     cameraObject2->AddComponent<MeshRenderer>();
     cameraObject4->AddComponent<CameraScript>();
@@ -27,8 +27,8 @@ void DefaultScene(Objects& objects)
     cameraObject->GetComponent<Transform>();
     cameraObject->GetComponent<Audio>();
     cameraObject->GetComponent<Collider>();
-    cameraObject3->GetComponent<Rigidbody>()->Destroy();
-    cameraObject2->Destroy();
+    cameraObject3->GetComponent<Rigidbody>()->Destroy(15000);
+    cameraObject2->Destroy(5000);
     objects.GetObjectsByName("camera");
     objects.GetObjects<CameraObject>();
     objects.GetObjectsByTag("tag");

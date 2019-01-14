@@ -15,7 +15,7 @@ class Object
 {
 public:
 	Object(std::string name, Objects& objects, Components& components);
-	virtual ~Object() = default;
+    virtual ~Object();
 
     template <class T, typename std::enable_if<std::is_base_of<Renderer, T>::value>::type* = nullptr>
     T* AddComponent();
@@ -49,19 +49,19 @@ public:
     template <class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type* = nullptr>
     T* GetComponent();
 
-    Objects::UniqueId GetUniqueId();
     std::string GetName();
     void AddTag(const std::string& tag);
     bool ContainsTag(const std::string& tag);
-    void Destroy();
+    void Destroy(Uint32 delay = 0);
 
 protected:
     friend class Component;
     friend class Objects;
+    friend class Transform;
 
     virtual void Initialize();
-    void RegisterForComponentDestruction();
-    void DestroyComponents();
+    bool UpdateForDestruction();
+    bool DoDestruction();
 
 private:
 	std::unique_ptr<Transform> transform;
@@ -73,11 +73,12 @@ private:
     std::unique_ptr<Rigidbody> rigidbody;
 	std::vector<std::unique_ptr<Script>> scripts;
 
-    Objects::UniqueId id;
     std::string name;
     std::unordered_set<std::string> tags;
     Objects& objects;
     Components& components;
+    Sint32 timeToDestruction = SDL_MAX_SINT32;
+    bool registeredForDestruction = false;
 };
 
 template<class T, typename std::enable_if<std::is_base_of<Renderer, T>::value>::type*>

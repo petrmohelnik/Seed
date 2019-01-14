@@ -42,16 +42,16 @@ void RenderingPipeline::CleanComponents()
 {
     std::experimental::erase_if(renderers, [](const auto renderer)
     {
-        return renderer->IsRegisteredForDestruction();
+        return renderer->ToBeDestroyed();
     });
     std::experimental::erase_if(lights, [](const auto light)
     {
-        return light->IsRegisteredForDestruction();
+        return light->ToBeDestroyed();
     });
     std::experimental::erase_if(cameras, [](const auto camera)
     {
-        return camera->IsRegisteredForDestruction();
+        return camera->ToBeDestroyed();
     });
-    if (mainCamera && mainCamera->IsRegisteredForDestruction())
+    if (mainCamera && mainCamera->ToBeDestroyed())
         mainCamera = nullptr;
 }
