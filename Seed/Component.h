@@ -9,14 +9,18 @@ public:
 	virtual ~Component() = default;
 
     Object* GetObject();
-    void Destroy();
-    bool IsRegisteredForDestruction();
+    void Destroy(Uint32 delay = 0);
 
 protected:
     friend class Object;
-    void RegisterForDestruction();
+    friend class Components;
+    friend class RenderingPipeline;
+    friend class PhysicsEngine;
+    bool UpdateForDestruction();
+    bool ToBeDestroyed();
 
 private:
     Object* object;
-    bool toBeDestroyed = false;
+    Sint32 timeToDestruction = SDL_MAX_SINT32;
+    bool registeredForDestruction = false;
 };

@@ -3,8 +3,6 @@
 #include "Components.h"
 #include "Transform.h"
 
-Objects::UniqueId Objects::uniqueId = 0;
-
 Objects::Objects(Components& components) : components(components)
 {
 }
@@ -41,33 +39,25 @@ std::vector<Object*> Objects::GetObjectsByTag(const std::string& tag)
     return result;
 }
 
-void Objects::RegisterForDestruction(UniqueId uniqueId)
+void Objects::UpdateForDestruction()
 {
-    objectsToBeDestroyed.insert(uniqueId);
-}
-
-void Objects::RegisterForComponentDestruction(UniqueId uniqueId)
-{
-    objectsToDestroyComponents.insert(uniqueId);
-}
-
-Objects::UniqueId Objects::CreateUniqueId()
-{
-    return uniqueId++;
-}
-
-void Objects::Destroy()
-{
-    for (const auto& id : objectsToDestroyComponents)
+    bool isSomethingDestroyed = false;
+    for (const auto& object : objects)
     {
-        objects[id]->DestroyComponents();
+        if(object.second->UpdateForDestruction())
+            isSomethingDestroyed = true;
     }
-    objectsToDestroyComponents.clear();
+    
+    if (!isSomethingDestroyed)
+        return;
 
-    for (const auto& id : objectsToBeDestroyed)
+    components.CleanComponents();
+
+    for (auto object = std::begin(objects); object != std::end(objects); )
     {
-        objects[id]->GetComponent<Transform>()->GetParent()->CleanChildren();
-        objects.erase(id);
+        if (object->second->DoDestruction())
+            object = objects.erase(object);
+        else
+            ++object;
     }
-    objectsToBeDestroyed.clear();
 }
