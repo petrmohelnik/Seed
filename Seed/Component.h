@@ -1,8 +1,9 @@
 #pragma once
+#include "Identifiable.h"
 
 class Object;
 
-class Component
+class Component : public Identifiable
 {
 public:
     Component(Object* object);

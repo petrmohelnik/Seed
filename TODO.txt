@@ -1,9 +1,25 @@
-prece jenom bych asi mel ty componenty v object dat do kolekce - proc ne?
-
 load assimp
-meshRenderer bude mit Model,
-ten se tam preda pres SetModel
-v Model budou staticky metody jako createSphere, loadFromFile, loadFromAssimpScene...
-model bude mit kolekci meshu, kde kazdy bude mit shader a podle nej bude mesh nekde zaregistrovan a renderovan
+https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
-render
+pri volani render mi renderer nebude nic renderovat, ale nasype commandy do render queue,
+tam se budou radit prioritne podle vrstvy materialu, potom podle programu
+jeden submesh bude asi jeden draw call, ten se zaradi do te fronty pres pointer na MeshRenderer
+aby mel vsechno potrebne info, nastavi kontext a vykresli se, jde dalsi
+
+atributy jde sdilet mezi programy pokud maji stejnou lokaci,
+atributy ne, ale muze se pouzit unifom buffer objekt ktery zastresi vsechny naraz
+
+mesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
+shader bude drzet lokace?
+
+textura bude bud obrazek, nebo bude nejaka barva, ta barva bude taky udelana jako textura s jednim pixelem?
+nejakej texture loader si bude drzet shared pointery na ty textury a kdyz uz ho jednou loadnul, tak mi ho vrati stejnej
+stejne by to mlh delat i mesh loader
+
+!!!!!!!
+https://unity3d.com/learn/tutorials/temas/performance-optimization/optimizing-graphics-rendering-unity-games
+
+komponenta nemusi mit object, co kdyz si ji drzum v membru ve skriptu?
+
+https://hero.handmade.network/forums/code-discussion/t/2479-using_opengl_uniforms_attributes_outputs_in_more_efficient_way
+https://gamedev.stackexchange.com/questions/57108/what-is-the-best-method-to-update-shader-uniforms

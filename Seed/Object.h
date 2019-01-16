@@ -1,6 +1,7 @@
 #pragma once
 #include "Components.h"
 #include "Objects.h"
+#include "Identifiable.h"
 
 class Transform;
 class Renderer;
@@ -11,10 +12,10 @@ class Collider;
 class Rigidbody;
 class Script;
 
-class Object
+class Object : public Identifiable
 {
 public:
-	Object(std::string name, Objects& objects, Components& components);
+	Object(std::string name_, Objects& objects, Components& components);
     virtual ~Object();
 
     template <class T, typename std::enable_if<std::is_base_of<Renderer, T>::value>::type* = nullptr>
@@ -49,9 +50,8 @@ public:
     template <class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type* = nullptr>
     T* GetComponent();
 
-    std::string GetName();
-    void AddTag(const std::string& tag);
-    bool ContainsTag(const std::string& tag);
+    operator Transform*();
+
     void Destroy(Uint32 delay = 0);
 
 protected:
@@ -73,8 +73,6 @@ private:
     std::unique_ptr<Rigidbody> rigidbody;
 	std::vector<std::unique_ptr<Script>> scripts;
 
-    std::string name;
-    std::unordered_set<std::string> tags;
     Objects& objects;
     Components& components;
     Sint32 timeToDestruction = SDL_MAX_SINT32;

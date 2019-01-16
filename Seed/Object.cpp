@@ -5,10 +5,11 @@
 #include "Script.h"
 #include "Time.h"
 
-Object::Object(std::string name, Objects& objects, Components& components)
-    : name(std::move(name)), objects(objects), components(components)
+Object::Object(std::string name_, Objects& objects, Components& components)
+    : objects(objects), components(components)
 {
 	transform = std::make_unique<Transform>(this);
+    name = std::move(name_);
 }
 
 Object::~Object()
@@ -17,19 +18,9 @@ Object::~Object()
         parent->CleanChildren();
 }
 
-std::string Object::GetName()
+Object::operator Transform*()
 {
-    return name;
-}
-
-void Object::AddTag(const std::string& tag)
-{
-    tags.insert(tag);
-}
-
-bool Object::ContainsTag(const std::string & tag)
-{
-    return tags.count(name) != 0;
+    return transform.get();
 }
 
 void Object::Destroy(Uint32 delay)

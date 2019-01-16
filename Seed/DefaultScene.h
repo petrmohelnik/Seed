@@ -8,7 +8,7 @@ void DefaultScene(Objects& objects)
     auto cameraObject2 = objects.CreateObject<CameraObject>("camera2");
     auto cameraObject3 = objects.CreateObject<CameraObject>("camera3");
     auto cameraObject4 = objects.CreateObject<CameraObject>("camera4");
-    cameraObject1->GetComponent<Transform>()->SetParent(cameraObject->GetComponent<Transform>());
+    cameraObject1->GetComponent<Transform>()->SetParent(cameraObject);
     cameraObject2->GetComponent<Transform>()->SetParent(cameraObject->GetComponent<Transform>());
     cameraObject3->GetComponent<Transform>()->SetParent(cameraObject2->GetComponent<Transform>());
     cameraObject4->GetComponent<Transform>()->SetParent(cameraObject2->GetComponent<Transform>());
