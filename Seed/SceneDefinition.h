@@ -10,6 +10,7 @@
 #include "Collider.h"
 #include "Rigidbody.h"
 #include "Script.h"
+#include "FileSystem.h"
 
 class SceneDefinition
 {

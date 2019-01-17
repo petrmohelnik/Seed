@@ -32,7 +32,6 @@ void DefaultScene(Objects& objects)
     objects.GetObjectsByName("camera");
     objects.GetObjects<CameraObject>();
     objects.GetObjectsByTag("tag");
-    auto mat = cameraObject->GetComponent<CameraScript>()->getProjection();
-    if (mat != glm::mat4(0.0))
-        throw std::exception("fail");
+    
+    cameraObject->GetComponent<MeshRenderer>()->GetMesh() = FileSystem::LoadFromFile("resource\\lara.dae");
 }
