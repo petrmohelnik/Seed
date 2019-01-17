@@ -22,6 +22,8 @@ public:
     std::vector<std::shared_ptr<Material>> GetSharedMaterials();
 
 private:
+    GLuint mvp;
+
     std::shared_ptr<Mesh> mesh;
     std::vector<std::shared_ptr<Material>> materials;
 };

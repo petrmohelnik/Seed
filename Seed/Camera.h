@@ -5,4 +5,7 @@ class Camera final : public Component
 {
 public:
     using Component::Component;
+
+private:
+    GLuint projection;
 };
