@@ -1,6 +1,6 @@
 #include "SDLWindow.h"
 
-SDLWindow::SDLWindow(Input& input, Time& time) : input(input), time(time)
+SDLWindow::SDLWindow(Input& input) : input(input)
 {
 }
 
@@ -67,9 +67,9 @@ void SDLWindow::PollInputs()
 	}
 }
 
-void SDLWindow::UpdateTime()
+Uint32 SDLWindow::GetTime()
 {
-	time.UpdateTime(SDL_GetTicks());
+    return SDL_GetTicks();
 }
 
 void SDLWindow::Swap()

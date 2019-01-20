@@ -17,10 +17,8 @@ Assimp::Importer::GetOrphanedScene()
 tohle by mi melo stacit na vsechno
 
 pouzivat public memberu misto getteru/setteru?
+proc mit static time? rozhodnout se konecne ohledne tech static a getteru
 
-loop
-https://pdfs.semanticscholar.org/f401/4a0328b383ee509ed837ff16af96af1168eb.pdf
-doresit pauzu
 All Awake calls
 All Start Calls
 while (stepping towards variable delta time)
@@ -31,9 +29,6 @@ OnEnter/Exit/Stay collision functions
 Rigidbody interpolation applies transform.position and rotation
 OnMouseDown/OnMouseUp etc. events
 All Update functions
-
-kdyz fixed update bude prilis pomaly, tak se jedne skipne
-
 metody na poradi skriptu
 https://docs.unity3d.com/Manual/ExecutionOrder.html
 pohyby zpusobene fyzkou se aplikujou pred mouseDown a Update ale po OnCollision a OnTrigger

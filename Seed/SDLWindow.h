@@ -1,22 +1,20 @@
 #pragma once
 #include "Input.h"
-#include "Time.h"
 
 class SDLWindow
 {
 public:
-	SDLWindow(Input& input, Time& time);
+	SDLWindow(Input& input);
 
 	void CreateWindow(int width, int height);
 	void InitializeOpenGL();
 	void PollInputs();
-	void UpdateTime();
+	Uint32 GetTime();
 	void Swap();
 
 private:
     SDL_Window* window = nullptr;
 	SDL_GLContext context;
 	Input& input;
-	Time& time;
 };
 

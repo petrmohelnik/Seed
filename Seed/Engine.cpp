@@ -1,7 +1,8 @@
 #include "Engine.h"
 
 Engine::Engine() 
-    : window(input, time)
+    : window(input)
+    , time(window)
     , components(input, time, objects)
     , objects(components)
     , sceneDefinition(objects)
@@ -18,28 +19,27 @@ void Engine::CreateWindow()
 void Engine::Work()
 {
     scene.Initialize("Default");
+    time.InitializeTime();
 
 	while (input.GameIsRunning())
 	{
 		window.PollInputs();
+		time.UpdateTime();
 
 		if (input.Pause())
 		{
-			isPaused = true;
+            time.PauseTime();
 		}
 		if (input.Resume())
 		{
-			isPaused = false;
+            time.UnpauseTime();
 		}
-		if (!isPaused)
+		while (time.StartFixedUpdate())
 		{
-			while (time.CurrentTime() - time.DeltaTime() >= time.FixedDeltaTime())
-			{
-				scene.OnFixedUpdate();
-			}
+			scene.OnFixedUpdate();
+            time.EndFixedUpdate();
 		}
 
-		window.UpdateTime();
 		scene.OnFrameUpdate();
         objects.UpdateForDestruction();
 		scene.Render();
