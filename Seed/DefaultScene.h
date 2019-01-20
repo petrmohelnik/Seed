@@ -33,5 +33,5 @@ void DefaultScene(Objects& objects)
     objects.GetObjects<CameraObject>();
     objects.GetObjectsByTag("tag");
     
-    cameraObject->GetComponent<MeshRenderer>()->GetMesh() = FileSystem::LoadFromFile("resource\\lara.dae");
+    cameraObject->GetComponent<MeshRenderer>()->GetMesh() = FileSystem::LoadMesh("resource\\lara.dae");
 }

@@ -1,9 +1,10 @@
 #include "FileSystem.h"
 #include "Mesh.h"
+#include "Material.h"
 
 std::unordered_map<std::string, std::weak_ptr<Mesh>> FileSystem::meshes;
 
-std::shared_ptr<Mesh> FileSystem::LoadFromFile(std::string path)
+std::shared_ptr<Mesh> FileSystem::LoadMesh(std::string path)
 {
     auto mesh = meshes.find(path);
     if (mesh != meshes.end())

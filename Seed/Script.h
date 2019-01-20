@@ -16,9 +16,13 @@ public:
            PhysicsEngine& physics);
 	virtual ~Script() = default;
 	
-	virtual void Start() {};
-	virtual void OnFrameUpdate() {};
-	virtual void End() {};
+	virtual void Create() {};
+	virtual void FixedUpdate() {};
+	virtual void OnTrigger() {};
+	virtual void OnCollision() {};
+	virtual void Update() {};
+	virtual void OnMouseDown() {};
+	virtual void Destroy() {};
 
 private:
     Input& input;

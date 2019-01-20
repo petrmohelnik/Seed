@@ -13,6 +13,7 @@ public:
 
     void Initialize(std::string scene);
 
+	void OnFixedUpdate();
 	void OnFrameUpdate();
 	void Render();
 

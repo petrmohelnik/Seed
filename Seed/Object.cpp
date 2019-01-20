@@ -37,7 +37,7 @@ void Object::Initialize()
 bool Object::UpdateForDestruction()
 {
     if(registeredForDestruction)
-        timeToDestruction -= Time::GetDelta();
+        timeToDestruction -= Time::DeltaTime();
 
     if (registeredForDestruction && timeToDestruction <= 0)
     {

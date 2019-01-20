@@ -16,7 +16,7 @@ void Components::OnFrameUpdate()
 {
     for (const auto& script : scripts)
     {
-        script->OnFrameUpdate();
+        script->Update();
     }
 }
 

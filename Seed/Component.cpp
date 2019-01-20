@@ -23,7 +23,7 @@ bool Component::UpdateForDestruction()
     if (!registeredForDestruction)
         return false;
 
-    timeToDestruction -= Time::GetDelta();
+    timeToDestruction -= Time::DeltaTime();
 
     return timeToDestruction <= 0;
 }

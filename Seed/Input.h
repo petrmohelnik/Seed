@@ -3,7 +3,10 @@
 class Input
 {
 public:
-	bool IsKeyPressed(SDL_Keycode key);
+	bool GameIsRunning();
+	bool Pause();
+	bool Resume();
+	bool KeyPressed(SDL_Keycode key);
 
 protected:
     friend class SDLWindow;

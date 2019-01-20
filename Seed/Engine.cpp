@@ -19,9 +19,26 @@ void Engine::Work()
 {
     scene.Initialize("Default");
 
-	while (1)
+	while (input.GameIsRunning())
 	{
 		window.PollInputs();
+
+		if (input.Pause())
+		{
+			isPaused = true;
+		}
+		if (input.Resume())
+		{
+			isPaused = false;
+		}
+		if (!isPaused)
+		{
+			while (time.CurrentTime() - time.DeltaTime() >= time.FixedDeltaTime())
+			{
+				scene.OnFixedUpdate();
+			}
+		}
+
 		window.UpdateTime();
 		scene.OnFrameUpdate();
         objects.UpdateForDestruction();

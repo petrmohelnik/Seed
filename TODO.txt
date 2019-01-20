@@ -1,26 +1,45 @@
 load assimp
 mel bych mit metodu loadScene, ktery mi loadne cely file a potom helper metody, kde si z nej budu getovat meshe, materialy a tak
-uz treba ve sceneDefinici
-ty helper meotdy pak si ulozej ten odkaz pres weak_ptr
-volam loadMesh
-nacte scene a drzi si ji
-loadMaterial pouzije drzenou scenu
-...
-udelam si weak_ptr na kazdy shared_ptr ktery vracim
+load mesh a material pouzije drzenou scenu
+udelam si weak_ptr pouze na kazdy shared_ptr ktery vracim z metod ktery ocekavaj jednotlive meshe a materialy
 pri nejakym dalsim loadu stejne sceny se podivam jestli uz ten mesh drzim kdzytak nactu celou scenu znova jinak jenom vratim
+budou i overload metody, kde zadam nazev filu treba na load mesh a tam ve filu bude jenom jeden model
+automaticky si budu pamatovat posledni load a nebudu muset znova loadovat pro getovani materialu (poprve, podruhe uz budu mi nacashovane)
+
+ma to teda dve vyuziti:
+load cele scene - jeji init v sceneLoaderu
+load jednotlivych modelu
+
 FreeScene() - assimp to drzi za me
 assim.GetScene()
 Assimp::Importer::GetOrphanedScene()	
-budou i overload metody, kde zadam nazev filu treba na load mesh a tyhle jediny si budou ukladat weak_ptr, tam ve filu bude jenom jeden model
-boudoy ty vis popsany, LoadScene, ktery si je ukladat nebou, to budou filky, kde je vic veci
-automaticky si budu pamatovat posledni load a nebudu muset znova loadovat pro getovani materialu (poprve, podruhe uz budu mi nacashovane)
 
 tohle by mi melo stacit na vsechno
-jenom load pro scenu co si nepamatauje a ja si ho iteruju
-a samostatny load pro prefaby co si pamatuje
 
+pouzivat public memberu misto getteru/setteru?
 
+loop
+https://pdfs.semanticscholar.org/f401/4a0328b383ee509ed837ff16af96af1168eb.pdf
+doresit pauzu
+All Awake calls
+All Start Calls
+while (stepping towards variable delta time)
+All FixedUpdate functions
+Physics simulation
+OnEnter/Exit/Stay trigger functions
+OnEnter/Exit/Stay collision functions
+Rigidbody interpolation applies transform.position and rotation
+OnMouseDown/OnMouseUp etc. events
+All Update functions
 
+kdyz fixed update bude prilis pomaly, tak se jedne skipne
+
+metody na poradi skriptu
+https://docs.unity3d.com/Manual/ExecutionOrder.html
+pohyby zpusobene fyzkou se aplikujou pred mouseDown a Update ale po OnCollision a OnTrigger
+skripty by si asi fakt meli ty metody registrovat, kdyz jich je takhle hodne
+fixedUpate je pouze pro fyziku, napr physcs addFOrce
+pohyb jako transform.translate se dela v update
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 

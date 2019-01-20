@@ -24,5 +24,7 @@ private:
 	Time time;
 	Objects objects;
 	Components components;
+
+	bool isPaused = false;
 };
 
