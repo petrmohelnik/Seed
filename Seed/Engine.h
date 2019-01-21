@@ -6,6 +6,7 @@
 #include "Components.h"
 #include "Scene.h"
 #include "SceneDefinition.h"
+#include "FileSystem.h"
 
 class Engine
 {
@@ -24,5 +25,6 @@ private:
 	Time time;
 	Objects objects;
 	Components components;
+    FileSystem fileSystem;
 };
 

@@ -11,11 +11,12 @@ class Audio;
 class Collider;
 class Rigidbody;
 class Script;
+class FileSystem;
 
 class Object : public Identifiable
 {
 public:
-	Object(std::string name_, Objects& objects, Components& components);
+	Object(std::string name_, Objects& objects, Components& components, FileSystem& fileSystem);
     virtual ~Object();
 
     template <class T, typename std::enable_if<std::is_base_of<Renderer, T>::value>::type* = nullptr>
@@ -75,6 +76,7 @@ private:
 
     Objects& objects;
     Components& components;
+    FileSystem& fileSystem;
     Sint32 timeToDestruction = SDL_MAX_SINT32;
     bool registeredForDestruction = false;
 };

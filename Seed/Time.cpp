@@ -33,6 +33,7 @@ void Time::PauseTime()
 void Time::UnpauseTime()
 {
     paused = false;
+    currentTime = window.GetTime();
 }
 
 bool Time::StartFixedUpdate()

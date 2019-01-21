@@ -1,7 +1,7 @@
 #pragma once
 #include "CameraObject.h"
 
-void DefaultScene(Objects& objects)
+void DefaultScene(Objects& objects, FileSystem& fileSystem)
 {
     auto cameraObject = objects.CreateObject<CameraObject>("camera");
     auto cameraObject1 = objects.CreateObject<CameraObject>("camera1");
@@ -15,13 +15,13 @@ void DefaultScene(Objects& objects)
     cameraObject->AddTag("tag");
     cameraObject->AddComponent<Light>()->Destroy(16000);;
     cameraObject4->AddComponent<Camera>();
-    cameraObject2->AddComponent<MeshRenderer>();
+    cameraObject->AddComponent<MeshRenderer>();
     cameraObject4->AddComponent<CameraScript>();
     cameraObject2->AddComponent<Audio>();
     cameraObject3->AddComponent<Rigidbody>();
     cameraObject->AddComponent<Collider>();
     cameraObject->AddComponent<Audio>();
-    cameraObject3->GetComponent<MeshRenderer>();
+    cameraObject->GetComponent<MeshRenderer>();
     cameraObject->GetComponent<Light>();
     cameraObject4->GetComponent<Camera>()->Destroy();
     cameraObject->GetComponent<Transform>();
@@ -33,5 +33,5 @@ void DefaultScene(Objects& objects)
     objects.GetObjects<CameraObject>();
     objects.GetObjectsByTag("tag");
     
-    cameraObject->GetComponent<MeshRenderer>()->GetMesh() = FileSystem::LoadMesh("resource\\lara.dae");
+    cameraObject->GetComponent<MeshRenderer>()->GetMesh() = fileSystem.LoadMesh("lara.dae");
 }

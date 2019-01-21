@@ -6,12 +6,23 @@ class Material;
 class FileSystem
 {
 public:
-    static std::shared_ptr<Mesh> LoadMesh(std::string path);
-	static std::shared_ptr<Material> LoadMaterial(std::string path);
-    static std::shared_ptr<Mesh> CreateSphere();
-    static std::shared_ptr<Mesh> CreatePlane();
+    void LoadScene(const std::string& path);
+    std::vector<std::shared_ptr<Mesh>> LoadMeshes();
+    void LoadCameras();
+    void UnloadScene();
+    std::shared_ptr<Mesh> LoadMesh(const std::string& path);
+	std::shared_ptr<Material> LoadMaterial(const std::string& path);
+    std::shared_ptr<Mesh> CreateSphere();
+    std::shared_ptr<Mesh> CreatePlane();
 
 private:
-    static std::unordered_map<std::string, std::weak_ptr<Mesh>> meshes;
-	static std::unordered_map<std::string, std::weak_ptr<Material>> materials;
+    const aiScene* GetScene(const std::string& path);
+    std::shared_ptr<Mesh> LoadMeshData(aiMesh* assimpMesh);
+
+    std::unordered_map<std::string, std::weak_ptr<Mesh>> meshes;
+	std::unordered_map<std::string, std::weak_ptr<Material>> materials;
+    Assimp::Importer importer;
+
+    std::string folder = "assets/";
+    std::string loadedScene;
 };

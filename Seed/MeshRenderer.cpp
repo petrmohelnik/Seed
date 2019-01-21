@@ -4,6 +4,7 @@ MeshRenderer::MeshRenderer(Object* object, Input& input, Time& time)
     : Renderer(object, input, time)
 {
     materials.push_back(std::make_shared<Material>());
+    mesh = std::make_shared<Mesh>();
 }
 
 void MeshRenderer::Render()

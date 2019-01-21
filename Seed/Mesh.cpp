@@ -1,5 +1,10 @@
 #include "Mesh.h"
 
+Mesh::Mesh()
+{
+    vertices = std::vector<glm::vec3>();
+}
+
 Mesh::~Mesh()
 {
     Unload();

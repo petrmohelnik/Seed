@@ -1,10 +1,11 @@
-load assimp
 mel bych mit metodu loadScene, ktery mi loadne cely file a potom helper metody, kde si z nej budu getovat meshe, materialy a tak
 load mesh a material pouzije drzenou scenu
 udelam si weak_ptr pouze na kazdy shared_ptr ktery vracim z metod ktery ocekavaj jednotlive meshe a materialy
 pri nejakym dalsim loadu stejne sceny se podivam jestli uz ten mesh drzim kdzytak nactu celou scenu znova jinak jenom vratim
 budou i overload metody, kde zadam nazev filu treba na load mesh a tam ve filu bude jenom jeden model
 automaticky si budu pamatovat posledni load a nebudu muset znova loadovat pro getovani materialu (poprve, podruhe uz budu mi nacashovane)
+assimp vytvori pro kazdy polylist cely novy mesh se samostatnyma vertexama - upravit mesh strukturu
+ignorovat liny
 
 ma to teda dve vyuziti:
 load cele scene - jeji init v sceneLoaderu
@@ -18,6 +19,7 @@ tohle by mi melo stacit na vsechno
 
 pouzivat public memberu misto getteru/setteru?
 proc mit static time? rozhodnout se konecne ohledne tech static a getteru
+mozna udelat staticky gettery a ty se muzou pouzivat odkudkoliv, tam kde se to pouziva casto si to z toho natahnu nekde v konstruktoru
 
 All Awake calls
 All Start Calls

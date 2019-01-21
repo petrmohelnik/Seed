@@ -4,9 +4,10 @@
 #include "Audio.h"
 #include "Script.h"
 #include "Time.h"
+#include "FileSystem.h"
 
-Object::Object(std::string name_, Objects& objects, Components& components)
-    : objects(objects), components(components)
+Object::Object(std::string name_, Objects& objects, Components& components, FileSystem& fileSystem)
+    : objects(objects), components(components), fileSystem(fileSystem)
 {
 	transform = std::make_unique<Transform>(this);
     name = std::move(name_);

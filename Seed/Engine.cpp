@@ -4,8 +4,8 @@ Engine::Engine()
     : window(input)
     , time(window)
     , components(input, time, objects)
-    , objects(components)
-    , sceneDefinition(objects)
+    , objects(components, fileSystem)
+    , sceneDefinition(objects, fileSystem)
     , scene(sceneDefinition, objects, components)
 {
 }

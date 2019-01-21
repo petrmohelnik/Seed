@@ -2,11 +2,12 @@
 
 class Object;
 class Components;
+class FileSystem;
 
 class Objects
 {
 public:
-    Objects(Components& components);
+    Objects(Components& components, FileSystem& fileSystem);
 
 	template<typename T>
 	T* CreateObject(const std::string& name);
@@ -23,6 +24,7 @@ protected:
 
 private:
     Components& components;
+    FileSystem& fileSystem;
 
     std::unordered_map<std::string, std::unique_ptr<Object>> objects;
 };
@@ -31,7 +33,7 @@ template<typename T>
 T* Objects::CreateObject(const std::string& name)
 {
 	static_assert(std::is_base_of<Object, T>::value, "T must be derived from Object");
-	auto object = std::make_unique<T>(name, *this, components);
+	auto object = std::make_unique<T>(name, *this, components, fileSystem);
     auto objectRawPtr = object.get();
     objects.insert({ name, std::move(object) });
     objectRawPtr->Initialize();

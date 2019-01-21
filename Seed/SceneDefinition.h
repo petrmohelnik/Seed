@@ -15,10 +15,11 @@
 class SceneDefinition
 {
 public:
-    SceneDefinition(Objects& objects);
+    SceneDefinition(Objects& objects, FileSystem& fileSystem);
 
     void InitializeScene(std::string scene);
 
 private:
     Objects& objects;
+    FileSystem& fileSystem;
 };

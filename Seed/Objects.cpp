@@ -2,8 +2,9 @@
 #include "Object.h"
 #include "Components.h"
 #include "Transform.h"
+#include "FileSystem.h"
 
-Objects::Objects(Components& components) : components(components)
+Objects::Objects(Components& components, FileSystem& fileSystem) : components(components), fileSystem(fileSystem)
 {
 }
 
