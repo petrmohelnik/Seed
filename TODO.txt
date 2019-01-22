@@ -3,9 +3,11 @@ load mesh a material pouzije drzenou scenu
 udelam si weak_ptr pouze na kazdy shared_ptr ktery vracim z metod ktery ocekavaj jednotlive meshe a materialy
 pri nejakym dalsim loadu stejne sceny se podivam jestli uz ten mesh drzim kdzytak nactu celou scenu znova jinak jenom vratim
 budou i overload metody, kde zadam nazev filu treba na load mesh a tam ve filu bude jenom jeden model
-automaticky si budu pamatovat posledni load a nebudu muset znova loadovat pro getovani materialu (poprve, podruhe uz budu mi nacashovane)
-assimp vytvori pro kazdy polylist cely novy mesh se samostatnyma vertexama - upravit mesh strukturu
-ignorovat liny
+asi moznost zeptat se meshe kolik ma submeshu
+void LoadMaterialsData();
+void LoadMaterialData();
+textury bud jsou embedde a pak se daj rovnou nacist
+nebo jsou jenom paths a ty si musim nacist sam
 
 ma to teda dve vyuziti:
 load cele scene - jeji init v sceneLoaderu
@@ -62,3 +64,4 @@ komponenta nemusi mit object, co kdyz si ji drzum v membru ve skriptu?
 
 https://hero.handmade.network/forums/code-discussion/t/2479-using_opengl_uniforms_attributes_outputs_in_more_efficient_way
 https://gamedev.stackexchange.com/questions/57108/what-is-the-best-method-to-update-shader-uniforms
+https://blender.stackexchange.com/questions/32677/how-to-combine-two-different-textures-into-one

@@ -12,11 +12,15 @@ public:
 protected:
     friend class FileSystem;
     
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> normals;
-    std::vector<glm::vec2> texCoords;
-    std::vector<std::vector<glm::uvec3>> indices;
-
 private:
-    GLuint vao;
+    struct SubMesh
+    {
+        std::vector<glm::vec3> vertices;
+        std::vector<glm::vec3> normals;
+        std::vector<glm::vec2> texCoords;
+        std::vector<glm::uvec3> indices;
+        GLuint vao;
+    };
+    
+    std::vector<SubMesh> subMeshes;
 };

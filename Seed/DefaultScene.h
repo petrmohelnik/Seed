@@ -33,6 +33,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     objects.GetObjects<CameraObject>();
     objects.GetObjectsByTag("tag");
     
-    cameraObject->GetComponent<MeshRenderer>()->GetMesh() = fileSystem.LoadMesh("venom.dae");
     cameraObject->GetComponent<MeshRenderer>()->GetMesh() = fileSystem.LoadMesh("lara.dae");
+    cameraObject->GetComponent<MeshRenderer>()->GetMesh() = fileSystem.LoadMesh("venom.dae");
+    cameraObject->GetComponent<MeshRenderer>()->GetMaterials() = fileSystem.LoadMaterials("lara.dae");
+    cameraObject->GetComponent<MeshRenderer>()->GetMaterials() = fileSystem.LoadMaterials("venom.dae");
 }
