@@ -20,11 +20,11 @@ private:
     const aiScene* GetScene(const std::string& path);
     std::shared_ptr<Mesh> LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes);
     Mesh::SubMesh LoadSubMeshData(aiMesh* assimpMesh);
-    void LoadMaterialsData();
-    void LoadMaterialData();
+    std::vector<std::shared_ptr<Material>> LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials);
+    Material LoadMaterialData(aiMaterial* assimpMaterial);
 
-    std::unordered_map<std::string, std::weak_ptr<Mesh>> meshes;
-	std::unordered_map<std::string, std::vector<std::weak_ptr<Material>>> materials;
+    std::unordered_map<std::string, std::weak_ptr<Mesh>> loadedMeshes;
+	std::unordered_map<std::string, std::vector<std::weak_ptr<Material>>> loadedMaterials;
     Assimp::Importer importer;
 
     std::string folder = "assets/";

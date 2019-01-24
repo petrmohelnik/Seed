@@ -10,7 +10,7 @@ public:
     void Unload();
 
 private:
-    std::vector<unsigned char> tex;
+    std::vector<Uint8> tex;
     unsigned int width;
     unsigned int height;
 

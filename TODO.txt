@@ -1,13 +1,17 @@
 mel bych mit metodu loadScene, ktery mi loadne cely file a potom helper metody, kde si z nej budu getovat meshe, materialy a tak
 load mesh a material pouzije drzenou scenu
+collada ma nadefinovane objekty a pak ma pro ne nadefinovane transformace, takze muzu vracet objekty a jejich transoformace
+a v scene definici si z tooh potom vytvaret objekty
+zatim jenom nacrtnout definice metod ale neni potreba implementovat
 udelam si weak_ptr pouze na kazdy shared_ptr ktery vracim z metod ktery ocekavaj jednotlive meshe a materialy
 pri nejakym dalsim loadu stejne sceny se podivam jestli uz ten mesh drzim kdzytak nactu celou scenu znova jinak jenom vratim
 budou i overload metody, kde zadam nazev filu treba na load mesh a tam ve filu bude jenom jeden model
 asi moznost zeptat se meshe kolik ma submeshu
 void LoadMaterialsData();
 void LoadMaterialData();
-textury bud jsou embedde a pak se daj rovnou nacist
 nebo jsou jenom paths a ty si musim nacist sam
+reserve na vektorech
+textura bude bud obrazek, nebo bude nejaka barva, ta barva bude taky udelana jako textura s jednim pixelem?
 
 ma to teda dve vyuziti:
 load cele scene - jeji init v sceneLoaderu
@@ -53,10 +57,6 @@ atributy ne, ale muze se pouzit unifom buffer objekt ktery zastresi vsechny nara
 mesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?
 
-textura bude bud obrazek, nebo bude nejaka barva, ta barva bude taky udelana jako textura s jednim pixelem?
-nejakej texture loader si bude drzet shared pointery na ty textury a kdyz uz ho jednou loadnul, tak mi ho vrati stejnej
-stejne by to mlh delat i mesh loader
-
 !!!!!!!
 https://unity3d.com/learn/tutorials/temas/performance-optimization/optimizing-graphics-rendering-unity-games
 
@@ -65,3 +65,4 @@ komponenta nemusi mit object, co kdyz si ji drzum v membru ve skriptu?
 https://hero.handmade.network/forums/code-discussion/t/2479-using_opengl_uniforms_attributes_outputs_in_more_efficient_way
 https://gamedev.stackexchange.com/questions/57108/what-is-the-best-method-to-update-shader-uniforms
 https://blender.stackexchange.com/questions/32677/how-to-combine-two-different-textures-into-one
+https://github.com/assimp/assimp/wiki/Embedded-Textures-References

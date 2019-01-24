@@ -27,8 +27,8 @@ const aiScene* FileSystem::GetScene(const std::string& path)
 
 std::shared_ptr<Mesh> FileSystem::LoadMesh(const std::string& path)
 {
-    auto result = meshes.find(path);
-    if (result != meshes.end() && !result->second.expired())
+    auto result = loadedMeshes.find(path);
+    if (result != loadedMeshes.end() && !result->second.expired())
         return result->second.lock();
 
     auto scene = GetScene(path);
@@ -37,7 +37,7 @@ std::shared_ptr<Mesh> FileSystem::LoadMesh(const std::string& path)
         throw std::runtime_error("File: " + path + " does not contain any meshes");
 
     auto mesh = LoadMeshData(scene->mMeshes, scene->mNumMeshes);
-    meshes.insert_or_assign(path, mesh);
+    loadedMeshes.insert_or_assign(path, mesh);
 
     return mesh;
 }
@@ -52,50 +52,50 @@ std::shared_ptr<Mesh> FileSystem::LoadMeshData(aiMesh** assimpMeshes, unsigned i
         mesh->subMeshes.insert(mesh->subMeshes.begin() + assimpMeshes[index]->mMaterialIndex, LoadSubMeshData(assimpMeshes[index]));
     }
 
-    return std::shared_ptr<Mesh>();
+    return mesh;
 }
 
 Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
 {
-    Mesh::SubMesh mesh;
+    Mesh::SubMesh subMesh;
 
     for (unsigned int index = 0; index < assimpMesh->mNumVertices; index++)
     {
-        mesh.vertices.push_back(glm::vec3(
+        subMesh.vertices.push_back(glm::vec3(
             assimpMesh->mVertices[index].x,
             assimpMesh->mVertices[index].y,
             assimpMesh->mVertices[index].z));
 
-        mesh.normals.push_back(glm::vec3(
+        subMesh.normals.push_back(glm::vec3(
             assimpMesh->mNormals[index].x,
             assimpMesh->mNormals[index].y,
             assimpMesh->mNormals[index].z));
 
         if (assimpMesh->HasTextureCoords(0))
         {
-            mesh.texCoords.push_back(glm::vec2(
+            subMesh.texCoords.push_back(glm::vec2(
                 assimpMesh->mTextureCoords[0][index].x,
                 assimpMesh->mTextureCoords[0][index].y));
         }
         else
-            mesh.texCoords.push_back(glm::vec2(0, 0));
+            subMesh.texCoords.push_back(glm::vec2(0, 0));
     }
 
     for (unsigned int index = 0; index < assimpMesh->mNumFaces; index++)
     {
-        mesh.indices.push_back(glm::uvec3(
+        subMesh.indices.push_back(glm::uvec3(
             assimpMesh->mFaces[index].mIndices[0],
             assimpMesh->mFaces[index].mIndices[1],
             assimpMesh->mFaces[index].mIndices[2]));
     }
 
-    return mesh;
+    return subMesh;
 }
 
 std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials(const std::string& path)
 {
-    auto result = materials.find(path);
-    if (result != materials.end())
+    auto result = loadedMaterials.find(path);
+    if (result != loadedMaterials.end())
     {
         auto expired = std::any_of(std::begin(result->second), std::end(result->second), [](const auto& weakResult)
         {
@@ -117,8 +117,38 @@ std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials(const std::stri
     if (scene->mNumMaterials == 0)
         throw std::runtime_error("File: " + path + " does not contain any materials");
 
-    auto material = scene->mMaterials[1];
-    auto count = material->GetTextureCount(aiTextureType_DIFFUSE);
+    auto materials = LoadMaterialsData(scene->mMaterials, scene->mNumMaterials);
 
-    return std::vector<std::shared_ptr<Material>>();
+    loadedMaterials.insert_or_assign(path, std::vector<std::weak_ptr<Material>>());
+    for (const auto& material : materials)
+        loadedMaterials[path].push_back(material);
+
+    return materials;
+}
+
+std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials)
+{
+    auto materials = std::vector<std::shared_ptr<Material>>();
+
+    for (unsigned int index = 0; index < numMaterials; index++)
+    {
+        materials.push_back(std::make_shared<Material>(LoadMaterialData(assimpMaterials[index])));
+    }
+
+    return materials;
+}
+
+Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial)
+{
+    Material material;
+
+    if (assimpMaterial->GetTextureCount(aiTextureType_DIFFUSE) != 0)
+    {
+        aiString texturePath;
+        if(assimpMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
+            throw std::runtime_error("Failed to load texture from material");
+
+    }
+
+    return material;
 }

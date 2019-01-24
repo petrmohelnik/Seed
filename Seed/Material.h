@@ -8,11 +8,14 @@ public:
     Material();
     ~Material();
 
+protected:
+    friend class FileSystem;
+
 private:
-    std::shared_ptr<Texture> diffuse;
-    std::shared_ptr<Texture> specular;
-    std::shared_ptr<Texture> normal;
-    std::shared_ptr<Texture> height;
+    Texture diffuse;
+    Texture specular;
+    Texture normal;
+    Texture height;
     glm::vec3 emission;
     Shader::Type shader;
 };
