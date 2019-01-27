@@ -9,6 +9,8 @@ public:
     void Load();
     void Unload();
 
+    int NumberOfSubmeshes();
+
 protected:
     friend class FileSystem;
     
@@ -21,6 +23,8 @@ private:
         std::vector<glm::uvec3> indices;
         GLuint vao;
     };
+
+    bool deleteAfterLoad = false;
     
     std::vector<SubMesh> subMeshes;
 };

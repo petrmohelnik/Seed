@@ -16,6 +16,6 @@ private:
     Texture specular;
     Texture normal;
     Texture height;
-    glm::vec3 emission;
+
     Shader::Type shader;
 };

@@ -16,6 +16,8 @@ public:
     std::shared_ptr<Mesh> GetMesh();
     std::shared_ptr<Mesh> GetSharedMesh();
 
+    void SetMaterial(int index, std::shared_ptr<Material> material);
+    void SetMaterials(std::vector<std::shared_ptr<Material>> materials_);
     std::shared_ptr<Material> GetMaterial();
     std::shared_ptr<Material> GetSharedMaterial();
     std::vector<std::shared_ptr<Material>> GetMaterials();

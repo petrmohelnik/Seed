@@ -8,8 +8,10 @@ public:
     FileSystem();
 
     void LoadScene(const std::string& path);
-    std::vector<std::shared_ptr<Mesh>> LoadMeshes();
-    void LoadCameras();
+    std::vector<std::shared_ptr<Mesh>> LoadMeshes(); //we need to somehow return position
+    std::vector<std::shared_ptr<Material>> LoadMaterials();
+    void LoadCameras(); //return components? it will contain position an such
+    void LoadLights();
     void UnloadScene();
     std::shared_ptr<Mesh> LoadMesh(const std::string& path);
     std::vector<std::shared_ptr<Material>> LoadMaterials(const std::string& path);
@@ -22,6 +24,7 @@ private:
     Mesh::SubMesh LoadSubMeshData(aiMesh* assimpMesh);
     std::vector<std::shared_ptr<Material>> LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials);
     Material LoadMaterialData(aiMaterial* assimpMaterial);
+    Texture LoadTexture(const std::string& path);
 
     std::unordered_map<std::string, std::weak_ptr<Mesh>> loadedMeshes;
 	std::unordered_map<std::string, std::vector<std::weak_ptr<Material>>> loadedMaterials;

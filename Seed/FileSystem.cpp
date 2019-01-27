@@ -1,4 +1,5 @@
 #include "FileSystem.h"
+#include <FreeImage.h>
 
 FileSystem::FileSystem()
 {
@@ -17,12 +18,34 @@ void FileSystem::LoadScene(const std::string& path)
 
     if (!scene)
         throw std::runtime_error("Failed to parse " + path + " file : " + importer.GetErrorString());
+    loadedScene = path;
 }
 
 const aiScene* FileSystem::GetScene(const std::string& path)
 {
     LoadScene(path);
     return importer.GetScene();
+}
+
+std::vector<std::shared_ptr<Mesh>> FileSystem::LoadMeshes()
+{
+    std::vector<std::shared_ptr<Mesh>> meshes;
+    auto scene = importer.GetScene();
+
+    meshes.push_back(LoadMeshData(scene->mMeshes, scene->mNumMeshes)); //temporary, it needs to separate meshes based on geometry, this return only one
+
+    return meshes;
+}
+
+std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials()
+{
+    auto scene = importer.GetScene();
+    return LoadMaterialsData(scene->mMaterials, scene->mNumMaterials);
+}
+
+void FileSystem::UnloadScene()
+{
+    importer.FreeScene();
 }
 
 std::shared_ptr<Mesh> FileSystem::LoadMesh(const std::string& path)
@@ -58,6 +81,10 @@ std::shared_ptr<Mesh> FileSystem::LoadMeshData(aiMesh** assimpMeshes, unsigned i
 Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
 {
     Mesh::SubMesh subMesh;
+    subMesh.vertices.reserve(assimpMesh->mNumVertices);
+    subMesh.normals.reserve(assimpMesh->mNumVertices);
+    subMesh.texCoords.reserve(assimpMesh->mNumVertices);
+    subMesh.indices.reserve(assimpMesh->mNumFaces);
 
     for (unsigned int index = 0; index < assimpMesh->mNumVertices; index++)
     {
@@ -148,7 +175,58 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial)
         if(assimpMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
             throw std::runtime_error("Failed to load texture from material");
 
+        material.diffuse = LoadTexture(folder + texturePath.C_Str());
+    }
+    if (assimpMaterial->GetTextureCount(aiTextureType_NORMALS) != 0)
+    {
+        aiString texturePath;
+        if (assimpMaterial->GetTexture(aiTextureType_NORMALS, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
+            throw std::runtime_error("Failed to load texture from material");
+
+        material.normal = LoadTexture(folder + texturePath.C_Str());
+    }
+    if (assimpMaterial->GetTextureCount(aiTextureType_SPECULAR) != 0)
+    {
+        aiString texturePath;
+        if (assimpMaterial->GetTexture(aiTextureType_SPECULAR, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
+            throw std::runtime_error("Failed to load texture from material");
+
+        material.specular = LoadTexture(folder + texturePath.C_Str());
+    }
+    if (assimpMaterial->GetTextureCount(aiTextureType_HEIGHT) != 0)
+    {
+        aiString texturePath;
+        if (assimpMaterial->GetTexture(aiTextureType_HEIGHT, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
+            throw std::runtime_error("Failed to load texture from material");
+
+        material.height = LoadTexture(folder + texturePath.C_Str());
     }
 
     return material;
+}
+
+Texture FileSystem::LoadTexture(const std::string& path)
+{
+    Texture texture;
+
+    auto textureFormat = FreeImage_GetFileType(path.c_str(), 0);
+    if (textureFormat == FIF_UNKNOWN)
+        textureFormat = FreeImage_GetFIFFromFilename(path.c_str());
+    if (!textureFormat)
+        throw std::runtime_error("Failed to load texture (" + path + "): unknown format");
+    if (!FreeImage_FIFSupportsReading(textureFormat))
+        throw std::runtime_error("Failed to load texture (" + path + "): texture format is not supported");
+
+    auto loadedTexture = FreeImage_Load(textureFormat, path.c_str());
+    if (!loadedTexture)
+        throw std::runtime_error("Failed to load texture (" + path + ")");
+
+    auto textureData = FreeImage_GetBits(loadedTexture);
+    texture.width = FreeImage_GetWidth(loadedTexture);
+    texture.height = FreeImage_GetHeight(loadedTexture);
+    texture.data.assign(textureData, textureData + texture.width * texture.height);
+
+    FreeImage_Unload(loadedTexture);
+
+    return texture;
 }

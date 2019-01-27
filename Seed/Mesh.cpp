@@ -18,3 +18,8 @@ void Mesh::Unload()
 {
     //unload z gpu
 }
+
+int Mesh::NumberOfSubmeshes()
+{
+    return static_cast<int>(subMeshes.size());
+}

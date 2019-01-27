@@ -13,7 +13,7 @@ void MeshRenderer::Render()
 
 void MeshRenderer::SetMesh(std::shared_ptr<Mesh> mesh_)
 {
-    mesh = mesh;
+    mesh = mesh_;
 }
 
 std::shared_ptr<Mesh> MeshRenderer::GetMesh()
@@ -25,6 +25,18 @@ std::shared_ptr<Mesh> MeshRenderer::GetMesh()
 std::shared_ptr<Mesh> MeshRenderer::GetSharedMesh()
 {
     return mesh;
+}
+
+void MeshRenderer::SetMaterial(int index, std::shared_ptr<Material> material)
+{
+    if (materials.size() <= index)
+        materials.resize(index + 1, std::make_shared<Material>());
+    materials.insert(materials.begin() + index, material);
+}
+
+void MeshRenderer::SetMaterials(std::vector<std::shared_ptr<Material>> materials_)
+{
+    materials = materials_;
 }
 
 std::shared_ptr<Material> MeshRenderer::GetMaterial()
