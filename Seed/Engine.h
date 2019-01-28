@@ -16,15 +16,21 @@ public:
 	void CreateWindow();
 	void Work();
 
+    static Time& GetTime();
+    static Input& GetInput();
+    static Objects& GetObjects();
+    static Components& GetComponents();
+    static FileSystem& GetFileSystem();
+
 private:
-	SDLWindow window;
+	static SDLWindow window;
 	Scene scene;
     SceneDefinition sceneDefinition;
 
-	Input input;
-	Time time;
-	Objects objects;
-	Components components;
-    FileSystem fileSystem;
+	static Input input;
+	static Time time;
+	static Objects objects;
+	static Components components;
+    static FileSystem fileSystem;
 };
 

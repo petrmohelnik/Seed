@@ -35,4 +35,5 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     
     cameraObject->GetComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
     cameraObject->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
+    fileSystem.LoadCameras();
 }

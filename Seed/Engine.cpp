@@ -1,14 +1,43 @@
 #include "Engine.h"
 
+Input Engine::input;
+FileSystem Engine::fileSystem;
+SDLWindow Engine::window(input);
+Time Engine::time(window);
+Objects Engine::objects(components, fileSystem);
+Components Engine::components(input, time, objects);
+
 Engine::Engine() 
-    : window(input)
-    , time(window)
-    , components(input, time, objects)
-    , objects(components, fileSystem)
-    , sceneDefinition(objects, fileSystem)
+    : sceneDefinition(objects, fileSystem)
     , scene(sceneDefinition, objects, components)
 {
 }
+
+Time& Engine::GetTime()
+{
+    return time;
+}
+
+Input& Engine::GetInput()
+{
+    return input;
+}
+
+Objects& Engine::GetObjects()
+{
+    return objects;
+}
+
+Components& Engine::GetComponents()
+{
+    return components;
+}
+
+FileSystem& Engine::GetFileSystem()
+{
+    return fileSystem;
+}
+
 
 void Engine::CreateWindow()
 {

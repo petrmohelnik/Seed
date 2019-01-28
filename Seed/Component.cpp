@@ -1,4 +1,5 @@
 #include "Component.h"
+#include "Engine.h"
 #include "Object.h"
 #include "Time.h"
 
@@ -23,7 +24,7 @@ bool Component::UpdateForDestruction()
     if (!registeredForDestruction)
         return false;
 
-    timeToDestruction -= Time::DeltaTime();
+    timeToDestruction -= Engine::GetTime().DeltaTime();
 
     return timeToDestruction <= 0;
 }

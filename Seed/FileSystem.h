@@ -1,6 +1,7 @@
 #pragma once
 #include "Mesh.h"
 #include "Material.h"
+#include "Camera.h"
 
 class FileSystem
 {
@@ -10,7 +11,7 @@ public:
     void LoadScene(const std::string& path);
     std::vector<std::shared_ptr<Mesh>> LoadMeshes(); //we need to somehow return position
     std::vector<std::shared_ptr<Material>> LoadMaterials();
-    void LoadCameras(); //return components? it will contain position an such
+    std::vector<Object*> LoadCameras(); //return components? it will contain position an such
     void LoadLights();
     void UnloadScene();
     std::shared_ptr<Mesh> LoadMesh(const std::string& path);

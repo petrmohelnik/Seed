@@ -1,10 +1,6 @@
 #include "Time.h"
 #include "SDLWindow.h"
 
-Uint32 Time::deltaTime = 0;
-Uint32 Time::fixedDeltaTime = 20;
-bool Time::paused = false;
-
 Time::Time(SDLWindow& window) : window(window)
 {
 }

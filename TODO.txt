@@ -1,9 +1,5 @@
-pouzivat public memberu misto getteru/setteru?
-proc mit static time? rozhodnout se konecne ohledne tech static a getteru
-mozna udelat staticky gettery a ty se muzou pouzivat odkudkoliv, tam kde se to pouziva casto si to z toho natahnu nekde v konstruktoru
-
-komponenta nemusi mit object, co kdyz si ji drzum v membru ve skriptu?
-object se ji priradi az pri predani do objektu, tam se taky zaregistuje do Components, mezitim je 'neaktivni'
+co teda mam mit jako membry ty veci jako input, time atd. a nestaci si to v konstruktoru getnout?
+Vsak to nemusim predavat jako parameter do konstruktoru
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 

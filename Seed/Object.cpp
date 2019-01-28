@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "Engine.h"
 #include "Transform.h"
 #include "Renderer.h"
 #include "Audio.h"
@@ -38,7 +39,7 @@ void Object::Initialize()
 bool Object::UpdateForDestruction()
 {
     if(registeredForDestruction)
-        timeToDestruction -= Time::DeltaTime();
+        timeToDestruction -= Engine::GetTime().DeltaTime();
 
     if (registeredForDestruction && timeToDestruction <= 0)
     {
