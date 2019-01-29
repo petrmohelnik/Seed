@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "Object.h"
 #include "Time.h"
+#include "Transform.h"
 
 Component::Component(Object* object) : object(object)
 {
@@ -10,6 +11,11 @@ Component::Component(Object* object) : object(object)
 Object* Component::GetObject()
 {
     return object;
+}
+
+Transform* Component::GetTransform()
+{
+    return object->GetComponent<Transform>();
 }
 
 void Component::Destroy(Uint32 delay)

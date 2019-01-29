@@ -2,6 +2,7 @@
 #include "Identifiable.h"
 
 class Object;
+class Transform;
 
 class Component : public Identifiable
 {
@@ -10,6 +11,7 @@ public:
 	virtual ~Component() = default;
 
     Object* GetObject();
+    Transform* GetTransform();
     void Destroy(Uint32 delay = 0);
 
 protected:

@@ -1,7 +1,7 @@
 #include "MeshRenderer.h"
 
-MeshRenderer::MeshRenderer(Object* object, Input& input, Time& time)
-    : Renderer(object, input, time)
+MeshRenderer::MeshRenderer(Object* object)
+    : Renderer(object)
 {
     materials.push_back(std::make_shared<Material>());
     mesh = std::make_shared<Mesh>();

@@ -4,7 +4,7 @@
 class SDLWindow
 {
 public:
-	SDLWindow(Input& input);
+	SDLWindow();
 
 	void CreateWindow(int width, int height);
 	void InitializeOpenGL();

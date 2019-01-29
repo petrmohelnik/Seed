@@ -2,13 +2,12 @@
 #include "SceneDefinition.h"
 #include "Objects.h"
 #include "Components.h"
+#include "Engine.h"
 
-Scene::Scene(SceneDefinition& sceneDefinition,
-             Objects& objects,
-             Components& components)
+Scene::Scene(SceneDefinition& sceneDefinition)
     : sceneDefinition(sceneDefinition)
-    , objects(objects)
-    , components(components)
+    , objects(Engine::GetObjects())
+    , components(Engine::GetComponents())
 {
 }
 

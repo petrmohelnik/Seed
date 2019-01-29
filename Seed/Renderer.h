@@ -7,9 +7,7 @@ class Time;
 class Renderer : public Component
 {
 public:
-    Renderer(Object* object,
-             Input& input,
-             Time& time);
+    Renderer(Object* object);
 	virtual ~Renderer() = default;
 
 	virtual void Render() = 0;

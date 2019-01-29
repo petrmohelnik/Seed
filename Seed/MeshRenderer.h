@@ -6,9 +6,7 @@
 class MeshRenderer : public Renderer
 {
 public:
-    MeshRenderer(Object* object,
-                 Input& input,
-                 Time& time);
+    MeshRenderer(Object* object);
 
 	void Render() override;
 

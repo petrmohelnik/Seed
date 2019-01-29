@@ -16,9 +16,7 @@ class Objects;
 class Components
 {
 public:
-	Components(Input& input,
-               Time& time,
-               Objects& objects);
+	Components();
 
 protected:
     friend class Objects;
@@ -55,7 +53,7 @@ template<typename T>
 inline std::unique_ptr<T> Components::CreateRenderer(Object* object)
 {
 	static_assert(std::is_base_of<Renderer, T>::value, "T must be derived from Renderer");
-	auto renderer =  std::make_unique<T>(object, input, time);
+	auto renderer =  std::make_unique<T>(object);
     pipeline.AddRenderer(renderer.get());
 	return renderer;
 }
@@ -101,7 +99,7 @@ template<typename T>
 inline std::unique_ptr<T> Components::CreateScript(Object* object)
 {
 	static_assert(std::is_base_of<Script, T>::value, "T must be derived from Script");
-	auto script = std::make_unique<T>(object, input, time, objects, physics);
+	auto script = std::make_unique<T>(object, physics);
     scripts.push_back(script.get());
 	return script;
 }

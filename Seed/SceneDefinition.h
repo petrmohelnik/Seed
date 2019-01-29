@@ -15,7 +15,7 @@
 class SceneDefinition
 {
 public:
-    SceneDefinition(Objects& objects, FileSystem& fileSystem);
+    SceneDefinition();
 
     void InitializeScene(std::string scene);
 

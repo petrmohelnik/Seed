@@ -9,11 +9,7 @@ class PhysicsEngine;
 class Script : public Component
 {
 public:
-	Script(Object* object,
-           Input& input,
-           Time& time,
-	       Objects& objects,
-           PhysicsEngine& physics);
+	Script(Object* object, PhysicsEngine& physics);
 	virtual ~Script() = default;
 	
 	virtual void OnCreate() {};

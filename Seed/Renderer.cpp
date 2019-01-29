@@ -1,12 +1,11 @@
 #include "Renderer.h"
 #include "Input.h"
 #include "Time.h"
+#include "Engine.h"
 
-Renderer::Renderer(Object* object,
-                   Input& input,
-                   Time& time)
+Renderer::Renderer(Object* object)
     : Component(object)
-    , input(input)
-    , time(time)
+    , input(Engine::GetInput())
+    , time(Engine::GetTime())
 {
 }

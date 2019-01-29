@@ -7,9 +7,7 @@ class Components;
 class Scene
 {
 public:
-    Scene(SceneDefinition& sceneDefinition,
-          Objects& objects,
-          Components& components);
+    Scene(SceneDefinition& sceneDefinition);
 
     void Initialize(std::string scene);
 

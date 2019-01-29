@@ -3,8 +3,11 @@
 #include "Components.h"
 #include "Transform.h"
 #include "FileSystem.h"
+#include "Engine.h"
 
-Objects::Objects(Components& components, FileSystem& fileSystem) : components(components), fileSystem(fileSystem)
+Objects::Objects() 
+    : components(Engine::GetComponents())
+    , fileSystem(Engine::GetFileSystem())
 {
 }
 

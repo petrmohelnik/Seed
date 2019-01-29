@@ -1,6 +1,8 @@
 #include "SDLWindow.h"
+#include "Engine.h"
 
-SDLWindow::SDLWindow(Input& input) : input(input)
+SDLWindow::SDLWindow() 
+    : input(Engine::GetInput())
 {
 }
 

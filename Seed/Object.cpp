@@ -6,9 +6,13 @@
 #include "Script.h"
 #include "Time.h"
 #include "FileSystem.h"
+#include "Time.h"
 
-Object::Object(std::string name_, Objects& objects, Components& components, FileSystem& fileSystem)
-    : objects(objects), components(components), fileSystem(fileSystem)
+Object::Object(std::string name_)
+    : objects(Engine::GetObjects())
+    , components(Engine::GetComponents())
+    , fileSystem(Engine::GetFileSystem())
+    , time(Engine::GetTime())
 {
 	transform = std::make_unique<Transform>(this);
     name = std::move(name_);
@@ -18,11 +22,6 @@ Object::~Object()
 {
     if(auto parent = transform->GetParent())
         parent->CleanChildren();
-}
-
-Object::operator Transform*()
-{
-    return transform.get();
 }
 
 void Object::Destroy(Uint32 delay)

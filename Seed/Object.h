@@ -12,11 +12,12 @@ class Collider;
 class Rigidbody;
 class Script;
 class FileSystem;
+class Time;
 
 class Object : public Identifiable
 {
 public:
-	Object(std::string name_, Objects& objects, Components& components, FileSystem& fileSystem);
+	Object(std::string name_);
     virtual ~Object();
 
     template <class T, typename std::enable_if<std::is_base_of<Renderer, T>::value>::type* = nullptr>
@@ -51,8 +52,6 @@ public:
     template <class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type* = nullptr>
     T* GetComponent();
 
-    operator Transform*();
-
     void Destroy(Uint32 delay = 0);
 
 protected:
@@ -77,6 +76,7 @@ private:
     Objects& objects;
     Components& components;
     FileSystem& fileSystem;
+    Time& time;
     Sint32 timeToDestruction = SDL_MAX_SINT32;
     bool registeredForDestruction = false;
 };

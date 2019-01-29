@@ -1,5 +1,6 @@
 #include "FileSystem.h"
 #include <FreeImage.h>
+#include "Engine.h"
 
 FileSystem::FileSystem()
 {
@@ -41,6 +42,15 @@ std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials()
 {
     auto scene = importer.GetScene();
     return LoadMaterialsData(scene->mMaterials, scene->mNumMaterials);
+}
+
+std::vector<Object*> FileSystem::LoadCameras()
+{
+    std::vector<Object*> cameras;
+    auto object = Engine::GetObjects().CreateObject<Object>("camera1");
+    cameras.push_back(object);
+
+    return cameras;
 }
 
 void FileSystem::UnloadScene()

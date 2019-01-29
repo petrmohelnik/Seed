@@ -1,10 +1,12 @@
+#include "SceneDefinition.h"
 #include "Objects.h"
 #include "Components.h"
-#include "SceneDefinition.h"
+#include "Engine.h"
 #include "DefaultScene.h"
 
-SceneDefinition::SceneDefinition(Objects& objects, FileSystem& fileSystem)
-    : objects(objects), fileSystem(fileSystem)
+SceneDefinition::SceneDefinition()
+    : objects(Engine::GetObjects())
+    , fileSystem(Engine::GetFileSystem())
 {
 }
 

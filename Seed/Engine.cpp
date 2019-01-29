@@ -2,14 +2,14 @@
 
 Input Engine::input;
 FileSystem Engine::fileSystem;
-SDLWindow Engine::window(input);
+SDLWindow Engine::window;
 Time Engine::time(window);
-Objects Engine::objects(components, fileSystem);
-Components Engine::components(input, time, objects);
+Objects Engine::objects;
+Components Engine::components;
 
 Engine::Engine() 
-    : sceneDefinition(objects, fileSystem)
-    , scene(sceneDefinition, objects, components)
+    : sceneDefinition()
+    , scene(sceneDefinition)
 {
 }
 

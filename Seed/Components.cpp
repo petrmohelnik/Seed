@@ -2,13 +2,12 @@
 #include "Input.h"
 #include "Time.h"
 #include "Object.h"
+#include "Engine.h"
 
-Components::Components(Input& input,
-                       Time& time,
-                       Objects& objects) 
-    : input(input)
-    , time(time)
-    , objects(objects)
+Components::Components() 
+    : input(Engine::GetInput())
+    , time(Engine::GetTime())
+    , objects(Engine::GetObjects())
 {
 }
 

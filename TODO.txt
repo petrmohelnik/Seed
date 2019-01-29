@@ -1,5 +1,4 @@
-co teda mam mit jako membry ty veci jako input, time atd. a nestaci si to v konstruktoru getnout?
-Vsak to nemusim predavat jako parameter do konstruktoru
+objekty musi byt umozneny mit stejne jmeno - co tam dela unordered_map?
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
