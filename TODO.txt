@@ -1,4 +1,7 @@
-objekty musi byt umozneny mit stejne jmeno - co tam dela unordered_map?
+udelat load na gpu
+profilovat memory
+deleteafterload
+co s alpha kanalem?
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 

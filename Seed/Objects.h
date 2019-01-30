@@ -26,7 +26,7 @@ private:
     Components& components;
     FileSystem& fileSystem;
 
-    std::unordered_map<std::string, std::unique_ptr<Object>> objects;
+    std::unordered_multimap<std::string, std::unique_ptr<Object>> objects;
 };
 
 template<typename T>

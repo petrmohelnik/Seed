@@ -13,7 +13,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     cameraObject3->GetComponent<Transform>()->SetParent(cameraObject2->GetComponent<Transform>());
     cameraObject4->GetComponent<Transform>()->SetParent(cameraObject2->GetComponent<Transform>());
     cameraObject->AddTag("tag");
-    cameraObject->AddComponent<Light>()->Destroy(16000);;
+    cameraObject->AddComponent<Light>()->Destroy(16000);
     cameraObject4->AddComponent<Camera>();
     cameraObject->AddComponent<MeshRenderer>();
     cameraObject4->AddComponent<CameraScript>();
@@ -36,4 +36,9 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     cameraObject->GetComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
     cameraObject->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
     fileSystem.LoadCameras();
+    auto cameras = objects.GetObjectsByName("camera1");
+    cameraObject->GetComponent<MeshRenderer>()->GetSharedMesh()->Load();
+    cameraObject->GetComponent<MeshRenderer>()->GetSharedMesh()->Unload();
+    cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->Load();
+    cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->Unload();
 }

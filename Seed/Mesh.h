@@ -24,6 +24,8 @@ private:
         GLuint vao;
     };
 
+    void LoadSubMesh(SubMesh& subMesh);
+
     bool deleteAfterLoad = false;
     
     std::vector<SubMesh> subMeshes;

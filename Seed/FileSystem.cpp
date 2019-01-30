@@ -82,7 +82,7 @@ std::shared_ptr<Mesh> FileSystem::LoadMeshData(aiMesh** assimpMeshes, unsigned i
 
     for (unsigned int index = 0; index < numMeshes; index++)
     {
-        mesh->subMeshes.insert(mesh->subMeshes.begin() + assimpMeshes[index]->mMaterialIndex, LoadSubMeshData(assimpMeshes[index]));
+        mesh->subMeshes[assimpMeshes[index]->mMaterialIndex] = std::move(LoadSubMeshData(assimpMeshes[index]));
     }
 
     return mesh;
@@ -234,7 +234,7 @@ Texture FileSystem::LoadTexture(const std::string& path)
     auto textureData = FreeImage_GetBits(loadedTexture);
     texture.width = FreeImage_GetWidth(loadedTexture);
     texture.height = FreeImage_GetHeight(loadedTexture);
-    texture.data.assign(textureData, textureData + texture.width * texture.height);
+    texture.data.assign(textureData, textureData + FreeImage_GetMemorySize(loadedTexture));
 
     FreeImage_Unload(loadedTexture);
 

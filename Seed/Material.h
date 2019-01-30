@@ -8,6 +8,9 @@ public:
     Material();
     ~Material();
 
+    void Load();
+    void Unload();
+
 protected:
     friend class FileSystem;
 
