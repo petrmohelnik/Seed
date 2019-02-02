@@ -5,15 +5,21 @@ co s alpha kanalem?
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
-pri volani render mi renderer nebude nic renderovat, ale nasype commandy do render queue,
+prvne se musi zpropagovat transformace
+bude root transformace drzena nekde v components, ale pro ucely GetParent se bude tvarit jako nullptr
+to bude defautni parent, pri SetParent se objekt odstrani z children sveho aktualniho parenta
+pro kazdou kameru se ze vsech objektu, ktere uz maji nove transformacni matice, vytvori render queue
 tam se budou radit prioritne podle vrstvy materialu, potom podle programu
-jeden submesh bude asi jeden draw call, ten se zaradi do te fronty pres pointer na MeshRenderer
-aby mel vsechno potrebne info, nastavi kontext a vykresli se, jde dalsi
+jeden submesh bude jeden draw call, ten se zaradi do fronty pres pointer na MeshRenderer a index
+ten nastavi kontext a vykresli se, jde dalsi
+shader classa bude mit nejakou setup metodu, ktera bude neco delat na zaklade vybraneho typu shaderu
+shader se bude volat pres material
+shader taky bude mit draw metodu
 
 atributy jde sdilet mezi programy pokud maji stejnou lokaci,
 atributy ne, ale muze se pouzit unifom buffer objekt ktery zastresi vsechny naraz
 
-mesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
+submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?
 
 All Awake calls
