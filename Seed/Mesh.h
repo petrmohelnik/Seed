@@ -26,7 +26,7 @@ private:
 
     void LoadSubMesh(SubMesh& subMesh);
 
-    bool deleteAfterLoad = false;
+    bool deleteAfterLoad = true;
     
     std::vector<SubMesh> subMeshes;
 };

@@ -15,6 +15,12 @@ void Mesh::Load()
     {
         LoadSubMesh(subMesh);
     }
+
+    if (deleteAfterLoad)
+    {
+        std::vector<SubMesh> emptyVector;
+        subMeshes.swap(emptyVector);
+    }
 }
 
 void Mesh::LoadSubMesh(SubMesh& subMesh)

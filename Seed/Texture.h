@@ -18,7 +18,7 @@ private:
     unsigned int width;
     unsigned int height;
 
-    bool deleteAfterLoad = false;
+    bool deleteAfterLoad = true;
 
     GLuint sampler;
 };

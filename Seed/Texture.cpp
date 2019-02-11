@@ -22,6 +22,12 @@ void Texture::Load()
     glGenerateMipmap(GL_TEXTURE_2D);
     
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    if (deleteAfterLoad)
+    {
+        std::vector<Uint8> emptyVector;
+        data.swap(emptyVector);
+    }
 }
 
 void Texture::Unload()

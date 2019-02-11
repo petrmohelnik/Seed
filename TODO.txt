@@ -2,6 +2,8 @@ udelat load na gpu
 profilovat memory
 deleteafterload
 co s alpha kanalem?
+meshe a materialy se mi pro nacitani porad destruujou
+volat glDeleteBuffers asi i pro vbo, zkontrolvat pomoci glIsBuffer
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
@@ -38,6 +40,9 @@ pohyby zpusobene fyzkou se aplikujou pred mouseDown a Update ale po OnCollision 
 skripty by si asi fakt meli ty metody registrovat, kdyz jich je takhle hodne
 fixedUpate je pouze pro fyziku, napr physcs addFOrce
 pohyb jako transform.translate se dela v update
+
+textura nebo mesh by si meli drzet path, aby pri loadu na gpu, kdyz maji smazany data si ho mohly naloadovat,
+ale uz na primo, zadny sdileni pres file system
 
 !!!!!!!
 https://unity3d.com/learn/tutorials/temas/performance-optimization/optimizing-graphics-rendering-unity-games

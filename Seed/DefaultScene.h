@@ -28,7 +28,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     cameraObject->GetComponent<Audio>();
     cameraObject->GetComponent<Collider>();
     cameraObject3->GetComponent<Rigidbody>()->Destroy(15000);
-    cameraObject2->Destroy(5000);
+    cameraObject->Destroy(5000);
     objects.GetObjectsByName("camera");
     objects.GetObjects<CameraObject>();
     objects.GetObjectsByTag("tag");
@@ -38,7 +38,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     fileSystem.LoadCameras();
     auto cameras = objects.GetObjectsByName("camera1");
     cameraObject->GetComponent<MeshRenderer>()->GetSharedMesh()->Load();
-    cameraObject->GetComponent<MeshRenderer>()->GetSharedMesh()->Unload();
+    //cameraObject->GetComponent<MeshRenderer>()->GetSharedMesh()->Unload();
     cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->Load();
     cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->Unload();
 }
