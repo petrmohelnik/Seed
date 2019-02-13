@@ -7,6 +7,10 @@ class Material
 public:
     Material();
     ~Material();
+    Material(Material&& m) = default;
+    Material(const Material& m) = default;
+    Material& operator=(const Material& m) = default;
+    Material& operator=(Material&& m) = default;
 
     void Load();
     void Unload();

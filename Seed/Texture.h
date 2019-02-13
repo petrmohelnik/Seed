@@ -4,7 +4,6 @@ class Texture
 {
 public:
     Texture();
-    ~Texture();
 
     void Load();
     void Unload();

@@ -6,11 +6,6 @@ Texture::Texture()
     SetColor(glm::u8vec4(255, 255, 255, 0));
 }
 
-Texture::~Texture()
-{
-    Unload();
-}
-
 void Texture::Load()
 {
     glGenTextures(1, &sampler);
@@ -33,6 +28,7 @@ void Texture::Load()
 void Texture::Unload()
 {
     glDeleteTextures(1, &sampler);
+    sampler = 0;
 }
 
 void Texture::SetColor(glm::u8vec4 color)

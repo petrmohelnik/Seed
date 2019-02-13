@@ -5,6 +5,10 @@ class Mesh
 public:
     Mesh();
     ~Mesh();
+    Mesh(Mesh&& m) = default;
+    Mesh(const Mesh& m) = default;
+    Mesh& operator=(const Mesh& m) = default;
+    Mesh& operator=(Mesh&& m) = default;
 
     void Load();
     void Unload();
@@ -22,6 +26,7 @@ private:
         std::vector<glm::vec2> texCoords;
         std::vector<glm::uvec3> indices;
         GLuint vao;
+        GLuint vbo[4];
     };
 
     void LoadSubMesh(SubMesh& subMesh);

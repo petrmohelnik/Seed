@@ -38,7 +38,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     fileSystem.LoadCameras();
     auto cameras = objects.GetObjectsByName("camera1");
     cameraObject->GetComponent<MeshRenderer>()->GetSharedMesh()->Load();
-    //cameraObject->GetComponent<MeshRenderer>()->GetSharedMesh()->Unload();
+    cameraObject->GetComponent<MeshRenderer>()->GetSharedMesh()->Unload();
     cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->Load();
     cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->Unload();
 }

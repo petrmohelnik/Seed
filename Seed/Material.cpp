@@ -6,6 +6,7 @@ Material::Material()
 
 Material::~Material()
 {
+    Unload();
 }
 
 void Material::Load()

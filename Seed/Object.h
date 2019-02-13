@@ -19,6 +19,10 @@ class Object : public Identifiable
 public:
 	Object(std::string name_);
     virtual ~Object();
+    Object(Object&& m) = delete;
+    Object(const Object& m) = delete;
+    Object& operator=(const Object& m) = delete;
+    Object& operator=(Object&& m) = delete;
 
     template <class T, typename std::enable_if<std::is_base_of<Renderer, T>::value>::type* = nullptr>
     T* AddComponent();

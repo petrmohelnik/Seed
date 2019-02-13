@@ -1,9 +1,4 @@
-udelat load na gpu
-profilovat memory
-deleteafterload
 co s alpha kanalem?
-meshe a materialy se mi pro nacitani porad destruujou
-volat glDeleteBuffers asi i pro vbo, zkontrolvat pomoci glIsBuffer
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
@@ -14,6 +9,9 @@ pro kazdou kameru se ze vsech objektu, ktere uz maji nove transformacni matice, 
 tam se budou radit prioritne podle vrstvy materialu, potom podle programu
 jeden submesh bude jeden draw call, ten se zaradi do fronty pres pointer na MeshRenderer a index
 ten nastavi kontext a vykresli se, jde dalsi
+shader asi nemusi byt pres enum, kazdy shader muze dedit z baze, do nej se da v konstrukoru path na shdare file
+takze ten shader class bude jakjo by predpis pro skupinu shaderu nejakeho typu
+ty vsechny shadery budou mit stejne usporadani atributu, takze ja muzu se vsema shaderama pracovat stejne
 shader classa bude mit nejakou setup metodu, ktera bude neco delat na zaklade vybraneho typu shaderu
 shader se bude volat pres material
 shader taky bude mit draw metodu
