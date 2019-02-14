@@ -59,6 +59,8 @@ void Mesh::Unload()
     {
         glDeleteBuffers(4, &subMesh.vbo[0]);
         glDeleteVertexArrays(1, &subMesh.vao);
+        std::fill(subMesh.vbo, subMesh.vbo + 4, 0);
+        subMesh.vao = 0;
     }
 }
 
