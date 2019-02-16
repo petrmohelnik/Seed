@@ -1,5 +1,4 @@
-co s alpha kanalem? - dynamicky podle textury jestli ma aplha kanal to nastavit pri vytvareni opengl textury, v shaderu se vzdy
-ziska gvec4 tak je to jedno
+nemam v gitu dllky?
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 

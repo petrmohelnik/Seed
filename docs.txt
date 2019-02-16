@@ -2,3 +2,6 @@ game loop:
 https://people.engr.ncsu.edu/gjin2/Classes/591/Spring2018/loopGame.pdf
 https://gafferongames.com/post/fix_your_timestep/
 https://pdfs.semanticscholar.org/f401/4a0328b383ee509ed837ff16af96af1168eb.pdf
+
+blur:
+https://software.intel.com/en-us/blogs/2014/07/15/an-investigation-of-fast-real-time-gpu-based-image-blur-algorithms

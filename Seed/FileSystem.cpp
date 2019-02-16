@@ -234,6 +234,7 @@ Texture FileSystem::LoadTexture(const std::string& path)
     auto textureData = FreeImage_GetBits(loadedTexture);
     texture.width = FreeImage_GetWidth(loadedTexture);
     texture.height = FreeImage_GetHeight(loadedTexture);
+	texture.bytesPerPixel = FreeImage_GetMemorySize(loadedTexture) / 8;
     texture.data.assign(textureData, textureData + FreeImage_GetMemorySize(loadedTexture));
 
     FreeImage_Unload(loadedTexture);
