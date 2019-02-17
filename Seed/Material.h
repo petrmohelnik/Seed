@@ -24,5 +24,5 @@ private:
     Texture normal;
     Texture height;
 
-    Shader::Type shader;
+    Shader* shader;
 };

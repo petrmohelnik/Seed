@@ -37,7 +37,7 @@ GLuint Texture::GetInternalFormat()
 	return GL_RGBA8;
 }
 
-GLuint Texture::GetInternalFormat()
+GLuint Texture::GetFormat()
 {
 	if (bytesPerPixel == 1)
 		return GL_RED;

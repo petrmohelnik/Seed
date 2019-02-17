@@ -3,12 +3,10 @@
 class Shader
 {
 public:
-    enum class Type
-    {
-        Diffuse
-    };
+    Shader(const std::string& path);
 
-    Shader();
+    virtual void setup() = 0;
+    virtual void draw() = 0;
 
 private:
     GLuint program;

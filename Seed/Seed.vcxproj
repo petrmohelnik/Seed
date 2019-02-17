@@ -48,6 +48,7 @@
     <ClCompile Include="SDLWindow.cpp" />
     <ClCompile Include="Seed.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Shaders.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -90,6 +91,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SDLWindow.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Shaders.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />

@@ -1,5 +1,5 @@
 #include "Shader.h"
 
-Shader::Shader()
+Shader::Shader(const std::string& path)
 {
 }
