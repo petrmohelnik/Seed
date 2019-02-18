@@ -2,7 +2,7 @@
 
 class Shader;
 
-class Shaders
+class ShaderFactory
 {
 public:
     enum class Type
@@ -10,7 +10,7 @@ public:
         Basic
     };
 
-    Shaders();
+    ShaderFactory();
 
     Shader* GetShader(Type type);
 

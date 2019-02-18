@@ -1,10 +1,9 @@
 #pragma once
+#include "ShaderCompiler.h"
 
 class Shader
 {
 public:
-    Shader(const std::string& path);
-
     virtual void setup() = 0;
     virtual void draw() = 0;
 

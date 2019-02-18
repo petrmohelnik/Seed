@@ -2,13 +2,13 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Camera.h"
-//#include "Engine.h"
 
 class FileSystem
 {
 public:
     FileSystem();
 
+    std::string LoadTextFile(const std::string& path);
     void LoadScene(const std::string& path);
     std::vector<std::shared_ptr<Mesh>> LoadMeshes(); //we need to somehow return position
     std::vector<std::shared_ptr<Material>> LoadMaterials();

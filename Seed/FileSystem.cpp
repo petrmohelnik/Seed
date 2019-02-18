@@ -7,6 +7,34 @@ FileSystem::FileSystem()
     importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType::aiPrimitiveType_LINE | aiPrimitiveType::aiPrimitiveType_POINT);
 }
 
+std::string FileSystem::LoadTextFile(const std::string& path)
+{
+    char *buffer;
+
+    std::ifstream file(path);
+    if (file.is_open())
+    {
+        file.seekg(0, file.end);
+        auto length = static_cast<int>(file.tellg());
+        file.seekg(0, file.beg);
+
+        buffer = new char[length + 1];
+
+        file.read(buffer, length);
+        file.close();
+
+        buffer[length] = '\0';
+
+        std::cout << "file " << path << " loaded" << std::endl;
+    }
+    else
+    {
+        throw std::runtime_error("Unable to open file " + path);
+    }
+
+    return std::string(buffer);
+}
+
 void FileSystem::LoadScene(const std::string& path)
 {
     if (loadedScene == path)

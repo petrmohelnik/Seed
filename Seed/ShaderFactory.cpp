@@ -1,11 +1,12 @@
-#include "Shaders.h"
+#include "ShaderFactory.h"
 #include "Shader.h"
+#include "BasicShader.h"
 
-Shaders::Shaders()
+ShaderFactory::ShaderFactory()
 {
 }
 
-Shader* Shaders::GetShader(Type type)
+Shader* ShaderFactory::GetShader(Type type)
 {
     if (shaders.find(type) == shaders.end())
     {
@@ -15,11 +16,11 @@ Shader* Shaders::GetShader(Type type)
     return shaders[type].get();
 }
 
-void Shaders::CreateShader(Type type)
+void ShaderFactory::CreateShader(Type type)
 {
     if (type == Type::Basic)
     {
-        shaders.emplace(BasicShader("Basic.vs"));
+        shaders.insert({ type , std::make_unique<BasicShader>("Basic.vs", "Basic.fs") });
     }
     else
     {
