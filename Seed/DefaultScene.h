@@ -40,5 +40,9 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     cameraObject->GetComponent<MeshRenderer>()->GetSharedMesh()->Load();
     cameraObject->GetComponent<MeshRenderer>()->GetSharedMesh()->Unload();
     cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->Load();
+    cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->SetShader(ShaderFactory::Type::Basic);
     cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->Unload();
+
+    ShaderFactory shaders;
+    shaders.GetShader(ShaderFactory::Type::Basic);
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "Texture.h"
-#include "Shader.h"
+#include "ShaderFactory.h"
 
 class Material
 {
@@ -15,6 +15,8 @@ public:
     void Load();
     void Unload();
 
+    void SetShader(ShaderFactory::Type shader_);
+
 protected:
     friend class FileSystem;
 
@@ -24,5 +26,5 @@ private:
     Texture normal;
     Texture height;
 
-    Shader* shader;
+    ShaderFactory::Type shader = ShaderFactory::Type::Basic;
 };

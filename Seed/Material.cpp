@@ -24,3 +24,8 @@ void Material::Unload()
     normal.Unload();
     height.Unload();
 }
+
+void Material::SetShader(ShaderFactory::Type shader_)
+{
+    shader = shader_;
+}

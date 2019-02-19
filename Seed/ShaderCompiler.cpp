@@ -13,11 +13,11 @@ GLuint ShaderCompiler::Compile(const std::string& vertexShader, const std::strin
 
 void ShaderCompiler::CompileShader(const std::string& path, GLuint shaderType, GLuint program)
 {
-    auto file = Engine::GetFileSystem().LoadTextFile(path);
+    auto file = Engine::GetFileSystem().LoadTextFile("Shaders/" + path);
+    const char *c_str = file.c_str();
 
     auto shader = glCreateShader(shaderType);
-    const char *c_str = file.c_str();
-    glShaderSource(shader, 1, &c_str, NULL);
+    glShaderSource(shader, 1, &c_str, nullptr);
     glCompileShader(shader);
 
     int compiled;
@@ -29,10 +29,10 @@ void ShaderCompiler::CompileShader(const std::string& path, GLuint shaderType, G
         std::string info;
         info.reserve(logLength);
         glGetShaderInfoLog(shader, logLength, nullptr, &info[0]);
-        std::cout << "GLSL compiler " << path << ": " << info << std::endl;
+        std::cout << "GLSL compiler " << path << ": " << info.c_str() << std::endl;
     }
 
-    if (compiled != 0)
+    if (compiled == GL_FALSE)
     {
         throw std::runtime_error("Error compiling shader: " + path);
     }
@@ -53,10 +53,10 @@ void ShaderCompiler::LinkProgram(GLuint program)
         std::string info;
         info.reserve(logLength);
         glGetProgramInfoLog(program, logLength, nullptr, &info[0]);
-        std::cout << "GLSL linker: " << info << std::endl;
+        std::cout << "GLSL linker: " << info.c_str() << std::endl;
     }
 
-    if (linked != 0)
+    if (linked == GL_FALSE)
     {
         throw std::runtime_error("Error linking program");
     }

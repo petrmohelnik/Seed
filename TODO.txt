@@ -7,13 +7,9 @@ pro kazdou kameru se ze vsech objektu, ktere uz maji nove transformacni matice, 
 tam se budou radit prioritne podle vrstvy materialu, potom podle programu
 jeden submesh bude jeden draw call, ten se zaradi do fronty pres pointer na MeshRenderer a index
 ten nastavi kontext a vykresli se, jde dalsi
-shader se muze nastavovat pres enum a nekde ve factory tomu bude prirazenej shader class a fily shaderu
-kazdej bude mit jenom jednu instanci, ktera se vytvori on demand
-shader asi nemusi byt pres enum, kazdy shader muze dedit z baze, do nej se da v konstrukoru path na shader file
-takze ten shader class bude jakjo by predpis pro skupinu shaderu nejakeho typu -  a nemel y se teda jmenovat napr technique?
 ty vsechny shadery budou mit stejne usporadani atributu, takze ja muzu se vsema shaderama pracovat stejne
 shader classa bude mit nejakou setup metodu, ktera bude neco delat na zaklade vybraneho typu shaderu
-shader se bude volat pres material
+v materialu bude shader typ, shader se bude tahat pri renderovani z shaderfactory podle toho typu
 shader taky bude mit draw metodu
 
 atributy jde sdilet mezi programy pokud maji stejnou lokaci,

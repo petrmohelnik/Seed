@@ -1,5 +1,4 @@
 #include "ShaderFactory.h"
-#include "Shader.h"
 #include "BasicShader.h"
 
 ShaderFactory::ShaderFactory()

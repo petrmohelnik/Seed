@@ -21,6 +21,9 @@
     <Filter Include="Scripts">
       <UniqueIdentifier>{a9131f08-736b-4d8a-8cc1-edd571933b89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{aa45e841-3cde-4833-b7e3-07c85391fa1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -253,5 +256,13 @@
     <ClInclude Include="BasicShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\Basic.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\Basic.vs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

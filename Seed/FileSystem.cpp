@@ -9,30 +9,12 @@ FileSystem::FileSystem()
 
 std::string FileSystem::LoadTextFile(const std::string& path)
 {
-    char *buffer;
-
     std::ifstream file(path);
-    if (file.is_open())
-    {
-        file.seekg(0, file.end);
-        auto length = static_cast<int>(file.tellg());
-        file.seekg(0, file.beg);
 
-        buffer = new char[length + 1];
+    std::stringstream buffer;
+    buffer << file.rdbuf();
 
-        file.read(buffer, length);
-        file.close();
-
-        buffer[length] = '\0';
-
-        std::cout << "file " << path << " loaded" << std::endl;
-    }
-    else
-    {
-        throw std::runtime_error("Unable to open file " + path);
-    }
-
-    return std::string(buffer);
+    return buffer.str();
 }
 
 void FileSystem::LoadScene(const std::string& path)
