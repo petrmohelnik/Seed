@@ -1,21 +1,42 @@
 #version 460
 
-uniform mat4 mvp;
-uniform mat3 m;
+layout(binding = 1) uniform CameraBlock
+{
+	mat4 projection;
+	vec3 viewPos;
+};
 
-in vec3 v_pos;
-in vec3 v_norm;
-in vec2 v_texCoord;
+layout(binding = 2) uniform ModelBlock
+{
+	mat3 modelView;
+	mat3 tiModelView;
+};
 
-out vec3 f_pos;
-out vec3 f_norm;
-out vec2 f_texCoord;
+layout(binding = 3) uniform MaterialBlock
+{
+	vec3 placeholder;
+};
+
+layout(binding = 4) uniform LightBlock
+{
+	vec3 pos;
+	vec3 color;
+	vec3 ambient;
+} lights[10];
+
+in vec3 vPos;
+in vec3 vNorm;
+in vec2 vTexCoord;
+
+out vec3 fPos;
+out vec3 fNorm;
+out vec2 fTexCoord;
 
 void main()
 {
-	f_pos = m * v_pos;
-	f_norm = v_norm;
-	f_texCoord = v_texCoord;
+	fPos = modelView * vPos;
+	fNorm = vNorm;
+	fTexCoord = vTexCoord;
 
-	gl_Position = mvp * vec4(v_pos, 1.0);
+	gl_Position = mat4(modelView) * projection * vec4(vPos, 1.0);
 }

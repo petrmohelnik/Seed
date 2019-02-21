@@ -1,3 +1,5 @@
+jak sdilet samplery? nemuzou byt v uniform blocich
+
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
 prvne se musi zpropagovat transformace
