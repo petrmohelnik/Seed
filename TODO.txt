@@ -1,4 +1,7 @@
-jak sdilet samplery? nemuzou byt v uniform blocich
+ty uniform objekty musi byt sdileny vsema meshrenderama atd. asi staticky membery
+vsechny tu buffery asi musi vlastnint jeden objekt, musi se to dostat k tem, co to budou updatovat
+kdyz to ten pipeline vzdy bindne a pak nad tim objektem zavola at updatuje data
+pouzivat radsi padding nez mit vsude vec4 a mat4
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 

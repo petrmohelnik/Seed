@@ -11,6 +11,11 @@ Components::Components()
 {
 }
 
+void Components::Initialize()
+{
+    renderingPipeline.Initialize();
+}
+
 void Components::OnFrameUpdate()
 {
     for (const auto& script : scripts)
@@ -21,12 +26,12 @@ void Components::OnFrameUpdate()
 
 void Components::Render()
 {
-    pipeline.Render();
+    renderingPipeline.Render();
 }
 
 void Components::CleanComponents()
 {
-    pipeline.CleanComponents();
+    renderingPipeline.CleanComponents();
     physics.CleanComponents();
 
     std::experimental::erase_if(audios, [](const auto audio)

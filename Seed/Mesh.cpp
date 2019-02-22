@@ -40,12 +40,18 @@ void Mesh::LoadSubMesh(SubMesh& subMesh)
 
     glBindBuffer(GL_ARRAY_BUFFER, subMesh.vbo[0]);
     glBufferData(GL_ARRAY_BUFFER, subMesh.vertices.size() * sizeof(float) * 3, &subMesh.vertices[0].x, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, subMesh.vbo[1]);
     glBufferData(GL_ARRAY_BUFFER, subMesh.normals.size() * sizeof(float) * 3, &subMesh.normals[0].x, GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, subMesh.vbo[2]);
     glBufferData(GL_ARRAY_BUFFER, subMesh.texCoords.size() * sizeof(float) * 2, &subMesh.texCoords[0].x, GL_STATIC_DRAW);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, subMesh.vbo[3]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, subMesh.indices.size() * sizeof(Uint32) * 3, &subMesh.indices[0].x, GL_STATIC_DRAW);
@@ -62,6 +68,11 @@ void Mesh::Unload()
         std::fill(subMesh.vbo, subMesh.vbo + 4, 0);
         subMesh.vao = 0;
     }
+}
+
+void Mesh::BindSubMesh(int index)
+{
+    glBindVertexArray(subMeshes[index].vao);
 }
 
 int Mesh::NumberOfSubmeshes()

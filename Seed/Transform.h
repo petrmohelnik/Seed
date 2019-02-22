@@ -9,6 +9,8 @@ public:
     void SetParent(Transform* parent_);
     void SetParent(Object* parent_);
 
+    glm::mat4 GetModelMatrix();
+
 protected:
     friend class Object;
     friend class Objects;
@@ -21,6 +23,6 @@ private:
     Transform* parent = nullptr;
     std::vector<Transform*> children;
 
-    glm::mat3 position;
-    glm::mat3 rotation;
+    glm::vec3 position;
+    glm::vec3 rotation;
 };

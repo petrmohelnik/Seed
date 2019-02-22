@@ -7,6 +7,8 @@ class Light;
 class RenderingPipeline
 {
 public:
+    void Initialize();
+
     void AddRenderer(Renderer* renderer);
     void AddCamera(Camera* camera);
     void AddLight(Light* light);

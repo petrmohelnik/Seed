@@ -10,7 +10,7 @@ public:
     Renderer(Object* object);
 	virtual ~Renderer() = default;
 
-	virtual void Render() = 0;
+	virtual void Render(int index) = 0;
 
 private:
     Input& input;

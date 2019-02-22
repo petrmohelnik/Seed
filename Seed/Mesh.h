@@ -13,6 +13,8 @@ public:
     void Load();
     void Unload();
 
+    void BindSubMesh(int index);
+
     int NumberOfSubmeshes();
 
 protected:

@@ -5,6 +5,13 @@
 
 Camera* RenderingPipeline::mainCamera;
 
+void RenderingPipeline::Initialize()
+{
+    GLuint modelBlock;
+    glGenBuffers(1, &modelBlock);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 1, modelBlock);
+}
+
 void RenderingPipeline::AddRenderer(Renderer* renderer)
 {
     renderers.push_back(renderer);
@@ -24,7 +31,7 @@ void RenderingPipeline::Render()
 {
     for (const auto& renderer : renderers)
     {
-        renderer->Render();
+        renderer->Render(0);
     }
 }
 

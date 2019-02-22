@@ -7,5 +7,5 @@ public:
     using Component::Component;
 
 private:
-    GLuint projection;
+    GLuint cameraBlock;
 };

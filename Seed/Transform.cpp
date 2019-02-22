@@ -18,6 +18,11 @@ void Transform::SetParent(Object* parent_)
     parent->AddChild(this);
 }
 
+glm::mat4 Transform::GetModelMatrix()
+{
+    return glm::mat4();
+}
+
 void Transform::DestroyAllChildren()
 {
     for (const auto& child : children)

@@ -1,4 +1,5 @@
 #include "MeshRenderer.h"
+#include "Transform.h"
 
 MeshRenderer::MeshRenderer(Object* object)
     : Renderer(object)
@@ -7,8 +8,14 @@ MeshRenderer::MeshRenderer(Object* object)
     mesh = std::make_shared<Mesh>();
 }
 
-void MeshRenderer::Render()
+void MeshRenderer::Render(int index)
 {
+    GLuint modelBlock = 1;
+    //SetModelBLock volany z rendering pipeline?
+    ModelBlock modelBlockData { GetTransform()->GetModelMatrix(), GetTransform()->GetModelMatrix() };
+    glBindBuffer(GL_UNIFORM_BUFFER, modelBlock);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(modelBlockData), &modelBlockData, GL_DYNAMIC_DRAW);
+    mesh->BindSubMesh(index);
 }
 
 void MeshRenderer::SetMesh(std::shared_ptr<Mesh> mesh_)

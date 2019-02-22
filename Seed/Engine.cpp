@@ -38,7 +38,6 @@ FileSystem& Engine::GetFileSystem()
     return fileSystem;
 }
 
-
 void Engine::CreateWindow()
 {
 	window.CreateWindow(1024, 768);
@@ -49,6 +48,7 @@ void Engine::Work()
 {
     scene.Initialize("Default");
     time.InitializeTime();
+    components.Initialize();
 
 	while (input.GameIsRunning())
 	{

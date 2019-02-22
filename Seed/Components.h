@@ -22,6 +22,9 @@ protected:
     friend class Objects;
     friend class Object;
     friend class Scene;
+    friend class Engine;
+
+    void Initialize();
 
     template<typename T>
 	std::unique_ptr<T> CreateRenderer(Object* object);
@@ -43,7 +46,7 @@ private:
     Time& time;
     Objects& objects;
 
-    RenderingPipeline pipeline;
+    RenderingPipeline renderingPipeline;
     PhysicsEngine physics;
     std::vector<Audio*> audios;
     std::vector<Script*> scripts;
@@ -54,21 +57,21 @@ inline std::unique_ptr<T> Components::CreateRenderer(Object* object)
 {
 	static_assert(std::is_base_of<Renderer, T>::value, "T must be derived from Renderer");
 	auto renderer =  std::make_unique<T>(object);
-    pipeline.AddRenderer(renderer.get());
+    renderingPipeline.AddRenderer(renderer.get());
 	return renderer;
 }
 
 inline std::unique_ptr<Camera> Components::CreateCamera(Object* object)
 {
     auto camera = std::make_unique<Camera>(object);
-    pipeline.AddCamera(camera.get());
+    renderingPipeline.AddCamera(camera.get());
     return camera;
 }
 
 inline std::unique_ptr<Light> Components::CreateLight(Object* object)
 {
     auto light = std::make_unique<Light>(object);
-    pipeline.AddLight(light.get());
+    renderingPipeline.AddLight(light.get());
     return light;
 }
 
