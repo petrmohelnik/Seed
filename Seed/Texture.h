@@ -8,6 +8,8 @@ public:
     void Load();
     void Unload();
 
+    void BindTexture();
+
 protected:
     friend class FileSystem;
     void SetColor(glm::u8vec4 color);
@@ -26,5 +28,5 @@ private:
 
     bool deleteAfterLoad = true;
 
-    GLuint sampler;
+    GLuint texture = 0;
 };

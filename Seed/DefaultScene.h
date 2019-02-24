@@ -3,7 +3,7 @@
 
 void DefaultScene(Objects& objects, FileSystem& fileSystem)
 {
-    auto cameraObject = objects.CreateObject<CameraObject>("camera");
+    /*auto cameraObject = objects.CreateObject<CameraObject>("camera");
     auto cameraObject1 = objects.CreateObject<CameraObject>("camera1");
     auto cameraObject2 = objects.CreateObject<CameraObject>("camera2");
     auto cameraObject3 = objects.CreateObject<CameraObject>("camera3");
@@ -44,5 +44,12 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->Unload();
 
     ShaderFactory shaders;
-    shaders.GetShader(ShaderFactory::Type::Basic);
+    shaders.GetShader(ShaderFactory::Type::Basic);*/
+
+    auto joker = objects.CreateObject<Object>("joker");
+    joker->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("jaguar_14.dae"));
+    joker->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("jaguar_14.dae"));
+
+    auto camera = objects.CreateObject<Object>("camera")->AddComponent<Camera>();
+    auto light = objects.CreateObject<Object>("light")->AddComponent<Light>();
 }

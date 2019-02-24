@@ -48,10 +48,11 @@ std::vector<std::shared_ptr<Mesh>> FileSystem::LoadMeshes()
     return meshes;
 }
 
-std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials()
+std::vector<std::vector<std::shared_ptr<Material>>> FileSystem::LoadMaterials()
 {
+    //needs to return vector of materials for each mesh
     auto scene = importer.GetScene();
-    return LoadMaterialsData(scene->mMaterials, scene->mNumMaterials);
+    return std::vector<std::vector<std::shared_ptr<Material>>>();//LoadMaterialsData(scene->mMaterials, scene->mNumMaterials);
 }
 
 std::vector<Object*> FileSystem::LoadCameras()
@@ -88,11 +89,11 @@ std::shared_ptr<Mesh> FileSystem::LoadMesh(const std::string& path)
 std::shared_ptr<Mesh> FileSystem::LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes)
 {
     auto mesh = std::make_shared<Mesh>();
-    mesh->subMeshes.resize(numMeshes);
+    mesh->subMeshes.reserve(numMeshes);
 
     for (unsigned int index = 0; index < numMeshes; index++)
     {
-        mesh->subMeshes[assimpMeshes[index]->mMaterialIndex] = std::move(LoadSubMeshData(assimpMeshes[index]));
+        mesh->subMeshes.push_back(std::move(LoadSubMeshData(assimpMeshes[index])));
     }
 
     return mesh;
@@ -108,29 +109,29 @@ Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
 
     for (unsigned int index = 0; index < assimpMesh->mNumVertices; index++)
     {
-        subMesh.vertices.push_back(glm::vec3(
+        subMesh.vertices.emplace_back(glm::vec3(
             assimpMesh->mVertices[index].x,
             assimpMesh->mVertices[index].y,
             assimpMesh->mVertices[index].z));
 
-        subMesh.normals.push_back(glm::vec3(
+        subMesh.normals.emplace_back(glm::vec3(
             assimpMesh->mNormals[index].x,
             assimpMesh->mNormals[index].y,
             assimpMesh->mNormals[index].z));
 
         if (assimpMesh->HasTextureCoords(0))
         {
-            subMesh.texCoords.push_back(glm::vec2(
+            subMesh.texCoords.emplace_back(glm::vec2(
                 assimpMesh->mTextureCoords[0][index].x,
                 assimpMesh->mTextureCoords[0][index].y));
         }
         else
-            subMesh.texCoords.push_back(glm::vec2(0, 0));
+            subMesh.texCoords.emplace_back(glm::vec2(0, 0));
     }
 
     for (unsigned int index = 0; index < assimpMesh->mNumFaces; index++)
     {
-        subMesh.indices.push_back(glm::uvec3(
+        subMesh.indices.emplace_back(glm::uvec3(
             assimpMesh->mFaces[index].mIndices[0],
             assimpMesh->mFaces[index].mIndices[1],
             assimpMesh->mFaces[index].mIndices[2]));
@@ -166,11 +167,18 @@ std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials(const std::stri
 
     auto materials = LoadMaterialsData(scene->mMaterials, scene->mNumMaterials);
 
+    std::vector<std::shared_ptr<Material>> orderedMaterials;
+    orderedMaterials.reserve(scene->mNumMeshes);
+    for (unsigned int index = 0; index < scene->mNumMeshes; index++)
+    {
+        orderedMaterials.push_back(materials[scene->mMeshes[index]->mMaterialIndex]);
+    }
+
     loadedMaterials.insert_or_assign(path, std::vector<std::weak_ptr<Material>>());
-    for (const auto& material : materials)
+    for (const auto& material : orderedMaterials)
         loadedMaterials[path].push_back(material);
 
-    return materials;
+    return orderedMaterials;
 }
 
 std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials)
@@ -244,8 +252,8 @@ Texture FileSystem::LoadTexture(const std::string& path)
     auto textureData = FreeImage_GetBits(loadedTexture);
     texture.width = FreeImage_GetWidth(loadedTexture);
     texture.height = FreeImage_GetHeight(loadedTexture);
-	texture.bytesPerPixel = FreeImage_GetMemorySize(loadedTexture) / 8;
-    texture.data.assign(textureData, textureData + FreeImage_GetMemorySize(loadedTexture));
+    texture.bytesPerPixel = FreeImage_GetBPP(loadedTexture) / 8;
+    texture.data.assign(textureData, textureData + texture.bytesPerPixel * texture.width * texture.height);
 
     FreeImage_Unload(loadedTexture);
 

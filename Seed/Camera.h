@@ -6,6 +6,13 @@ class Camera final : public Component
 public:
     using Component::Component;
 
+    void BindCamera();
+
 private:
-    GLuint cameraBlock;
+    struct CameraBlock
+    {
+        glm::mat4 projection;
+        glm::mat4 view;
+        glm::vec4 viewPos;
+    };
 };

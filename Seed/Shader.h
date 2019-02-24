@@ -5,7 +5,7 @@ class Shader
 {
 public:
     virtual void setup() = 0;
-    virtual void draw() = 0;
+    virtual void draw(int count) = 0;
 
 private:
     GLuint program;

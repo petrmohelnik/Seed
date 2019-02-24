@@ -7,23 +7,23 @@ layout(std140, binding = 0) uniform CameraBlock
 	vec4 viewPos;
 };
 
-layout(std140, binding = 1) uniform ModelBlock
+layout(std140, binding = 1) uniform LightBlock
+{
+	vec4 lightPos;
+	vec4 lightColor;
+	vec4 lightAmbient;
+};
+
+layout(std140, binding = 2) uniform ModelBlock
 {
 	mat4 model;
 	mat4 tiModel;
 };
 
-layout(std140, binding = 2) uniform MaterialBlock
+layout(std140, binding = 3) uniform MaterialBlock
 {
 	vec4 placeholder;
 };
-
-layout(std140, binding = 3) uniform LightBlock
-{
-	vec4 pos;
-	vec4 color;
-	vec4 ambient;
-} lights[10];
 
 layout(location = 0) in vec3 vPos;
 layout(location = 1) in vec3 vNorm;
@@ -40,4 +40,5 @@ void main()
 	fTexCoord = vTexCoord;
 
 	gl_Position = projection * view * model * vec4(vPos, 1.0);
+	//gl_Position = vec4(vPos.xy, 0.0, 1.0);
 }

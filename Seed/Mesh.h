@@ -16,6 +16,7 @@ public:
     void BindSubMesh(int index);
 
     int NumberOfSubmeshes();
+    int SubmeshIndicesCount(int index);
 
 protected:
     friend class FileSystem;
@@ -27,7 +28,8 @@ private:
         std::vector<glm::vec3> normals;
         std::vector<glm::vec2> texCoords;
         std::vector<glm::uvec3> indices;
-        GLuint vao;
+        int indicesCount;
+        GLuint vao = 0;
         GLuint vbo[4];
     };
 

@@ -15,7 +15,16 @@ public:
 
     void SetType(Type type_);
 
+    void BindLight();
+
 private:
-    Type type = Type::Directional;
+    struct LightBlock
+    {
+        glm::vec4 lightPos;
+        glm::vec4 lightColor;
+        glm::vec4 lightAmbient;
+    };
+
+    Type type = Type::Point;
 };
 

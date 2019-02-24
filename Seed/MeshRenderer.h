@@ -8,6 +8,7 @@ class MeshRenderer : public Renderer
 public:
     MeshRenderer(Object* object);
 
+    void AddToRenderQueue(RenderQueue* queue) override;
 	void Render(int index) override;
 
     void SetMesh(std::shared_ptr<Mesh> mesh_);
@@ -27,7 +28,6 @@ private:
         glm::mat4 model;
         glm::mat4 tiModel;
     };
-    GLuint modelBlock;
 
     std::shared_ptr<Mesh> mesh;
     std::vector<std::shared_ptr<Material>> materials;

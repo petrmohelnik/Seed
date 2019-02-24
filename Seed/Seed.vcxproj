@@ -42,6 +42,7 @@
     <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
+    <ClCompile Include="RenderQueue.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneDefinition.cpp" />
@@ -87,6 +88,7 @@
     <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderingPipeline.h" />
+    <ClInclude Include="RenderQueue.h" />
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="SceneDefinition.h" />
     <ClInclude Include="Script.h" />

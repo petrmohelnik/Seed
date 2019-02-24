@@ -7,7 +7,7 @@ public:
     BasicShader(const std::string& vertexShader, const std::string& fragmentShader);
 
     void setup() override;
-    void draw() override;
+    void draw(int count) override;
 
 private:
     GLuint program;

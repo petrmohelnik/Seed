@@ -134,6 +134,9 @@
     <ClCompile Include="BasicShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RenderQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -254,6 +257,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BasicShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

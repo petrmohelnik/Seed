@@ -20,7 +20,7 @@ void Transform::SetParent(Object* parent_)
 
 glm::mat4 Transform::GetModelMatrix()
 {
-    return glm::mat4();
+    return glm::mat4(1.0);
 }
 
 void Transform::DestroyAllChildren()

@@ -6,6 +6,7 @@ SDLWindow Engine::window;
 Time Engine::time(window);
 Objects Engine::objects;
 Components Engine::components;
+ShaderFactory Engine::shaderFactory;
 
 Engine::Engine() 
     : sceneDefinition()
@@ -36,6 +37,11 @@ Components& Engine::GetComponents()
 FileSystem& Engine::GetFileSystem()
 {
     return fileSystem;
+}
+
+ShaderFactory& Engine::GetShaderFactory()
+{
+    return shaderFactory;
 }
 
 void Engine::CreateWindow()

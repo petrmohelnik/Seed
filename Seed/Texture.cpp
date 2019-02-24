@@ -8,12 +8,15 @@ Texture::Texture()
 
 void Texture::Load()
 {
-    glGenTextures(1, &sampler);
-    glBindTexture(GL_TEXTURE_2D, sampler);
+    if (texture != 0)
+        return;
+
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(), width, height, 0, GetInternalFormat(), GL_UNSIGNED_BYTE, &data[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(), width, height, 0, GetFormat(), GL_UNSIGNED_BYTE, &data[0]);
     glGenerateMipmap(GL_TEXTURE_2D);
     
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -43,16 +46,21 @@ GLuint Texture::GetFormat()
 		return GL_RED;
 	if (bytesPerPixel == 2)
 		return GL_RED;
-	if (bytesPerPixel == 3)
-		return GL_RGB;
+    if (bytesPerPixel == 3)
+        return GL_BGR;
 
-	return GL_RGBA;
+	return GL_BGRA;
 }
 
 void Texture::Unload()
 {
-    glDeleteTextures(1, &sampler);
-    sampler = 0;
+    glDeleteTextures(1, &texture);
+    texture = 0;
+}
+
+void Texture::BindTexture()
+{
+    glBindTexture(GL_TEXTURE_2D, texture);
 }
 
 void Texture::SetColor(glm::u8vec4 color)

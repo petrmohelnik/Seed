@@ -1,7 +1,25 @@
-ty uniform objekty musi byt sdileny vsema meshrenderama atd. asi staticky membery
-vsechny tu buffery asi musi vlastnint jeden objekt, musi se to dostat k tem, co to budou updatovat
-kdyz to ten pipeline vzdy bindne a pak nad tim objektem zavola at updatuje data
 pouzivat radsi padding nez mit vsude vec4 a mat4
+layout in a out atirbutu v sahderech
+setMeshAndMaterials
+library_visual_scenes obsahuje transformace - v assimpu m_rootNode
+ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene
+jak poznam ze to ma vic geometrii a ze by to meli byt separatni objekty?
+checknout co se tam dlouho loaduje pri jaguaru
+pro klasicky load jednoho meshe uvazuju, ze je tam jeden mesh a nema zadnou t
+transform, zbytek necham na assimpu
+pro loadsceny, prochazim strom sceny a vytvarim pro kazdy node separatni mesh
+ten load sceny by mel rovnou vytvaret objekty anastavovat jim komponenty a nemel by asi nic vracet
+zkusit optinmalozavat assimp flagy
+umet nacist barvy misto textur
+rozlisit shinnines a specular
+stahnout si nejakej poradnej modela podivat se jak ma rozlozeny textury
+https://gamedev.stackexchange.com/questions/74879/specular-map-what-about-the-specular-reflections-highlight-size
+mit ambient color v te strukture pro material?
+https://unity3d.com/learn/tutorials/topics/graphics/ambient-lighting
+co delat s emission color?
+svetlo je jenom jedna barva
+potom je globalni ambient color
+ty spekular barvy a tak jsou vlasnosti jenom materialu a ne svetla
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
@@ -10,15 +28,6 @@ bude root transformace drzena nekde v components, ale pro ucely GetParent se bud
 to bude defautni parent, pri SetParent se objekt odstrani z children sveho aktualniho parenta
 pro kazdou kameru se ze vsech objektu, ktere uz maji nove transformacni matice, vytvori render queue
 tam se budou radit prioritne podle vrstvy materialu, potom podle programu
-jeden submesh bude jeden draw call, ten se zaradi do fronty pres pointer na MeshRenderer a index
-ten nastavi kontext a vykresli se, jde dalsi
-ty vsechny shadery budou mit stejne usporadani atributu, takze ja muzu se vsema shaderama pracovat stejne
-shader classa bude mit nejakou setup metodu, ktera bude neco delat na zaklade vybraneho typu shaderu
-v materialu bude shader typ, shader se bude tahat pri renderovani z shaderfactory podle toho typu
-shader taky bude mit draw metodu
-
-atributy jde sdilet mezi programy pokud maji stejnou lokaci,
-atributy ne, ale muze se pouzit unifom buffer objekt ktery zastresi vsechny naraz
 
 submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?
@@ -50,6 +59,7 @@ https://hero.handmade.network/forums/code-discussion/t/2479-using_opengl_uniform
 https://gamedev.stackexchange.com/questions/57108/what-is-the-best-method-to-update-shader-uniforms
 https://blender.stackexchange.com/questions/32677/how-to-combine-two-different-textures-into-one
 https://github.com/assimp/assimp/wiki/Embedded-Textures-References
+https://stackoverflow.com/a/27895283
 
 kdybych chtel ukladat data submeshu do jednoho vektoru, samostatne mi staci jenom indices
 https://computergraphics.stackexchange.com/questions/4623/multiple-vao-share-a-vbo

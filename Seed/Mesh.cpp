@@ -34,6 +34,9 @@ void Mesh::Load()
 
 void Mesh::LoadSubMesh(SubMesh& subMesh)
 {
+    if (subMesh.vao != 0)
+        return;
+
     glGenBuffers(4, &subMesh.vbo[0]);
     glGenVertexArrays(1, &subMesh.vao);
     glBindVertexArray(subMesh.vao);
@@ -55,6 +58,7 @@ void Mesh::LoadSubMesh(SubMesh& subMesh)
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, subMesh.vbo[3]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, subMesh.indices.size() * sizeof(Uint32) * 3, &subMesh.indices[0].x, GL_STATIC_DRAW);
+    subMesh.indicesCount = subMesh.indices.size() * 3;
 
     glBindVertexArray(0);
 }
@@ -78,4 +82,9 @@ void Mesh::BindSubMesh(int index)
 int Mesh::NumberOfSubmeshes()
 {
     return static_cast<int>(subMeshes.size());
+}
+
+int Mesh::SubmeshIndicesCount(int index)
+{
+    return subMeshes[index].indicesCount;
 }

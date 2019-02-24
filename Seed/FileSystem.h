@@ -10,8 +10,8 @@ public:
 
     std::string LoadTextFile(const std::string& path);
     void LoadScene(const std::string& path);
-    std::vector<std::shared_ptr<Mesh>> LoadMeshes(); //we need to somehow return position
-    std::vector<std::shared_ptr<Material>> LoadMaterials();
+    std::vector<std::shared_ptr<Mesh>> LoadMeshes(); //we need to somehow return transform, can we return it separately?
+    std::vector<std::vector<std::shared_ptr<Material>>> LoadMaterials();
     std::vector<Object*> LoadCameras(); //return components? it will contain position an such
     void LoadLights();
     void UnloadScene();

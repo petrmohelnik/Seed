@@ -11,6 +11,7 @@ int main(int argc, char** argv)
 	try 
 	{
 		engine.CreateWindow();
+	    engine.Work();
 	}
 	catch (const std::exception& exception)
 	{
@@ -18,8 +19,6 @@ int main(int argc, char** argv)
 		std::cin.get();
 		return -1;
 	}
-
-	engine.Work();
 
 	return 0;
 }

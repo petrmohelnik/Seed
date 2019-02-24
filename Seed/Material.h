@@ -15,12 +15,20 @@ public:
     void Load();
     void Unload();
 
+    void BindMaterial();
+
     void SetShader(ShaderFactory::Type shader_);
+    ShaderFactory::Type GetShader();
 
 protected:
     friend class FileSystem;
 
 private:
+    struct MaterialBlock
+    {
+        glm::vec4 placeholder;
+    };
+
     Texture diffuse;
     Texture specular;
     Texture normal;

@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "SceneDefinition.h"
 #include "FileSystem.h"
+#include "ShaderFactory.h"
 
 class Engine
 {
@@ -21,6 +22,7 @@ public:
     static Objects& GetObjects();
     static Components& GetComponents();
     static FileSystem& GetFileSystem();
+    static ShaderFactory& GetShaderFactory();
 
 private:
 	static SDLWindow window;
@@ -32,5 +34,6 @@ private:
 	static Objects objects;
 	static Components components;
     static FileSystem fileSystem;
+    static ShaderFactory shaderFactory;
 };
 

@@ -1,5 +1,9 @@
 #include "MeshRenderer.h"
 #include "Transform.h"
+#include "RenderingPipeline.h"
+#include "RenderQueue.h"
+#include "ShaderFactory.h"
+#include "Engine.h"
 
 MeshRenderer::MeshRenderer(Object* object)
     : Renderer(object)
@@ -8,19 +12,33 @@ MeshRenderer::MeshRenderer(Object* object)
     mesh = std::make_shared<Mesh>();
 }
 
+void MeshRenderer::AddToRenderQueue(RenderQueue* queue)
+{
+    for (int index = 0; index < mesh->NumberOfSubmeshes(); index++)
+    {
+        queue->Add(this, index);
+    }
+}
+
 void MeshRenderer::Render(int index)
 {
-    GLuint modelBlock = 1;
-    //SetModelBLock volany z rendering pipeline?
-    ModelBlock modelBlockData { GetTransform()->GetModelMatrix(), GetTransform()->GetModelMatrix() };
-    glBindBuffer(GL_UNIFORM_BUFFER, modelBlock);
+    materials[index]->BindMaterial();
+    auto shader = Engine::GetShaderFactory().GetShader(materials[index]->GetShader());
+    shader->setup();
+
+    RenderingPipeline::BindModelUniform();
+    ModelBlock modelBlockData = { GetTransform()->GetModelMatrix(), glm::inverse(glm::transpose(GetTransform()->GetModelMatrix())) };
     glBufferData(GL_UNIFORM_BUFFER, sizeof(modelBlockData), &modelBlockData, GL_DYNAMIC_DRAW);
+
     mesh->BindSubMesh(index);
+
+    shader->draw(mesh->SubmeshIndicesCount(index));
 }
 
 void MeshRenderer::SetMesh(std::shared_ptr<Mesh> mesh_)
 {
     mesh = mesh_;
+    mesh->Load();
 }
 
 std::shared_ptr<Mesh> MeshRenderer::GetMesh()
@@ -39,11 +57,16 @@ void MeshRenderer::SetMaterial(int index, std::shared_ptr<Material> material)
     if (materials.size() <= index)
         materials.resize(index + 1, std::make_shared<Material>());
     materials.insert(materials.begin() + index, material);
+    material->Load();
 }
 
 void MeshRenderer::SetMaterials(std::vector<std::shared_ptr<Material>> materials_)
 {
     materials = materials_;
+    for (const auto& material : materials)
+    {
+        material->Load();
+    }
 }
 
 std::shared_ptr<Material> MeshRenderer::GetMaterial()
