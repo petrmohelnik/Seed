@@ -12,10 +12,10 @@ public:
 
 protected:
     friend class FileSystem;
-    void SetColor(glm::u8vec4 color);
-    void SetColor(glm::u8vec3 color);
-    void SetColor(glm::u8vec2 color);
-    void SetColor(glm::u8vec1 color);
+    void SetColor(Uint8 x, Uint8 y, Uint8 z, Uint8 w);
+    void SetColor(Uint8 x, Uint8 y, Uint8 z);
+    void SetColor(Uint8 x, Uint8 y);
+    void SetColor(Uint8 x);
 
 private:
 	GLuint GetInternalFormat();

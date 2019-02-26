@@ -3,7 +3,7 @@
 
 Texture::Texture()
 {
-    SetColor(glm::u8vec3(255, 255, 255));
+    SetColor(255, 255, 255, 255);
 }
 
 void Texture::Load()
@@ -63,33 +63,33 @@ void Texture::BindTexture()
     glBindTexture(GL_TEXTURE_2D, texture);
 }
 
-void Texture::SetColor(glm::u8vec4 color)
+void Texture::SetColor(Uint8 x, Uint8 y, Uint8 z, Uint8 w)
 {
-    data = std::vector<Uint8>{ color.x, color.y, color.z, color.w };
+    data = std::vector<Uint8>{ x, y, z, w };
     width = 1;
     height = 1;
 	bytesPerPixel = 4;
 }
 
-void Texture::SetColor(glm::u8vec3 color)
+void Texture::SetColor(Uint8 x, Uint8 y, Uint8 z)
 {
-	data = std::vector<Uint8>{ color.x, color.y, color.z };
+	data = std::vector<Uint8>{ x, y, z };
 	width = 1;
 	height = 1;
 	bytesPerPixel = 3;
 }
 
-void Texture::SetColor(glm::u8vec2 color)
+void Texture::SetColor(Uint8 x, Uint8 y)
 {
-	data = std::vector<Uint8>{ color.x, color.y };
+	data = std::vector<Uint8>{ x, y };
 	width = 1;
 	height = 1;
 	bytesPerPixel = 2;
 }
 
-void Texture::SetColor(glm::u8vec1 color)
+void Texture::SetColor(Uint8 x)
 {
-	data = std::vector<Uint8>{ color.x };
+	data = std::vector<Uint8>{ x };
 	width = 1;
 	height = 1;
 	bytesPerPixel = 1;

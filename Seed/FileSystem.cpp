@@ -197,40 +197,42 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial)
 {
     Material material;
 
-    if (assimpMaterial->GetTextureCount(aiTextureType_DIFFUSE) != 0)
-    {
-        aiString texturePath;
-        if(assimpMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
-            throw std::runtime_error("Failed to load texture from material");
+    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_DIFFUSE, material.diffuse))
+        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_DIFFUSE, material.diffuse);
 
-        material.diffuse = LoadTexture(folder + texturePath.C_Str());
-    }
-    if (assimpMaterial->GetTextureCount(aiTextureType_NORMALS) != 0)
-    {
-        aiString texturePath;
-        if (assimpMaterial->GetTexture(aiTextureType_NORMALS, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
-            throw std::runtime_error("Failed to load texture from material");
+    LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.normal);
+    
+    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.specular))
+        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.specular);
 
-        material.normal = LoadTexture(folder + texturePath.C_Str());
-    }
-    if (assimpMaterial->GetTextureCount(aiTextureType_SPECULAR) != 0)
-    {
-        aiString texturePath;
-        if (assimpMaterial->GetTexture(aiTextureType_SPECULAR, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
-            throw std::runtime_error("Failed to load texture from material");
-
-        material.specular = LoadTexture(folder + texturePath.C_Str());
-    }
-    if (assimpMaterial->GetTextureCount(aiTextureType_HEIGHT) != 0)
-    {
-        aiString texturePath;
-        if (assimpMaterial->GetTexture(aiTextureType_HEIGHT, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
-            throw std::runtime_error("Failed to load texture from material");
-
-        material.height = LoadTexture(folder + texturePath.C_Str());
-    }
+    LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.height);
 
     return material;
+}
+
+bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, Texture& textureData)
+{
+    if (assimpMaterial->GetTextureCount(textureType) != 0)
+    {
+        aiString texturePath;
+        if (assimpMaterial->GetTexture(textureType, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
+            throw std::runtime_error("Failed to load texture from material");
+
+        textureData = LoadTexture(folder + texturePath.C_Str());
+
+        return true;
+    }
+
+    return false;
+}
+
+void FileSystem::LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, Texture& textureData)
+{
+    aiColor4D color;
+    if (aiGetMaterialColor(assimpMaterial, pKey, type, index, &color) == AI_SUCCESS)
+    {
+        textureData.SetColor(color.b * 255, color.g * 255, color.r * 255, color.a * 255);
+    }
 }
 
 Texture FileSystem::LoadTexture(const std::string& path)

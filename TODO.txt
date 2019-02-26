@@ -20,6 +20,7 @@ co delat s emission color?
 svetlo je jenom jedna barva
 potom je globalni ambient color
 ty spekular barvy a tak jsou vlasnosti jenom materialu a ne svetla
+http://assimp.sourceforge.net/lib_html/material_8h.html
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
