@@ -37,8 +37,6 @@ layout(location = 0) out vec4 gl_FragColor;
 
 void main()
 {
-	float shininess = texture(texSpecular, fTexCoord).x * 100.0;
-
 	vec3 viewDir = normalize(viewPos.xyz - fPos).xyz;
 	vec3 lightDir = normalize(lightPos.xyz - fPos);
 	vec3 normal = normalize(mat3(tiModel) * fNorm);
@@ -48,7 +46,7 @@ void main()
 	vec3 specularReflection = vec3(0.0, 0.0, 0.0);
 	if (dot(normal, lightDir) > 0.0)
 	{
-		specularReflection = lightColor.xyz * pow(max(0.0, dot(reflect(-lightDir, normal), viewDir)), shininess);
+		specularReflection = lightColor.xyz * texture(texSpecular, fTexCoord).xyz * pow(max(0.0, dot(reflect(-lightDir, normal), viewDir)), 100.0);
 	}
 
 	gl_FragColor = vec4(vec3(diffuseReflection + specularReflection + lightAmbient.xyz) * vec3(texture(texDiffuse, fTexCoord)), 1.0);
