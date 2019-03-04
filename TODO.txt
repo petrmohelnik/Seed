@@ -29,6 +29,9 @@ bude root transformace drzena nekde v components, ale pro ucely GetParent se bud
 to bude defautni parent, pri SetParent se objekt odstrani z children sveho aktualniho parenta
 pro kazdou kameru se ze vsech objektu, ktere uz maji nove transformacni matice, vytvori render queue
 tam se budou radit prioritne podle vrstvy materialu, potom podle programu
+http://developer.download.nvidia.com/CgTutorial/cg_tutorial_chapter04.html
+https://gamedev.stackexchange.com/questions/54020/translating-viewmatrix-is-inverted-why
+https://computergraphics.stackexchange.com/questions/5571/why-do-i-need-to-inverse-the-orientation-matrix-of-a-camera-to-be-able-to-transl
 
 submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?

@@ -153,3 +153,5 @@ $RECYCLE.BIN/
 .DS_Store
 
 *.db
+Seed/assets/jaguar.dae
+Seed/assets/jaguar_14.dae
