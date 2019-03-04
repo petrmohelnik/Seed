@@ -46,7 +46,7 @@ ShaderFactory& Engine::GetShaderFactory()
 
 void Engine::CreateWindow()
 {
-	window.CreateWindow(1024, 768);
+	window.CreateWindow(1280, 720);
 	window.InitializeOpenGL();
 }
 

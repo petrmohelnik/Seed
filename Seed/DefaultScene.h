@@ -47,8 +47,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     shaders.GetShader(ShaderFactory::Type::Basic);*/
 
     auto joker = objects.CreateObject<Object>("joker");
-    joker->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("jaguar_14.dae"));
-    joker->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("jaguar_14.dae"));
+    joker->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("nyra/nyra.dae"));
+    joker->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("nyra/nyra.dae"));
 
     auto camera = objects.CreateObject<Object>("camera")->AddComponent<Camera>();
     auto light = objects.CreateObject<Object>("light")->AddComponent<Light>();
