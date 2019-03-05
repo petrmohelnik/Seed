@@ -26,7 +26,7 @@ public:
     glm::vec3 GetPosition();
     glm::vec3 GetLocalPosition();
     glm::vec3 GetForwardAxis();
-    void SetScale(glm::vec3 scale);
+    void SetScale(glm::vec3 scale_);
     glm::vec3 GetScale();
     glm::vec3 GetLocalScale();
 

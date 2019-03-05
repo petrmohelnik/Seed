@@ -46,3 +46,102 @@ glm::mat4 Transform::GetModelMatrix()
 {
     return modelMatrix;
 }
+
+void Transform::RotateAngle(float angle, glm::vec3 axis)
+{
+    glm::rotate(rotation, angle, axis);
+}
+
+void Transform::RotateX(float angle)
+{
+    glm::rotate(rotation, angle, glm::vec3(1.0f, 0.0f, 0.0f));
+}
+
+void Transform::RotateY(float angle)
+{
+    glm::rotate(rotation, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+void Transform::RotateZ(float angle)
+{
+    glm::rotate(rotation, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+}
+
+void Transform::RotateQuat(glm::quat quaternion)
+{
+    rotation *= quaternion;
+}
+
+void Transform::LookAt(glm::vec3 position)
+{
+}
+
+glm::vec3 Transform::GetEulerAngles()
+{
+    return glm::vec3();
+}
+
+glm::vec3 Transform::GetLocalEulerAngles()
+{
+    return glm::eulerAngles(rotation);
+}
+
+glm::quat Transform::GetRotation()
+{
+    return glm::quat();
+}
+
+glm::quat Transform::GetLocalRotation()
+{
+    return rotation;
+}
+
+void Transform::Translate(glm::vec3 translation)
+{
+    position += translation;
+}
+
+void Transform::TranslateX(float translation)
+{
+    position.x += translation;
+}
+
+void Transform::TranslateY(float translation)
+{
+    position.y += translation;
+}
+
+void Transform::TranslateZ(float translation)
+{
+    position.z += translation;
+}
+
+glm::vec3 Transform::GetPosition()
+{
+    return glm::vec3();
+}
+
+glm::vec3 Transform::GetLocalPosition()
+{
+    return position;
+}
+
+glm::vec3 Transform::GetForwardAxis()
+{
+    return glm::vec3();
+}
+
+void Transform::SetScale(glm::vec3 scale_)
+{
+    scale = scale_;
+}
+
+glm::vec3 Transform::GetScale()
+{
+    return glm::vec3();
+}
+
+glm::vec3 Transform::GetLocalScale()
+{
+    return scale;
+}
