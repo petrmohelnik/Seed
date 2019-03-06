@@ -3,12 +3,18 @@
 #include "Renderer.h"
 #include "Camera.h"
 #include "Light.h"
+#include "Transform.h"
 
 Camera* RenderingPipeline::mainCamera;
 GLuint RenderingPipeline::cameraUniform;
 GLuint RenderingPipeline::lightUniform;
 GLuint RenderingPipeline::modelUniform;
 GLuint RenderingPipeline::materialUniform;
+
+void RenderingPipeline::SetRootTransform(Transform* root)
+{
+    rootTransform = root;
+}
 
 void RenderingPipeline::Initialize()
 {

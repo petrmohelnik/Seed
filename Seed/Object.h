@@ -17,6 +17,7 @@ class Time;
 class Object : public Identifiable
 {
 public:
+	Object();
 	Object(std::string name_);
     virtual ~Object();
     Object(Object&& m) = delete;

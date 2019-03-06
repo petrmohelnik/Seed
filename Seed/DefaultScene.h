@@ -47,8 +47,17 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     shaders.GetShader(ShaderFactory::Type::Basic);*/
 
     auto joker = objects.CreateObject<Object>("joker");
-    joker->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("nyra/nyra.dae"));
-    joker->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("nyra/nyra.dae"));
+    joker->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
+    joker->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
+    joker->GetComponent<Transform>()->SetScale(glm::vec3(0.01));
+    joker->GetComponent<Transform>()->RotateZ(1.5);
+    joker->GetComponent<Transform>()->TranslateX(2.0);
+
+    auto joker2 = objects.CreateObject<Object>("joker");
+    joker2->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
+    joker2->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
+    joker2->GetComponent<Transform>()->TranslateX(-400.0);
+    joker2->GetComponent<Transform>()->SetParent(joker);
 
     auto camera = objects.CreateObject<Object>("camera")->AddComponent<Camera>();
     auto light = objects.CreateObject<Object>("light")->AddComponent<Light>();

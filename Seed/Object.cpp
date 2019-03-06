@@ -8,13 +8,23 @@
 #include "FileSystem.h"
 #include "Time.h"
 
+Object::Object()
+    : objects(Engine::GetObjects())
+    , components(Engine::GetComponents())
+    , fileSystem(Engine::GetFileSystem())
+    , time(Engine::GetTime())
+{
+    transform = std::make_unique<Transform>(this);
+    name = "root";
+}
+
 Object::Object(std::string name_)
     : objects(Engine::GetObjects())
     , components(Engine::GetComponents())
     , fileSystem(Engine::GetFileSystem())
     , time(Engine::GetTime())
 {
-	transform = std::make_unique<Transform>(this);
+	transform = std::make_unique<Transform>(this, components.GetRoot()->GetComponent<Transform>());
     name = std::move(name_);
 }
 

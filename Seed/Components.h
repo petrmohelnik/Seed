@@ -40,6 +40,7 @@ protected:
     void OnFrameUpdate();
     void Render();
     void CleanComponents();
+    Object* GetRoot();
 
 private:
     Input& input;
@@ -50,6 +51,7 @@ private:
     PhysicsEngine physics;
     std::vector<Audio*> audios;
     std::vector<Script*> scripts;
+    std::unique_ptr<Object> root;
 };
 
 template<typename T>

@@ -4,10 +4,13 @@ class Renderer;
 class Camera;
 class Light;
 class RenderQueue;
+class Transform;
 
 class RenderingPipeline
 {
 public:
+    void SetRootTransform(Transform* root);
+
     void Initialize();
     void Render();
 
@@ -31,6 +34,7 @@ private:
     std::vector<Camera*> cameras;
     static Camera* mainCamera;
     std::vector<Light*> lights;
+    Transform* rootTransform;
 
     static GLuint cameraUniform;
     static GLuint lightUniform;

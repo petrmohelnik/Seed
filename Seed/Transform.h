@@ -5,6 +5,7 @@ class Transform final : public Component
 {
 public:
     using Component::Component;
+    Transform(Object* object, Transform* root);
     Transform* GetParent();
     void SetParent(Transform* parent_);
     void SetParent(Object* parent_);
@@ -35,17 +36,23 @@ public:
 protected:
     friend class Object;
     friend class Objects;
+    friend class Components;
     void DestroyAllChildren();
     void CleanChildren();
+    void UpdateModelMatrix();
 
 private:
     void AddChild(Transform* child);
+    bool IsParentRoot() const;
+    void MakeRoot();
+    bool isRoot = false;
 
     Transform* parent = nullptr;
     std::vector<Transform*> children;
 
-    glm::vec3 position;
-    glm::quat rotation;
-    glm::vec3 scale;
-    glm::mat4 modelMatrix;
+    glm::vec3 position = glm::vec3(0.0);
+    glm::quat rotation = glm::angleAxis(0.0f, glm::vec3(0.0, 0.0, 1.0));
+    glm::vec3 scale = glm::vec3(1.0);
+
+    glm::mat4 modelMatrix = glm::mat4(1.0);
 };

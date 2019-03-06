@@ -9,6 +9,14 @@ Components::Components()
     , time(Engine::GetTime())
     , objects(Engine::GetObjects())
 {
+    root = std::make_unique<Object>();
+    root->GetComponent<Transform>()->MakeRoot();
+    renderingPipeline.SetRootTransform(root->GetComponent<Transform>());
+}
+
+Object* Components::GetRoot()
+{
+    return root.get();;
 }
 
 void Components::Initialize()
@@ -26,6 +34,7 @@ void Components::OnFrameUpdate()
 
 void Components::Render()
 {
+    root->GetComponent<Transform>()->UpdateModelMatrix();
     renderingPipeline.Render();
 }
 
