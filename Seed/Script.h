@@ -20,9 +20,10 @@ public:
 	virtual void OnMouseDown() {};
 	virtual void OnDestroy() {};
 
-private:
+protected:
     Input& input;
     Time& time;
     Objects& objects;
     PhysicsEngine& physics;
+    Transform* transform;
 };

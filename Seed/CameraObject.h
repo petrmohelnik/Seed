@@ -1,6 +1,6 @@
 #pragma once
 #include "Object.h"
-#include "CameraScript.h"
+#include "CameraMovementScript.h"
 
 class CameraObject : public Object
 {
@@ -12,5 +12,6 @@ public:
 
 void CameraObject::Initialize()
 {
-    AddComponent<CameraScript>();
+    AddComponent<CameraMovementScript>();
+    AddComponent<Camera>();
 }

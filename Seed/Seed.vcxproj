@@ -65,13 +65,14 @@
     <ClInclude Include="BasicShader.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraObject.h" />
-    <ClInclude Include="CameraScript.h" />
+    <ClInclude Include="CameraMovementScript.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Components.h" />
     <ClInclude Include="DefaultScene.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="GameScript.h" />
     <ClInclude Include="Identifiable.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />

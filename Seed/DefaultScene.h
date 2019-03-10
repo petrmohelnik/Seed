@@ -1,5 +1,6 @@
 #pragma once
 #include "CameraObject.h"
+#include "GameScript.h"
 
 void DefaultScene(Objects& objects, FileSystem& fileSystem)
 {
@@ -49,16 +50,20 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto joker = objects.CreateObject<Object>("joker");
     joker->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
     joker->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
-    joker->GetComponent<Transform>()->SetScale(glm::vec3(0.01));
-    joker->GetComponent<Transform>()->RotateZ(1.5);
-    joker->GetComponent<Transform>()->TranslateX(2.0);
+    joker->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.01));
+    joker->GetComponent<Transform>()->TranslateX(100.0);
+    joker->GetComponent<Transform>()->RotateX(-1.57);
 
-    auto joker2 = objects.CreateObject<Object>("joker");
+    auto joker2 = objects.CreateObject<Object>("joker2");
     joker2->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
     joker2->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
     joker2->GetComponent<Transform>()->TranslateX(-400.0);
     joker2->GetComponent<Transform>()->SetParent(joker);
+    //auto scriptt = joker2->AddComponent<CameraMovementScript>();
+    //joker2->GetComponent<CameraMovementScript>()->MoveSensitivity = 10.0f;
+    //joker2->AddComponent<GameScript>();
 
-    auto camera = objects.CreateObject<Object>("camera")->AddComponent<Camera>();
+    auto camera = objects.CreateObject<CameraObject>("camera");
+    camera->GetComponent<Transform>()->TranslateZ(10.0);
     auto light = objects.CreateObject<Object>("light")->AddComponent<Light>();
 }

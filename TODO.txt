@@ -1,5 +1,10 @@
+vracenit pointeru pri AddComponent nefunguje a asi i u object - vraic null po movu
+
+SetRotation, X,y,z,... lokalni osa, globalni osa, quaternion...
+setovaci metody by meli mit parametry, zda local nebo global
+forwardAxis... jsou asi jenom globalni
 pouzivat radsi padding nez mit vsude vec4 a mat4
-layout in a out atirbutu v sahderech
+layout in a out atributu v sahderech
 setMeshAndMaterials
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
 ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene
@@ -30,14 +35,21 @@ mel bych nekdy i u normalniho loadu volat unload scene
 modely muzou sdilet textury mezi materialy... :/
 kombinovani textur a barev example dole: http://assimp.sourceforge.net/lib_html/materials.html
 kombinovani nedelat, pripadne na cpu jenom a kdyz uz tak jenom jedna textura s jednou barvou na gpu
+predelat inputy mysi na vlastni enumy
+https://gamedev.stackexchange.com/questions/138358/what-is-the-transformation-order-when-using-the-transform-class
+viz koment od Soapy, jednotlive slozky by asi mely byt oddelene, potom mi scale nebude ovlivnovat translaci a muze byt posldeni
 
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
+http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
+glm je column-major
+!!!https://www.scratchapixel.com/lessons/mathematics-physics-for-computer-graphics/geometry/row-major-vs-column-major-vector
 mit moznost nastavovat transformace i v globalnim prostoru
 pro kazdou kameru se ze vsech objektu, ktere uz maji nove transformacni matice, vytvori render queue
 tam se budou radit prioritne podle vrstvy materialu, potom podle programu
+forawrd axis ma mit - v zetu?
 http://developer.download.nvidia.com/CgTutorial/cg_tutorial_chapter04.html
 https://gamedev.stackexchange.com/questions/54020/translating-viewmatrix-is-inverted-why
 https://computergraphics.stackexchange.com/questions/5571/why-do-i-need-to-inverse-the-orientation-matrix-of-a-camera-to-be-able-to-transl

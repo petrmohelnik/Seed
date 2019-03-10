@@ -11,6 +11,7 @@ public:
     void SetParent(Object* parent_);
 
     void RotateAngle(float angle, glm::vec3 axis);
+    void Rotate(glm::vec3 angles);
     void RotateX(float angle);
     void RotateY(float angle);
     void RotateZ(float angle);
@@ -20,14 +21,19 @@ public:
     glm::vec3 GetLocalEulerAngles();
     glm::quat GetRotation();
     glm::quat GetLocalRotation();
+    void SetLocalRotation(glm::quat rotation);
     void Translate(glm::vec3 translation);
     void TranslateX(float translation);
     void TranslateY(float translation);
     void TranslateZ(float translation);
+    void SetPosition(glm::vec3 position_);
+    void SetLocalPosition(glm::vec3 position_);
     glm::vec3 GetPosition();
     glm::vec3 GetLocalPosition();
+    glm::vec3 GetRightAxis();
+    glm::vec3 GetUpAxis();
     glm::vec3 GetForwardAxis();
-    void SetScale(glm::vec3 scale_);
+    void SetLocalScale(glm::vec3 scale_);
     glm::vec3 GetScale();
     glm::vec3 GetLocalScale();
 
@@ -51,7 +57,7 @@ private:
     std::vector<Transform*> children;
 
     glm::vec3 position = glm::vec3(0.0);
-    glm::quat rotation = glm::angleAxis(0.0f, glm::vec3(0.0, 0.0, 1.0));
+    glm::quat orientation = glm::angleAxis(0.0f, glm::vec3(0.0, 0.0, 1.0));
     glm::vec3 scale = glm::vec3(1.0);
 
     glm::mat4 modelMatrix = glm::mat4(1.0);

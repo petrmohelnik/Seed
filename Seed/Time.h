@@ -6,8 +6,8 @@ class Time
 public:
     Time(SDLWindow& window);
 
-	Uint32 DeltaTime();
-	Uint32 FixedDeltaTime();
+	float DeltaTime();
+    float FixedDeltaTime();
 
 protected:
 	friend class Engine;
@@ -20,6 +20,8 @@ protected:
     void EndFixedUpdate();
 
 private:
+    float ToSeconds(Uint32 milliseconds);
+
     Uint32 deltaTime = 0;
     Uint32 fixedDeltaTime = 20;
     Uint32 currentTime = 0;

@@ -11,4 +11,5 @@ Script::Script(Object* object, PhysicsEngine& physics)
     , objects(Engine::GetObjects())
     , physics(physics)
 {
+    transform = object->GetComponent<Transform>();
 }

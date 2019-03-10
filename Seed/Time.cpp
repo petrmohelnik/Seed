@@ -50,14 +50,19 @@ void Time::EndFixedUpdate()
         fixedUpdateAccumulate -= fixedUpdateDuration;
 }
 
-Uint32 Time::DeltaTime()
+float Time::ToSeconds(Uint32 milliseconds)
+{
+    return milliseconds * 0.001f;
+}
+
+float Time::DeltaTime()
 {
     if (paused)
         return 0;
-    return deltaTime;
+    return ToSeconds(deltaTime);
 }
 
-Uint32 Time::FixedDeltaTime()
+float Time::FixedDeltaTime()
 {
-	return fixedDeltaTime;
+    return ToSeconds(fixedDeltaTime);
 }

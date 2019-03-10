@@ -34,7 +34,8 @@ void SDLWindow::InitializeOpenGL()
 	}
 
 	//vertical synchronization
-	//SDL_GL_SetSwapInterval(1);
+	SDL_GL_SetSwapInterval(1);
+    SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	glewExperimental = GL_TRUE;
 	GLenum result = glewInit();
@@ -62,6 +63,9 @@ void SDLWindow::InitializeOpenGL()
 
 void SDLWindow::PollInputs()
 {
+    input.ClearInputs();
+
+    input.InitializeState();
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
