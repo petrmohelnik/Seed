@@ -76,9 +76,9 @@ void Transform::UpdateModelMatrix()
     if (!isRoot)
     {
         //modelMatrix = glm::scale(parent->modelMatrix, scale);
-        //modelMatrix = glm::toMat4(orientation) * modelMatrix;
         //modelMatrix = glm::translate(modelMatrix, position);
-        modelMatrix = parent->modelMatrix * glm::scale(scale) * glm::translate(position) * glm::toMat4(orientation); //scale should be at the right
+        //modelMatrix = glm::toMat4(orientation) * modelMatrix;
+        modelMatrix = parent->modelMatrix * glm::scale(scale) * glm::translate(position) * glm::toMat4((orientation)); //scale should be at the right
     }
 
     for (auto const& child : children)
@@ -201,19 +201,19 @@ glm::vec3 Transform::GetLocalPosition()
 glm::vec3 Transform::GetRightAxis()
 {
     auto rotationMatrix = glm::toMat4(GetRotation());
-    return glm::vec3(rotationMatrix[0][0], rotationMatrix[1][0], rotationMatrix[2][0]);
+    return glm::vec3(rotationMatrix[0]);
 }
 
 glm::vec3 Transform::GetUpAxis()
 {
     auto rotationMatrix = glm::toMat4(GetRotation());
-    return glm::vec3(rotationMatrix[0][1], rotationMatrix[1][1], rotationMatrix[2][1]);
+    return glm::vec3(rotationMatrix[1]);
 }
 
 glm::vec3 Transform::GetForwardAxis()
 {
     auto rotationMatrix = glm::toMat4(GetRotation());
-    return glm::vec3(rotationMatrix[0][2], rotationMatrix[1][2], rotationMatrix[2][2]);
+    return glm::vec3(rotationMatrix[2]);
 }
 
 void Transform::SetLocalScale(glm::vec3 scale_)

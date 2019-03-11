@@ -6,6 +6,7 @@ void Camera::BindCamera()
 {
     RenderingPipeline::BindCameraUniform();
 
+    auto view = glm::inverse(GetTransform()->GetModelMatrix());
     auto position = glm::vec4(GetTransform()->GetPosition(), 0.0f);
     
     CameraBlock cameraBlockData

@@ -38,21 +38,17 @@ kombinovani nedelat, pripadne na cpu jenom a kdyz uz tak jenom jedna textura s j
 predelat inputy mysi na vlastni enumy
 https://gamedev.stackexchange.com/questions/138358/what-is-the-transformation-order-when-using-the-transform-class
 viz koment od Soapy, jednotlive slozky by asi mely byt oddelene, potom mi scale nebude ovlivnovat translaci a muze byt posldeni
+jaky je spravny poradi nasobeni quaternionu pro lokalni vs globalni rotaci?
 
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
-http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
 glm je column-major
-!!!https://www.scratchapixel.com/lessons/mathematics-physics-for-computer-graphics/geometry/row-major-vs-column-major-vector
 mit moznost nastavovat transformace i v globalnim prostoru
 pro kazdou kameru se ze vsech objektu, ktere uz maji nove transformacni matice, vytvori render queue
 tam se budou radit prioritne podle vrstvy materialu, potom podle programu
 forawrd axis ma mit - v zetu?
-http://developer.download.nvidia.com/CgTutorial/cg_tutorial_chapter04.html
-https://gamedev.stackexchange.com/questions/54020/translating-viewmatrix-is-inverted-why
-https://computergraphics.stackexchange.com/questions/5571/why-do-i-need-to-inverse-the-orientation-matrix-of-a-camera-to-be-able-to-transl
 
 submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?
