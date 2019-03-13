@@ -25,14 +25,7 @@ void CameraMovementScript::Update()
 
     if (input.MouseButton(SDL_BUTTON_RIGHT))
     {
-        //rotate around y global axis
-        //transform->SetLocalRotation(glm::normalize(transform->GetLocalRotation() * glm::angleAxis(input.MouseMovement().x * RotationSensitivity, glm::vec3(0.0f, 1.0f, 0.0f))));
-        //rotate around x local axis
-        //transform->RotateX(input.MouseMovement().y * RotationSensitivity);
-        //first around x, then around y
-        transform->SetLocalRotation(glm::normalize(
-            glm::angleAxis(-input.MouseMovement().x * RotationSensitivity, glm::vec3(0.0f, 1.0f, 0.0f)) *
-            transform->GetLocalRotation() *
-            glm::angleAxis(-input.MouseMovement().y * RotationSensitivity, glm::vec3(1.0f, 0.0f, 0.0f))));
+        transform->RotateX(-input.MouseMovement().y * RotationSensitivity, Transform::Space::World);
+        transform->RotateY(-input.MouseMovement().x * RotationSensitivity);
     }
 }

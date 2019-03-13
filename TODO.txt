@@ -36,9 +36,10 @@ modely muzou sdilet textury mezi materialy... :/
 kombinovani textur a barev example dole: http://assimp.sourceforge.net/lib_html/materials.html
 kombinovani nedelat, pripadne na cpu jenom a kdyz uz tak jenom jedna textura s jednou barvou na gpu
 predelat inputy mysi na vlastni enumy
-https://gamedev.stackexchange.com/questions/138358/what-is-the-transformation-order-when-using-the-transform-class
-viz koment od Soapy, jednotlive slozky by asi mely byt oddelene, potom mi scale nebude ovlivnovat translaci a muze byt posldeni
+scale rodice ovlivnuje translaci potomka, to je i v unity, ale nemel bych bych schopen anstavit globalni pozici pres set globalpos?
+pri nastavovani globalnich pozic musim brat v uvahu vsechny slozky, napr rotace rodice ovlivni globalni pozici potomka
 jaky je spravny poradi nasobeni quaternionu pro lokalni vs globalni rotaci?
+ani setlocalposition nebere v uvahu rotci, to musim orpavit - muuz brat posledni model matici v uvahu?
 
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 

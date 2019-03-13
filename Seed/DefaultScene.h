@@ -50,18 +50,27 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto joker = objects.CreateObject<Object>("joker");
     joker->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
     joker->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
-    joker->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.01));
-    joker->GetComponent<Transform>()->TranslateX(100.0);
+    joker->GetComponent<Transform>()->SetScale(glm::vec3(0.01));
+    joker->GetComponent<Transform>()->TranslateX(1.0);
     joker->GetComponent<Transform>()->RotateX(-1.57);
+    joker->AddComponent<GameScript>();
 
     auto joker2 = objects.CreateObject<Object>("joker2");
     joker2->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
     joker2->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
     joker2->GetComponent<Transform>()->TranslateX(-400.0);
+    joker2->GetComponent<Transform>()->SetScale(glm::vec3(0.5));
     joker2->GetComponent<Transform>()->SetParent(joker);
-    //auto scriptt = joker2->AddComponent<CameraMovementScript>();
-    //joker2->GetComponent<CameraMovementScript>()->MoveSensitivity = 10.0f;
-    //joker2->AddComponent<GameScript>();
+    joker2->AddComponent<GameScript>();
+    joker2->GetComponent<GameScript>()->increaseXZPosition = (2.0f * 3.14f) / 15.0f;
+
+    auto joker3 = objects.CreateObject<Object>("joker3");
+    joker3->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
+    joker3->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
+    joker3->GetComponent<Transform>()->TranslateX(-400.0);
+    joker3->GetComponent<Transform>()->SetParent(joker2);
+    joker3->AddComponent<GameScript>();
+    joker3->GetComponent<GameScript>()->increaseXZPosition = (2.0f * 3.14f) / 5.0f;
 
     auto camera = objects.CreateObject<CameraObject>("camera");
     camera->GetComponent<Transform>()->TranslateZ(10.0);

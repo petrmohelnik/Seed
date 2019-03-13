@@ -4,17 +4,23 @@
 class Transform final : public Component
 {
 public:
+    enum class Space
+    {
+        Local,
+        World
+    };
+
     using Component::Component;
     Transform(Object* object, Transform* root);
     Transform* GetParent();
     void SetParent(Transform* parent_);
     void SetParent(Object* parent_);
 
-    void RotateAngle(float angle, glm::vec3 axis);
+    void RotateAngle(float angle, glm::vec3 axis, Space space = Space::Local);
     void Rotate(glm::vec3 angles);
-    void RotateX(float angle);
-    void RotateY(float angle);
-    void RotateZ(float angle);
+    void RotateX(float angle, Space space = Space::Local);
+    void RotateY(float angle, Space space = Space::Local);
+    void RotateZ(float angle, Space space = Space::Local);
     void RotateQuat(glm::quat quaternion);
     void LookAt(glm::vec3 position);
     glm::vec3 GetEulerAngles();
@@ -26,14 +32,13 @@ public:
     void TranslateX(float translation);
     void TranslateY(float translation);
     void TranslateZ(float translation);
-    void SetPosition(glm::vec3 position_);
-    void SetLocalPosition(glm::vec3 position_);
+    void SetPosition(glm::vec3 position_, Space space = Space::Local);
     glm::vec3 GetPosition();
     glm::vec3 GetLocalPosition();
     glm::vec3 GetRightAxis();
     glm::vec3 GetUpAxis();
     glm::vec3 GetForwardAxis();
-    void SetLocalScale(glm::vec3 scale_);
+    void SetScale(glm::vec3 scale_);
     glm::vec3 GetScale();
     glm::vec3 GetLocalScale();
 
@@ -51,6 +56,9 @@ private:
     void AddChild(Transform* child);
     bool IsParentRoot() const;
     void MakeRoot();
+    glm::mat4 CalculateLocalMatrix();
+    glm::mat4 CalculateWorldMatrix();
+
     bool isRoot = false;
 
     Transform* parent = nullptr;

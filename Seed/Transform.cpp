@@ -26,6 +26,19 @@ void Transform::MakeRoot()
     isRoot = true;
 }
 
+glm::mat4 Transform::CalculateLocalMatrix()
+{
+    return glm::translate(position) * glm::toMat4(orientation) * glm::scale(scale);
+}
+
+glm::mat4 Transform::CalculateWorldMatrix()
+{
+    if (!isRoot)
+        return parent->CalculateWorldMatrix() * CalculateLocalMatrix();
+
+    return modelMatrix;
+}
+
 void Transform::SetParent(Transform* parent_)
 {
     std::experimental::erase_if(parent->children, [this](const Transform* parentChild)
@@ -75,10 +88,7 @@ void Transform::UpdateModelMatrix()
 {
     if (!isRoot)
     {
-        //modelMatrix = glm::scale(parent->modelMatrix, scale);
-        //modelMatrix = glm::translate(modelMatrix, position);
-        //modelMatrix = glm::toMat4(orientation) * modelMatrix;
-        modelMatrix = parent->modelMatrix * glm::scale(scale) * glm::translate(position) * glm::toMat4((orientation)); //scale should be at the right
+        modelMatrix = parent->modelMatrix * CalculateLocalMatrix();
     }
 
     for (auto const& child : children)
@@ -87,9 +97,12 @@ void Transform::UpdateModelMatrix()
     }
 }
 
-void Transform::RotateAngle(float angle, glm::vec3 axis)
+void Transform::RotateAngle(float angle, glm::vec3 axis, Space space)
 {
-    orientation = glm::normalize(glm::angleAxis(angle, axis) * orientation);
+    if (space == Space::Local)
+        orientation = glm::normalize(glm::angleAxis(angle, axis) * orientation);
+    else
+        orientation = glm::normalize(orientation * glm::angleAxis(angle, axis));
 }
 
 void Transform::Rotate(glm::vec3 angles)
@@ -97,19 +110,19 @@ void Transform::Rotate(glm::vec3 angles)
     orientation = glm::normalize(glm::quat(angles) * orientation);
 }
 
-void Transform::RotateX(float angle)
+void Transform::RotateX(float angle, Space space)
 {
-    orientation = glm::normalize(glm::angleAxis(angle, glm::vec3(1.0f, 0.0f, 0.0f)) * orientation);
+    RotateAngle(angle, glm::vec3(1.0f, 0.0f, 0.0f), space);
 }
 
-void Transform::RotateY(float angle)
+void Transform::RotateY(float angle, Space space)
 {
-    orientation = glm::normalize(glm::angleAxis(angle, glm::vec3(0.0f, 1.0f, 0.0f)) * orientation);
+    RotateAngle(angle, glm::vec3(0.0f, 1.0f, 0.0f), space);
 }
 
-void Transform::RotateZ(float angle)
+void Transform::RotateZ(float angle, Space space)
 {
-    orientation = glm::normalize(glm::angleAxis(angle, glm::vec3(0.0f, 0.0f, 1.0f)) * orientation);
+    RotateAngle(angle, glm::vec3(0.0f, 0.0f, 1.0f), space);
 }
 
 void Transform::RotateQuat(glm::quat quaternion)
@@ -169,20 +182,16 @@ void Transform::TranslateZ(float translation)
     position.z += translation;
 }
 
-void Transform::SetPosition(glm::vec3 position_)
+void Transform::SetPosition(glm::vec3 position_, Space space)
 {
-    if (IsParentRoot())
-        SetLocalPosition(position_);
+    if (space == Space::Local)
+    {
+        position = position_;
+    }
     else
     {
-        position = glm::vec3(0.0f);
-        position = position_ - GetPosition();
+        position = glm::vec3((glm::inverse(parent->CalculateWorldMatrix())) * glm::vec4(position_, 1.0f));
     }
-}
-
-void Transform::SetLocalPosition(glm::vec3 position_)
-{
-    position = position_;
 }
 
 glm::vec3 Transform::GetPosition()
@@ -216,7 +225,7 @@ glm::vec3 Transform::GetForwardAxis()
     return glm::vec3(rotationMatrix[2]);
 }
 
-void Transform::SetLocalScale(glm::vec3 scale_)
+void Transform::SetScale(glm::vec3 scale_)
 {
     scale = scale_;
 }
