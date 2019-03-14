@@ -40,6 +40,7 @@ scale rodice ovlivnuje translaci potomka, to je i v unity, ale nemel bych bych s
 pri nastavovani globalnich pozic musim brat v uvahu vsechny slozky, napr rotace rodice ovlivni globalni pozici potomka
 jaky je spravny poradi nasobeni quaternionu pro lokalni vs globalni rotaci?
 ani setlocalposition nebere v uvahu rotci, to musim orpavit - muuz brat posledni model matici v uvahu?
+ty lokalni a globalni rotace mam blbe
 
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 
