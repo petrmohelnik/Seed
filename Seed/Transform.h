@@ -43,6 +43,8 @@ public:
     glm::vec3 GetLocalScale();
 
     glm::mat4 GetModelMatrix();
+	glm::mat4 GetLocalToWorldMatrix();
+	glm::mat4 GetWorldToLocalMatrix();
 
 protected:
     friend class Object;
@@ -58,6 +60,8 @@ private:
     void MakeRoot();
     glm::mat4 CalculateLocalMatrix();
     glm::mat4 CalculateWorldMatrix();
+	void DecomposeMatrix(glm::mat4 matrix, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation);
+	void TransformInWorldAndDecompose(glm::mat4 worldTransformation, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation);
 
     bool isRoot = false;
 

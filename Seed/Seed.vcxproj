@@ -91,6 +91,7 @@
     <ClInclude Include="RenderingPipeline.h" />
     <ClInclude Include="RenderQueue.h" />
     <ClInclude Include="Rigidbody.h" />
+    <ClInclude Include="RotateWorldScript.h" />
     <ClInclude Include="SceneDefinition.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="Object.h" />

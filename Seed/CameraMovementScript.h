@@ -25,7 +25,7 @@ void CameraMovementScript::Update()
 
     if (input.MouseButton(SDL_BUTTON_RIGHT))
     {
-        transform->RotateX(-input.MouseMovement().y * RotationSensitivity, Transform::Space::World);
-        transform->RotateY(-input.MouseMovement().x * RotationSensitivity);
+        transform->RotateY(-input.MouseMovement().x * RotationSensitivity, Transform::Space::World);
+        transform->RotateX(-input.MouseMovement().y * RotationSensitivity);
     }
 }

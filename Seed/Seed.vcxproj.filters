@@ -265,6 +265,9 @@
     <ClInclude Include="GameScript.h">
       <Filter>Scripts</Filter>
     </ClInclude>
+    <ClInclude Include="RotateWorldScript.h">
+      <Filter>Scripts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\Basic.fs">

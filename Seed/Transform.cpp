@@ -39,6 +39,21 @@ glm::mat4 Transform::CalculateWorldMatrix()
     return modelMatrix;
 }
 
+void Transform::DecomposeMatrix(glm::mat4 matrix, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation)
+{
+	glm::vec3 dummyScale, dummySkew;
+	glm::vec4 dummyPerspective;
+	glm::decompose(matrix, dummyScale, decomposedOrientation, decomposedTranslation, dummySkew, dummyPerspective);
+}
+
+void Transform::TransformInWorldAndDecompose(glm::mat4 worldTransformation, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation)
+{
+	auto localToWorldMatrix = GetLocalToWorldMatrix();
+	auto worldTransformationLocalMatrix = glm::inverse(localToWorldMatrix) * worldTransformation * localToWorldMatrix * CalculateLocalMatrix();
+
+	DecomposeMatrix(worldTransformationLocalMatrix, decomposedTranslation, decomposedOrientation);
+}
+
 void Transform::SetParent(Transform* parent_)
 {
     std::experimental::erase_if(parent->children, [this](const Transform* parentChild)
@@ -84,6 +99,16 @@ glm::mat4 Transform::GetModelMatrix()
     return modelMatrix;
 }
 
+glm::mat4 Transform::GetLocalToWorldMatrix()
+{
+	return parent->CalculateWorldMatrix();
+}
+
+glm::mat4 Transform::GetWorldToLocalMatrix()
+{
+	return glm::inverse(GetLocalToWorldMatrix());
+}
+
 void Transform::UpdateModelMatrix()
 {
     if (!isRoot)
@@ -100,9 +125,12 @@ void Transform::UpdateModelMatrix()
 void Transform::RotateAngle(float angle, glm::vec3 axis, Space space)
 {
     if (space == Space::Local)
-        orientation = glm::normalize(glm::angleAxis(angle, axis) * orientation);
-    else
         orientation = glm::normalize(orientation * glm::angleAxis(angle, axis));
+	else
+	{
+		glm::vec3 dummyTranslation;
+		TransformInWorldAndDecompose(glm::toMat4(glm::angleAxis(angle, axis)), dummyTranslation, orientation);
+	}
 }
 
 void Transform::Rotate(glm::vec3 angles)
@@ -190,7 +218,7 @@ void Transform::SetPosition(glm::vec3 position_, Space space)
     }
     else
     {
-        position = glm::vec3((glm::inverse(parent->CalculateWorldMatrix())) * glm::vec4(position_, 1.0f));
+        position = glm::vec3(GetWorldToLocalMatrix() * glm::vec4(position_, 1.0f));
     }
 }
 
