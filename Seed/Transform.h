@@ -17,21 +17,20 @@ public:
     void SetParent(Object* parent_);
 
     void RotateAngle(float angle, glm::vec3 axis, Space space = Space::Local);
-    void Rotate(glm::vec3 angles);
+    void Rotate(glm::vec3 angles, Space space = Space::Local);
     void RotateX(float angle, Space space = Space::Local);
     void RotateY(float angle, Space space = Space::Local);
     void RotateZ(float angle, Space space = Space::Local);
-    void RotateQuat(glm::quat quaternion);
-    void LookAt(glm::vec3 position);
+    void RotateQuat(glm::quat quaternion, Space space = Space::Local);
+    void SetRotation(glm::quat rotation);
     glm::vec3 GetEulerAngles();
     glm::vec3 GetLocalEulerAngles();
     glm::quat GetRotation();
     glm::quat GetLocalRotation();
-    void SetLocalRotation(glm::quat rotation);
-    void Translate(glm::vec3 translation);
-    void TranslateX(float translation);
-    void TranslateY(float translation);
-    void TranslateZ(float translation);
+    void Translate(glm::vec3 translation, Space space = Space::Local);
+    void TranslateX(float translation, Space space = Space::Local);
+    void TranslateY(float translation, Space space = Space::Local);
+    void TranslateZ(float translation, Space space = Space::Local);
     void SetPosition(glm::vec3 position_, Space space = Space::Local);
     glm::vec3 GetPosition();
     glm::vec3 GetLocalPosition();
@@ -41,6 +40,8 @@ public:
     void SetScale(glm::vec3 scale_);
     glm::vec3 GetScale();
     glm::vec3 GetLocalScale();
+    void LookAt(glm::vec3 position);
+    void RotateAround();
 
     glm::mat4 GetModelMatrix();
 	glm::mat4 GetLocalToWorldMatrix();

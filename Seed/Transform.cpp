@@ -124,18 +124,12 @@ void Transform::UpdateModelMatrix()
 
 void Transform::RotateAngle(float angle, glm::vec3 axis, Space space)
 {
-    if (space == Space::Local)
-        orientation = glm::normalize(orientation * glm::angleAxis(angle, axis));
-	else
-	{
-		glm::vec3 dummyTranslation;
-		TransformInWorldAndDecompose(glm::toMat4(glm::angleAxis(angle, axis)), dummyTranslation, orientation);
-	}
+    RotateQuat(glm::angleAxis(angle, axis), space);
 }
 
-void Transform::Rotate(glm::vec3 angles)
+void Transform::Rotate(glm::vec3 angles, Space space)
 {
-    orientation = glm::normalize(glm::quat(angles) * orientation);
+    RotateQuat(glm::quat(angles), space);
 }
 
 void Transform::RotateX(float angle, Space space)
@@ -153,13 +147,20 @@ void Transform::RotateZ(float angle, Space space)
     RotateAngle(angle, glm::vec3(0.0f, 0.0f, 1.0f), space);
 }
 
-void Transform::RotateQuat(glm::quat quaternion)
+void Transform::RotateQuat(glm::quat quaternion, Space space)
 {
-    orientation = glm::normalize(quaternion * orientation);
+    if (space == Space::Local)
+        orientation = glm::normalize(orientation * quaternion);
+    else
+    {
+        glm::vec3 dummyTranslation;
+        TransformInWorldAndDecompose(glm::toMat4(quaternion), dummyTranslation, orientation);
+    }
 }
 
-void Transform::LookAt(glm::vec3 position)
+void Transform::SetRotation(glm::quat rotation)
 {
+    orientation = rotation;
 }
 
 glm::vec3 Transform::GetEulerAngles()
@@ -185,29 +186,30 @@ glm::quat Transform::GetLocalRotation()
     return orientation;
 }
 
-void Transform::SetLocalRotation(glm::quat rotation)
+void Transform::Translate(glm::vec3 translation, Space space)
 {
-    orientation = rotation;
+    if(space == Space::Local)
+        position += translation;
+    else
+    {
+        glm::quat dummyRotation;
+        TransformInWorldAndDecompose(glm::translate(translation), position, dummyRotation);
+    }
 }
 
-void Transform::Translate(glm::vec3 translation)
+void Transform::TranslateX(float translation, Space space)
 {
-    position += translation;
+    Translate(glm::vec3(translation, 0.0f, 0.0f), space);
 }
 
-void Transform::TranslateX(float translation)
+void Transform::TranslateY(float translation, Space space)
 {
-    position.x += translation;
+    Translate(glm::vec3(0.0f, translation, 0.0f), space);
 }
 
-void Transform::TranslateY(float translation)
+void Transform::TranslateZ(float translation, Space space)
 {
-    position.y += translation;
-}
-
-void Transform::TranslateZ(float translation)
-{
-    position.z += translation;
+    Translate(glm::vec3(0.0f, 0.0f, translation), space);
 }
 
 void Transform::SetPosition(glm::vec3 position_, Space space)
@@ -237,20 +239,17 @@ glm::vec3 Transform::GetLocalPosition()
 
 glm::vec3 Transform::GetRightAxis()
 {
-    auto rotationMatrix = glm::toMat4(GetRotation());
-    return glm::vec3(rotationMatrix[0]);
+    return glm::vec3(CalculateWorldMatrix()[0]);
 }
 
 glm::vec3 Transform::GetUpAxis()
 {
-    auto rotationMatrix = glm::toMat4(GetRotation());
-    return glm::vec3(rotationMatrix[1]);
+    return glm::vec3(CalculateWorldMatrix()[1]);
 }
 
 glm::vec3 Transform::GetForwardAxis()
 {
-    auto rotationMatrix = glm::toMat4(GetRotation());
-    return glm::vec3(rotationMatrix[2]);
+    return glm::vec3(CalculateWorldMatrix()[2]);
 }
 
 void Transform::SetScale(glm::vec3 scale_)

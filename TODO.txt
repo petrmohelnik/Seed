@@ -41,6 +41,7 @@ pri nastavovani globalnich pozic musim brat v uvahu vsechny slozky, napr rotace 
 jaky je spravny poradi nasobeni quaternionu pro lokalni vs globalni rotaci?
 ani setlocalposition nebere v uvahu rotci, to musim orpavit - muuz brat posledni model matici v uvahu?
 RotateAround bude rotovat i menit pozici v globalu
+ty globalni gettrey mam taky blbe
 
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 

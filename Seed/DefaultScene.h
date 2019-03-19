@@ -62,14 +62,14 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     joker2->GetComponent<Transform>()->TranslateX(-400.0);
     joker2->GetComponent<Transform>()->SetScale(glm::vec3(0.5));
     joker2->GetComponent<Transform>()->SetParent(joker);
-    //joker2->AddComponent<GameScript>();
-    //joker2->GetComponent<GameScript>()->increaseXZPosition = (2.0f * 3.14f) / 15.0f;
+    joker2->AddComponent<GameScript>();
+    joker2->GetComponent<GameScript>()->increaseXZPosition = (2.0f * 3.14f) / 15.0f;
 
     auto joker3 = objects.CreateObject<Object>("joker3");
+    joker3->GetComponent<Transform>()->SetParent(joker2);
     joker3->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
     joker3->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
-    joker3->GetComponent<Transform>()->TranslateX(-400.0);
-    joker3->GetComponent<Transform>()->SetParent(joker2);
+    joker3->GetComponent<Transform>()->TranslateX(-2.0, Transform::Space::World);
     joker3->GetComponent<Transform>()->RotateY(1.68);
     joker3->AddComponent<RotateWorldScript>();
 
