@@ -124,12 +124,12 @@ void Transform::UpdateModelMatrix()
 
 void Transform::RotateAngle(float angle, glm::vec3 axis, Space space)
 {
-    RotateQuat(glm::angleAxis(angle, axis), space);
+    Rotate(glm::angleAxis(angle, axis), space);
 }
 
 void Transform::Rotate(glm::vec3 angles, Space space)
 {
-    RotateQuat(glm::quat(angles), space);
+    Rotate(glm::quat(angles), space);
 }
 
 void Transform::RotateX(float angle, Space space)
@@ -147,7 +147,7 @@ void Transform::RotateZ(float angle, Space space)
     RotateAngle(angle, glm::vec3(0.0f, 0.0f, 1.0f), space);
 }
 
-void Transform::RotateQuat(glm::quat quaternion, Space space)
+void Transform::Rotate(glm::quat quaternion, Space space)
 {
     if (space == Space::Local)
         orientation = glm::normalize(orientation * quaternion);
@@ -178,7 +178,7 @@ glm::quat Transform::GetRotation()
     if (IsParentRoot())
         return GetLocalRotation();
         
-    return GetLocalRotation() * parent->GetRotation();
+    return parent->GetRotation() * GetLocalRotation();
 }
 
 glm::quat Transform::GetLocalRotation()
@@ -220,16 +220,13 @@ void Transform::SetPosition(glm::vec3 position_, Space space)
     }
     else
     {
-        position = glm::vec3(GetWorldToLocalMatrix() * glm::vec4(position_, 1.0f));
+        position = GetWorldToLocalMatrix() * glm::vec4(position_, 1.0f);
     }
 }
 
 glm::vec3 Transform::GetPosition()
 {
-    if (IsParentRoot())
-        return GetLocalPosition();
-        
-    return GetLocalPosition() + parent->GetPosition();
+    return GetLocalToWorldMatrix() * glm::vec4(position, 1.0f);
 }
 
 glm::vec3 Transform::GetLocalPosition()
@@ -239,17 +236,17 @@ glm::vec3 Transform::GetLocalPosition()
 
 glm::vec3 Transform::GetRightAxis()
 {
-    return glm::vec3(CalculateWorldMatrix()[0]);
+    return glm::normalize(glm::vec3(CalculateWorldMatrix()[0]));
 }
 
 glm::vec3 Transform::GetUpAxis()
 {
-    return glm::vec3(CalculateWorldMatrix()[1]);
+    return glm::normalize(glm::vec3(CalculateWorldMatrix()[1]));
 }
 
 glm::vec3 Transform::GetForwardAxis()
 {
-    return glm::vec3(CalculateWorldMatrix()[2]);
+    return glm::normalize(glm::vec3(CalculateWorldMatrix()[2]));
 }
 
 void Transform::SetScale(glm::vec3 scale_)
@@ -262,7 +259,7 @@ glm::vec3 Transform::GetScale()
     if (IsParentRoot())
         return GetLocalScale();
         
-    return GetLocalScale() * parent->GetScale();
+    return parent->GetScale() * GetLocalScale();
 }
 
 glm::vec3 Transform::GetLocalScale()

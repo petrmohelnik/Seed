@@ -1,8 +1,6 @@
 vracenit pointeru pri AddComponent nefunguje a asi i u object - vraic null po movu
 
-SetRotation, X,y,z,... lokalni osa, globalni osa, quaternion...
-setovaci metody by meli mit parametry, zda local nebo global
-forwardAxis... jsou asi jenom globalni
+dodelat lookAt a RotateAround.
 pouzivat radsi padding nez mit vsude vec4 a mat4
 layout in a out atributu v sahderech
 setMeshAndMaterials
@@ -36,12 +34,7 @@ modely muzou sdilet textury mezi materialy... :/
 kombinovani textur a barev example dole: http://assimp.sourceforge.net/lib_html/materials.html
 kombinovani nedelat, pripadne na cpu jenom a kdyz uz tak jenom jedna textura s jednou barvou na gpu
 predelat inputy mysi na vlastni enumy
-scale rodice ovlivnuje translaci potomka, to je i v unity, ale nemel bych bych schopen anstavit globalni pozici pres set globalpos?
-pri nastavovani globalnich pozic musim brat v uvahu vsechny slozky, napr rotace rodice ovlivni globalni pozici potomka
-jaky je spravny poradi nasobeni quaternionu pro lokalni vs globalni rotaci?
-ani setlocalposition nebere v uvahu rotci, to musim orpavit - muuz brat posledni model matici v uvahu?
 RotateAround bude rotovat i menit pozici v globalu
-ty globalni gettrey mam taky blbe
 
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 
