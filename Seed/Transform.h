@@ -40,8 +40,8 @@ public:
     void SetScale(glm::vec3 scale_);
     glm::vec3 GetScale();
     glm::vec3 GetLocalScale();
-    void LookAt(glm::vec3 position);
-    void RotateAround();
+    void LookAt(glm::vec3 worldPosition, glm::vec3 upAxis = glm::vec3(0.0f, 1.0f, 0.0f));
+    void RotateAround(float angle, glm::vec3 worldAxis, glm::vec3 worldPoint = glm::vec3(0.0f, 0.0f, 0.0f));
 
     glm::mat4 GetModelMatrix();
 	glm::mat4 GetLocalToWorldMatrix();

@@ -13,11 +13,10 @@ void RotateWorldScript::Update()
 {
     glm::vec3 scale;
 	if (input.MouseButton(SDL_BUTTON_LEFT))
-		transform->RotateY(-input.MouseMovement().x * 0.01, Transform::Space::World);
+		transform->RotateAround(-input.MouseMovement().x * 0.01, glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(-2.0f, 0.0f, 0.0f));
     if (input.KeyDown(SDLK_x))
     {
-        transform->Translate(transform->GetForwardAxis(), Transform::Space::World);
-        scale = -transform->GetScale();
+        transform->LookAt(glm::vec3(0.0f, 0.0f, 0.0f));
     }
     if (input.KeyDown(SDLK_c))
     {

@@ -1,6 +1,5 @@
 vracenit pointeru pri AddComponent nefunguje a asi i u object - vraic null po movu
 
-dodelat lookAt a RotateAround.
 pouzivat radsi padding nez mit vsude vec4 a mat4
 layout in a out atributu v sahderech
 setMeshAndMaterials
@@ -34,17 +33,12 @@ modely muzou sdilet textury mezi materialy... :/
 kombinovani textur a barev example dole: http://assimp.sourceforge.net/lib_html/materials.html
 kombinovani nedelat, pripadne na cpu jenom a kdyz uz tak jenom jedna textura s jednou barvou na gpu
 predelat inputy mysi na vlastni enumy
-RotateAround bude rotovat i menit pozici v globalu
 
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
-glm je column-major
-mit moznost nastavovat transformace i v globalnim prostoru
-pro kazdou kameru se ze vsech objektu, ktere uz maji nove transformacni matice, vytvori render queue
-tam se budou radit prioritne podle vrstvy materialu, potom podle programu
-forawrd axis ma mit - v zetu?
+v render queue se budou radit objekty prioritne podle vrstvy materialu, potom podle programu
 
 submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?

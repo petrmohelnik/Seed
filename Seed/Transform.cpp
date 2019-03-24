@@ -266,3 +266,17 @@ glm::vec3 Transform::GetLocalScale()
 {
     return scale;
 }
+
+void Transform::LookAt(glm::vec3 worldPosition, glm::vec3 upAxis)
+{
+    auto const localToWorldMatrix = GetLocalToWorldMatrix();
+    auto const currentWorldPosition = glm::vec3(localToWorldMatrix * glm::vec4(position, 1.0f));
+    glm::vec3 dummyTranslation;
+    DecomposeMatrix(glm::inverse(localToWorldMatrix) * glm::inverse(glm::lookAt(currentWorldPosition, worldPosition, upAxis)), dummyTranslation, orientation);
+}
+
+void Transform::RotateAround(float angle, glm::vec3 worldAxis, glm::vec3 worldPoint)
+{
+    auto const worldTransfromationMatrix = glm::translate(worldPoint) * glm::toMat4(glm::angleAxis(angle, worldAxis)) * glm::translate(-worldPoint);
+    TransformInWorldAndDecompose(worldTransfromationMatrix, position, orientation);
+}
