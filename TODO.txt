@@ -1,5 +1,3 @@
-vracenit pointeru pri AddComponent nefunguje a asi i u object - vraic null po movu
-
 pouzivat radsi padding nez mit vsude vec4 a mat4
 layout in a out atributu v sahderech
 setMeshAndMaterials

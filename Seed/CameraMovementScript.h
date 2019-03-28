@@ -8,8 +8,8 @@ public:
 
     void Update() override;
 
-    float RotationSensitivity = 0.01;
-    float MoveSensitivity = 0.1;
+    float RotationSensitivity = 0.01f;
+    float MoveSensitivity = 0.1f;
 };
 
 void CameraMovementScript::Update()

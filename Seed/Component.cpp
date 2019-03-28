@@ -18,10 +18,10 @@ Transform* Component::GetTransform()
     return object->GetComponent<Transform>();
 }
 
-void Component::Destroy(Uint32 delay)
+void Component::Destroy(float delay)
 {
-    if (timeToDestruction >= static_cast<Sint32>(delay))
-        timeToDestruction = static_cast<Sint32>(delay);
+    if (timeToDestruction >= delay)
+        timeToDestruction = delay;
     registeredForDestruction = true;
 }
 

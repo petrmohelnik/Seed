@@ -57,7 +57,7 @@ public:
     template <class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type* = nullptr>
     T* GetComponent();
 
-    void Destroy(Uint32 delay = 0);
+    void Destroy(float delay = 0);
 
 protected:
     friend class Component;
@@ -82,7 +82,7 @@ private:
     Components& components;
     FileSystem& fileSystem;
     Time& time;
-    Sint32 timeToDestruction = SDL_MAX_SINT32;
+    float timeToDestruction = std::numeric_limits<float>::max();
     bool registeredForDestruction = false;
 };
 
@@ -91,14 +91,12 @@ inline T* Object::AddComponent()
 {
     if (renderer)
         throw std::runtime_error("Object: " + name + "already contains Renderer");
-    auto rendererT = components.CreateRenderer<T>(this);
-    auto rendererTRawPtr = rendererT.get();
-    renderer = std::move(rendererT);
-    return rendererTRawPtr;
+    renderer = components.CreateRenderer<T>(this);
+    return dynamic_cast<T*>(renderer.get());
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Camera, T>::value>::type*>
-inline T * Object::AddComponent()
+inline T* Object::AddComponent()
 {
     if (camera)
         throw std::runtime_error("Object: " + name + "already contains Camera");
@@ -107,7 +105,7 @@ inline T * Object::AddComponent()
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Light, T>::value>::type*>
-inline T * Object::AddComponent()
+inline T* Object::AddComponent()
 {
     if (light)
         throw std::runtime_error("Object: " + name + "already contains Light");
@@ -116,23 +114,21 @@ inline T * Object::AddComponent()
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Audio, T>::value>::type*>
-inline T * Object::AddComponent()
+inline T* Object::AddComponent()
 {
-    auto audio = components.CreateAudio(this);
-    audios.push_back(std::move(audio));
-    return audio.get();
+    audios.push_back(components.CreateAudio(this));
+    return audios.back().get();
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Collider, T>::value>::type*>
-inline T * Object::AddComponent()
+inline T* Object::AddComponent()
 {
-    auto collider = components.CreateCollider<T>(this);
-    colliders.push_back(std::move(collider));
-    return collider.get();
+    colliders.push_back(components.CreateCollider<T>(this));
+    return colliders.back().get();
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Rigidbody, T>::value>::type*>
-inline T * Object::AddComponent()
+inline T* Object::AddComponent()
 {
     if (rigidbody)
         throw std::runtime_error("Object: " + name + "already contains Rigidbody");
@@ -141,11 +137,10 @@ inline T * Object::AddComponent()
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type*>
-inline T * Object::AddComponent()
+inline T* Object::AddComponent()
 {
-    auto script = components.CreateScript<T>(this);
-    scripts.push_back(std::move(script));
-    return script.get();
+    scripts.push_back(components.CreateScript<T>(this));
+    return dynamic_cast<T*>(scripts.back().get());
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Transform, T>::value>::type*>

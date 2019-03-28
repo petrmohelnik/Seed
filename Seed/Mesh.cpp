@@ -58,7 +58,7 @@ void Mesh::LoadSubMesh(SubMesh& subMesh)
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, subMesh.vbo[3]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, subMesh.indices.size() * sizeof(Uint32) * 3, &subMesh.indices[0].x, GL_STATIC_DRAW);
-    subMesh.indicesCount = subMesh.indices.size() * 3;
+    subMesh.indicesCount = static_cast<int>(subMesh.indices.size()) * 3;
 
     glBindVertexArray(0);
 }

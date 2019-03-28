@@ -34,10 +34,10 @@ Object::~Object()
         parent->CleanChildren();
 }
 
-void Object::Destroy(Uint32 delay)
+void Object::Destroy(float delay)
 {
-    if(timeToDestruction >= static_cast<Sint32>(delay))
-        timeToDestruction = static_cast<Sint32>(delay);
+    if(timeToDestruction >= delay)
+        timeToDestruction = delay;
     registeredForDestruction = true;
 }
 

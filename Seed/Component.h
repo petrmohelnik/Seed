@@ -12,7 +12,7 @@ public:
 
     Object* GetObject();
     Transform* GetTransform();
-    void Destroy(Uint32 delay = 0);
+    void Destroy(float delay = 0);
 
 protected:
     friend class Object;
@@ -24,6 +24,6 @@ protected:
 
 private:
     Object* object;
-    Sint32 timeToDestruction = SDL_MAX_SINT32;
+    float timeToDestruction = std::numeric_limits<float>::max();
     bool registeredForDestruction = false;
 };

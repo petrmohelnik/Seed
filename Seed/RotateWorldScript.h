@@ -11,9 +11,8 @@ public:
 
 void RotateWorldScript::Update()
 {
-    glm::vec3 scale;
 	if (input.MouseButton(SDL_BUTTON_LEFT))
-		transform->RotateAround(-input.MouseMovement().x * 0.01, glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(-2.0f, 0.0f, 0.0f));
+		transform->RotateAround(-input.MouseMovement().x * 0.01f, glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(-2.0f, 0.0f, 0.0f));
     if (input.KeyDown(SDLK_x))
     {
         transform->LookAt(glm::vec3(0.0f, 0.0f, 0.0f));

@@ -231,7 +231,7 @@ void FileSystem::LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey,
     aiColor4D color;
     if (aiGetMaterialColor(assimpMaterial, pKey, type, index, &color) == AI_SUCCESS)
     {
-        textureData.SetColor(color.b * 255, color.g * 255, color.r * 255, color.a * 255);
+        textureData.SetColor(static_cast<Uint8>(color.b * 255), static_cast<Uint8>(color.g * 255), static_cast<Uint8>(color.r * 255), static_cast<Uint8>(color.a * 255));
     }
 }
 
