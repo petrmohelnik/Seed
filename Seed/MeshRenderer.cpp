@@ -27,7 +27,11 @@ void MeshRenderer::Render(int index)
     shader->setup();
 
     RenderingPipeline::BindModelUniform();
-    ModelBlock modelBlockData = { GetTransform()->GetModelMatrix(), glm::inverse(glm::transpose(GetTransform()->GetModelMatrix())) };
+    ModelBlock modelBlockData
+    { 
+        GetTransform()->GetModelMatrix(), 
+        glm::mat4(glm::inverse(glm::transpose(GetTransform()->GetModelMatrix()))) 
+    };
     glBufferData(GL_UNIFORM_BUFFER, sizeof(modelBlockData), &modelBlockData, GL_DYNAMIC_DRAW);
 
     mesh->BindSubMesh(index);

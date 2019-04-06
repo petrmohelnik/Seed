@@ -54,7 +54,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     joker->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
     joker->GetComponent<Transform>()->TranslateX(1.0f);
     joker->GetComponent<Transform>()->RotateX(-1.57f);
-    joker->AddComponent<GameScript>();
+    //joker->AddComponent<GameScript>();
 
     auto joker2 = objects.CreateObject<Object>("joker2");
     joker2->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
@@ -62,8 +62,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     joker2->GetComponent<Transform>()->TranslateX(-400.0f);
     joker2->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
     joker2->GetComponent<Transform>()->SetParent(joker);
-    joker2->AddComponent<GameScript>();
-    joker2->GetComponent<GameScript>()->increaseXZPosition = (2.0f * 3.14f) / 15.0f;
+    //joker2->AddComponent<GameScript>();
+    //joker2->GetComponent<GameScript>()->increaseXZPosition = (2.0f * 3.14f) / 15.0f;
 
     auto joker3 = objects.CreateObject<Object>("joker3");
     joker3->GetComponent<Transform>()->SetParent(joker2);
@@ -72,7 +72,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     joker3->GetComponent<Transform>()->TranslateX(-2.0f, Transform::Space::World);
     joker3->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
     joker3->GetComponent<Transform>()->RotateY(1.68f);
-    joker3->AddComponent<RotateWorldScript>();
+    //joker3->AddComponent<RotateWorldScript>();
 
     auto camera = objects.CreateObject<CameraObject>("camera");
     camera->GetComponent<Transform>()->TranslateZ(10.0);

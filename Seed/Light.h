@@ -20,9 +20,9 @@ public:
 private:
     struct LightBlock
     {
-        glm::vec4 lightPos;
-        glm::vec4 lightColor;
-        glm::vec4 lightAmbient;
+        alignas(16) glm::vec3 lightPos;
+        alignas(16) glm::vec3 lightColor;
+        alignas(16) glm::vec3 lightAmbient;
     };
 
     Type type = Type::Point;

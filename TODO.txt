@@ -1,25 +1,24 @@
-pouzivat radsi padding nez mit vsude vec4 a mat4
-layout in a out atributu v sahderech
 setMeshAndMaterials
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
 ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene
 jak poznam ze to ma vic geometrii a ze by to meli byt separatni objekty?
-checknout co se tam dlouho loaduje pri jaguaru
 pro klasicky load jednoho meshe uvazuju, ze je tam jeden mesh a nema zadnou
 transform, zbytek necham na assimpu
 pro loadsceny, prochazim strom sceny a vytvarim pro kazdy node separatni mesh
 ten load sceny by mel rovnou vytvaret objekty anastavovat jim komponenty a nemel by asi nic vracet
-zkusit optinmalozavat assimp flagy
+zkusit optimalozavat assimp flagy
 umet nacist barvy misto textur
 rozlisit shinnines a specular
 mely by byt v jedne texture, shinines jako alpha 0 v unity je to smoothness
 stahnout si nejakej poradnej modela podivat se jak ma rozlozeny textury
 https://gamedev.stackexchange.com/questions/74879/specular-map-what-about-the-specular-reflections-highlight-size
-mit ambient color v te strukture pro material?
-https://unity3d.com/learn/tutorials/topics/graphics/ambient-lighting
 co delat s emission color?
 svetlo je jenom jedna barva
-potom je globalni ambient color
+potom je globalni ambient light - nebo muze byt brana ze skyboxu
+pripadne pouzit https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBufferSubData.xhtml
+https://docs.unity3d.com/Manual/GlobalIllumination.html
+mit ambient color v te strukture pro material?
+https://unity3d.com/learn/tutorials/topics/graphics/ambient-lighting
 ty spekular barvy a tak jsou vlasnosti jenom materialu a ne svetla
 http://assimp.sourceforge.net/lib_html/material_8h.html
 az udelam pohyb kamery tak normal mapping

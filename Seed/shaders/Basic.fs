@@ -4,20 +4,20 @@ layout(std140, binding = 0) uniform CameraBlock
 {
 	mat4 projection;
 	mat4 view;
-	vec4 viewPos;
+	vec3 viewPos;
 };
 
 layout(std140, binding = 1) uniform LightBlock
 {
-	vec4 lightPos;
-	vec4 lightColor;
-	vec4 lightAmbient;
+	vec3 lightPos;
+	vec3 lightColor;
+	vec3 lightAmbient;
 };
 
 layout(std140, binding = 2) uniform ModelBlock
 {
 	mat4 model;
-	mat4 tiModel;
+	mat3 tiModel;
 };
 
 layout(std140, binding = 3) uniform MaterialBlock
@@ -37,17 +37,21 @@ layout(location = 0) out vec4 gl_FragColor;
 
 void main()
 {
-	vec3 viewDir = normalize(viewPos.xyz - fPos).xyz;
-	vec3 lightDir = normalize(lightPos.xyz - fPos);
-	vec3 normal = normalize(mat3(tiModel) * fNorm);
+	vec3 viewDir = normalize(viewPos - fPos);
+	vec3 lightDir = normalize(lightPos - fPos);
+	vec3 normal = normalize(tiModel * fNorm);
 
-	vec3 diffuseReflection = lightColor.xyz * max(0.0, dot(normal, lightDir));
-
+	vec4 diffuseTexture = texture(texDiffuse, fTexCoord);
+	vec3 diffuseReflection = lightColor * max(0.0, dot(normal, lightDir));
+	vec3 diffuseColor = (lightAmbient + diffuseReflection) * diffuseTexture.xyz;
+	
+	vec4 specularTexture = texture(texSpecular, fTexCoord);
 	vec3 specularReflection = vec3(0.0, 0.0, 0.0);
 	if (dot(normal, lightDir) > 0.0)
 	{
-		specularReflection = lightColor.xyz * texture(texSpecular, fTexCoord).xyz * pow(max(0.0, dot(reflect(-lightDir, normal), viewDir)), 100.0);
+		specularReflection = lightColor * pow(max(0.0, dot(reflect(-lightDir, normal), viewDir)), pow(2.0, 13.0 * specularTexture.w));
 	}
+	vec3 specularColor = specularReflection * specularTexture.xyz;
 
-	gl_FragColor = vec4(vec3(diffuseReflection + specularReflection + lightAmbient.xyz) * vec3(texture(texDiffuse, fTexCoord)), 1.0);
+	gl_FragColor = vec4(diffuseColor + specularColor, diffuseTexture.w);
 }

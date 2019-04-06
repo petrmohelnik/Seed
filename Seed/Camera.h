@@ -13,6 +13,6 @@ private:
     {
         glm::mat4 projection;
         glm::mat4 view;
-        glm::vec4 viewPos;
+        alignas(16) glm::vec3 viewPos;
     };
 };
