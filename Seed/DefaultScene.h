@@ -49,30 +49,30 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     shaders.GetShader(ShaderFactory::Type::Basic);*/
 
     auto joker = objects.CreateObject<Object>("joker");
-    joker->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
-    joker->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
-    joker->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
-    joker->GetComponent<Transform>()->TranslateX(1.0f);
-    joker->GetComponent<Transform>()->RotateX(-1.57f);
+    joker->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("statue.dae"));
+    joker->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("statue.dae"));
+    joker->GetComponent<Transform>()->SetScale(glm::vec3(0.1f));
+    //joker->GetComponent<Transform>()->TranslateX(1.0f);
+    //joker->GetComponent<Transform>()->RotateX(-1.57f);
     //joker->AddComponent<GameScript>();
 
-    auto joker2 = objects.CreateObject<Object>("joker2");
-    joker2->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
-    joker2->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
-    joker2->GetComponent<Transform>()->TranslateX(-400.0f);
-    joker2->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
-    joker2->GetComponent<Transform>()->SetParent(joker);
+    //auto joker2 = objects.CreateObject<Object>("joker2");
+    //joker2->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("LuxuryLivingRoomSofa.obj"));
+    //joker2->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("LuxuryLivingRoomSofa.obj"));
+    ////joker2->GetComponent<Transform>()->TranslateX(-400.0f);
+    //joker2->GetComponent<Transform>()->SetScale(glm::vec3(0.1f));
+    //joker2->GetComponent<Transform>()->SetParent(joker);
     //joker2->AddComponent<GameScript>();
     //joker2->GetComponent<GameScript>()->increaseXZPosition = (2.0f * 3.14f) / 15.0f;
 
-    auto joker3 = objects.CreateObject<Object>("joker3");
-    joker3->GetComponent<Transform>()->SetParent(joker2);
-    joker3->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
-    joker3->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
-    joker3->GetComponent<Transform>()->TranslateX(-2.0f, Transform::Space::World);
-    joker3->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
-    joker3->GetComponent<Transform>()->RotateY(1.68f);
-    //joker3->AddComponent<RotateWorldScript>();
+    //auto joker3 = objects.CreateObject<Object>("joker3");
+    //joker3->GetComponent<Transform>()->SetParent(joker2);
+    //joker3->AddComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
+    //joker3->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
+    //joker3->GetComponent<Transform>()->TranslateX(-2.0f, Transform::Space::World);
+    //joker3->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
+    //joker3->GetComponent<Transform>()->RotateY(1.68f);
+    ////joker3->AddComponent<RotateWorldScript>();
 
     auto camera = objects.CreateObject<CameraObject>("camera");
     camera->GetComponent<Transform>()->TranslateZ(10.0);

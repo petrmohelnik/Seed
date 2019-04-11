@@ -27,16 +27,22 @@ layout(std140, binding = 3) uniform MaterialBlock
 
 layout(location = 0) in vec3 vPos;
 layout(location = 1) in vec3 vNorm;
-layout(location = 2) in vec2 vTexCoord;
+layout(location = 2) in vec3 vTang;
+layout(location = 3) in vec3 vBitang;
+layout(location = 4) in vec2 vTexCoord;
 
 out vec3 fPos;
 out vec3 fNorm;
+out vec3 fTang;
+out vec3 fBitang;
 out vec2 fTexCoord;
 
 void main()
 {
 	fPos = mat3(model) * vPos;
 	fNorm = vNorm;
+	fTang = vTang;
+	fBitang = vBitang;
 	fTexCoord = vTexCoord;
 
 	gl_Position = projection * view * model * vec4(vPos, 1.0);

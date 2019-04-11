@@ -31,6 +31,8 @@ layout(binding = 2) uniform sampler2D texSpecular;
 
 in vec3 fPos;
 in vec3 fNorm;
+in vec3 fTang;
+in vec3 fBitang;
 in vec2 fTexCoord;
 
 layout(location = 0) out vec4 gl_FragColor;

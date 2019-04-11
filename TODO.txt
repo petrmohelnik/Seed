@@ -6,7 +6,6 @@ pro klasicky load jednoho meshe uvazuju, ze je tam jeden mesh a nema zadnou
 transform, zbytek necham na assimpu
 pro loadsceny, prochazim strom sceny a vytvarim pro kazdy node separatni mesh
 ten load sceny by mel rovnou vytvaret objekty anastavovat jim komponenty a nemel by asi nic vracet
-zkusit optimalozavat assimp flagy
 umet nacist barvy misto textur
 rozlisit shinnines a specular
 mely by byt v jedne texture, shinines jako alpha 0 v unity je to smoothness
@@ -21,8 +20,6 @@ mit ambient color v te strukture pro material?
 https://unity3d.com/learn/tutorials/topics/graphics/ambient-lighting
 ty spekular barvy a tak jsou vlasnosti jenom materialu a ne svetla
 http://assimp.sourceforge.net/lib_html/material_8h.html
-az udelam pohyb kamery tak normal mapping
-tangenty a bitangenty vygeneruju assimpem
 https://learnopengl.com/Advanced-Lighting/Normal-Mapping
 https://paroj.github.io/gltut/Illumination/Tut11%20BlinnPhong%20Model.html
 mel bych nekdy i u normalniho loadu volat unload scene

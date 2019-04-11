@@ -25,7 +25,10 @@ void FileSystem::LoadScene(const std::string& path)
     auto scene = importer.ReadFile(folder + path, 
         aiProcess_GenSmoothNormals | 
         aiProcess_SortByPType | 
-        aiProcess_Triangulate);
+        aiProcess_Triangulate |
+        aiProcess_CalcTangentSpace |
+        aiProcess_FixInfacingNormals
+    );
 
     if (!scene)
         throw std::runtime_error("Failed to parse " + path + " file : " + importer.GetErrorString());
@@ -104,6 +107,8 @@ Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
     Mesh::SubMesh subMesh;
     subMesh.vertices.reserve(assimpMesh->mNumVertices);
     subMesh.normals.reserve(assimpMesh->mNumVertices);
+    subMesh.tangents.reserve(assimpMesh->mNumVertices);
+    subMesh.bitangents.reserve(assimpMesh->mNumVertices);
     subMesh.texCoords.reserve(assimpMesh->mNumVertices);
     subMesh.indices.reserve(assimpMesh->mNumFaces);
 
@@ -118,6 +123,16 @@ Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
             assimpMesh->mNormals[index].x,
             assimpMesh->mNormals[index].y,
             assimpMesh->mNormals[index].z));
+
+        subMesh.tangents.emplace_back(glm::vec3(
+            assimpMesh->mTangents[index].x,
+            assimpMesh->mTangents[index].y,
+            assimpMesh->mTangents[index].z));
+
+        subMesh.bitangents.emplace_back(glm::vec3(
+            assimpMesh->mBitangents[index].x,
+            assimpMesh->mBitangents[index].y,
+            assimpMesh->mBitangents[index].z));
 
         if (assimpMesh->HasTextureCoords(0))
         {
