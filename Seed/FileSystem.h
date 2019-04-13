@@ -27,7 +27,7 @@ private:
     std::vector<std::shared_ptr<Material>> LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials);
     Material LoadMaterialData(aiMaterial* assimpMaterial);
     bool LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, Texture& textureData);
-    void LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, Texture& textureData);
+    void LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, Texture& textureData, aiColor4D defaultColor);
     Texture LoadTexture(const std::string& path);
 
     std::unordered_map<std::string, std::weak_ptr<Mesh>> loadedMeshes;

@@ -213,12 +213,12 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial)
     Material material;
 
     if (!LoadMaterialTexture(assimpMaterial, aiTextureType_DIFFUSE, material.diffuse))
-        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_DIFFUSE, material.diffuse);
+        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_DIFFUSE, material.diffuse, aiColor4D(1.0f));
 
     LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.normal);
     
     if (!LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.specular))
-        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.specular);
+        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.specular, aiColor4D(1.0f, 1.0f, 1.0f, 0.2f));
 
     LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.height);
 
@@ -241,13 +241,13 @@ bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType t
     return false;
 }
 
-void FileSystem::LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, Texture& textureData)
+void FileSystem::LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, Texture& textureData, aiColor4D defaultColor)
 {
     aiColor4D color;
-    if (aiGetMaterialColor(assimpMaterial, pKey, type, index, &color) == AI_SUCCESS)
-    {
-        textureData.SetColor(static_cast<Uint8>(color.b * 255), static_cast<Uint8>(color.g * 255), static_cast<Uint8>(color.r * 255), static_cast<Uint8>(color.a * 255));
-    }
+	if (aiGetMaterialColor(assimpMaterial, pKey, type, index, &color) != AI_SUCCESS)
+		color = defaultColor;
+     
+	textureData.SetColor(static_cast<Uint8>(color.b * 255), static_cast<Uint8>(color.g * 255), static_cast<Uint8>(color.r * 255), static_cast<Uint8>(color.a * 255));
 }
 
 Texture FileSystem::LoadTexture(const std::string& path)

@@ -21,6 +21,7 @@ public:
     std::shared_ptr<Material> GetSharedMaterial();
     std::vector<std::shared_ptr<Material>> GetMaterials();
     std::vector<std::shared_ptr<Material>> GetSharedMaterials();
+	void Load(const std::string& path);
 
 private:
     struct ModelBlock
