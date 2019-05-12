@@ -11,3 +11,6 @@ https://www.gamedev.net/forums/topic/609137-glm-quaternion-camera
 http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
 https://gamedev.stackexchange.com/questions/138358/what-is-the-transformation-order-when-using-the-transform-class
 https://stackoverflow.com/questions/37942389/correctly-transforming-a-node-relative-to-a-specified-space
+
+shading:
+https://paroj.github.io/gltut/Illumination/Tut11%20BlinnPhong%20Model.html

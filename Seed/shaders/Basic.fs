@@ -37,6 +37,18 @@ in vec2 fTexCoord;
 
 layout(location = 0) out vec4 gl_FragColor;
 
+vec3 fresnel(vec3 F0, float HdotL)
+{
+  return F0 + (1.0 - F0) * pow(1.0 - HdotL, 5.0); //Schlick's approximation
+}
+
+vec3 BlinnPhongLobe(vec3 viewDir, vec3 lightDir, vec3 normal, vec3 albedo, float shininess)
+{
+  vec3 halfVector = normalize(lightDir + viewDir);
+  float blinnTerm = clamp(dot(normal, halfVector), 0.0, 1.0);
+  return clamp(fresnel(albedo, dot(halfVector, viewDir)) * pow(blinnTerm, shininess), 0.0, 1.0);
+}
+
 void main()
 {
 	vec3 viewDir = normalize(viewPos - fPos);
@@ -48,10 +60,10 @@ void main()
 	vec3 diffuseColor = (lightAmbient + diffuseReflection) * diffuseTexture.xyz;
 	
 	vec4 specularTexture = texture(texSpecular, fTexCoord);
-	vec3 specularReflection = vec3(0.0, 0.0, 0.0);
+	vec3 specularReflection = vec3(0.0);
 	if (dot(normal, lightDir) > 0.0)
 	{
-		specularReflection = lightColor * pow(max(0.0, dot(reflect(-lightDir, normal), viewDir)), pow(2.0, 13.0 * specularTexture.w));
+		specularReflection = lightColor * BlinnPhongLobe(viewDir, lightDir, normal, vec3(0.5), pow(2.0, 13.0 * specularTexture.w));
 	}
 	vec3 specularColor = specularReflection * specularTexture.xyz;
 

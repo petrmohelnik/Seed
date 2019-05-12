@@ -21,7 +21,6 @@ https://unity3d.com/learn/tutorials/topics/graphics/ambient-lighting
 ty spekular barvy a tak jsou vlasnosti jenom materialu a ne svetla
 http://assimp.sourceforge.net/lib_html/material_8h.html
 https://learnopengl.com/Advanced-Lighting/Normal-Mapping
-https://paroj.github.io/gltut/Illumination/Tut11%20BlinnPhong%20Model.html
 mel bych nekdy i u normalniho loadu volat unload scene
 modely muzou sdilet textury mezi materialy... :/
 kombinovani textur a barev example dole: http://assimp.sourceforge.net/lib_html/materials.html

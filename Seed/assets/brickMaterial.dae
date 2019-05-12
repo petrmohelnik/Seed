@@ -144,7 +144,7 @@
               <texture texture="Brick_Wall_014_COLOR_jpg-sampler"/>
             </diffuse>
             <specular>
-              <color sid="specular">0.5 0.5 0.5 0.2</color>
+              <color sid="specular">0.5 0.5 0.5 0.4</color>
             </specular>
             <shininess>
               <float sid="shininess">50</float>
