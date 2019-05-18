@@ -30,9 +30,8 @@ layout(binding = 1) uniform sampler2D texNormal;
 layout(binding = 2) uniform sampler2D texSpecular;
 
 in vec3 fPos;
-in vec3 fNorm;
-in vec3 fTang;
-in vec3 fBitang;
+in vec3 fViewPos;
+in vec3 fLightPos;
 in vec2 fTexCoord;
 
 layout(location = 0) out vec4 gl_FragColor;
@@ -51,9 +50,11 @@ vec3 BlinnPhongLobe(vec3 viewDir, vec3 lightDir, vec3 normal, vec3 albedo, float
 
 void main()
 {
-	vec3 viewDir = normalize(viewPos - fPos);
-	vec3 lightDir = normalize(lightPos - fPos);
-	vec3 normal = normalize(tiModel * fNorm);
+	vec3 viewDir = normalize(fViewPos - fPos);
+	vec3 lightDir = normalize(fLightPos - fPos);
+
+	vec3 normalTexture = texture(texNormal, fTexCoord).xyz;
+	vec3 normal = normalize(normalTexture * 2.0 - 1.0);
 
 	vec4 diffuseTexture = texture(texDiffuse, fTexCoord);
 	vec3 diffuseReflection = lightColor * max(0.0, dot(normal, lightDir));
@@ -67,5 +68,5 @@ void main()
 	}
 	vec3 specularColor = specularReflection * specularTexture.xyz;
 
-	gl_FragColor = vec4(diffuseColor + specularColor, diffuseTexture.w);
+	gl_FragColor = vec4(diffuseColor, diffuseTexture.w);
 }

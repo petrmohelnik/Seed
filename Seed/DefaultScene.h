@@ -81,6 +81,12 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     ////joker3->AddComponent<RotateWorldScript>();
 
     auto camera = objects.CreateObject<CameraObject>("camera");
-    camera->GetComponent<Transform>()->TranslateZ(10.0);
-    auto light = objects.CreateObject<Object>("light")->AddComponent<Light>();
+    camera->GetComponent<Transform>()->TranslateZ(4.0);
+	auto light = objects.CreateObject<Object>("light");
+	light->AddComponent<Light>();
+	light->GetComponent<Transform>()->TranslateZ(5.0);
+	light->GetComponent<Transform>()->TranslateY(2.0);
+	light->GetComponent<Transform>()->TranslateX(3.0);
+	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
+	light->AddComponent<MeshRenderer>()->Load("sphere.dae");
 }

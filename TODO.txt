@@ -1,4 +1,8 @@
 setMeshAndMaterials
+bitangent asi nepotrebuju predavat do shaderu
+udelat si plany jak v tutorialu a s test a cihlama a s tema si rotovat
+potom to vyzkouset na ostatnich modelech z tutorialu
+dat svetlu transform a aobrazit na jeho miste zlutou kouli
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
 ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene
 jak poznam ze to ma vic geometrii a ze by to meli byt separatni objekty?

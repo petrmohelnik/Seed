@@ -12,10 +12,10 @@ public:
 
 protected:
     friend class FileSystem;
-    void SetColor(Uint8 x, Uint8 y, Uint8 z, Uint8 w);
-    void SetColor(Uint8 x, Uint8 y, Uint8 z);
-    void SetColor(Uint8 x, Uint8 y);
-    void SetColor(Uint8 x);
+    void SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+    void SetColor(Uint8 r, Uint8 g, Uint8 b);
+    void SetColor(Uint8 r1, Uint8 r2);
+    void SetColor(Uint8 r);
 
 private:
 	GLuint GetInternalFormat();

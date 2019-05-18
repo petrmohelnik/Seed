@@ -63,33 +63,33 @@ void Texture::BindTexture()
     glBindTexture(GL_TEXTURE_2D, texture);
 }
 
-void Texture::SetColor(Uint8 x, Uint8 y, Uint8 z, Uint8 w)
+void Texture::SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-    data = std::vector<Uint8>{ x, y, z, w };
+    data = std::vector<Uint8>{ b, g, r, a };
     width = 1;
     height = 1;
 	bytesPerPixel = 4;
 }
 
-void Texture::SetColor(Uint8 x, Uint8 y, Uint8 z)
+void Texture::SetColor(Uint8 r, Uint8 g, Uint8 b)
 {
-	data = std::vector<Uint8>{ x, y, z };
+	data = std::vector<Uint8>{ b, g, r };
 	width = 1;
 	height = 1;
 	bytesPerPixel = 3;
 }
 
-void Texture::SetColor(Uint8 x, Uint8 y)
+void Texture::SetColor(Uint8 r1, Uint8 r2)
 {
-	data = std::vector<Uint8>{ x, y };
+	data = std::vector<Uint8>{ r1, r2 };
 	width = 1;
 	height = 1;
 	bytesPerPixel = 2;
 }
 
-void Texture::SetColor(Uint8 x)
+void Texture::SetColor(Uint8 r)
 {
-	data = std::vector<Uint8>{ x };
+	data = std::vector<Uint8>{ r };
 	width = 1;
 	height = 1;
 	bytesPerPixel = 1;
