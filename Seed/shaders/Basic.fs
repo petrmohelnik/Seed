@@ -55,6 +55,7 @@ void main()
 
 	vec3 normalTexture = texture(texNormal, fTexCoord).xyz;
 	vec3 normal = normalize(normalTexture * 2.0 - 1.0);
+	normal.y = -normal.y;
 
 	vec4 diffuseTexture = texture(texDiffuse, fTexCoord);
 	vec3 diffuseReflection = lightColor * max(0.0, dot(normal, lightDir));
@@ -68,5 +69,5 @@ void main()
 	}
 	vec3 specularColor = specularReflection * specularTexture.xyz;
 
-	gl_FragColor = vec4(diffuseColor, diffuseTexture.w);
+	gl_FragColor = vec4(diffuseColor + specularColor, diffuseTexture.w);
 }

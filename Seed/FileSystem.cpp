@@ -22,7 +22,7 @@ void FileSystem::LoadScene(const std::string& path)
     if (loadedScene == path)
         return;
 
-    auto scene = importer.ReadFile(folder + path, 
+    auto scene = importer.ReadFile(parentFolder + path,
         aiProcess_GenSmoothNormals | 
         aiProcess_SortByPType | 
         aiProcess_Triangulate |
@@ -108,7 +108,6 @@ Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
     subMesh.vertices.reserve(assimpMesh->mNumVertices);
     subMesh.normals.reserve(assimpMesh->mNumVertices);
     subMesh.tangents.reserve(assimpMesh->mNumVertices);
-    subMesh.bitangents.reserve(assimpMesh->mNumVertices);
     subMesh.texCoords.reserve(assimpMesh->mNumVertices);
     subMesh.indices.reserve(assimpMesh->mNumFaces);
 
@@ -128,11 +127,6 @@ Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
             assimpMesh->mTangents[index].x,
             assimpMesh->mTangents[index].y,
             assimpMesh->mTangents[index].z));
-
-        subMesh.bitangents.emplace_back(glm::vec3(
-            assimpMesh->mBitangents[index].x,
-            assimpMesh->mBitangents[index].y,
-            assimpMesh->mBitangents[index].z));
 
         if (assimpMesh->HasTextureCoords(0))
         {
@@ -180,7 +174,11 @@ std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials(const std::stri
     if (scene->mNumMaterials == 0)
         throw std::runtime_error("File: " + path + " does not contain any materials");
 
-    auto materials = LoadMaterialsData(scene->mMaterials, scene->mNumMaterials);
+	auto folderEnd = path.find_last_of("\\/");
+	std::string folder;
+	if(folderEnd != std::string::npos)
+		folder = path.substr(0, path.find_last_of("\\/") + 1);
+    auto materials = LoadMaterialsData(scene->mMaterials, scene->mNumMaterials, folder);
 
     std::vector<std::shared_ptr<Material>> orderedMaterials;
     orderedMaterials.reserve(scene->mNumMeshes);
@@ -196,37 +194,37 @@ std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials(const std::stri
     return orderedMaterials;
 }
 
-std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials)
+std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials, const std::string& folder)
 {
     auto materials = std::vector<std::shared_ptr<Material>>();
 
     for (unsigned int index = 0; index < numMaterials; index++)
     {
-        materials.push_back(std::make_shared<Material>(LoadMaterialData(assimpMaterials[index])));
+        materials.push_back(std::make_shared<Material>(LoadMaterialData(assimpMaterials[index], folder)));
     }
 
     return materials;
 }
 
-Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial)
+Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::string& folder)
 {
     Material material;
 
-    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_DIFFUSE, material.diffuse))
+    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_DIFFUSE, material.diffuse, folder))
         LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_DIFFUSE, material.diffuse, aiColor4D(1.0f));
 
-    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.normal))
+    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.normal, folder))
 		material.normal.SetColor(128, 128, 255);
     
-    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.specular))
+    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.specular, folder))
         LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.specular, aiColor4D(1.0f, 1.0f, 1.0f, 0.2f));
 
-    LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.height);
+    LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.height, folder);
 
     return material;
 }
 
-bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, Texture& textureData)
+bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, Texture& textureData, const std::string& folder)
 {
     if (assimpMaterial->GetTextureCount(textureType) != 0)
     {
@@ -234,7 +232,7 @@ bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType t
         if (assimpMaterial->GetTexture(textureType, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
             throw std::runtime_error("Failed to load texture from material");
 
-        textureData = LoadTexture(folder + texturePath.C_Str());
+        textureData = LoadTexture(parentFolder + folder + texturePath.C_Str());
 
         return true;
     }

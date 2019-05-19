@@ -16,7 +16,7 @@ public:
 void GameScript::Update()
 {
     // Move sphere around the circle.
-    transform->SetPosition(glm::vec3(2.0f * std::sin(xzPosition), 4.0f * std::sin(yPosition), 2.0f * std::cos(xzPosition)), Transform::Space::World);
+    transform->SetPosition(glm::vec3(10.0f * std::sin(xzPosition), 10.0f * std::sin(yPosition), 10.0f * std::cos(xzPosition)), Transform::Space::World);
 
     // Update the rotating position.
     xzPosition += increaseXZPosition * time.DeltaTime();

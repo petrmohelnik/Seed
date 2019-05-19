@@ -12,7 +12,7 @@ public:
 void RotateWorldScript::Update()
 {
 	if (input.MouseButton(SDL_BUTTON_LEFT))
-		transform->RotateAround(-input.MouseMovement().x * 0.01f, glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(-2.0f, 0.0f, 0.0f));
+		transform->Rotate(glm::vec3(input.MouseMovement().y * 0.01f, input.MouseMovement().x * 0.01f, 0.0f));
     if (input.KeyDown(SDLK_x))
     {
         transform->LookAt(glm::vec3(0.0f, 0.0f, 0.0f));

@@ -26,8 +26,6 @@ void Mesh::Load()
             subMesh.normals.swap(emptyNormals);
             std::vector<glm::vec3> emptyTangents;
             subMesh.tangents.swap(emptyTangents);
-            std::vector<glm::vec3> emptyBitangents;
-            subMesh.bitangents.swap(emptyBitangents);
             std::vector<glm::vec2> emptyTexCoords;
             subMesh.texCoords.swap(emptyTexCoords);
             std::vector<glm::uvec3> emptyIndices;
@@ -61,16 +59,11 @@ void Mesh::LoadSubMesh(SubMesh& subMesh)
     glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, subMesh.vbo[3]);
-    glBufferData(GL_ARRAY_BUFFER, subMesh.bitangents.size() * sizeof(float) * 3, &subMesh.bitangents[0].x, GL_STATIC_DRAW);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glBufferData(GL_ARRAY_BUFFER, subMesh.texCoords.size() * sizeof(float) * 2, &subMesh.texCoords[0].x, GL_STATIC_DRAW);
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(3);
 
-    glBindBuffer(GL_ARRAY_BUFFER, subMesh.vbo[4]);
-    glBufferData(GL_ARRAY_BUFFER, subMesh.texCoords.size() * sizeof(float) * 2, &subMesh.texCoords[0].x, GL_STATIC_DRAW);
-    glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(4);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, subMesh.vbo[5]);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, subMesh.vbo[4]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, subMesh.indices.size() * sizeof(Uint32) * 3, &subMesh.indices[0].x, GL_STATIC_DRAW);
     subMesh.indicesCount = static_cast<int>(subMesh.indices.size()) * 3;
 
@@ -81,9 +74,9 @@ void Mesh::Unload()
 {
     for (auto& subMesh : subMeshes)
     {
-        glDeleteBuffers(6, &subMesh.vbo[0]);
+        glDeleteBuffers(5, &subMesh.vbo[0]);
         glDeleteVertexArrays(1, &subMesh.vao);
-        std::fill(subMesh.vbo, subMesh.vbo + 6, 0);
+        std::fill(subMesh.vbo, subMesh.vbo + 5, 0);
         subMesh.vao = 0;
     }
 }

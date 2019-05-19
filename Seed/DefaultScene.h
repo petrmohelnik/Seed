@@ -48,11 +48,13 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     ShaderFactory shaders;
     shaders.GetShader(ShaderFactory::Type::Basic);*/
 
-	auto brickMaterial = fileSystem.LoadMaterials("brickMaterial.dae")[0];
+	auto brickMaterial1 = fileSystem.LoadMaterials("brickMaterial.dae")[0];
+	auto brickMaterial2 = fileSystem.LoadMaterials("brickMaterial2.dae")[0];
+	auto brickMaterial3 = fileSystem.LoadMaterials("brickMaterial3.dae")[0];
 
-    auto joker = objects.CreateObject<Object>("joker");
+    auto joker = objects.CreateObject("joker");
     joker->AddComponent<MeshRenderer>()->Load("cube.dae");
-	joker->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial);
+	joker->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial1);
 
     //oker->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("statue.dae"));
     //joker->GetComponent<Transform>()->SetScale(glm::vec3(0.1f));
@@ -60,9 +62,9 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //joker->GetComponent<Transform>()->RotateX(-1.57f);
     //joker->AddComponent<GameScript>();
 
-    auto joker2 = objects.CreateObject<Object>("joker2");
-    joker2->AddComponent<MeshRenderer>()->Load("sphere.dae");
-	joker2->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial);
+    auto joker2 = objects.CreateObject("joker2");
+    joker2->AddComponent<MeshRenderer>()->Load("cube.dae");
+	joker2->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial3);
     //joker2->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("LuxuryLivingRoomSofa.obj"));
     joker2->GetComponent<Transform>()->TranslateX(3.0f);
     //joker2->GetComponent<Transform>()->SetScale(glm::vec3(0.1f));
@@ -70,23 +72,41 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //joker2->AddComponent<GameScript>();
     //joker2->GetComponent<GameScript>()->increaseXZPosition = (2.0f * 3.14f) / 15.0f;
 
-    auto joker3 = objects.CreateObject<Object>("joker3");
+    auto joker3 = objects.CreateObject("joker3");
     //joker3->GetComponent<Transform>()->SetParent(joker2);
-    joker3->AddComponent<MeshRenderer>()->Load("cylinder.dae");
-	joker3->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial);
+    joker3->AddComponent<MeshRenderer>()->Load("cube.dae");
+	joker3->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial2);
     //joker3->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
     joker3->GetComponent<Transform>()->TranslateX(-3.0f, Transform::Space::World);
     //joker3->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
     joker3->GetComponent<Transform>()->RotateX(3.14f);
-    ////joker3->AddComponent<RotateWorldScript>();
+    joker3->AddComponent<RotateWorldScript>();
+	joker2->AddComponent<RotateWorldScript>();
+	joker->AddComponent<RotateWorldScript>();
+
+	auto cyborg = objects.CreateObjectWithMesh("cyborg", "cyborg/cyborg.obj");
+	cyborg->AddComponent<RotateWorldScript>();
+
+	auto planet = objects.CreateObjectWithMesh("planet", "planet/planet.obj");
+	planet->AddComponent<RotateWorldScript>();
+	planet->GetComponent<Transform>()->TranslateX(-3.0f);
+	planet->GetComponent<Transform>()->TranslateY(4.0f);
+
+	auto nanosuit = objects.CreateObjectWithMesh("nanosuit", "nanosuit/nanosuit.obj");
+	nanosuit->AddComponent<RotateWorldScript>();
+	nanosuit->GetComponent<Transform>()->TranslateX(3.0f);
+	nanosuit->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
 
     auto camera = objects.CreateObject<CameraObject>("camera");
-    camera->GetComponent<Transform>()->TranslateZ(4.0);
-	auto light = objects.CreateObject<Object>("light");
+    camera->GetComponent<Transform>()->TranslateZ(6.0);
+    camera->GetComponent<Transform>()->TranslateY(1.0);
+	auto light = objects.CreateObject("light");
 	light->AddComponent<Light>();
-	light->GetComponent<Transform>()->TranslateZ(5.0);
-	light->GetComponent<Transform>()->TranslateY(2.0);
-	light->GetComponent<Transform>()->TranslateX(3.0);
+	light->GetComponent<Transform>()->TranslateZ(8.0, Transform::Space::World);
+	light->GetComponent<Transform>()->TranslateY(9.0, Transform::Space::World);
+	light->GetComponent<Transform>()->TranslateX(-2.0, Transform::Space::World);
 	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
 	light->AddComponent<MeshRenderer>()->Load("sphere.dae");
+	//light->AddComponent<GameScript>();
+	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.1f));
 }

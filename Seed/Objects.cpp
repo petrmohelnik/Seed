@@ -11,6 +11,13 @@ Objects::Objects()
 {
 }
 
+Object * Objects::CreateObjectWithMesh(const std::string& name, const std::string& meshFilePath)
+{
+	auto object = CreateObject(name);
+	object->AddComponent<MeshRenderer>()->Load(meshFilePath);
+	return object;
+}
+
 Object* Objects::GetObjectByName(const std::string& name)
 {
     for (const auto& object : objects)

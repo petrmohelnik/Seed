@@ -14,3 +14,4 @@ https://stackoverflow.com/questions/37942389/correctly-transforming-a-node-relat
 
 shading:
 https://paroj.github.io/gltut/Illumination/Tut11%20BlinnPhong%20Model.html
+https://learnopengl.com/Advanced-Lighting/Normal-Mapping
