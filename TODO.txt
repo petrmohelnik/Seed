@@ -1,8 +1,8 @@
-alpha v texture na nanostui je nejaka navic
 jiny deafult na specular nez 0
-rozchodit nanosuit z tutorialu
+rozchodit nanosuit z tutorialu - ambient textura, kdyz neni tak pouzit diffuse
 co je ta refl?
 zobrazit na miste svetla zlutou kouli
+---
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
 ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene
 jak poznam ze to ma vic geometrii a ze by to meli byt separatni objekty?
@@ -18,7 +18,6 @@ co delat s emission color?
 potom je globalni ambient light - nebo muze byt brana ze skyboxu
 pripadne pouzit https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBufferSubData.xhtml
 https://docs.unity3d.com/Manual/GlobalIllumination.html
-mit ambient color v te strukture pro material?
 https://unity3d.com/learn/tutorials/topics/graphics/ambient-lighting
 ty spekular barvy a tak jsou vlasnosti jenom materialu a ne svetla
 http://assimp.sourceforge.net/lib_html/material_8h.html
@@ -27,6 +26,8 @@ modely muzou sdilet textury mezi materialy... :/
 kombinovani textur a barev example dole: http://assimp.sourceforge.net/lib_html/materials.html
 kombinovani nedelat, pripadne na cpu jenom a kdyz uz tak jenom jedna textura s jednou barvou na gpu
 predelat inputy mysi na vlastni enumy
+https://learnopengl.com/Advanced-OpenGL/Blending
+projit learnopengl
 
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 

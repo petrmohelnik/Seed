@@ -53,7 +53,7 @@ void main()
 	vec3 viewDir = normalize(fViewPos - fPos);
 	vec3 lightDir = normalize(fLightPos - fPos);
 
-	vec3 normalTexture = texture(texNormal, fTexCoord).xyz;
+	vec3 normalTexture = normalize(texture(texNormal, fTexCoord).xyz);
 	vec3 normal = normalize(normalTexture * 2.0 - 1.0);
 	normal.y = -normal.y;
 
@@ -69,5 +69,8 @@ void main()
 	}
 	vec3 specularColor = specularReflection * specularTexture.xyz;
 
-	gl_FragColor = vec4(diffuseColor + specularColor, diffuseTexture.w);
+	float alpha = diffuseTexture.w + (specularColor.r + specularColor.g + specularColor.b) * 0.3333333334;
+	if(alpha < 0.05)
+        discard;
+	gl_FragColor = vec4(diffuseColor + specularColor, alpha);
 }
