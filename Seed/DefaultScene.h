@@ -95,7 +95,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	auto nanosuit = objects.CreateObjectWithMesh("nanosuit", "nanosuit/nanosuit.obj");
 	nanosuit->AddComponent<RotateWorldScript>();
 	nanosuit->GetComponent<Transform>()->TranslateX(3.0f);
-	nanosuit->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
 
     auto camera = objects.CreateObject<CameraObject>("camera");
     camera->GetComponent<Transform>()->TranslateZ(6.0);
@@ -108,5 +107,5 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
 	light->AddComponent<MeshRenderer>()->Load("sphere.dae");
 	//light->AddComponent<GameScript>();
-	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.1f));
+	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.0f));
 }

@@ -53,7 +53,7 @@ void main()
 	vec3 viewDir = normalize(fViewPos - fPos);
 	vec3 lightDir = normalize(fLightPos - fPos);
 
-	vec3 normalTexture = normalize(texture(texNormal, fTexCoord).xyz);
+	vec3 normalTexture = texture(texNormal, fTexCoord).xyz;
 	vec3 normal = normalize(normalTexture * 2.0 - 1.0);
 	normal.y = -normal.y;
 

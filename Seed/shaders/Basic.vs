@@ -28,7 +28,8 @@ layout(std140, binding = 3) uniform MaterialBlock
 layout(location = 0) in vec3 vPos;
 layout(location = 1) in vec3 vNorm;
 layout(location = 2) in vec3 vTang;
-layout(location = 3) in vec2 vTexCoord;
+layout(location = 3) in vec3 vBitang;
+layout(location = 4) in vec2 vTexCoord;
 
 out vec3 fPos;
 out vec3 fViewPos;
@@ -38,9 +39,8 @@ out vec2 fTexCoord;
 void main()
 {
 	vec3 T = normalize(tiModel * vTang);
+	vec3 B = normalize(tiModel * vBitang);
 	vec3 N = normalize(tiModel * vNorm);
-	T = normalize(T - dot(T, N) * N); //re-orthogonalize T with respect to N
-	vec3 B = cross(N, T);
 	mat3 TBN = transpose(mat3(T, B, N)); //transpose equals inverse for orthogonal matrices
 
 	fPos = TBN * vec3(model * vec4(vPos, 1.0));

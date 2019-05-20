@@ -128,6 +128,11 @@ Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
             assimpMesh->mTangents[index].y,
             assimpMesh->mTangents[index].z));
 
+        subMesh.bitangents.emplace_back(glm::vec3(
+            assimpMesh->mBitangents[index].x,
+            assimpMesh->mBitangents[index].y,
+            assimpMesh->mBitangents[index].z));
+
         if (assimpMesh->HasTextureCoords(0))
         {
             subMesh.texCoords.emplace_back(glm::vec2(
