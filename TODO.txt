@@ -1,7 +1,12 @@
 jiny deafult na specular nez 0
-rozchodit nanosuit z tutorialu - ambient textura, kdyz neni tak pouzit diffuse
-co je ta refl?
 zobrazit na miste svetla zlutou kouli
+rozlisit shinnines a specular
+mely by byt v jedne texture, shinines jako alpha 0 v unity je to smoothness
+presunout textury do MaterialBlock?
+pridat plane na zem
+vzdalenost od svetla
+ostre hrany u specularu
+bug s diffusem u planety
 ---
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
 ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene
@@ -10,11 +15,8 @@ pro klasicky load jednoho meshe uvazuju, ze je tam jeden mesh a nema zadnou
 transform, zbytek necham na assimpu
 pro loadsceny, prochazim strom sceny a vytvarim pro kazdy node separatni mesh
 ten load sceny by mel rovnou vytvaret objekty anastavovat jim komponenty a nemel by asi nic vracet
-rozlisit shinnines a specular
-mely by byt v jedne texture, shinines jako alpha 0 v unity je to smoothness
 stahnout si nejakej poradnej modela podivat se jak ma rozlozeny textury
 https://gamedev.stackexchange.com/questions/74879/specular-map-what-about-the-specular-reflections-highlight-size
-co delat s emission color?
 potom je globalni ambient light - nebo muze byt brana ze skyboxu
 pripadne pouzit https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBufferSubData.xhtml
 https://docs.unity3d.com/Manual/GlobalIllumination.html

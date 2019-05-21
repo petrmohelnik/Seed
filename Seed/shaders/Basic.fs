@@ -28,6 +28,7 @@ layout(std140, binding = 3) uniform MaterialBlock
 layout(binding = 0) uniform sampler2D texDiffuse;
 layout(binding = 1) uniform sampler2D texNormal;
 layout(binding = 2) uniform sampler2D texSpecular;
+layout(binding = 3) uniform sampler2D texEmission;
 
 in vec3 fPos;
 in vec3 fViewPos;
@@ -53,6 +54,8 @@ void main()
 	vec3 viewDir = normalize(fViewPos - fPos);
 	vec3 lightDir = normalize(fLightPos - fPos);
 
+	vec3 emissionColor = texture(texEmission, fTexCoord).xyz;
+
 	vec3 normalTexture = texture(texNormal, fTexCoord).xyz;
 	vec3 normal = normalize(normalTexture * 2.0 - 1.0);
 	normal.y = -normal.y;
@@ -72,5 +75,5 @@ void main()
 	float alpha = diffuseTexture.w + (specularColor.r + specularColor.g + specularColor.b) * 0.3333333334;
 	if(alpha < 0.05)
         discard;
-	gl_FragColor = vec4(diffuseColor + specularColor, alpha);
+	gl_FragColor = vec4(diffuseColor + specularColor + emissionColor, alpha);
 }

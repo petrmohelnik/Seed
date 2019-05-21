@@ -12,18 +12,20 @@ Material::~Material()
 
 void Material::Load()
 {
-    diffuse.Load();
-    specular.Load();
-    normal.Load();
-    height.Load();
+    Diffuse.Load();
+    Specular.Load();
+    Normal.Load();
+    Emission.Load();
+    Height.Load();
 }
 
 void Material::Unload()
 {
-    diffuse.Unload();
-    specular.Unload();
-    normal.Unload();
-    height.Unload();
+    Diffuse.Unload();
+    Specular.Unload();
+    Normal.Unload();
+    Emission.Unload();
+    Height.Unload();
 }
 
 void Material::BindMaterial()
@@ -33,11 +35,13 @@ void Material::BindMaterial()
     glBufferData(GL_UNIFORM_BUFFER, sizeof(materialBlockData), &materialBlockData, GL_DYNAMIC_DRAW);
 
     glActiveTexture(GL_TEXTURE0);
-    diffuse.BindTexture();
+    Diffuse.BindTexture();
     glActiveTexture(GL_TEXTURE1);
-    normal.BindTexture();
+    Normal.BindTexture();
     glActiveTexture(GL_TEXTURE2);
-    specular.BindTexture();
+    Specular.BindTexture();
+    glActiveTexture(GL_TEXTURE3);
+    Emission.BindTexture();
 }
 
 void Material::SetShader(ShaderFactory::Type shader_)

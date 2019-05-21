@@ -10,13 +10,13 @@ public:
 
     glm::vec3 spherePosition;
     float xzPosition, yPosition;
-    float increaseXZPosition = (2.0f * 3.14f) / 30.0f, increaseYPosition = (2.0f * 3.14f) / 13.3f;
+    float increaseXZPosition = (2.0f * 3.14f) / 20.0f, increaseYPosition = (2.0f * 3.14f) / 10.0f;
 };
 
 void GameScript::Update()
 {
     // Move sphere around the circle.
-    transform->SetPosition(glm::vec3(10.0f * std::sin(xzPosition), 10.0f * std::sin(yPosition), 10.0f * std::cos(xzPosition)), Transform::Space::World);
+    transform->SetPosition(glm::vec3(6.0f * std::sin(xzPosition), 4.0f * std::sin(yPosition), 6.0f * std::cos(xzPosition)), Transform::Space::World);
 
     // Update the rotating position.
     xzPosition += increaseXZPosition * time.DeltaTime();

@@ -215,16 +215,19 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
 {
     Material material;
 
-    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_DIFFUSE, material.diffuse, folder))
-        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_DIFFUSE, material.diffuse, aiColor4D(1.0f));
+    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_DIFFUSE, material.Diffuse, folder))
+        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_DIFFUSE, material.Diffuse, aiColor4D(1.0f));
 
-    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.normal, folder))
-		material.normal.SetColor(128, 128, 255);
+    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.Normal, folder))
+		material.Normal.SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
     
-    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.specular, folder))
-        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.specular, aiColor4D(1.0f, 1.0f, 1.0f, 0.2f));
+    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.Specular, folder))
+        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Specular, aiColor4D(1.0f, 1.0f, 1.0f, 0.2f));
 
-    LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.height, folder);
+    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_EMISSIVE, material.Emission, folder))
+        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_EMISSIVE, material.Emission, aiColor4D(0.0f));
+
+    LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.Height, folder);
 
     return material;
 }
@@ -251,7 +254,7 @@ void FileSystem::LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey,
 	if (aiGetMaterialColor(assimpMaterial, pKey, type, index, &color) != AI_SUCCESS)
 		color = defaultColor;
      
-	textureData.SetColor(static_cast<Uint8>(color.r * 255), static_cast<Uint8>(color.g * 255), static_cast<Uint8>(color.b * 255), static_cast<Uint8>(color.a * 255));
+	textureData.SetColor(glm::vec4(color.r, color.g, color.b, color.a));
 }
 
 Texture FileSystem::LoadTexture(const std::string& path)

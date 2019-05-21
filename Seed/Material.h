@@ -20,6 +20,12 @@ public:
     void SetShader(ShaderFactory::Type shader_);
     ShaderFactory::Type GetShader();
 
+    Texture Diffuse;
+    Texture Specular;
+    Texture Normal;
+    Texture Emission;
+    Texture Height;
+
 protected:
     friend class FileSystem;
 
@@ -28,11 +34,6 @@ private:
     {
         glm::vec4 placeholder;
     };
-
-    Texture diffuse;
-    Texture specular;
-    Texture normal;
-    Texture height;
 
     ShaderFactory::Type shader = ShaderFactory::Type::Basic;
 };

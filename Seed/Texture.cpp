@@ -3,7 +3,7 @@
 
 Texture::Texture()
 {
-    SetColor(255, 255, 255, 255);
+    SetColor(glm::vec4(1.0f));
 }
 
 void Texture::Load()
@@ -54,43 +54,51 @@ GLuint Texture::GetFormat()
 
 void Texture::Unload()
 {
+    if (texture == 0)
+        return;
+
     glDeleteTextures(1, &texture);
     texture = 0;
 }
 
 void Texture::BindTexture()
 {
+    Load();
     glBindTexture(GL_TEXTURE_2D, texture);
 }
 
-void Texture::SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+void Texture::SetColor(glm::vec4 color)
 {
-    data = std::vector<Uint8>{ b, g, r, a };
+    data = std::vector<Uint8>{ static_cast<Uint8>(color.b * 255), static_cast<Uint8>(color.g * 255), static_cast<Uint8>(color.r * 255), static_cast<Uint8>(color.a * 255) };
     width = 1;
     height = 1;
 	bytesPerPixel = 4;
+    Unload();
 }
 
-void Texture::SetColor(Uint8 r, Uint8 g, Uint8 b)
+void Texture::SetColor(glm::vec3 color)
 {
-	data = std::vector<Uint8>{ b, g, r };
+	data = std::vector<Uint8>{ static_cast<Uint8>(color.b * 255), static_cast<Uint8>(color.g * 255), static_cast<Uint8>(color.r * 255) };
 	width = 1;
 	height = 1;
 	bytesPerPixel = 3;
+    Unload();
 }
 
-void Texture::SetColor(Uint8 r1, Uint8 r2)
+void Texture::SetColor(glm::vec2 color)
 {
-	data = std::vector<Uint8>{ r1, r2 };
+	data = std::vector<Uint8>{ static_cast<Uint8>(color.x * 255), static_cast<Uint8>(color.y * 255) };
 	width = 1;
 	height = 1;
 	bytesPerPixel = 2;
+    Unload();
 }
 
-void Texture::SetColor(Uint8 r)
+void Texture::SetColor(float color)
 {
-	data = std::vector<Uint8>{ r };
+	data = std::vector<Uint8>{ static_cast<Uint8>(color * 255) };
 	width = 1;
 	height = 1;
 	bytesPerPixel = 1;
+    Unload();
 }

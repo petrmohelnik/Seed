@@ -91,6 +91,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	planet->AddComponent<RotateWorldScript>();
 	planet->GetComponent<Transform>()->TranslateX(-3.0f);
 	planet->GetComponent<Transform>()->TranslateY(4.0f);
+    planet->GetComponent<MeshRenderer>()->GetMaterial()->Normal.SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
 
 	auto nanosuit = objects.CreateObjectWithMesh("nanosuit", "nanosuit/nanosuit.obj");
 	nanosuit->AddComponent<RotateWorldScript>();
@@ -101,11 +102,13 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     camera->GetComponent<Transform>()->TranslateY(1.0);
 	auto light = objects.CreateObject("light");
 	light->AddComponent<Light>();
-	light->GetComponent<Transform>()->TranslateZ(8.0, Transform::Space::World);
-	light->GetComponent<Transform>()->TranslateY(9.0, Transform::Space::World);
+	light->GetComponent<Transform>()->TranslateZ(5.0, Transform::Space::World);
+	light->GetComponent<Transform>()->TranslateY(4.0, Transform::Space::World);
 	light->GetComponent<Transform>()->TranslateX(-2.0, Transform::Space::World);
 	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
 	light->AddComponent<MeshRenderer>()->Load("sphere.dae");
-	//light->AddComponent<GameScript>();
+    light->GetComponent<MeshRenderer>()->GetMaterial()->Emission.SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
+	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 0.95f));
 	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.0f));
+	light->AddComponent<GameScript>();
 }
