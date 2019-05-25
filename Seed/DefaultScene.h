@@ -64,7 +64,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 
     auto joker2 = objects.CreateObject("joker2");
     joker2->AddComponent<MeshRenderer>()->Load("cube.dae");
-	joker2->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial3);
+	joker2->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial2);
     //joker2->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("LuxuryLivingRoomSofa.obj"));
     joker2->GetComponent<Transform>()->TranslateX(3.0f);
     //joker2->GetComponent<Transform>()->SetScale(glm::vec3(0.1f));
@@ -75,7 +75,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto joker3 = objects.CreateObject("joker3");
     //joker3->GetComponent<Transform>()->SetParent(joker2);
     joker3->AddComponent<MeshRenderer>()->Load("cube.dae");
-	joker3->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial2);
+	joker3->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial3);
     //joker3->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
     joker3->GetComponent<Transform>()->TranslateX(-3.0f, Transform::Space::World);
     //joker3->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
@@ -91,7 +91,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	planet->AddComponent<RotateWorldScript>();
 	planet->GetComponent<Transform>()->TranslateX(-3.0f);
 	planet->GetComponent<Transform>()->TranslateY(4.0f);
-    planet->GetComponent<MeshRenderer>()->GetMaterial()->Normal.SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
+    planet->GetComponent<MeshRenderer>()->GetMaterial()->Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
 
 	auto nanosuit = objects.CreateObjectWithMesh("nanosuit", "nanosuit/nanosuit.obj");
 	nanosuit->AddComponent<RotateWorldScript>();
@@ -107,8 +107,12 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->GetComponent<Transform>()->TranslateX(-2.0, Transform::Space::World);
 	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
 	light->AddComponent<MeshRenderer>()->Load("sphere.dae");
-    light->GetComponent<MeshRenderer>()->GetMaterial()->Emission.SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
+    light->GetComponent<MeshRenderer>()->GetMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
 	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 0.95f));
-	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.0f));
+	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.01f));
 	light->AddComponent<GameScript>();
+
+    auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
+    ground->GetComponent<Transform>()->SetScale(glm::vec3(1000));
+    ground->GetComponent<Transform>()->TranslateY(-1);
 }

@@ -6,6 +6,11 @@ Texture::Texture()
     SetColor(glm::vec4(1.0f));
 }
 
+Texture::~Texture()
+{
+    Unload();
+}
+
 void Texture::Load()
 {
     if (texture != 0)

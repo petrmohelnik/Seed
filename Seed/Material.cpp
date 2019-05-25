@@ -3,29 +3,33 @@
 
 Material::Material()
 {
+    Diffuse = std::make_shared<Texture>();
+    Specular = std::make_shared<Texture>();
+    Normal = std::make_shared<Texture>();
+    Emission = std::make_shared<Texture>();
+    Height = std::make_shared<Texture>();
 }
 
 Material::~Material()
 {
-    Unload();
 }
 
 void Material::Load()
 {
-    Diffuse.Load();
-    Specular.Load();
-    Normal.Load();
-    Emission.Load();
-    Height.Load();
+    Diffuse->Load();
+    Specular->Load();
+    Normal->Load();
+    Emission->Load();
+    Height->Load();
 }
 
 void Material::Unload()
 {
-    Diffuse.Unload();
-    Specular.Unload();
-    Normal.Unload();
-    Emission.Unload();
-    Height.Unload();
+    Diffuse->Unload();
+    Specular->Unload();
+    Normal->Unload();
+    Emission->Unload();
+    Height->Unload();
 }
 
 void Material::BindMaterial()
@@ -35,13 +39,13 @@ void Material::BindMaterial()
     glBufferData(GL_UNIFORM_BUFFER, sizeof(materialBlockData), &materialBlockData, GL_DYNAMIC_DRAW);
 
     glActiveTexture(GL_TEXTURE0);
-    Diffuse.BindTexture();
+    Diffuse->BindTexture();
     glActiveTexture(GL_TEXTURE1);
-    Normal.BindTexture();
+    Normal->BindTexture();
     glActiveTexture(GL_TEXTURE2);
-    Specular.BindTexture();
+    Specular->BindTexture();
     glActiveTexture(GL_TEXTURE3);
-    Emission.BindTexture();
+    Emission->BindTexture();
 }
 
 void Material::SetShader(ShaderFactory::Type shader_)

@@ -53,27 +53,37 @@ void main()
 {
 	vec3 viewDir = normalize(fViewPos - fPos);
 	vec3 lightDir = normalize(fLightPos - fPos);
+	float lightDist = length(fLightPos - fPos);
+	float lightAttenuation = 1.0 / (1.0 + 0.09 * lightDist + 0.032 * lightDist * lightDist);
 
 	vec3 emissionColor = texture(texEmission, fTexCoord).xyz;
-
+	
 	vec3 normalTexture = texture(texNormal, fTexCoord).xyz;
 	vec3 normal = normalize(normalTexture * 2.0 - 1.0);
 	normal.y = -normal.y;
 
 	vec4 diffuseTexture = texture(texDiffuse, fTexCoord);
-	vec3 diffuseReflection = lightColor * max(0.0, dot(normal, lightDir));
+	vec3 diffuseReflection = lightColor * lightAttenuation * max(0.0, dot(normal, lightDir));
 	vec3 diffuseColor = (lightAmbient + diffuseReflection) * diffuseTexture.xyz;
 	
 	vec4 specularTexture = texture(texSpecular, fTexCoord);
 	vec3 specularReflection = vec3(0.0);
 	if (dot(normal, lightDir) > 0.0)
 	{
-		specularReflection = lightColor * BlinnPhongLobe(viewDir, lightDir, normal, vec3(0.5), pow(2.0, 13.0 * specularTexture.w));
+		specularReflection = lightColor * lightAttenuation * BlinnPhongLobe(viewDir, lightDir, normal, vec3(0.5), pow(2.0, 13.0 * specularTexture.w));
 	}
 	vec3 specularColor = specularReflection * specularTexture.xyz;
 
 	float alpha = diffuseTexture.w + (specularColor.r + specularColor.g + specularColor.b) * 0.3333333334;
 	if(alpha < 0.05)
         discard;
-	gl_FragColor = vec4(diffuseColor + specularColor + emissionColor, alpha);
+
+	vec3 reflectionColor = diffuseColor + specularColor;
+	float lightToGeometryAngle = dot(vec3(0.0, 0.0, 1.0), lightDir);
+	if (lightToGeometryAngle < 0.0)
+	{	// we are on the opposite side from light, slowly fade away so we dont have reflections due to normal mapping
+		reflectionColor *= pow(1 + lightToGeometryAngle, 3);
+	}
+
+	gl_FragColor = vec4(reflectionColor + emissionColor, alpha);
 }

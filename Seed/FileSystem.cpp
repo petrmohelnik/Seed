@@ -219,7 +219,7 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
         LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_DIFFUSE, material.Diffuse, aiColor4D(1.0f));
 
     if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.Normal, folder))
-		material.Normal.SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
+		material.Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
     
     if (!LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.Specular, folder))
         LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Specular, aiColor4D(1.0f, 1.0f, 1.0f, 0.2f));
@@ -232,7 +232,7 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
     return material;
 }
 
-bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, Texture& textureData, const std::string& folder)
+bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, std::shared_ptr<Texture>& textureData, const std::string& folder)
 {
     if (assimpMaterial->GetTextureCount(textureType) != 0)
     {
@@ -248,18 +248,18 @@ bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType t
     return false;
 }
 
-void FileSystem::LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, Texture& textureData, aiColor4D defaultColor)
+void FileSystem::LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, std::shared_ptr<Texture>& textureData, aiColor4D defaultColor)
 {
     aiColor4D color;
 	if (aiGetMaterialColor(assimpMaterial, pKey, type, index, &color) != AI_SUCCESS)
 		color = defaultColor;
      
-	textureData.SetColor(glm::vec4(color.r, color.g, color.b, color.a));
+    textureData->SetColor(glm::vec4(color.r, color.g, color.b, color.a));
 }
 
-Texture FileSystem::LoadTexture(const std::string& path)
+std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path)
 {
-    Texture texture;
+    auto texture = std::make_shared<Texture>();
 
     auto textureFormat = FreeImage_GetFileType(path.c_str(), 0);
     if (textureFormat == FIF_UNKNOWN)
@@ -274,10 +274,10 @@ Texture FileSystem::LoadTexture(const std::string& path)
         throw std::runtime_error("Failed to load texture (" + path + ")");
 
     auto textureData = FreeImage_GetBits(loadedTexture);
-    texture.width = FreeImage_GetWidth(loadedTexture);
-    texture.height = FreeImage_GetHeight(loadedTexture);
-    texture.bytesPerPixel = FreeImage_GetBPP(loadedTexture) / 8;
-    texture.data.assign(textureData, textureData + texture.bytesPerPixel * texture.width * texture.height);
+    texture->width = FreeImage_GetWidth(loadedTexture);
+    texture->height = FreeImage_GetHeight(loadedTexture);
+    texture->bytesPerPixel = FreeImage_GetBPP(loadedTexture) / 8;
+    texture->data.assign(textureData, textureData + texture->bytesPerPixel * texture->width * texture->height);
 
     FreeImage_Unload(loadedTexture);
 

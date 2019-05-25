@@ -56,7 +56,7 @@ void Engine::Work()
     time.InitializeTime();
     components.Initialize();
 
-	while (input.GameIsRunning())
+	while (input.GameIsRunning() && !input.Key(SDLK_ESCAPE))
 	{
 		window.PollInputs();
 		time.UpdateTime();

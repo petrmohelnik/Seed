@@ -1,12 +1,9 @@
-jiny deafult na specular nez 0
-zobrazit na miste svetla zlutou kouli
 rozlisit shinnines a specular
 mely by byt v jedne texture, shinines jako alpha 0 v unity je to smoothness
+jiny deafult na specular nez 0
 presunout textury do MaterialBlock?
-pridat plane na zem
-vzdalenost od svetla
 ostre hrany u specularu
-bug s diffusem u planety
+zaintegrovat tabulky do svetla na attenuation
 ---
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
 ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene
@@ -21,7 +18,6 @@ potom je globalni ambient light - nebo muze byt brana ze skyboxu
 pripadne pouzit https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBufferSubData.xhtml
 https://docs.unity3d.com/Manual/GlobalIllumination.html
 https://unity3d.com/learn/tutorials/topics/graphics/ambient-lighting
-ty spekular barvy a tak jsou vlasnosti jenom materialu a ne svetla
 http://assimp.sourceforge.net/lib_html/material_8h.html
 mel bych nekdy i u normalniho loadu volat unload scene
 modely muzou sdilet textury mezi materialy... :/

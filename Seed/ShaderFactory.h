@@ -6,7 +6,9 @@ class ShaderFactory
 public:
     enum class Type
     {
-        Basic
+        Basic,
+        Basic2,
+        Basic3,
     };
 
     ShaderFactory();

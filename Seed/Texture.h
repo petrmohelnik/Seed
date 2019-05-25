@@ -4,6 +4,7 @@ class Texture
 {
 public:
     Texture();
+    ~Texture();
 
     void SetColor(glm::vec4 color);
     void SetColor(glm::vec3 color);

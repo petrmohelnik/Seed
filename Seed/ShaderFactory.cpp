@@ -21,6 +21,14 @@ void ShaderFactory::CreateShader(Type type)
     {
         shaders.insert({ type , std::make_unique<BasicShader>("Basic.vs", "Basic.fs") });
     }
+    else     if (type == Type::Basic2)
+    {
+        shaders.insert({ type , std::make_unique<BasicShader>("Basic.vs", "Basic2.fs") });
+    }
+    else     if (type == Type::Basic3)
+    {
+        shaders.insert({ type , std::make_unique<BasicShader>("Basic.vs", "Basic3.fs") });
+    }
     else
     {
         throw std::runtime_error("Unsupported shader type");
