@@ -109,7 +109,10 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->AddComponent<MeshRenderer>()->Load("sphere.dae");
     light->GetComponent<MeshRenderer>()->GetMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
 	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 0.95f));
-	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.01f));
+	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.02f));
+	light->GetComponent<Light>()->SetRange(50);
+	light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.0f));
+	light->GetComponent<Light>()->SetCutoffAngle(0.7f);
 	light->AddComponent<GameScript>();
 
     auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");

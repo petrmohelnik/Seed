@@ -11,6 +11,9 @@ layout(std140, binding = 1) uniform LightBlock
 {
 	vec3 lightPos;
 	vec3 lightColor;
+	vec3 lightAttenuationCoeffs;
+	vec2 lightCutoff;
+	vec3 lightOrientation;
 	vec3 lightAmbient;
 };
 
@@ -33,6 +36,7 @@ layout(binding = 3) uniform sampler2D texEmission;
 in vec3 fPos;
 in vec3 fViewPos;
 in vec3 fLightPos;
+in vec3 fLightOrienation;
 in vec2 fTexCoord;
 
 layout(location = 0) out vec4 gl_FragColor;
@@ -54,7 +58,10 @@ void main()
 	vec3 viewDir = normalize(fViewPos - fPos);
 	vec3 lightDir = normalize(fLightPos - fPos);
 	float lightDist = length(fLightPos - fPos);
-	float lightAttenuation = 1.0 / (1.0 + 0.09 * lightDist + 0.032 * lightDist * lightDist);
+	float lightAttenuation = 1.0 / (lightAttenuationCoeffs.x + lightAttenuationCoeffs.y * lightDist + lightAttenuationCoeffs.z * lightDist * lightDist);
+	float lightAngleSpot = dot(lightDir, normalize(-fLightOrienation));
+	float lightSpotIntensity = clamp((lightAngleSpot - lightCutoff.y) / (lightCutoff.x - lightCutoff.y), 0.0, 1.0);
+	vec3 lightIntensity = lightColor * lightSpotIntensity * lightAttenuation;
 
 	vec3 emissionColor = texture(texEmission, fTexCoord).xyz;
 	
@@ -63,14 +70,14 @@ void main()
 	normal.y = -normal.y;
 
 	vec4 diffuseTexture = texture(texDiffuse, fTexCoord);
-	vec3 diffuseReflection = lightColor * lightAttenuation * max(0.0, dot(normal, lightDir));
+	vec3 diffuseReflection = lightIntensity * max(0.0, dot(normal, lightDir));
 	vec3 diffuseColor = (lightAmbient + diffuseReflection) * diffuseTexture.xyz;
 	
 	vec4 specularTexture = texture(texSpecular, fTexCoord);
 	vec3 specularReflection = vec3(0.0);
 	if (dot(normal, lightDir) > 0.0)
 	{
-		specularReflection = lightColor * lightAttenuation * BlinnPhongLobe(viewDir, lightDir, normal, vec3(0.5), pow(2.0, 13.0 * specularTexture.w));
+		specularReflection = lightIntensity * BlinnPhongLobe(viewDir, lightDir, normal, vec3(0.5), pow(2.0, 13.0 * specularTexture.w));
 	}
 	vec3 specularColor = specularReflection * specularTexture.xyz;
 

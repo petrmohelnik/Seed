@@ -3,7 +3,6 @@ mely by byt v jedne texture, shinines jako alpha 0 v unity je to smoothness
 jiny deafult na specular nez 0
 presunout textury do MaterialBlock?
 ostre hrany u specularu
-zaintegrovat tabulky do svetla na attenuation
 ---
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
 ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene
@@ -26,6 +25,9 @@ kombinovani nedelat, pripadne na cpu jenom a kdyz uz tak jenom jedna textura s j
 predelat inputy mysi na vlastni enumy
 https://learnopengl.com/Advanced-OpenGL/Blending
 projit learnopengl
+
+vice svetel
+https://community.khronos.org/t/sending-an-array-of-structs-to-shader-via-an-uniform-buffer-object/75092/2
 
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 

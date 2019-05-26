@@ -11,6 +11,9 @@ layout(std140, binding = 1) uniform LightBlock
 {
 	vec3 lightPos;
 	vec3 lightColor;
+	vec3 lightAttenuationCoeffs;
+	vec2 lightCutoff;
+	vec3 lightOrientation;
 	vec3 lightAmbient;
 };
 
@@ -34,6 +37,7 @@ layout(location = 4) in vec2 vTexCoord;
 out vec3 fPos;
 out vec3 fViewPos;
 out vec3 fLightPos;
+out vec3 fLightOrienation;
 out vec2 fTexCoord;
 
 void main()
@@ -46,6 +50,7 @@ void main()
 	fPos = TBN * vec3(model * vec4(vPos, 1.0));
 	fViewPos = TBN * viewPos;
 	fLightPos = TBN * lightPos;
+	fLightOrienation = TBN * lightOrientation;
 	fTexCoord = vTexCoord;
 
 	gl_Position = projection * view * model * vec4(vPos, 1.0);
