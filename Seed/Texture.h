@@ -20,6 +20,9 @@ protected:
 
     void BindTexture();
 
+    void SetAlphaColor(float alpha);
+    void AddAlphaChannel(float alpha);
+
 private:
 	GLuint GetInternalFormat();
 	GLuint GetFormat();

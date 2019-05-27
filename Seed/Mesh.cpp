@@ -20,18 +20,12 @@ void Mesh::Load()
     {
         for (auto& subMesh : subMeshes)
         {
-            std::vector<glm::vec3> emptyVertices;
-            subMesh.vertices.swap(emptyVertices);
-            std::vector<glm::vec3> emptyNormals;
-            subMesh.normals.swap(emptyNormals);
-            std::vector<glm::vec3> emptyTangents;
-            subMesh.tangents.swap(emptyTangents);
-            std::vector<glm::vec3> emptyBitangents;
-            subMesh.bitangents.swap(emptyBitangents);
-            std::vector<glm::vec2> emptyTexCoords;
-            subMesh.texCoords.swap(emptyTexCoords);
-            std::vector<glm::uvec3> emptyIndices;
-            subMesh.indices.swap(emptyIndices);
+            subMesh.vertices.clear(); subMesh.vertices.shrink_to_fit();
+            subMesh.normals.clear(); subMesh.normals.shrink_to_fit();
+            subMesh.tangents.clear(); subMesh.tangents.shrink_to_fit();
+            subMesh.bitangents.clear(); subMesh.bitangents.shrink_to_fit();
+            subMesh.texCoords.clear(); subMesh.texCoords.shrink_to_fit();
+            subMesh.indices.clear(); subMesh.indices.shrink_to_fit();
         }
     }
 }

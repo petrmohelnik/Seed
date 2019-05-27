@@ -216,13 +216,23 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
     Material material;
 
     if (!LoadMaterialTexture(assimpMaterial, aiTextureType_DIFFUSE, material.Diffuse, folder))
+    {
         LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_DIFFUSE, material.Diffuse, aiColor4D(1.0f));
+        LoadMaterialAlpha(assimpMaterial, AI_MATKEY_OPACITY, material.Diffuse, 1.0f);
+    }
 
     if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.Normal, folder))
 		material.Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
     
     if (!LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.Specular, folder))
-        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Specular, aiColor4D(1.0f, 1.0f, 1.0f, 0.2f));
+    {
+        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Specular, aiColor4D(1.0f));
+        LoadMaterialAlpha(assimpMaterial, AI_MATKEY_SHININESS, material.Specular, 100.0f);
+    }
+    else if (material.Specular->bytesPerPixel != 4)
+    {
+        material.Specular->AddAlphaChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_SHININESS, 100.0f));
+    }
 
     if(!LoadMaterialTexture(assimpMaterial, aiTextureType_EMISSIVE, material.Emission, folder))
         LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_EMISSIVE, material.Emission, aiColor4D(0.0f));
@@ -255,6 +265,23 @@ void FileSystem::LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey,
 		color = defaultColor;
      
     textureData->SetColor(glm::vec4(color.r, color.g, color.b, color.a));
+}
+
+void FileSystem::LoadMaterialAlpha(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, std::shared_ptr<Texture>& textureData, float defaultAlpha)
+{
+    textureData->SetAlphaColor(GetMaterialFloat(assimpMaterial, pKey, type, index, defaultAlpha));
+}
+
+float FileSystem::GetMaterialFloat(aiMaterial * assimpMaterial, const char * pKey, unsigned int type, unsigned int index, float defaultAlpha)
+{
+    float alpha;
+    if (aiGetMaterialFloat(assimpMaterial, pKey, type, index, &alpha) != AI_SUCCESS)
+        alpha = defaultAlpha;
+
+    if (std::strcmp(pKey, "$mat.shininess") == 0)
+        alpha = log2(alpha) / 13;
+
+    return alpha;
 }
 
 std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path)

@@ -107,3 +107,32 @@ void Texture::SetColor(float color)
 	bytesPerPixel = 1;
     Unload();
 }
+
+void Texture::SetAlphaColor(float alpha)
+{
+    if (bytesPerPixel != 4 && data.size() != 4)
+        throw std::runtime_error("cannot set alpha value, because data is not of size 4");
+
+    data[3] = alpha * 255;
+    Unload();
+}
+
+void Texture::AddAlphaChannel(float alpha)
+{
+    if (bytesPerPixel != 3)
+        throw std::runtime_error("cannot add alpha value, because data is not of size 3");
+
+    std::vector<Uint8> newData;
+    newData.resize(data.size() / 3 * 4, alpha * 255);
+
+    for (int i = 0, j = 0; i < data.size(); i++, j++)
+    {
+        newData[j] = data[i];
+        if ((i + 1) % 3 == 0)
+            j++;
+    }
+
+    data = std::move(newData);
+    bytesPerPixel = 4;
+    Unload();
+}
