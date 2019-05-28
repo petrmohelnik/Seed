@@ -17,19 +17,19 @@ Material::~Material()
 void Material::Load()
 {
     Diffuse->Load();
-    Specular->Load();
     Normal->Load();
-    Emission->Load();
     Height->Load();
+    Specular->Load();
+    Emission->Load();
 }
 
 void Material::Unload()
 {
     Diffuse->Unload();
-    Specular->Unload();
     Normal->Unload();
-    Emission->Unload();
     Height->Unload();
+    Specular->Unload();
+    Emission->Unload();
 }
 
 void Material::BindMaterial()
@@ -43,8 +43,10 @@ void Material::BindMaterial()
     glActiveTexture(GL_TEXTURE1);
     Normal->BindTexture();
     glActiveTexture(GL_TEXTURE2);
-    Specular->BindTexture();
+    Height->BindTexture();
     glActiveTexture(GL_TEXTURE3);
+    Specular->BindTexture();
+    glActiveTexture(GL_TEXTURE4);
     Emission->BindTexture();
 }
 

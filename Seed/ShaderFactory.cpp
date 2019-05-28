@@ -19,15 +19,7 @@ void ShaderFactory::CreateShader(Type type)
 {
     if (type == Type::Basic)
     {
-        shaders.insert({ type , std::make_unique<BasicShader>("Basic.vs", "Basic.fs") });
-    }
-    else     if (type == Type::Basic2)
-    {
-        shaders.insert({ type , std::make_unique<BasicShader>("Basic.vs", "Basic2.fs") });
-    }
-    else     if (type == Type::Basic3)
-    {
-        shaders.insert({ type , std::make_unique<BasicShader>("Basic.vs", "Basic3.fs") });
+        shaders.insert({ type , std::make_unique<BasicShader>("Basic.vert", "Basic.frag") });
     }
     else
     {

@@ -23,11 +23,6 @@ layout(std140, binding = 2) uniform ModelBlock
 	mat3 tiModel;
 };
 
-layout(std140, binding = 3) uniform MaterialBlock
-{
-	vec4 placeholder;
-};
-
 layout(location = 0) in vec3 vPos;
 layout(location = 1) in vec3 vNorm;
 layout(location = 2) in vec3 vTang;

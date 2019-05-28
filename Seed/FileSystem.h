@@ -24,11 +24,11 @@ private:
     Mesh::SubMesh LoadSubMeshData(aiMesh* assimpMesh);
     std::vector<std::shared_ptr<Material>> LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials, const std::string& folder);
     Material LoadMaterialData(aiMaterial* assimpMaterial, const std::string& folder);
-    bool LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, std::shared_ptr<Texture>& textureData, const std::string& folder);
+    bool LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, std::shared_ptr<Texture>& textureData, const std::string& folder, int bits = 0);
     void LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, std::shared_ptr<Texture>& textureData, aiColor4D defaultColor);
     void LoadMaterialAlpha(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, std::shared_ptr<Texture>& textureData, float defaultAlpha);
     float GetMaterialFloat(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, float defaultAlpha);
-    std::shared_ptr<Texture> LoadTexture(const std::string& path);
+    std::shared_ptr<Texture> LoadTexture(const std::string& path, int bits = 0);
 
     std::unordered_map<std::string, std::weak_ptr<Mesh>> loadedMeshes;
 	std::unordered_map<std::string, std::vector<std::weak_ptr<Material>>> loadedMaterials;

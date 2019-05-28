@@ -12,6 +12,12 @@ http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
 https://gamedev.stackexchange.com/questions/138358/what-is-the-transformation-order-when-using-the-transform-class
 https://stackoverflow.com/questions/37942389/correctly-transforming-a-node-relative-to-a-specified-space
 
+material:
+http://assimp.sourceforge.net/lib_html/materials.html
+http://assimp.sourceforge.net/lib_html/material_8h.html
+
 shading:
 https://paroj.github.io/gltut/Illumination/Tut11%20BlinnPhong%20Model.html
 https://learnopengl.com/Advanced-Lighting/Normal-Mapping
+learnopengl.com
+https://gamedev.stackexchange.com/questions/74879/specular-map-what-about-the-specular-reflections-highlight-size

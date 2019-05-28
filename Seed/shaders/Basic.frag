@@ -30,8 +30,9 @@ layout(std140, binding = 3) uniform MaterialBlock
 
 layout(binding = 0) uniform sampler2D texDiffuse;
 layout(binding = 1) uniform sampler2D texNormal;
-layout(binding = 2) uniform sampler2D texSpecular;
-layout(binding = 3) uniform sampler2D texEmission;
+layout(binding = 2) uniform sampler2D texHeight;
+layout(binding = 3) uniform sampler2D texSpecular;
+layout(binding = 4) uniform sampler2D texEmission;
 
 in vec3 fPos;
 in vec3 fViewPos;

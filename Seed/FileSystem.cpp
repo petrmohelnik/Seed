@@ -221,7 +221,7 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
         LoadMaterialAlpha(assimpMaterial, AI_MATKEY_OPACITY, material.Diffuse, 1.0f);
     }
 
-    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.Normal, folder))
+    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.Normal, folder, 24))
 		material.Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
     
     if (!LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.Specular, folder))
@@ -234,15 +234,16 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
         material.Specular->AddAlphaChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_SHININESS, 100.0f));
     }
 
-    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_EMISSIVE, material.Emission, folder))
+    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_EMISSIVE, material.Emission, folder, 24))
         LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_EMISSIVE, material.Emission, aiColor4D(0.0f));
 
-    LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.Height, folder);
+    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.Height, folder, 8))
+        material.Height->SetColor(1.0f);
 
     return material;
 }
 
-bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, std::shared_ptr<Texture>& textureData, const std::string& folder)
+bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, std::shared_ptr<Texture>& textureData, const std::string& folder, int bits)
 {
     if (assimpMaterial->GetTextureCount(textureType) != 0)
     {
@@ -250,7 +251,7 @@ bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType t
         if (assimpMaterial->GetTexture(textureType, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
             throw std::runtime_error("Failed to load texture from material");
 
-        textureData = LoadTexture(parentFolder + folder + texturePath.C_Str());
+        textureData = LoadTexture(parentFolder + folder + texturePath.C_Str(), bits);
 
         return true;
     }
@@ -284,7 +285,7 @@ float FileSystem::GetMaterialFloat(aiMaterial * assimpMaterial, const char * pKe
     return alpha;
 }
 
-std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path)
+std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bits)
 {
     auto texture = std::make_shared<Texture>();
 
@@ -299,6 +300,11 @@ std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path)
     auto loadedTexture = FreeImage_Load(textureFormat, path.c_str());
     if (!loadedTexture)
         throw std::runtime_error("Failed to load texture (" + path + ")");
+
+    if (bits == 8 && FreeImage_GetBPP(loadedTexture) > 8)
+        loadedTexture = FreeImage_ConvertTo8Bits(loadedTexture);
+    if (bits == 24 && FreeImage_GetBPP(loadedTexture) > 24)
+        loadedTexture = FreeImage_ConvertTo24Bits(loadedTexture);
 
     auto textureData = FreeImage_GetBits(loadedTexture);
     texture->width = FreeImage_GetWidth(loadedTexture);

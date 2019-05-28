@@ -1,8 +1,13 @@
-presunout textury do MaterialBlock?
 ostre hrany u specularu
 udelat environment mapu a odrazy ze specularu
-aiTextureType_HEIGHT
+a co ta alpha jeste ze samostatne textury?
 aiTextureType_LIGHTMAP - ambient occlusion
+potom je globalni ambient light - nebo muze byt brana ze skyboxu
+pripadne pouzit https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBufferSubData.xhtml
+https://docs.unity3d.com/Manual/GlobalIllumination.html
+https://unity3d.com/learn/tutorials/topics/graphics/ambient-lighting
+!!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
+paralax
 ---
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
 ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene
@@ -11,30 +16,18 @@ pro klasicky load jednoho meshe uvazuju, ze je tam jeden mesh a nema zadnou
 transform, zbytek necham na assimpu
 pro loadsceny, prochazim strom sceny a vytvarim pro kazdy node separatni mesh
 ten load sceny by mel rovnou vytvaret objekty anastavovat jim komponenty a nemel by asi nic vracet
-stahnout si nejakej poradnej modela podivat se jak ma rozlozeny textury
-https://gamedev.stackexchange.com/questions/74879/specular-map-what-about-the-specular-reflections-highlight-size
-potom je globalni ambient light - nebo muze byt brana ze skyboxu
-pripadne pouzit https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBufferSubData.xhtml
-https://docs.unity3d.com/Manual/GlobalIllumination.html
-https://unity3d.com/learn/tutorials/topics/graphics/ambient-lighting
-http://assimp.sourceforge.net/lib_html/material_8h.html
 mel bych nekdy i u normalniho loadu volat unload scene
 modely muzou sdilet textury mezi materialy... :/
-kombinovani textur a barev example dole: http://assimp.sourceforge.net/lib_html/materials.html
-kombinovani nedelat, pripadne na cpu jenom a kdyz uz tak jenom jedna textura s jednou barvou na gpu
 predelat inputy mysi na vlastni enumy
-https://learnopengl.com/Advanced-OpenGL/Blending
-projit learnopengl
 
 vice svetel
 https://community.khronos.org/t/sending-an-array-of-structs-to-shader-via-an-uniform-buffer-object/75092/2
-
-!!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
 v render queue se budou radit objekty prioritne podle vrstvy materialu, potom podle programu
 pruhlednej material musi mit specialni flag
+https://learnopengl.com/Advanced-OpenGL/Blending
 
 submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?
