@@ -18,6 +18,8 @@ public:
     template<typename T>
     std::vector<T*> GetObjects();
 
+    void SetSkybox(const std::string& skybox);
+
 protected:
     friend class Engine;
 

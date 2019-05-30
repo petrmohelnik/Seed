@@ -1,11 +1,9 @@
-ostre hrany u specularu
+bude nova trida TextureCubeMap, ta nebude dedit z texture, ale bude drzet 6 textur, bude si nad nema delat svuj vlastni load, bude friend
+skybox bude mit tu textureCubeMap a bude ji nastavovat pri renderu
 udelat environment mapu a odrazy ze specularu
-a co ta alpha jeste ze samostatne textury?
-aiTextureType_LIGHTMAP - ambient occlusion
 potom je globalni ambient light - nebo muze byt brana ze skyboxu
 pripadne pouzit https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBufferSubData.xhtml
 https://docs.unity3d.com/Manual/GlobalIllumination.html
-https://unity3d.com/learn/tutorials/topics/graphics/ambient-lighting
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 paralax
 ---
@@ -23,6 +21,10 @@ predelat inputy mysi na vlastni enumy
 vice svetel
 https://community.khronos.org/t/sending-an-array-of-structs-to-shader-via-an-uniform-buffer-object/75092/2
 
+fresnel
+
+aiTextureType_LIGHTMAP - ambient occlusion
+
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html
 
 v render queue se budou radit objekty prioritne podle vrstvy materialu, potom podle programu
@@ -31,6 +33,8 @@ https://learnopengl.com/Advanced-OpenGL/Blending
 
 submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?
+
+moznost nacist alpha jeste ze samostatne textury?
 
 All Awake calls
 All Start Calls
