@@ -21,6 +21,10 @@ void ShaderFactory::CreateShader(Type type)
     {
         shaders.insert({ type , std::make_unique<BasicShader>("Basic.vert", "Basic.frag") });
     }
+    else if (type == Type::Skybox)
+    {
+        shaders.insert({ type , std::make_unique<BasicShader>("Skybox.vert", "Skybox.frag") });
+    }
     else
     {
         throw std::runtime_error("Unsupported shader type");

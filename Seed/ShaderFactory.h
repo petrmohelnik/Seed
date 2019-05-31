@@ -7,8 +7,7 @@ public:
     enum class Type
     {
         Basic,
-        Basic2,
-        Basic3,
+        Skybox,
     };
 
     ShaderFactory();

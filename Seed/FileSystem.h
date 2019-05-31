@@ -17,6 +17,7 @@ public:
     void UnloadScene();
     std::shared_ptr<Mesh> LoadMesh(const std::string& path);
     std::vector<std::shared_ptr<Material>> LoadMaterials(const std::string& path);
+    std::shared_ptr<TextureCubeMap> LoadCubeMapTexture(const std::string& path);
 
 private:
     const aiScene* GetScene(const std::string& path);

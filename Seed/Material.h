@@ -1,5 +1,6 @@
 #pragma once
 #include "Texture.h"
+#include "TextureCubeMap.h"
 #include "ShaderFactory.h"
 
 class Material
@@ -25,6 +26,7 @@ public:
     std::shared_ptr<Texture> Height;
     std::shared_ptr<Texture> Specular;
     std::shared_ptr<Texture> Emission;
+    std::shared_ptr<TextureCubeMap> Environmental;
 
 protected:
     friend class FileSystem;

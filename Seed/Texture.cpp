@@ -28,8 +28,7 @@ void Texture::Load()
 
     if (deleteAfterLoad)
     {
-        std::vector<Uint8> emptyVector;
-        data.swap(emptyVector);
+        data.clear(); data.shrink_to_fit();
     }
 }
 

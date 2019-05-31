@@ -1,5 +1,5 @@
-bude nova trida TextureCubeMap, ta nebude dedit z texture, ale bude drzet 6 textur, bude si nad nema delat svuj vlastni load, bude friend
-skybox bude mit tu textureCubeMap a bude ji nastavovat pri renderu
+udelat to s indices aby slo pouzit basicshader?
+sdileni cubeMap pres filesystem?
 udelat environment mapu a odrazy ze specularu
 potom je globalni ambient light - nebo muze byt brana ze skyboxu
 pripadne pouzit https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBufferSubData.xhtml

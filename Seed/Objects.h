@@ -3,6 +3,7 @@
 class Object;
 class Components;
 class FileSystem;
+class TextureCubeMap;
 
 class Objects
 {
@@ -18,7 +19,7 @@ public:
     template<typename T>
     std::vector<T*> GetObjects();
 
-    void SetSkybox(const std::string& skybox);
+    void SetSkybox(std::shared_ptr<TextureCubeMap> cubeMap);
 
 protected:
     friend class Engine;
