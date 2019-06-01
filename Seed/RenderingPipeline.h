@@ -5,6 +5,7 @@ class Camera;
 class Light;
 class RenderQueue;
 class Transform;
+class Skybox;
 
 class RenderingPipeline
 {
@@ -26,6 +27,8 @@ public:
     static Camera* MainCamera();
     void CleanComponents();
 
+	void SetSkybox(Skybox* skybox);
+
 private:
     void RenderCamera(Camera* camera);
     void FillRenderQueue(RenderQueue* queue, Camera* camera);
@@ -35,6 +38,7 @@ private:
     static Camera* mainCamera;
     std::vector<Light*> lights;
     Transform* rootTransform;
+	Skybox* skybox = nullptr;
 
     static GLuint cameraUniform;
     static GLuint lightUniform;

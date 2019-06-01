@@ -116,6 +116,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->AddComponent<GameScript>();
 
     auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
-    ground->GetComponent<Transform>()->SetScale(glm::vec3(1000));
+    ground->GetComponent<Transform>()->SetScale(glm::vec3(100));
     ground->GetComponent<Transform>()->TranslateY(-1);
+
+	objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
 }

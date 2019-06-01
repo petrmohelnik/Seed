@@ -19,6 +19,6 @@ private:
     std::shared_ptr<TextureCubeMap> cubeMap;
 
     GLuint vao = 0;
-    GLuint vbo[1];
+    GLuint vbo[2];
 };
 

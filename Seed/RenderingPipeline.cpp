@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Light.h"
 #include "Transform.h"
+#include "Skybox.h"
 
 Camera* RenderingPipeline::mainCamera;
 GLuint RenderingPipeline::cameraUniform;
@@ -102,6 +103,11 @@ void RenderingPipeline::CleanComponents()
         mainCamera = nullptr;
 }
 
+void RenderingPipeline::SetSkybox(Skybox* skybox_)
+{
+	skybox = skybox_;
+}
+
 void RenderingPipeline::RenderCamera(Camera* camera)
 {
     RenderQueue queue;
@@ -111,12 +117,23 @@ void RenderingPipeline::RenderCamera(Camera* camera)
     glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     camera->BindCamera();
     lights[0]->BindLight();
     for (const auto& renderTarget : queue.queue)
     {
         renderTarget.first->Render(renderTarget.second);
     }
+
+	if (skybox)
+	{
+		RenderingPipeline::BindCameraUniform();
+		auto skyboxViewMatrix = glm::mat4(glm::mat3(glm::inverse(camera->GetTransform()->GetModelMatrix())));
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(skyboxViewMatrix), &skyboxViewMatrix);
+		glDepthFunc(GL_LEQUAL);
+		skybox->Render();
+		glDepthFunc(GL_LESS);
+	}
 }
 
 void RenderingPipeline::FillRenderQueue(RenderQueue* queue, Camera* camera)

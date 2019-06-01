@@ -8,6 +8,7 @@
 #include "Collider.h"
 #include "Rigidbody.h"
 #include "Script.h"
+#include "Skybox.h"
 
 class Input;
 class Time;
@@ -36,6 +37,9 @@ protected:
     std::unique_ptr<Rigidbody> CreateRigidbody(Object* object);
 	template<typename T>
 	std::unique_ptr<T> CreateScript(Object* object);
+
+	void SetSkybox(std::unique_ptr<Skybox> skybox);
+	void RemoveSkybox();
 	
     void OnFrameUpdate();
     void Render();
@@ -51,6 +55,7 @@ private:
     PhysicsEngine physics;
     std::vector<Audio*> audios;
     std::vector<Script*> scripts;
+	std::unique_ptr<Skybox> skybox;
     std::unique_ptr<Object> root;
 };
 

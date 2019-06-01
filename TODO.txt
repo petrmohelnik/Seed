@@ -1,5 +1,3 @@
-udelat to s indices aby slo pouzit basicshader?
-sdileni cubeMap pres filesystem?
 udelat environment mapu a odrazy ze specularu
 potom je globalni ambient light - nebo muze byt brana ze skyboxu
 pripadne pouzit https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBufferSubData.xhtml

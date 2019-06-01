@@ -1,12 +1,5 @@
 #version 460
 
-layout(std140, binding = 0) uniform CameraBlock
-{
-	mat4 projection;
-	mat4 view;
-	vec3 viewPos;
-};
-
 layout(std140, binding = 1) uniform LightBlock
 {
 	vec3 lightPos;
@@ -15,12 +8,6 @@ layout(std140, binding = 1) uniform LightBlock
 	vec2 lightCutoff;
 	vec3 lightOrientation;
 	vec3 lightAmbient;
-};
-
-layout(std140, binding = 2) uniform ModelBlock
-{
-	mat4 model;
-	mat3 tiModel;
 };
 
 layout(std140, binding = 3) uniform MaterialBlock
@@ -33,12 +20,13 @@ layout(binding = 1) uniform sampler2D texNormal;
 layout(binding = 2) uniform sampler2D texHeight;
 layout(binding = 3) uniform sampler2D texSpecular;
 layout(binding = 4) uniform sampler2D texEmission;
+layout(binding = 5) uniform samplerCube texEnvironmental;
 
 in vec3 fPos;
 in vec3 fViewPos;
 in vec3 fLightPos;
 in vec3 fLightOrienation;
-in vec2 fTexCoord;
+in vec2 fTexCoords;
 
 layout(location = 0) out vec4 gl_FragColor;
 
@@ -64,17 +52,17 @@ void main()
 	float lightSpotIntensity = clamp((lightAngleSpot - lightCutoff.y) / (lightCutoff.x - lightCutoff.y), 0.0, 1.0);
 	vec3 lightIntensity = lightColor * lightSpotIntensity * lightAttenuation;
 
-	vec3 emissionColor = texture(texEmission, fTexCoord).xyz;
+	vec3 emissionColor = texture(texEmission, fTexCoords).xyz;
 	
-	vec3 normalTexture = texture(texNormal, fTexCoord).xyz;
+	vec3 normalTexture = texture(texNormal, fTexCoords).xyz;
 	vec3 normal = normalize(normalTexture * 2.0 - 1.0);
 	normal.y = -normal.y;
 
-	vec4 diffuseTexture = texture(texDiffuse, fTexCoord);
+	vec4 diffuseTexture = texture(texDiffuse, fTexCoords);
 	vec3 diffuseReflection = lightIntensity * max(0.0, dot(normal, lightDir));
 	vec3 diffuseColor = (lightAmbient + diffuseReflection) * diffuseTexture.xyz;
 	
-	vec4 specularTexture = texture(texSpecular, fTexCoord);
+	vec4 specularTexture = texture(texSpecular, fTexCoords);
 	vec3 specularReflection = vec3(0.0);
 	if (dot(normal, lightDir) > 0.0)
 	{

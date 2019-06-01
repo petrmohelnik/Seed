@@ -199,6 +199,28 @@ std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials(const std::stri
     return orderedMaterials;
 }
 
+std::shared_ptr<TextureCubeMap> FileSystem::LoadCubeMap(const std::string& path, const std::string& format)
+{
+	auto result = loadedCubeMaps.find(path);
+	if (result != loadedCubeMaps.end() && !result->second.expired())
+		return result->second.lock();
+
+	std::string prefixPath = parentFolder + (*(path.end() - 1) == '/' || *(path.end() - 1) == '\\' ? path : path + '_');
+
+	auto cubeMap = std::make_shared<TextureCubeMap>();
+
+	cubeMap->faces[0] = LoadTexture(prefixPath + "right." + format, 24);
+	cubeMap->faces[1] = LoadTexture(prefixPath + "left." + format, 24);
+	cubeMap->faces[2] = LoadTexture(prefixPath + "bottom." + format, 24);
+	cubeMap->faces[3] = LoadTexture(prefixPath + "top." + format, 24);
+	cubeMap->faces[4] = LoadTexture(prefixPath + "front." + format, 24);
+	cubeMap->faces[5] = LoadTexture(prefixPath + "back." + format, 24);
+
+	loadedCubeMaps.insert_or_assign(path, cubeMap);
+
+	return cubeMap;
+}
+
 std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials, const std::string& folder)
 {
     auto materials = std::vector<std::shared_ptr<Material>>();

@@ -20,6 +20,7 @@ public:
     std::vector<T*> GetObjects();
 
     void SetSkybox(std::shared_ptr<TextureCubeMap> cubeMap);
+	void RemoveSkybox();
 
 protected:
     friend class Engine;

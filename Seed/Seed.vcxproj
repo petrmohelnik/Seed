@@ -112,6 +112,8 @@
   <ItemGroup>
     <None Include="shaders\Basic.frag" />
     <None Include="shaders\Basic.vert" />
+    <None Include="shaders\Skybox.frag" />
+    <None Include="shaders\Skybox.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

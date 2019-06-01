@@ -2,8 +2,8 @@
 
 layout(std140, binding = 0) uniform CameraBlock
 {
-	mat4 projection;
 	mat4 view;
+	mat4 projection;
 	vec3 viewPos;
 };
 
@@ -27,13 +27,13 @@ layout(location = 0) in vec3 vPos;
 layout(location = 1) in vec3 vNorm;
 layout(location = 2) in vec3 vTang;
 layout(location = 3) in vec3 vBitang;
-layout(location = 4) in vec2 vTexCoord;
+layout(location = 4) in vec2 vTexCoords;
 
 out vec3 fPos;
 out vec3 fViewPos;
 out vec3 fLightPos;
 out vec3 fLightOrienation;
-out vec2 fTexCoord;
+out vec2 fTexCoords;
 
 void main()
 {
@@ -46,7 +46,7 @@ void main()
 	fViewPos = TBN * viewPos;
 	fLightPos = TBN * lightPos;
 	fLightOrienation = TBN * lightOrientation;
-	fTexCoord = vTexCoord;
+	fTexCoords = vTexCoords;
 
 	gl_Position = projection * view * model * vec4(vPos, 1.0);
 }

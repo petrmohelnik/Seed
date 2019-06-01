@@ -17,7 +17,7 @@ public:
     void UnloadScene();
     std::shared_ptr<Mesh> LoadMesh(const std::string& path);
     std::vector<std::shared_ptr<Material>> LoadMaterials(const std::string& path);
-    std::shared_ptr<TextureCubeMap> LoadCubeMapTexture(const std::string& path);
+    std::shared_ptr<TextureCubeMap> LoadCubeMap(const std::string& path, const std::string& format);
 
 private:
     const aiScene* GetScene(const std::string& path);
@@ -33,7 +33,9 @@ private:
 
     std::unordered_map<std::string, std::weak_ptr<Mesh>> loadedMeshes;
 	std::unordered_map<std::string, std::vector<std::weak_ptr<Material>>> loadedMaterials;
-    Assimp::Importer importer;
+	std::unordered_map<std::string, std::weak_ptr<TextureCubeMap>> loadedCubeMaps;
+    
+	Assimp::Importer importer;
 
     std::string parentFolder = "assets/";
     std::string loadedScene;

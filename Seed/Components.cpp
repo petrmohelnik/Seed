@@ -24,6 +24,18 @@ void Components::Initialize()
     renderingPipeline.Initialize();
 }
 
+void Components::SetSkybox(std::unique_ptr<Skybox> skybox_)
+{
+	skybox = std::move(skybox_);
+	renderingPipeline.SetSkybox(skybox.get());
+}
+
+void Components::RemoveSkybox()
+{
+	skybox.reset();
+	renderingPipeline.SetSkybox(nullptr);
+}
+
 void Components::OnFrameUpdate()
 {
     for (const auto& script : scripts)

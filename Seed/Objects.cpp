@@ -50,6 +50,16 @@ std::vector<Object*> Objects::GetObjectsByTag(const std::string& tag)
     return result;
 }
 
+void Objects::SetSkybox(std::shared_ptr<TextureCubeMap> cubeMap)
+{
+	components.SetSkybox(std::make_unique<Skybox>(cubeMap));
+}
+
+void Objects::RemoveSkybox()
+{
+	components.RemoveSkybox();
+}
+
 void Objects::UpdateForDestruction()
 {
     bool isSomethingDestroyed = false;
