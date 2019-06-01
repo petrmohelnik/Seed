@@ -6,6 +6,11 @@ Texture::Texture()
     SetColor(glm::vec4(1.0f));
 }
 
+Texture::Texture(glm::vec4 color)
+{
+	SetColor(color);
+}
+
 Texture::~Texture()
 {
     Unload();
@@ -112,7 +117,7 @@ void Texture::SetAlphaColor(float alpha)
     if (bytesPerPixel != 4 && data.size() != 4)
         throw std::runtime_error("cannot set alpha value, because data is not of size 4");
 
-    data[3] = alpha * 255;
+    data[3] = static_cast<int>(alpha * 255);
     Unload();
 }
 
@@ -122,7 +127,7 @@ void Texture::AddAlphaChannel(float alpha)
         throw std::runtime_error("cannot add alpha value, because data is not of size 3");
 
     std::vector<Uint8> newData;
-    newData.resize(data.size() / 3 * 4, alpha * 255);
+    newData.resize(data.size() / 3 * 4, static_cast<int>(alpha * 255));
 
     for (int i = 0, j = 0; i < data.size(); i++, j++)
     {

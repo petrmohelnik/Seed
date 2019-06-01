@@ -22,12 +22,15 @@ void FileSystem::LoadScene(const std::string& path)
     if (loadedScene == path)
         return;
 
-    auto scene = importer.ReadFile(parentFolder + path,
-        aiProcess_GenSmoothNormals | 
-        aiProcess_SortByPType | 
-        aiProcess_Triangulate |
-        aiProcess_CalcTangentSpace |
-        aiProcess_FixInfacingNormals
+    auto scene = importer.ReadFile(parentFolder + path
+		, aiProcess_GenSmoothNormals
+		| aiProcess_SortByPType
+		| aiProcess_Triangulate
+		| aiProcess_CalcTangentSpace
+		| aiProcess_FixInfacingNormals
+		| aiProcess_ImproveCacheLocality
+		| aiProcess_OptimizeMeshes
+		| aiProcess_OptimizeGraph
     );
 
     if (!scene)
@@ -133,14 +136,9 @@ Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
             assimpMesh->mBitangents[index].y,
             assimpMesh->mBitangents[index].z));
 
-        if (assimpMesh->HasTextureCoords(0))
-        {
-            subMesh.texCoords.emplace_back(glm::vec2(
-                assimpMesh->mTextureCoords[0][index].x,
-                assimpMesh->mTextureCoords[0][index].y));
-        }
-        else
-            subMesh.texCoords.emplace_back(glm::vec2(0, 0));
+        subMesh.texCoords.emplace_back(glm::vec2(
+            assimpMesh->mTextureCoords[0][index].x,
+            assimpMesh->mTextureCoords[0][index].y));
     }
 
     for (unsigned int index = 0; index < assimpMesh->mNumFaces; index++)

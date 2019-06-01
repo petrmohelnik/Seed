@@ -87,11 +87,30 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	auto cyborg = objects.CreateObjectWithMesh("cyborg", "cyborg/cyborg.obj");
 	cyborg->AddComponent<RotateWorldScript>();
 
-	auto planet = objects.CreateObjectWithMesh("planet", "planet/planet.obj");
-	planet->AddComponent<RotateWorldScript>();
-	planet->GetComponent<Transform>()->TranslateX(-3.0f);
-	planet->GetComponent<Transform>()->TranslateY(4.0f);
-    planet->GetComponent<MeshRenderer>()->GetMaterial()->Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
+	auto scifi = objects.CreateObjectWithMesh("scifi", "scifi/scene.gltf");
+	scifi->AddComponent<RotateWorldScript>();
+	scifi->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
+	scifi->GetComponent<Transform>()->RotateX(-1.57f);
+
+	//auto treepack = objects.CreateObjectWithMesh("treepack", "treepack/treepack.obj");
+	//treepack->AddComponent<RotateWorldScript>();
+	//treepack->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
+
+	auto console = objects.CreateObjectWithMesh("console", "hologram_console/scene.gltf", glm::vec3(0.0f, 0.0f, 3.0f));
+	console->AddComponent<RotateWorldScript>();
+	console->GetComponent<Transform>()->RotateY(-1.57f);
+	//nyra->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
+	//nyra->GetComponent<MeshRenderer>()->GetMaterial()->Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
+	//nyra->GetComponent<MeshRenderer>()->GetMaterial()->Diffuse->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+
+	auto oldcar = objects.CreateObjectWithMesh("nyra", "oldcar/scene.gltf", glm::vec3(10.0f, -1.01f, 3.0f));
+	oldcar->GetComponent<Transform>()->RotateX(-1.57f);
+	oldcar->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
+
+	auto mountain = objects.CreateObjectWithMesh("mountain", "mountain/mountain.obj", glm::vec3(0.0f, -13.0f, -60.0f));
+	mountain->GetComponent<Transform>()->SetScale(glm::vec3(0.1f));
+	mountain->GetComponent<Transform>()->RotateX(-1.57f);
+	//mountain->GetComponent<Transform>()->Translate(glm::vec3(0.0f, -12.0f, -60.0f), Transform::Space::World);
 
 	auto nanosuit = objects.CreateObjectWithMesh("nanosuit", "nanosuit/nanosuit.obj");
 	nanosuit->AddComponent<RotateWorldScript>();
@@ -102,18 +121,18 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     camera->GetComponent<Transform>()->TranslateY(1.0);
 	auto light = objects.CreateObject("light");
 	light->AddComponent<Light>();
-	light->GetComponent<Transform>()->TranslateZ(5.0, Transform::Space::World);
-	light->GetComponent<Transform>()->TranslateY(4.0, Transform::Space::World);
-	light->GetComponent<Transform>()->TranslateX(-2.0, Transform::Space::World);
+	light->GetComponent<Transform>()->TranslateZ(50.0, Transform::Space::World);
+	light->GetComponent<Transform>()->TranslateY(40.0, Transform::Space::World);
+	light->GetComponent<Transform>()->TranslateX(-20.0, Transform::Space::World);
 	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
 	light->AddComponent<MeshRenderer>()->Load("sphere.dae");
     light->GetComponent<MeshRenderer>()->GetMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
 	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 0.95f));
 	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.02f));
-	light->GetComponent<Light>()->SetRange(100);
+	light->GetComponent<Light>()->SetRange(1000);
 	//light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.0f));
 	//light->GetComponent<Light>()->SetCutoffAngle(0.7f);
-	light->AddComponent<GameScript>();
+	//light->AddComponent<GameScript>();
 
     auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
     ground->GetComponent<Transform>()->SetScale(glm::vec3(100));

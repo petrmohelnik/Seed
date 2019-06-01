@@ -12,7 +12,7 @@ public:
 
 	template<typename T = Object>
 	T* CreateObject(const std::string& name);
-	Object* CreateObjectWithMesh(const std::string& name, const std::string& meshFilePath);
+	Object* CreateObjectWithMesh(const std::string& name, const std::string& meshFilePath, glm::vec3 position = glm::vec3(0.0f));
     Object* GetObjectByName(const std::string& name);
     std::vector<Object*> GetObjectsByName(const std::string& name);
     std::vector<Object*> GetObjectsByTag(const std::string& tag);

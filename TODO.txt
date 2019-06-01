@@ -1,9 +1,11 @@
-udelat environment mapu a odrazy ze specularu
+udelat environment mapu a odrazy ze specularu, defaultne pouzivat skybox texturu
 potom je globalni ambient light - nebo muze byt brana ze skyboxu
-pripadne pouzit https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBufferSubData.xhtml
 https://docs.unity3d.com/Manual/GlobalIllumination.html
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 paralax
+fresnel
+ambient light from skybox - Use the colors of the skybox to determine the ambient light coming from different angles.
+aiTextureType_LIGHTMAP - ambient occlusion
 ---
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
 ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene
@@ -13,21 +15,16 @@ transform, zbytek necham na assimpu
 pro loadsceny, prochazim strom sceny a vytvarim pro kazdy node separatni mesh
 ten load sceny by mel rovnou vytvaret objekty anastavovat jim komponenty a nemel by asi nic vracet
 mel bych nekdy i u normalniho loadu volat unload scene
-modely muzou sdilet textury mezi materialy... :/
+modely muzou sdilet textury mezi materialy... :/ --treepack??
 predelat inputy mysi na vlastni enumy
 
 vice svetel
 https://community.khronos.org/t/sending-an-array-of-structs-to-shader-via-an-uniform-buffer-object/75092/2
 
-fresnel
-
-aiTextureType_LIGHTMAP - ambient occlusion
-
-https://docs.unity3d.com/Manual/SL-SubShaderTags.html
-
 v render queue se budou radit objekty prioritne podle vrstvy materialu, potom podle programu
 pruhlednej material musi mit specialni flag
 https://learnopengl.com/Advanced-OpenGL/Blending
+https://docs.unity3d.com/Manual/SL-SubShaderTags.html -- inspirace poradi
 
 submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?

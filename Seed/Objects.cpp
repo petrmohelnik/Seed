@@ -11,10 +11,11 @@ Objects::Objects()
 {
 }
 
-Object * Objects::CreateObjectWithMesh(const std::string& name, const std::string& meshFilePath)
+Object* Objects::CreateObjectWithMesh(const std::string& name, const std::string& meshFilePath, glm::vec3 position)
 {
 	auto object = CreateObject(name);
 	object->AddComponent<MeshRenderer>()->Load(meshFilePath);
+	object->GetComponent<Transform>()->Translate(position);
 	return object;
 }
 
