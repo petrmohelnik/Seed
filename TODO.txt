@@ -1,10 +1,11 @@
-udelat environment mapu a odrazy ze specularu, defaultne pouzivat skybox texturu
+udelat environment mapu a odrazy ze specularu, defaultne pouzivat skybox texturu - jenom provizorne
+stahnout example modely z https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0
+a pripadne vyzkouset nejnovejsi http://www.assimp.org/ z masteru, pokud to nebude fungovat
+dotahnout environmental a fresnel - http://c0de517e.blogspot.com/2019/05/seeing-whole-physically-based-picture.html?m=1
 potom je globalni ambient light - nebo muze byt brana ze skyboxu
-https://docs.unity3d.com/Manual/GlobalIllumination.html
-!!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
-paralax
-fresnel
 ambient light from skybox - Use the colors of the skybox to determine the ambient light coming from different angles.
+!!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
+paralax - https://www.gamedev.net/forums/topic/687418-parallax-displacement-mapping-in-2017/
 aiTextureType_LIGHTMAP - ambient occlusion
 ---
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
@@ -18,6 +19,11 @@ mel bych nekdy i u normalniho loadu volat unload scene
 modely muzou sdilet textury mezi materialy... :/ --treepack??
 predelat inputy mysi na vlastni enumy
 
+nastudovat - https://learnopengl.com/Advanced-OpenGL/Stencil-testing
+nastudovat - https://learnopengl.com/Advanced-OpenGL/Framebuffers
+
+teren - https://victorbush.com/2015/01/tessellated-terrain/
+
 vice svetel
 https://community.khronos.org/t/sending-an-array-of-structs-to-shader-via-an-uniform-buffer-object/75092/2
 
@@ -30,6 +36,8 @@ submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glM
 shader bude drzet lokace?
 
 moznost nacist alpha jeste ze samostatne textury?
+
+tone mapping - https://64.github.io/tonemapping/
 
 All Awake calls
 All Start Calls
