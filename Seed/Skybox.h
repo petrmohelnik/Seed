@@ -11,7 +11,11 @@ public:
     std::shared_ptr<TextureCubeMap> GetCubeMap();
     std::shared_ptr<TextureCubeMap> GetSharedCubeMap();
 
+protected:
+    friend class RenderingPipeline;
+
     void Render();
+    TextureCubeMap* GetCubeMapRawPtr();
 
 private:
     void LoadCubeMesh();

@@ -19,6 +19,7 @@ public:
     static void BindLightUniform();
     static void BindModelUniform();
     static void BindMaterialUniform();
+    static void BindSkyboxTexture();
 
     void AddRenderer(Renderer* renderer);
     void AddCamera(Camera* camera);
@@ -35,11 +36,11 @@ private:
 
     std::vector<Renderer*> renderers;
     std::vector<Camera*> cameras;
-    static Camera* mainCamera;
     std::vector<Light*> lights;
     Transform* rootTransform;
-	Skybox* skybox = nullptr;
 
+    static Camera* mainCamera;
+    static Skybox* skybox;
     static GLuint cameraUniform;
     static GLuint lightUniform;
     static GLuint modelUniform;

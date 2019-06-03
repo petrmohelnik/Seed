@@ -88,7 +88,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	cyborg->AddComponent<RotateWorldScript>();
 
 	auto scifi = objects.CreateObjectWithMesh("scifi", "scifi/scene.gltf");
-	scifi->AddComponent<RotateWorldScript>();
 	scifi->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
 	scifi->GetComponent<Transform>()->RotateX(-1.57f);
 
@@ -96,9 +95,9 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	//treepack->AddComponent<RotateWorldScript>();
 	//treepack->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
 
-	auto console = objects.CreateObjectWithMesh("console", "hologram_console/scene.gltf", glm::vec3(0.0f, 0.0f, 3.0f));
-	console->AddComponent<RotateWorldScript>();
-	console->GetComponent<Transform>()->RotateY(-1.57f);
+	//auto console = objects.CreateObjectWithMesh("console", "hologram_console/scene.gltf", glm::vec3(0.0f, 0.0f, 3.0f));
+	//console->AddComponent<RotateWorldScript>();
+	//console->GetComponent<Transform>()->RotateY(-1.57f);
 	//nyra->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
 	//nyra->GetComponent<MeshRenderer>()->GetMaterial()->Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
 	//nyra->GetComponent<MeshRenderer>()->GetMaterial()->Diffuse->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));

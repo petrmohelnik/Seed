@@ -8,8 +8,6 @@ class MeshRenderer : public Renderer
 public:
     MeshRenderer(Object* object);
 
-    void AddToRenderQueue(RenderQueue* queue) override;
-	void Render(int index) override;
 
     void SetMesh(std::shared_ptr<Mesh> mesh_);
     std::shared_ptr<Mesh> GetMesh();
@@ -22,6 +20,12 @@ public:
     std::vector<std::shared_ptr<Material>> GetMaterials();
     std::vector<std::shared_ptr<Material>> GetSharedMaterials();
 	void Load(const std::string& path);
+
+protected:
+    friend class RenderingPipeline;
+
+    void AddToRenderQueue(RenderQueue* queue) override;
+	void Render(int index) override;
 
 private:
     struct ModelBlock

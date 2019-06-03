@@ -27,6 +27,7 @@ in vec3 fViewPos;
 in vec3 fLightPos;
 in vec3 fLightOrienation;
 in vec2 fTexCoords;
+in mat3 fTBN;
 
 layout(location = 0) out vec4 gl_FragColor;
 
@@ -53,16 +54,18 @@ void main()
 	vec3 lightIntensity = lightColor * lightSpotIntensity * lightAttenuation;
 
 	vec3 emissionColor = texture(texEmission, fTexCoords).xyz;
-	
 	vec3 normalTexture = texture(texNormal, fTexCoords).xyz;
+	vec4 specularTexture = texture(texSpecular, fTexCoords);
+	vec4 diffuseTexture = texture(texDiffuse, fTexCoords);
+
 	vec3 normal = normalize(normalTexture * 2.0 - 1.0);
 	normal.y = -normal.y;
 
-	vec4 diffuseTexture = texture(texDiffuse, fTexCoords);
 	vec3 diffuseReflection = lightIntensity * max(0.0, dot(normal, lightDir));
-	vec3 diffuseColor = (lightAmbient + diffuseReflection) * diffuseTexture.xyz;
+	vec3 reflectedColor = reflect(-viewDir, normal) * fTBN; //predelat
+	vec3 environmentalReflection = texture(texEnvironmental,vec3(reflectedColor.x, -reflectedColor.y, reflectedColor.z)).xyz;
+	vec3 diffuseColor = (lightAmbient + diffuseReflection) * mix(diffuseTexture.xyz, environmentalReflection, specularTexture.w);
 	
-	vec4 specularTexture = texture(texSpecular, fTexCoords);
 	vec3 specularReflection = vec3(0.0);
 	if (dot(normal, lightDir) > 0.0)
 	{
@@ -74,12 +77,12 @@ void main()
 	if(alpha < 0.05)
         discard;
 
-	vec3 reflectionColor = diffuseColor + specularColor;
+	vec3 illuminationColor = diffuseColor + specularColor;
 	float lightToGeometryAngle = dot(vec3(0.0, 0.0, 1.0), lightDir);
 	if (lightToGeometryAngle < 0.0)
-	{	// we are on the opposite side from light, slowly fade away so we dont have reflections due to normal mapping
-		reflectionColor *= pow(1 + lightToGeometryAngle, 3);
+	{	// we are on the opposite side from light, slowly fade away so we dont have illuminated hidden surface due to normal mapping
+		illuminationColor *= pow(1 + lightToGeometryAngle, 3);
 	}
 
-	gl_FragColor = vec4(reflectionColor + emissionColor, alpha);
+	gl_FragColor = vec4(illuminationColor + emissionColor, alpha);
 }

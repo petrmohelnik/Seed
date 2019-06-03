@@ -18,7 +18,7 @@ public:
 
     void BindMaterial();
 
-    void SetShader(ShaderFactory::Type shader_);
+    void SetShader(ShaderFactory::Type shader);
     ShaderFactory::Type GetShader();
 
     std::shared_ptr<Texture> Diffuse;

@@ -5,8 +5,10 @@
 #include "Light.h"
 #include "Transform.h"
 #include "Skybox.h"
+#include "TextureCubeMap.h"
 
-Camera* RenderingPipeline::mainCamera;
+Camera* RenderingPipeline::mainCamera = nullptr;
+Skybox* RenderingPipeline::skybox = nullptr;
 GLuint RenderingPipeline::cameraUniform;
 GLuint RenderingPipeline::lightUniform;
 GLuint RenderingPipeline::modelUniform;
@@ -50,6 +52,12 @@ void RenderingPipeline::BindModelUniform()
 void RenderingPipeline::BindMaterialUniform()
 {
     glBindBuffer(GL_UNIFORM_BUFFER, materialUniform);
+}
+
+void RenderingPipeline::BindSkyboxTexture()
+{
+    if(skybox)
+        skybox->GetCubeMapRawPtr()->BindTexture();
 }
 
 void RenderingPipeline::AddRenderer(Renderer* renderer)

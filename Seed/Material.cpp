@@ -21,6 +21,8 @@ void Material::Load()
     Height->Load();
     Specular->Load();
     Emission->Load();
+    if (Environmental)
+        Environmental->Load();
 }
 
 void Material::Unload()
@@ -30,6 +32,8 @@ void Material::Unload()
     Height->Unload();
     Specular->Unload();
     Emission->Unload();
+    if (Environmental)
+        Environmental->Unload();
 }
 
 void Material::BindMaterial()
@@ -48,6 +52,11 @@ void Material::BindMaterial()
     Specular->BindTexture();
     glActiveTexture(GL_TEXTURE4);
     Emission->BindTexture();
+    glActiveTexture(GL_TEXTURE5);
+    if (Environmental)
+        Environmental->BindTexture();
+    else
+        RenderingPipeline::BindSkyboxTexture();
 }
 
 void Material::SetShader(ShaderFactory::Type shader_)

@@ -34,6 +34,7 @@ out vec3 fViewPos;
 out vec3 fLightPos;
 out vec3 fLightOrienation;
 out vec2 fTexCoords;
+out mat3 fTBN;
 
 void main()
 {
@@ -41,6 +42,7 @@ void main()
 	vec3 B = normalize(tiModel * vBitang);
 	vec3 N = normalize(tiModel * vNorm);
 	mat3 TBN = transpose(mat3(T, B, N)); //transpose equals inverse for orthogonal matrices
+	fTBN = TBN;
 
 	fPos = TBN * vec3(model * vec4(vPos, 1.0));
 	fViewPos = TBN * viewPos;

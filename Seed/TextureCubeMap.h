@@ -15,7 +15,9 @@ public:
 
 protected:
     friend class FileSystem;
+    friend class Material;
     friend class Skybox;
+    friend class RenderingPipeline;
 
     void Load();
     void Unload();

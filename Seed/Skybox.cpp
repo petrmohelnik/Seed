@@ -81,3 +81,8 @@ void Skybox::Render()
 
     shader->draw(36);
 }
+
+TextureCubeMap * Skybox::GetCubeMapRawPtr()
+{
+    return cubeMap.get();
+}
