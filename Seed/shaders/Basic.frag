@@ -58,12 +58,10 @@ void main()
 	vec4 specularTexture = texture(texSpecular, fTexCoords);
 	vec4 diffuseTexture = texture(texDiffuse, fTexCoords);
 
-	vec3 normal = normalize(normalTexture * 2.0 - 1.0);
-	normal.y = -normal.y;
+	vec3 normal = normalize(normalTexture * 2.0 - 1.0); normal.y = -normal.y;
 
 	vec3 diffuseReflection = lightIntensity * max(0.0, dot(normal, lightDir));
-	vec3 reflectedColor = reflect(-viewDir, normal) * fTBN; //predelat
-	vec3 environmentalReflection = texture(texEnvironmental,vec3(reflectedColor.x, -reflectedColor.y, reflectedColor.z)).xyz;
+	vec3 environmentalReflection = texture(texEnvironmental, fTBN * reflect(-viewDir, normal)).xyz;
 	vec3 diffuseColor = (lightAmbient + diffuseReflection) * mix(diffuseTexture.xyz, environmentalReflection, specularTexture.w);
 	
 	vec3 specularReflection = vec3(0.0);

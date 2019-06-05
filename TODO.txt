@@ -1,12 +1,8 @@
-udelat environment mapu a odrazy ze specularu, defaultne pouzivat skybox texturu - jenom provizorne
-ten sample env musi byt v tangent sapce https://community.khronos.org/t/environment-mapping-with-normalmap-displacement/56443/2
-ten - na sample cubeampy udeatl pri laodu
-udelat koule
-stahnout hologram.gltf
 stahnout example modely z https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0
-a pripadne vyzkouset nejnovejsi http://www.assimp.org/ z masteru, pokud to nebude fungovat
 dotahnout environmental a fresnel - http://c0de517e.blogspot.com/2019/05/seeing-whole-physically-based-picture.html?m=1
 jak to mixovat?
+porovnat s unity
+https://developer.download.nvidia.com/CgTutorial/cg_tutorial_chapter07.html
 potom je globalni ambient light - nebo muze byt brana ze skyboxu
 ambient light from skybox - Use the colors of the skybox to determine the ambient light coming from different angles.
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html

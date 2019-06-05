@@ -95,9 +95,10 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	//treepack->AddComponent<RotateWorldScript>();
 	//treepack->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
 
-	//auto console = objects.CreateObjectWithMesh("console", "hologram_console/scene.gltf", glm::vec3(0.0f, 0.0f, 3.0f));
-	//console->AddComponent<RotateWorldScript>();
-	//console->GetComponent<Transform>()->RotateY(-1.57f);
+	auto console = objects.CreateObjectWithMesh("console", "console/console.gltf", glm::vec3(0.0f, 0.0f, 3.0f));
+	scifi->GetComponent<Transform>()->RotateY(-1.57f);
+	console->AddComponent<RotateWorldScript>();
+
 	//nyra->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
 	//nyra->GetComponent<MeshRenderer>()->GetMaterial()->Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
 	//nyra->GetComponent<MeshRenderer>()->GetMaterial()->Diffuse->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
@@ -105,6 +106,10 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	auto oldcar = objects.CreateObjectWithMesh("nyra", "oldcar/scene.gltf", glm::vec3(10.0f, -1.01f, 3.0f));
 	oldcar->GetComponent<Transform>()->RotateX(-1.57f);
 	oldcar->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
+
+    auto chair = objects.CreateObjectWithMesh("chair", "chair/scene.gltf", glm::vec3(0.0f, -1.01f, 6.0f));
+    chair->GetComponent<Transform>()->RotateX(-1.57f);
+    chair->GetComponent<Transform>()->SetScale(glm::vec3(0.05f));
 
 	auto mountain = objects.CreateObjectWithMesh("mountain", "mountain/mountain.obj", glm::vec3(0.0f, -13.0f, -60.0f));
 	mountain->GetComponent<Transform>()->SetScale(glm::vec3(0.1f));
@@ -116,15 +121,16 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	nanosuit->GetComponent<Transform>()->TranslateX(3.0f);
 
     auto camera = objects.CreateObject<CameraObject>("camera");
-    camera->GetComponent<Transform>()->TranslateZ(6.0);
-    camera->GetComponent<Transform>()->TranslateY(1.0);
+    camera->GetComponent<Transform>()->TranslateZ(10.0);
+    camera->GetComponent<Transform>()->TranslateY(3.0);
+    camera->GetComponent<Transform>()->TranslateX(-10.0);
 	auto light = objects.CreateObject("light");
 	light->AddComponent<Light>();
 	light->GetComponent<Transform>()->TranslateZ(50.0, Transform::Space::World);
 	light->GetComponent<Transform>()->TranslateY(40.0, Transform::Space::World);
 	light->GetComponent<Transform>()->TranslateX(-20.0, Transform::Space::World);
 	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
-	light->AddComponent<MeshRenderer>()->Load("sphere.dae");
+	light->AddComponent<MeshRenderer>()->Load("sphere.obj");
     light->GetComponent<MeshRenderer>()->GetMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
 	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 0.95f));
 	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.02f));
@@ -138,4 +144,12 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     ground->GetComponent<Transform>()->TranslateY(-1);
 
 	objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
+    
+    for (int i = 0; i < 20; i++)
+    {
+        float xPos = (i % 5) * 2 - 14.0f;
+        float yPos = (i / 5) * 2;
+        auto sphere = objects.CreateObjectWithMesh("sphere", "sphere.obj", glm::vec3(xPos, yPos, 1.0f));
+        sphere->GetComponent<MeshRenderer>()->GetMaterial()->Specular->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, i * (1.0f / 19.0f)));
+    }
 }

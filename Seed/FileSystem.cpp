@@ -31,10 +31,16 @@ void FileSystem::LoadScene(const std::string& path)
 		| aiProcess_ImproveCacheLocality
 		| aiProcess_OptimizeMeshes
 		| aiProcess_OptimizeGraph
+        | aiProcess_FindInvalidData
+        | aiProcess_JoinIdenticalVertices
+        | aiProcess_RemoveRedundantMaterials
+        | aiProcess_ValidateDataStructure
     );
 
     if (!scene)
+    {
         throw std::runtime_error("Failed to parse " + path + " file : " + importer.GetErrorString());
+    }
     loadedScene = path;
 }
 
@@ -207,12 +213,12 @@ std::shared_ptr<TextureCubeMap> FileSystem::LoadCubeMap(const std::string& path,
 
 	auto cubeMap = std::make_shared<TextureCubeMap>();
 
-	cubeMap->faces[0] = LoadTexture(prefixPath + "right." + format, 24);
-	cubeMap->faces[1] = LoadTexture(prefixPath + "left." + format, 24);
-	cubeMap->faces[2] = LoadTexture(prefixPath + "bottom." + format, 24);
-	cubeMap->faces[3] = LoadTexture(prefixPath + "top." + format, 24);
-	cubeMap->faces[4] = LoadTexture(prefixPath + "front." + format, 24);
-	cubeMap->faces[5] = LoadTexture(prefixPath + "back." + format, 24);
+	cubeMap->faces[0] = LoadTexture(prefixPath + "right." + format, 24, true);
+	cubeMap->faces[1] = LoadTexture(prefixPath + "left." + format, 24, true);
+	cubeMap->faces[2] = LoadTexture(prefixPath + "top." + format, 24, true);
+	cubeMap->faces[3] = LoadTexture(prefixPath + "bottom." + format, 24, true);
+	cubeMap->faces[4] = LoadTexture(prefixPath + "front." + format, 24, true);
+	cubeMap->faces[5] = LoadTexture(prefixPath + "back." + format, 24, true);
 
 	loadedCubeMaps.insert_or_assign(path, cubeMap);
 
@@ -305,7 +311,7 @@ float FileSystem::GetMaterialFloat(aiMaterial * assimpMaterial, const char * pKe
     return alpha;
 }
 
-std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bits)
+std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bits, bool flipHorizontal)
 {
     auto texture = std::make_shared<Texture>();
 
@@ -325,6 +331,8 @@ std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bi
         loadedTexture = FreeImage_ConvertTo8Bits(loadedTexture);
     if (bits == 24 && FreeImage_GetBPP(loadedTexture) > 24)
         loadedTexture = FreeImage_ConvertTo24Bits(loadedTexture);
+    if (flipHorizontal && !FreeImage_FlipVertical(loadedTexture))
+        throw std::runtime_error("Could not flip texture");
 
     auto textureData = FreeImage_GetBits(loadedTexture);
     texture->width = FreeImage_GetWidth(loadedTexture);

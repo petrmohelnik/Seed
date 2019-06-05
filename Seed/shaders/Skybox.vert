@@ -13,7 +13,7 @@ out vec3 fTexCoords;
 
 void main()
 {
-	fTexCoords = vec3(vPos.x, -vPos.y, vPos.z);
+	fTexCoords = vPos;
 
 	vec4 position = projection * view * vec4(vPos, 1.0);
 	gl_Position = position.xyww;

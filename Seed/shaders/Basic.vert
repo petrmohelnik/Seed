@@ -41,13 +41,13 @@ void main()
 	vec3 T = normalize(tiModel * vTang);
 	vec3 B = normalize(tiModel * vBitang);
 	vec3 N = normalize(tiModel * vNorm);
-	mat3 TBN = transpose(mat3(T, B, N)); //transpose equals inverse for orthogonal matrices
-	fTBN = TBN;
+	fTBN = mat3(T, B, N);
+	mat3 TBN_inverted = transpose(fTBN); //transpose equals inverse for orthogonal matrices
 
-	fPos = TBN * vec3(model * vec4(vPos, 1.0));
-	fViewPos = TBN * viewPos;
-	fLightPos = TBN * lightPos;
-	fLightOrienation = TBN * lightOrientation;
+	fPos = TBN_inverted * vec3(model * vec4(vPos, 1.0));
+	fViewPos = TBN_inverted * viewPos;
+	fLightPos = TBN_inverted * lightPos;
+	fLightOrienation = TBN_inverted * lightOrientation;
 	fTexCoords = vTexCoords;
 
 	gl_Position = projection * view * model * vec4(vPos, 1.0);

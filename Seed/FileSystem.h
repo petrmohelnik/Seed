@@ -29,7 +29,7 @@ private:
     void LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, std::shared_ptr<Texture>& textureData, aiColor4D defaultColor);
     void LoadMaterialAlpha(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, std::shared_ptr<Texture>& textureData, float defaultAlpha);
     float GetMaterialFloat(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, float defaultAlpha);
-    std::shared_ptr<Texture> LoadTexture(const std::string& path, int bits = 0);
+    std::shared_ptr<Texture> LoadTexture(const std::string& path, int bits = 0, bool flipHorizontal = false);
 
     std::unordered_map<std::string, std::weak_ptr<Mesh>> loadedMeshes;
 	std::unordered_map<std::string, std::vector<std::weak_ptr<Material>>> loadedMaterials;
