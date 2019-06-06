@@ -1,5 +1,5 @@
 #include "FileSystem.h"
-#include <FreeImage.h>
+#include <FreeImage.h> //needs to be here because of clash with imgui
 #include "Engine.h"
 
 FileSystem::FileSystem()
@@ -252,8 +252,15 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
     
     if (!LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.Specular, folder))
     {
-        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Specular, aiColor4D(1.0f));
-        LoadMaterialAlpha(assimpMaterial, AI_MATKEY_SHININESS, material.Specular, 100.0f);
+        if (LoadMaterialTexture(assimpMaterial, aiTextureType_UNKNOWN, material.Specular, folder, 24))
+        {
+            material.dataBlock.isMetallic = true;
+        }
+        else
+        {
+            LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Specular, aiColor4D(1.0f));
+            LoadMaterialAlpha(assimpMaterial, AI_MATKEY_SHININESS, material.Specular, 100.0f);
+        }
     }
     else if (material.Specular->bytesPerPixel != 4)
     {

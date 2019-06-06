@@ -34,8 +34,9 @@ protected:
 private:
     struct MaterialBlock
     {
-        glm::vec4 placeholder;
+        Uint32 isMetallic = false;
     };
 
+    MaterialBlock dataBlock;
     ShaderFactory::Type shader = ShaderFactory::Type::Basic;
 };

@@ -39,8 +39,7 @@ void Material::Unload()
 void Material::BindMaterial()
 {
     RenderingPipeline::BindMaterialUniform();
-    MaterialBlock materialBlockData{ glm::vec4() };
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(materialBlockData), &materialBlockData, GL_DYNAMIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);
 
     glActiveTexture(GL_TEXTURE0);
     Diffuse->BindTexture();

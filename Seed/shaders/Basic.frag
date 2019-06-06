@@ -12,7 +12,7 @@ layout(std140, binding = 1) uniform LightBlock
 
 layout(std140, binding = 3) uniform MaterialBlock
 {
-	vec4 placeholder;
+	bool isMetallic;
 };
 
 layout(binding = 0) uniform sampler2D texDiffuse;
@@ -65,7 +65,7 @@ void main()
 	vec3 diffuseColor = (lightAmbient + diffuseReflection) * mix(diffuseTexture.xyz, environmentalReflection, specularTexture.w);
 	
 	vec3 specularReflection = vec3(0.0);
-	if (dot(normal, lightDir) > 0.0)
+	if (dot(normal, lightDir) > 0.0 && !isMetallic)
 	{
 		specularReflection = lightIntensity * BlinnPhongLobe(viewDir, lightDir, normal, vec3(0.5), pow(2.0, 13.0 * specularTexture.w));
 	}
