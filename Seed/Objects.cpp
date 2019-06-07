@@ -19,6 +19,15 @@ Object* Objects::CreateObjectWithMesh(const std::string& name, const std::string
 	return object;
 }
 
+void Objects::CreateObjectsFromScene(const std::string& path) const
+{
+    fileSystem.LoadScene(path);
+    fileSystem.LoadModels();
+    fileSystem.LoadCameras();
+    fileSystem.LoadLights();
+    fileSystem.UnloadScene();
+}
+
 Object* Objects::GetObjectByName(const std::string& name)
 {
     for (const auto& object : objects)

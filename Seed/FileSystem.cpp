@@ -50,21 +50,37 @@ const aiScene* FileSystem::GetScene(const std::string& path)
     return importer.GetScene();
 }
 
-std::vector<std::shared_ptr<Mesh>> FileSystem::LoadMeshes()
+std::vector<Object*> FileSystem::LoadModels()
 {
-    std::vector<std::shared_ptr<Mesh>> meshes;
-    auto scene = importer.GetScene();
+    std::vector<Object*> objects;
 
-    meshes.push_back(LoadMeshData(scene->mMeshes, scene->mNumMeshes)); //temporary, it needs to separate meshes based on geometry, this return only one
+    LoadModel(importer.GetScene()->mRootNode, nullptr, objects);
 
-    return meshes;
+    //load materials
+
+    return objects;
 }
 
-std::vector<std::vector<std::shared_ptr<Material>>> FileSystem::LoadMaterials()
+void FileSystem::LoadModel(aiNode* node, Object* parent, std::vector<Object*>& objects)
 {
-    //needs to return vector of materials for each mesh
-    auto scene = importer.GetScene();
-    return std::vector<std::vector<std::shared_ptr<Material>>>();//LoadMaterialsData(scene->mMaterials, scene->mNumMaterials);
+    auto object = Engine::GetObjects().CreateObject<Object>(node->mName.C_Str());
+    object->GetComponent<Transform>()->SetParent(parent);
+    //object->GetComponent<Transform>()->SetPosition(node->mTransformation)
+
+    auto mesh = std::make_shared<Mesh>();
+    mesh->subMeshes.reserve(node->mNumMeshes);
+
+    for (unsigned int submeshIndex = 0; submeshIndex < node->mNumMeshes; submeshIndex++)
+    {
+        mesh->subMeshes.push_back(std::move(LoadSubMeshData(importer.GetScene()->mMeshes[node->mMeshes[submeshIndex]])));
+    }
+    object->AddComponent<MeshRenderer>()->SetMesh(mesh);
+
+    objects.push_back(object);
+    for(unsigned int childIndex = 0; childIndex < node->mNumChildren; childIndex++)
+    {
+        LoadModel(node->mChildren[childIndex], parent, objects);
+    }
 }
 
 std::vector<Object*> FileSystem::LoadCameras()
@@ -74,6 +90,10 @@ std::vector<Object*> FileSystem::LoadCameras()
     cameras.push_back(object);
 
     return cameras;
+}
+
+std::vector<Object*> FileSystem::LoadLights()
+{
 }
 
 void FileSystem::UnloadScene()

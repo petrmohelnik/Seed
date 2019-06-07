@@ -10,10 +10,9 @@ public:
 
     std::string LoadTextFile(const std::string& path);
     void LoadScene(const std::string& path);
-    std::vector<std::shared_ptr<Mesh>> LoadMeshes(); //we need to somehow return transform, can we return it separately?
-    std::vector<std::vector<std::shared_ptr<Material>>> LoadMaterials();
-    std::vector<Object*> LoadCameras(); //return components? it will contain position an such
-    void LoadLights();
+    std::vector<Object*> LoadModels();
+    std::vector<Object*> LoadCameras();
+    std::vector<Object*> LoadLights();
     void UnloadScene();
     std::shared_ptr<Mesh> LoadMesh(const std::string& path);
     std::vector<std::shared_ptr<Material>> LoadMaterials(const std::string& path);
@@ -21,6 +20,7 @@ public:
 
 private:
     const aiScene* GetScene(const std::string& path);
+    void LoadModel(aiNode* node, Object* parent, std::vector<Object*>& objects);
     std::shared_ptr<Mesh> LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes);
     Mesh::SubMesh LoadSubMeshData(aiMesh* assimpMesh);
     std::vector<std::shared_ptr<Material>> LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials, const std::string& folder);
