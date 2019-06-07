@@ -114,7 +114,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	auto mountain = objects.CreateObjectWithMesh("mountain", "mountain/mountain.obj", glm::vec3(0.0f, -13.0f, -60.0f));
 	mountain->GetComponent<Transform>()->SetScale(glm::vec3(0.1f));
 	mountain->GetComponent<Transform>()->RotateX(-1.57f);
-	//mountain->GetComponent<Transform>()->Translate(glm::vec3(0.0f, -12.0f, -60.0f), Transform::Space::World);
+	mountain->GetComponent<Transform>()->Translate(glm::vec3(0.0f, -12.0f, -60.0f), Transform::Space::World);
 
 	auto nanosuit = objects.CreateObjectWithMesh("nanosuit", "nanosuit/nanosuit.obj");
 	nanosuit->AddComponent<RotateWorldScript>();
@@ -133,7 +133,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->AddComponent<MeshRenderer>()->Load("sphere.obj");
     light->GetComponent<MeshRenderer>()->GetMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
 	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 0.95f));
-	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.02f));
+	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.03f));
 	light->GetComponent<Light>()->SetRange(1000);
 	//light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.0f));
 	//light->GetComponent<Light>()->SetCutoffAngle(0.7f);
@@ -151,5 +151,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
         float yPos = (i / 5) * 2;
         auto sphere = objects.CreateObjectWithMesh("sphere", "sphere.obj", glm::vec3(xPos, yPos, 1.0f));
         sphere->GetComponent<MeshRenderer>()->GetMaterial()->Specular->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, i * (1.0f / 19.0f)));
+        sphere->GetComponent<MeshRenderer>()->GetMaterial()->Diffuse->SetColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
     }
 }
