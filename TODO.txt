@@ -8,11 +8,13 @@ https://developer.download.nvidia.com/CgTutorial/cg_tutorial_chapter07.html
 #include <assimp/pbrmaterial.h>
 potom je globalni ambient light - nebo muze byt brana ze skyboxu
 ambient light from skybox - Use the colors of the skybox to determine the ambient light coming from different angles.
+porad nevim co s tou envMapou... vygooglit
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 paralax - https://www.gamedev.net/forums/topic/687418-parallax-displacement-mapping-in-2017/
 aiTextureType_LIGHTMAP - ambient occlusion
 attenuation jenom podle distance?
 TBN - vybrat T takovy, aby odpovidal puvodnimu smeru - musim noramlizovat abych nemel videt trojuhelniky
+nastavit spravne material na ty kostky
 ---
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
 ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene
