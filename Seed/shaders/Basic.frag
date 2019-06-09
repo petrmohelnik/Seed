@@ -135,7 +135,7 @@ void main()
 	float metallic = isMetallic ? specularTexture.b : 0.0;
 	float ambientOclussion = isMetallic ? specularTexture.r : 1.0;
 
-	vec3 F0 = mix(vec3(0.04), albedo, metallic);
+	vec3 F0 = isMetallic ? mix(vec3(0.04), albedo, metallic) : specularTexture.xyz;
 	vec3 kS = FresnelSchlick(F0, HdotV);
 	vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
 	
@@ -144,8 +144,8 @@ void main()
 		diffuseColor /= PI;
 	
 	vec3 specularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
-	if(!isMetallic)
-		specularColor *= specularTexture.xyz;// * BlinnPhongLobe(NdotH, smoothness, kS) * radiance;
+	//if(!isMetallic)
+		//specularColor *= specularTexture.xyz;// * BlinnPhongLobe(NdotH, smoothness, kS) * radiance;
 
 	//vec3 ambientColor = lightAmbient * mix(albedo, environmentalTexture, pow(smoothness, 0.5)) * ambientOclussion;
 	vec3 ambientColor = CalculateAmbient(NdotV, roughness, ambientOclussion, F0, normal, albedo);

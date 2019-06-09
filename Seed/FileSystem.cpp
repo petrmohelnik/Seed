@@ -279,13 +279,13 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
         }
         else
         {
-            LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Specular, aiColor4D(1.0f));
-            LoadMaterialAlpha(assimpMaterial, AI_MATKEY_SHININESS, material.Specular, 100.0f);
+            LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Specular, aiColor4D(0.15f));
+            LoadMaterialAlpha(assimpMaterial, AI_MATKEY_SHININESS, material.Specular, 0.4f);
         }
     }
     else if (material.Specular->bytesPerPixel != 4)
     {
-        material.Specular->AddAlphaChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_SHININESS, 100.0f));
+        material.Specular->AddAlphaChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_SHININESS, 0.4f));
     }
 
     if(!LoadMaterialTexture(assimpMaterial, aiTextureType_EMISSIVE, material.Emission, folder, 24))
@@ -330,11 +330,13 @@ void FileSystem::LoadMaterialAlpha(aiMaterial* assimpMaterial, const char* pKey,
 float FileSystem::GetMaterialFloat(aiMaterial * assimpMaterial, const char * pKey, unsigned int type, unsigned int index, float defaultAlpha)
 {
     float alpha;
-    if (aiGetMaterialFloat(assimpMaterial, pKey, type, index, &alpha) != AI_SUCCESS)
+    if (aiGetMaterialFloat(assimpMaterial, pKey, type, index, &alpha) == AI_SUCCESS)
+    {
+        if (std::strcmp(pKey, "$mat.shininess") == 0)
+            alpha = log2(alpha) / 13;
+    }
+    else
         alpha = defaultAlpha;
-
-    if (std::strcmp(pKey, "$mat.shininess") == 0)
-        alpha = log2(alpha) / 13;
 
     return alpha;
 }

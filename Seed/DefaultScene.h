@@ -51,6 +51,9 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	auto brickMaterial1 = fileSystem.LoadMaterials("brickMaterial.dae")[0];
 	auto brickMaterial2 = fileSystem.LoadMaterials("brickMaterial2.dae")[0];
 	auto brickMaterial3 = fileSystem.LoadMaterials("brickMaterial3.dae")[0];
+    brickMaterial1->Specular->SetColor(glm::vec4(0.15f, 0.15f, 0.15f, 0.2f));
+    brickMaterial2->Specular->SetColor(glm::vec4(0.15f, 0.15f, 0.15f, 0.2f));
+    brickMaterial3->Specular->SetColor(glm::vec4(0.15f, 0.15f, 0.15f, 0.8f));
 
     auto joker = objects.CreateObject("joker");
     joker->AddComponent<MeshRenderer>()->Load("cube.dae");
@@ -152,7 +155,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
         float yPos = (i / 5) * 2;
         auto sphere = objects.CreateObjectWithMesh("sphere", "sphere.obj", glm::vec3(xPos, yPos, 1.0f));
         sphere->GetComponent<MeshRenderer>()->GetMaterial()->Specular->SetColor(
-			glm::vec4(1.0f, 1.0f, 1.0f, i * (1.0f / 4.5f)));
+			glm::vec4(0.2f, 0.2f, 0.2f, i * (1.0f / 4.5f)));
         sphere->GetComponent<MeshRenderer>()->GetMaterial()->Diffuse->SetColor(glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
     }
 	for (int i = 0; i < 15; i++)
