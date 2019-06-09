@@ -1,8 +1,10 @@
+otestovat ty moje nonmeatalic modely v unity a taky koule
+lightAmbient odstranit?
 stahnout example modely z https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0
 dotahnout environmental a fresnel 
-http://c0de517e.blogspot.com/2019/05/seeing-whole-physically-based-picture.html?m=1
 https://learnopengl.com/PBR/Theory
 jak to mixovat?
+udelat hdr environment mapu
 porovnat s unity
 https://developer.download.nvidia.com/CgTutorial/cg_tutorial_chapter07.html
 #include <assimp/pbrmaterial.h>
@@ -12,9 +14,10 @@ porad nevim co s tou envMapou... vygooglit
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 paralax - https://www.gamedev.net/forums/topic/687418-parallax-displacement-mapping-in-2017/
 aiTextureType_LIGHTMAP - ambient occlusion
-attenuation jenom podle distance?
+attenuation jenom podle distance? a mit treba range jenom jeden parameter
 TBN - vybrat T takovy, aby odpovidal puvodnimu smeru - musim noramlizovat abych nemel videt trojuhelniky
 nastavit spravne material na ty kostky
+reflection probe
 ---
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
 ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene

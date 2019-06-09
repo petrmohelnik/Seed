@@ -20,6 +20,7 @@ public:
 
     void SetShader(ShaderFactory::Type shader);
     ShaderFactory::Type GetShader();
+	void SetMetallic();
 
     std::shared_ptr<Texture> Diffuse;
     std::shared_ptr<Texture> Normal;

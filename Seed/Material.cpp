@@ -67,3 +67,8 @@ ShaderFactory::Type Material::GetShader()
 {
     return shader;
 }
+
+void Material::SetMetallic()
+{
+	dataBlock.isMetallic = true;
+}

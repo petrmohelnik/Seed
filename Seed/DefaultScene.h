@@ -134,8 +134,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->AddComponent<MeshRenderer>()->Load("sphere.obj");
     light->GetComponent<MeshRenderer>()->GetMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
 	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 0.95f));
-	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.05f));
-	light->GetComponent<Light>()->SetRange(1000);
+	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.1f));
+	light->GetComponent<Light>()->SetRange(10000000);
 	//light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.0f));
 	//light->GetComponent<Light>()->SetCutoffAngle(0.7f);
 	//light->AddComponent<GameScript>();
@@ -146,12 +146,23 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 
 	objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
     
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 5; i++)
     {
         float xPos = (i % 5) * 2 - 14.0f;
         float yPos = (i / 5) * 2;
         auto sphere = objects.CreateObjectWithMesh("sphere", "sphere.obj", glm::vec3(xPos, yPos, 1.0f));
-        sphere->GetComponent<MeshRenderer>()->GetMaterial()->Specular->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, i * (1.0f / 19.0f)));
-        sphere->GetComponent<MeshRenderer>()->GetMaterial()->Diffuse->SetColor(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+        sphere->GetComponent<MeshRenderer>()->GetMaterial()->Specular->SetColor(
+			glm::vec4(1.0f, 1.0f, 1.0f, i * (1.0f / 4.5f)));
+        sphere->GetComponent<MeshRenderer>()->GetMaterial()->Diffuse->SetColor(glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
     }
+	for (int i = 0; i < 15; i++)
+	{
+		float xPos = (i % 5) * 2 - 14.0f;
+		float yPos = (i / 5) * 2 + 2;
+		auto sphere = objects.CreateObjectWithMesh("sphere", "sphere.obj", glm::vec3(xPos, yPos, 1.0f));
+		sphere->GetComponent<MeshRenderer>()->GetMaterial()->Specular->SetColor(
+			glm::vec3(1.0f, ((14 - i) / 5) * 0.4 + 0.1, (i % 5) * (1.0f / 4.5f)));
+		sphere->GetComponent<MeshRenderer>()->GetMaterial()->SetMetallic();
+		sphere->GetComponent<MeshRenderer>()->GetMaterial()->Diffuse->SetColor(glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
+	}
 }

@@ -38,6 +38,11 @@ vec3 FresnelSchlick(vec3 F0, float HdotV)
 	return F0 + (1.0 - F0) * pow(1.0 - HdotV, 5.0);
 }
 
+vec3 FresnelSchlickRoughness(vec3 F0, float HdotV, float roughness)
+{
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - HdotV, 5.0);
+}  
+
 vec3 GammaCorrection(vec3 color)
 {
 	return pow(color / (color + vec3(1.0)), vec3(1.0/2.2));
@@ -97,6 +102,13 @@ vec3 CookTorranceLobe(float NdotV, float NdotL, float NdotH, float roughness, ve
 	return numerator / max(denominator, 0.0001);
 }
 
+vec3 CalculateAmbient(float NdotV, float roughness, float ambientOclussion, vec3 F0, vec3 normal, vec3 albedo)
+{
+	vec3 kD = 1.0 - FresnelSchlickRoughness(F0, NdotV, roughness);
+	vec3 irradiance = texture(texEnvironmental, fTBN * normal).xyz;
+	return (kD * irradiance * albedo) * ambientOclussion;
+}
+
 void main()
 {
 	vec3 emissionColor = texture(texEmission, fTexCoords).xyz;
@@ -113,44 +125,30 @@ void main()
 	float NdotH = max(dot(normal, halfVector), 0.0);
 	float HdotV = max(dot(halfVector, viewDir), 0.0);
 
+	//vec3 environmentalTexture = texture(texEnvironmental, fTBN * reflect(-viewDir, normal)).xyz;
+	vec3 environmentalTexture = texture(texEnvironmental, fTBN * normal).xyz;
+
 	vec3 radiance = CalculateRadiance(lightDir);
 	vec3 albedo = diffuseTexture.xyz;
-	float metallic = isMetallic ? specularTexture.b : 0.0;
 	float roughness = isMetallic ? specularTexture.g : 1.0 - specularTexture.w;
 	float smoothness = 1.0 - roughness;
+	float metallic = isMetallic ? specularTexture.b : 0.0;
 	float ambientOclussion = isMetallic ? specularTexture.r : 1.0;
 
-	vec3 F0 = isMetallic ? mix(vec3(0.04), albedo, metallic) : vec3(0.04);
+	vec3 F0 = mix(vec3(0.04), albedo, metallic);
 	vec3 kS = FresnelSchlick(F0, HdotV);
 	vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
 	
-	vec3 diffuseColor = vec3(0.0);
-	vec3 diffuseReflection = radiance * NdotL;
-	vec3 environmentalReflection = texture(texEnvironmental, fTBN * reflect(-viewDir, normal)).xyz;
-	if(isMetallic)
-	{
-		diffuseColor = (kD * albedo / PI) * diffuseReflection;
-	}
-	else
-	{
-		diffuseColor = kD * albedo * diffuseReflection;
-	}
+	vec3 diffuseColor = kD * albedo * radiance * NdotL;
+	//if(isMetallic)
+		diffuseColor /= PI;
 	
-	vec3 specularColor = vec3(0.0);
-	if(isMetallic)
-	{
-		specularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
-	}
-	else
-	{
-		vec3 specularReflection = vec3(0.0);
-		if (dot(normal, lightDir) > 0.0)
-			specularReflection = BlinnPhongLobe(NdotH, smoothness, kS) * radiance;
-		specularColor = specularReflection * specularTexture.xyz;
-		specularColor = specularTexture.xyz * CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
-	}
+	vec3 specularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
+	if(!isMetallic)
+		specularColor *= specularTexture.xyz;// * BlinnPhongLobe(NdotH, smoothness, kS) * radiance;
 
-	vec3 ambientColor = lightAmbient * mix(albedo, environmentalReflection, pow(smoothness, 0.5)) * ambientOclussion;
+	//vec3 ambientColor = lightAmbient * mix(albedo, environmentalTexture, pow(smoothness, 0.5)) * ambientOclussion;
+	vec3 ambientColor = CalculateAmbient(NdotV, roughness, ambientOclussion, F0, normal, albedo);
 
 	float lightToGeometryAngle = dot(vec3(0.0, 0.0, 1.0), lightDir);
 	if (lightToGeometryAngle < 0.0)
@@ -160,19 +158,11 @@ void main()
 		specularColor *= oppositeSideCoeff;
 	}
 
-	vec3 illuminationColor;
-	if(isMetallic)
-	{
-		illuminationColor = GammaCorrection(diffuseColor + specularColor + emissionColor) + ambientColor;
-	}
-	else
-	{
-		illuminationColor = GammaCorrection(specularColor) + ambientColor + diffuseColor + emissionColor;
-	}
+	vec3 color = GammaCorrection(diffuseColor + specularColor + emissionColor);
 
 	float alpha = diffuseTexture.w + (specularColor.r + specularColor.g + specularColor.b) * 0.3333333334;
 	if(alpha < 0.05)
         discard;
 
-	gl_FragColor = vec4(illuminationColor, alpha);
+	gl_FragColor = vec4(color, alpha);
 }

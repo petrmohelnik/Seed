@@ -94,6 +94,7 @@ std::vector<Object*> FileSystem::LoadCameras()
 
 std::vector<Object*> FileSystem::LoadLights()
 {
+	return std::vector<Object*>();
 }
 
 void FileSystem::UnloadScene()
