@@ -27,7 +27,6 @@ public:
     std::shared_ptr<Texture> Height;
     std::shared_ptr<Texture> Specular;
     std::shared_ptr<Texture> Emission;
-    std::shared_ptr<TextureCubeMap> Environmental;
 
 protected:
     friend class FileSystem;

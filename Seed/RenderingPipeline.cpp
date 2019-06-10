@@ -54,10 +54,13 @@ void RenderingPipeline::BindMaterialUniform()
     glBindBuffer(GL_UNIFORM_BUFFER, materialUniform);
 }
 
-void RenderingPipeline::BindSkyboxTexture()
+void RenderingPipeline::BindSkyboxEnvironmentalMap()
 {
-    if(skybox)
+    if (skybox)
+    {
+        glActiveTexture(GL_TEXTURE5);
         skybox->GetCubeMapRawPtr()->BindTexture();
+    }
 }
 
 void RenderingPipeline::AddRenderer(Renderer* renderer)

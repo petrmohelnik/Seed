@@ -26,6 +26,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Components.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="EnvironmentalMap.cpp" />
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="Identifiable.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
@@ -73,6 +74,7 @@
     <ClInclude Include="Components.h" />
     <ClInclude Include="DefaultScene.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="EnvironmentalMap.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="GameScript.h" />
     <ClInclude Include="Identifiable.h" />
@@ -110,6 +112,9 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="EquirectangularToCubemap.frag" />
+    <None Include="EquirectangularToCubemap.vert" />
+    <None Include="PrecalculateIrradiance.frag" />
     <None Include="shaders\Basic.frag" />
     <None Include="shaders\Basic.vert" />
     <None Include="shaders\Skybox.frag" />

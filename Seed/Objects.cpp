@@ -60,9 +60,9 @@ std::vector<Object*> Objects::GetObjectsByTag(const std::string& tag)
     return result;
 }
 
-void Objects::SetSkybox(std::shared_ptr<TextureCubeMap> cubeMap)
+void Objects::SetSkybox(std::unique_ptr<TextureCubeMap> cubeMap)
 {
-	components.SetSkybox(std::make_unique<Skybox>(cubeMap));
+	components.SetSkybox(std::make_unique<Skybox>(std::move(cubeMap)));
 }
 
 void Objects::RemoveSkybox()

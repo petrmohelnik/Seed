@@ -20,7 +20,7 @@ public:
     template<typename T>
     std::vector<T*> GetObjects();
 
-    void SetSkybox(std::shared_ptr<TextureCubeMap> cubeMap);
+    void SetSkybox(std::unique_ptr<TextureCubeMap> cubeMap);
 	void RemoveSkybox();
 
 protected:

@@ -19,7 +19,7 @@ public:
     static void BindLightUniform();
     static void BindModelUniform();
     static void BindMaterialUniform();
-    static void BindSkyboxTexture();
+    static void BindSkyboxEnvironmentalMap();
 
     void AddRenderer(Renderer* renderer);
     void AddCamera(Camera* camera);

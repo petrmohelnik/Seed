@@ -143,6 +143,9 @@
     <ClCompile Include="TextureCubeMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EnvironmentalMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -280,6 +283,9 @@
     <ClInclude Include="TextureCubeMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EnvironmentalMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\Basic.frag">
@@ -292,6 +298,15 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="shaders\Skybox.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="PrecalculateIrradiance.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="EquirectangularToCubemap.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="EquirectangularToCubemap.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

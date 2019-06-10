@@ -25,6 +25,10 @@ void ShaderFactory::CreateShader(Type type)
     {
         shaders.insert({ type , std::make_unique<BasicShader>("Skybox.vert", "Skybox.frag") });
     }
+    else if (type == Type::EquirectangularToCubemap)
+    {
+        shaders.insert({ type , std::make_unique<BasicShader>("EquirectangularToCubemap.vert", "EquirectangularToCubemap.frag") });
+    }
     else
     {
         throw std::runtime_error("Unsupported shader type");

@@ -20,11 +20,18 @@ protected:
     friend class RenderingPipeline;
 
     void Load();
+    void LoadFromEquirectangular(float *data, int width, int height);
     void Unload();
 
     void BindTexture();
 
+    void LoadCubeMesh(GLuint* vao, GLuint* vbo);
+
 private:
+    void GenerateOpenglTexture();
+    void DefineOpenglTexture();
+    void DefineOpenglTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, const void* pixels = nullptr);
+
     std::vector<std::shared_ptr<Texture>> faces; //right, left, top, bottom, front, back
 
     bool deleteAfterLoad = true;

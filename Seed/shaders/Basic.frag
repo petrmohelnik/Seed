@@ -139,15 +139,10 @@ void main()
 	vec3 kS = FresnelSchlick(F0, HdotV);
 	vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
 	
-	vec3 diffuseColor = kD * albedo * radiance * NdotL;
-	//if(isMetallic)
-		diffuseColor /= PI;
+	vec3 diffuseColor = kD * albedo / PI * radiance * NdotL;
 	
 	vec3 specularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
-	//if(!isMetallic)
-		//specularColor *= specularTexture.xyz;// * BlinnPhongLobe(NdotH, smoothness, kS) * radiance;
 
-	//vec3 ambientColor = lightAmbient * mix(albedo, environmentalTexture, pow(smoothness, 0.5)) * ambientOclussion;
 	vec3 ambientColor = CalculateAmbient(NdotV, roughness, ambientOclussion, F0, normal, albedo);
 
 	float lightToGeometryAngle = dot(vec3(0.0, 0.0, 1.0), lightDir);

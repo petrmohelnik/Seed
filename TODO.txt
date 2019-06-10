@@ -1,22 +1,18 @@
+udelat druhy shader pro kalsickyho phonga
+umoznit nastavit texturu jako kanal jine - napr rougness u te cihlove zdi
 metallic jako deafult?
-vyresit to nacitani ro rougness a tak ze samostantych textur?
 TBN - vybrat T takovy, aby odpovidal puvodnimu smeru - musim noramlizovat abych nemel videt trojuhelniky
 lightAmbient odstranit?
 stahnout example modely z https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0
-dotahnout environmental a fresnel 
 https://learnopengl.com/PBR/Theory
-jak to mixovat?
-udelat hdr environment mapu
 https://developer.download.nvidia.com/CgTutorial/cg_tutorial_chapter07.html
 #include <assimp/pbrmaterial.h>
-potom je globalni ambient light - nebo muze byt brana ze skyboxu
-ambient light from skybox - Use the colors of the skybox to determine the ambient light coming from different angles.
-porad nevim co s tou envMapou... vygooglit
 !!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 paralax - https://www.gamedev.net/forums/topic/687418-parallax-displacement-mapping-in-2017/
 aiTextureType_LIGHTMAP - ambient occlusion
 attenuation jenom podle distance? a mit treba range jenom jeden parameter
 reflection probe
+https://blogs.unity3d.com/2015/02/18/working-with-physically-based-shading-a-practical-approach/
 ---
 library_visual_scenes obsahuje transformace - v assimpu m_rootNode
 ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene

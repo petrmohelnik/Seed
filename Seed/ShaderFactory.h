@@ -8,6 +8,7 @@ public:
     {
         Basic,
         Skybox,
+        EquirectangularToCubemap
     };
 
     ShaderFactory();

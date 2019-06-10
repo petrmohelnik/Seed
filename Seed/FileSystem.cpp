@@ -224,15 +224,11 @@ std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials(const std::stri
     return orderedMaterials;
 }
 
-std::shared_ptr<TextureCubeMap> FileSystem::LoadCubeMap(const std::string& path, const std::string& format)
+std::unique_ptr<TextureCubeMap> FileSystem::LoadCubeMap(const std::string& path, const std::string& format)
 {
-	auto result = loadedCubeMaps.find(path);
-	if (result != loadedCubeMaps.end() && !result->second.expired())
-		return result->second.lock();
-
 	std::string prefixPath = parentFolder + (*(path.end() - 1) == '/' || *(path.end() - 1) == '\\' ? path : path + '_');
 
-	auto cubeMap = std::make_shared<TextureCubeMap>();
+	auto cubeMap = std::make_unique<TextureCubeMap>();
 
 	cubeMap->faces[0] = LoadTexture(prefixPath + "right." + format, 24, true);
 	cubeMap->faces[1] = LoadTexture(prefixPath + "left." + format, 24, true);
@@ -240,8 +236,6 @@ std::shared_ptr<TextureCubeMap> FileSystem::LoadCubeMap(const std::string& path,
 	cubeMap->faces[3] = LoadTexture(prefixPath + "bottom." + format, 24, true);
 	cubeMap->faces[4] = LoadTexture(prefixPath + "front." + format, 24, true);
 	cubeMap->faces[5] = LoadTexture(prefixPath + "back." + format, 24, true);
-
-	loadedCubeMaps.insert_or_assign(path, cubeMap);
 
 	return cubeMap;
 }

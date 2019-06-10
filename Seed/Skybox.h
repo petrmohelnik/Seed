@@ -1,15 +1,13 @@
 #pragma once
 
 class TextureCubeMap;
+class EnvironmentalMap;
 
 class Skybox
 {
 public:
-    Skybox(std::shared_ptr<TextureCubeMap> cubeMap);
+    Skybox(std::unique_ptr<TextureCubeMap> cubeMap);
     ~Skybox();
-
-    std::shared_ptr<TextureCubeMap> GetCubeMap();
-    std::shared_ptr<TextureCubeMap> GetSharedCubeMap();
 
 protected:
     friend class RenderingPipeline;
@@ -18,9 +16,8 @@ protected:
     TextureCubeMap* GetCubeMapRawPtr();
 
 private:
-    void LoadCubeMesh();
-
-    std::shared_ptr<TextureCubeMap> cubeMap;
+    std::unique_ptr<TextureCubeMap> skybox;
+    std::unique_ptr<EnvironmentalMap> environmentalMap;
 
     GLuint vao = 0;
     GLuint vbo[2];
