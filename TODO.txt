@@ -1,4 +1,5 @@
 udelat druhy shader pro kalsickyho phonga
+mit nekde globalne nadefinovany targety textur
 umoznit nastavit texturu jako kanal jine - napr rougness u te cihlove zdi
 metallic jako deafult?
 TBN - vybrat T takovy, aby odpovidal puvodnimu smeru - musim noramlizovat abych nemel videt trojuhelniky

@@ -27,7 +27,11 @@ void ShaderFactory::CreateShader(Type type)
     }
     else if (type == Type::EquirectangularToCubemap)
     {
-        shaders.insert({ type , std::make_unique<BasicShader>("EquirectangularToCubemap.vert", "EquirectangularToCubemap.frag") });
+        shaders.insert({ type , std::make_unique<BasicShader>("SimplePosition.vert", "EquirectangularToCubemap.frag") });
+    }
+    else if (type == Type::PrecalculateIrradiance)
+    {
+        shaders.insert({ type , std::make_unique<BasicShader>("SimplePosition.vert", "PrecalculateIrradiance.frag") });
     }
     else
     {

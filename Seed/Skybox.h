@@ -13,7 +13,8 @@ protected:
     friend class RenderingPipeline;
 
     void Render();
-    TextureCubeMap* GetCubeMapRawPtr();
+    TextureCubeMap* GetSkyboxCubeMapRawPtr();
+    EnvironmentalMap* GetEnvironmentalMapRawPtr();
 
 private:
     std::unique_ptr<TextureCubeMap> skybox;

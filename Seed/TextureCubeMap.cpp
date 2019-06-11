@@ -37,47 +37,31 @@ void TextureCubeMap::Load()
 void TextureCubeMap::LoadFromEquirectangular(float* data, int width, int height)
 {
     if (texture != 0)
-        return;
+        throw std::runtime_error("Texture is already loaded");
 
-    GLuint equirectangularTexture;
-    //TODO vytvorit texturu
+    GLuint equirectangularTexture = GenerateEquirectangularTexture(data, width, height);
 
     GLuint vao, vbo[2];
     LoadCubeMesh(&vao, &vbo[0]);
 
     GenerateOpenglTexture();
     DefineOpenglTexture(GL_RGB16F, 512, 512, GL_RGB, GL_FLOAT);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-    GLuint captureFBO, captureRBO;
-    glGenFramebuffers(1, &captureFBO);
-    glGenRenderbuffers(1, &captureRBO);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-    glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
-
-    Camera::CameraBlock camera;
-    camera.projection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-    glm::mat4 captureViews[] =
-    {
-       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
-       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
-       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
-    };
+    GLuint fbo, rbo;
+    GenerateFrameBuffer(&fbo, &rbo, 512, 512);
 
     auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::EquirectangularToCubemap);
     shader->setup();
 
+    Camera::CameraBlock camera;
+    camera.projection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+    auto const captureViews = GenerateCameraViewsForCube();
+
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, equirectangularTexture);
 
-    glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.
-    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+    glViewport(0, 0, 512, 512);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     for (unsigned int i = 0; i < 6; ++i)
     {
         camera.view = captureViews[i];
@@ -90,10 +74,13 @@ void TextureCubeMap::LoadFromEquirectangular(float* data, int width, int height)
         glBindVertexArray(vao);
         shader->draw(36);
     }
-
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDeleteBuffers(2, &vbo[0]);
-    glDeleteVertexArrays(1, &vao);
+
+    UnloadCubeMesh(&vao, &vbo[0]);
+    DeleteFrameBuffer(&fbo, &rbo);
+    glDeleteTextures(1, &equirectangularTexture);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    Engine::GetWindow().ResetViewport();
 }
 
 void TextureCubeMap::Unload()
@@ -156,6 +143,29 @@ void TextureCubeMap::LoadCubeMesh(GLuint* vao, GLuint* vbo)
     glBindVertexArray(0);
 }
 
+void TextureCubeMap::UnloadCubeMesh(GLuint* vao, GLuint* vbo)
+{
+    glDeleteBuffers(2, vbo);
+    glDeleteVertexArrays(1, vao);
+}
+
+void TextureCubeMap::GenerateFrameBuffer(GLuint* fbo, GLuint* rbo, int width, int height)
+{
+    glGenFramebuffers(1, fbo);
+    glGenRenderbuffers(1, rbo);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, *fbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, *rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, *rbo);
+}
+
+void TextureCubeMap::DeleteFrameBuffer(GLuint* fbo, GLuint* rbo)
+{
+    glDeleteRenderbuffers(1, rbo);
+    glDeleteFramebuffers(1, fbo);
+}
+
 void TextureCubeMap::GenerateOpenglTexture()
 {
     glGenTextures(1, &texture);
@@ -176,6 +186,34 @@ void TextureCubeMap::DefineOpenglTexture()
         if (deleteAfterLoad)
             faces[i]->data.clear(); faces[i]->data.clear();
     }
+}
+
+GLuint TextureCubeMap::GenerateEquirectangularTexture(float* data, int width, int height)
+{
+    GLuint equirectangularTexture;
+    glGenTextures(1, &equirectangularTexture);
+    glBindTexture(GL_TEXTURE_2D, equirectangularTexture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
+
+    return equirectangularTexture;
+}
+
+std::vector<glm::mat4> TextureCubeMap::GenerateCameraViewsForCube()
+{
+    return std::vector<glm::mat4>
+    {
+       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
+       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+    };
 }
 
 void TextureCubeMap::DefineOpenglTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, const void* pixels)

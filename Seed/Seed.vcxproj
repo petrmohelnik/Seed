@@ -105,6 +105,7 @@
     <ClInclude Include="ShaderCompiler.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="Skybox.h" />
+    <ClInclude Include="stb\stb_image.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureCubeMap.h" />
@@ -112,11 +113,11 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="EquirectangularToCubemap.frag" />
-    <None Include="EquirectangularToCubemap.vert" />
-    <None Include="PrecalculateIrradiance.frag" />
     <None Include="shaders\Basic.frag" />
     <None Include="shaders\Basic.vert" />
+    <None Include="shaders\EquirectangularToCubemap.frag" />
+    <None Include="shaders\SimplePosition.vert" />
+    <None Include="shaders\PrecalculateIrradiance.frag" />
     <None Include="shaders\Skybox.frag" />
     <None Include="shaders\Skybox.vert" />
   </ItemGroup>

@@ -23,12 +23,13 @@ public:
     static Components& GetComponents();
     static FileSystem& GetFileSystem();
     static ShaderFactory& GetShaderFactory();
+    static SDLWindow& GetWindow();
 
 private:
-	static SDLWindow window;
 	Scene scene;
     SceneDefinition sceneDefinition;
 
+	static SDLWindow window;
 	static Input input;
 	static Time time;
 	static Objects objects;

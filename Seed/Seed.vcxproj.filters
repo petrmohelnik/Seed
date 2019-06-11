@@ -24,6 +24,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{aa45e841-3cde-4833-b7e3-07c85391fa1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="stb">
+      <UniqueIdentifier>{4d923b89-ee64-4101-91bf-28542359fff8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -286,6 +289,9 @@
     <ClInclude Include="EnvironmentalMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="stb\stb_image.h">
+      <Filter>stb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\Basic.frag">
@@ -300,13 +306,13 @@
     <None Include="shaders\Skybox.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="PrecalculateIrradiance.frag">
+    <None Include="shaders\EquirectangularToCubemap.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="EquirectangularToCubemap.vert">
+    <None Include="shaders\PrecalculateIrradiance.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="EquirectangularToCubemap.frag">
+    <None Include="shaders\SimplePosition.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

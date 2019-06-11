@@ -18,6 +18,7 @@ protected:
     friend class Material;
     friend class Skybox;
     friend class RenderingPipeline;
+    friend class EnvironmentalMap;
 
     void Load();
     void LoadFromEquirectangular(float *data, int width, int height);
@@ -25,12 +26,17 @@ protected:
 
     void BindTexture();
 
-    void LoadCubeMesh(GLuint* vao, GLuint* vbo);
+    static void LoadCubeMesh(GLuint* vao, GLuint* vbo);
+    static void UnloadCubeMesh(GLuint* vao, GLuint* vbo);
+    static void GenerateFrameBuffer(GLuint* fbo, GLuint* rbo, int width, int height);
+    static void DeleteFrameBuffer(GLuint* fbo, GLuint* rbo);
+    void DefineOpenglTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, const void* pixels = nullptr);
+    void GenerateOpenglTexture();
+    static std::vector<glm::mat4> GenerateCameraViewsForCube();
 
 private:
-    void GenerateOpenglTexture();
     void DefineOpenglTexture();
-    void DefineOpenglTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, const void* pixels = nullptr);
+    GLuint GenerateEquirectangularTexture(float* data, int width, int height);
 
     std::vector<std::shared_ptr<Texture>> faces; //right, left, top, bottom, front, back
 

@@ -44,6 +44,11 @@ ShaderFactory& Engine::GetShaderFactory()
     return shaderFactory;
 }
 
+SDLWindow& Engine::GetWindow()
+{
+    return window;
+}
+
 void Engine::CreateWindow()
 {
 	window.CreateWindow(1280, 720);

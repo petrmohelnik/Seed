@@ -8,7 +8,8 @@ public:
     {
         Basic,
         Skybox,
-        EquirectangularToCubemap
+        EquirectangularToCubemap,
+        PrecalculateIrradiance
     };
 
     ShaderFactory();

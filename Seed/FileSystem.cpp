@@ -1,5 +1,7 @@
 #include "FileSystem.h"
 #include <FreeImage.h> //needs to be here because of clash with imgui
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
 #include "Engine.h"
 
 FileSystem::FileSystem()
@@ -238,6 +240,23 @@ std::unique_ptr<TextureCubeMap> FileSystem::LoadCubeMap(const std::string& path,
 	cubeMap->faces[5] = LoadTexture(prefixPath + "back." + format, 24, true);
 
 	return cubeMap;
+}
+
+std::unique_ptr<TextureCubeMap> FileSystem::LoadCubeMapHDR(const std::string& path)
+{
+    auto cubeMapHDR = std::make_unique<TextureCubeMap>();
+
+    stbi_set_flip_vertically_on_load(true);
+    int width, height, dummy;
+    float *data = stbi_loadf((parentFolder + path).c_str(), &width, &height, &dummy, 0);
+    if (!data)
+        throw std::runtime_error("Failed to load texture (" + path + ")");
+
+    cubeMapHDR->LoadFromEquirectangular(data, width, height);
+
+    stbi_image_free(data);
+    
+    return cubeMapHDR;
 }
 
 std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials, const std::string& folder)

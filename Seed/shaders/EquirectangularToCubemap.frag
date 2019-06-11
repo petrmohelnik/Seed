@@ -15,5 +15,5 @@ void main()
     uv *= invAtan;
     uv += 0.5;
     
-    gl_FragColor = vec4(texture(texEnvironmental, uv).xyz, 1.0);
+    gl_FragColor = vec4(vec3(0.5), 1.0);
 }

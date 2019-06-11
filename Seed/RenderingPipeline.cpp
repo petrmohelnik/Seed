@@ -6,6 +6,7 @@
 #include "Transform.h"
 #include "Skybox.h"
 #include "TextureCubeMap.h"
+#include "EnvironmentalMap.h"
 
 Camera* RenderingPipeline::mainCamera = nullptr;
 Skybox* RenderingPipeline::skybox = nullptr;
@@ -58,8 +59,10 @@ void RenderingPipeline::BindSkyboxEnvironmentalMap()
 {
     if (skybox)
     {
+        auto environmentalMap = skybox->GetEnvironmentalMapRawPtr();
+
         glActiveTexture(GL_TEXTURE5);
-        skybox->GetCubeMapRawPtr()->BindTexture();
+        environmentalMap->BindIrradiance();
     }
 }
 

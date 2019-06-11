@@ -82,3 +82,10 @@ void SDLWindow::Swap()
 {
 	SDL_GL_SwapWindow(window);
 }
+
+void SDLWindow::ResetViewport()
+{
+    int width, height;
+    SDL_GL_GetDrawableSize(window, &width, &height);
+    glViewport(0, 0, width, height);
+}
