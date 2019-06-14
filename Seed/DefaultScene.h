@@ -147,7 +147,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     ground->GetComponent<Transform>()->SetScale(glm::vec3(100));
     ground->GetComponent<Transform>()->TranslateY(-1);
 
-	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
+	objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
     
     for (int i = 0; i < 5; i++)
     {

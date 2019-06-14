@@ -21,11 +21,7 @@ Object* Objects::CreateObjectWithMesh(const std::string& name, const std::string
 
 void Objects::CreateObjectsFromScene(const std::string& path) const
 {
-    fileSystem.LoadScene(path);
-    fileSystem.LoadModels();
-    fileSystem.LoadCameras();
-    fileSystem.LoadLights();
-    fileSystem.UnloadScene();
+    fileSystem.LoadObjects(path);
 }
 
 Object* Objects::GetObjectByName(const std::string& name)

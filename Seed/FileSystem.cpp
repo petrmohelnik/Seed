@@ -3,6 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 #include "Engine.h"
+#include <numeric>
 
 FileSystem::FileSystem()
 {
@@ -52,51 +53,72 @@ const aiScene* FileSystem::GetScene(const std::string& path)
     return importer.GetScene();
 }
 
-std::vector<Object*> FileSystem::LoadModels()
+std::vector<Object*> FileSystem::LoadObjects(const std::string& path)
 {
+    auto const scene = GetScene(path);
     std::vector<Object*> objects;
 
-    LoadModel(importer.GetScene()->mRootNode, nullptr, objects);
-
-    //load materials
+    auto const materials = LoadMaterialsData(scene->mMaterials, scene->mNumMaterials, path);
+    LoadNode(scene, scene->mRootNode, nullptr, objects, materials);
 
     return objects;
 }
 
-void FileSystem::LoadModel(aiNode* node, Object* parent, std::vector<Object*>& objects)
+void FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent, std::vector<Object*>& objects, const std::vector<std::shared_ptr<Material>>& materials)
 {
     auto object = Engine::GetObjects().CreateObject<Object>(node->mName.C_Str());
     object->GetComponent<Transform>()->SetParent(parent);
     //object->GetComponent<Transform>()->SetPosition(node->mTransformation)
 
-    auto mesh = std::make_shared<Mesh>();
-    mesh->subMeshes.reserve(node->mNumMeshes);
-
-    for (unsigned int submeshIndex = 0; submeshIndex < node->mNumMeshes; submeshIndex++)
-    {
-        mesh->subMeshes.push_back(std::move(LoadSubMeshData(importer.GetScene()->mMeshes[node->mMeshes[submeshIndex]])));
-    }
-    object->AddComponent<MeshRenderer>()->SetMesh(mesh);
+    LoadMesh(scene, node, object, materials);
+    LoadLight(scene, object);
+    LoadCamera(scene, object);
 
     objects.push_back(object);
     for(unsigned int childIndex = 0; childIndex < node->mNumChildren; childIndex++)
     {
-        LoadModel(node->mChildren[childIndex], parent, objects);
+        LoadNode(scene, node->mChildren[childIndex], parent, objects, materials);
     }
 }
 
-std::vector<Object*> FileSystem::LoadCameras()
+void FileSystem::LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<Material>>& materials)
 {
-    std::vector<Object*> cameras;
-    auto object = Engine::GetObjects().CreateObject<Object>("camera1");
-    cameras.push_back(object);
+    if (node->mNumMeshes != 0)
+    {
+        object->AddComponent<MeshRenderer>()->SetMesh(LoadMeshData(scene->mMeshes, node->mNumMeshes, node->mMeshes));
 
-    return cameras;
+        std::vector<std::shared_ptr<Material>> orderedMaterials;
+        orderedMaterials.reserve(node->mNumMeshes);
+        for (unsigned int index = 0; index < node->mNumMeshes; index++)
+        {
+            orderedMaterials.push_back(materials[scene->mMeshes[node->mMeshes[index]]->mMaterialIndex]);
+        }
+        object->GetComponent<MeshRenderer>()->SetMaterials(orderedMaterials);
+    }
 }
 
-std::vector<Object*> FileSystem::LoadLights()
+void FileSystem::LoadLight(const aiScene* scene, Object* object)
 {
-	return std::vector<Object*>();
+    for(unsigned int index = 0; index < scene->mNumLights; index++)
+    {
+        if(aiString(object->GetName()) == scene->mLights[index]->mName)
+        {
+            object->AddComponent<Light>();
+        }
+    }
+}
+
+void FileSystem::LoadCamera(const aiScene* scene, Object* object)
+{
+    for (unsigned int index = 0; index < scene->mNumCameras; index++)
+    {
+        if (aiString(object->GetName()) == scene->mCameras[index]->mName)
+        {
+            auto camera = object->AddComponent<Camera>();
+            if (index == 0)
+                RenderingPipeline::SetMainCamera(camera);
+        }
+    }
 }
 
 void FileSystem::UnloadScene()
@@ -106,11 +128,11 @@ void FileSystem::UnloadScene()
 
 std::shared_ptr<Mesh> FileSystem::LoadMesh(const std::string& path)
 {
-    auto result = loadedMeshes.find(path);
+    auto const result = loadedMeshes.find(path);
     if (result != loadedMeshes.end() && !result->second.expired())
         return result->second.lock();
 
-    auto scene = GetScene(path);
+    auto const scene = GetScene(path);
 
     if(scene->mNumMeshes == 0)
         throw std::runtime_error("File: " + path + " does not contain any meshes");
@@ -121,14 +143,17 @@ std::shared_ptr<Mesh> FileSystem::LoadMesh(const std::string& path)
     return mesh;
 }
 
-std::shared_ptr<Mesh> FileSystem::LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes)
+std::shared_ptr<Mesh> FileSystem::LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes, unsigned* assimpMeshesIndexes)
 {
     auto mesh = std::make_shared<Mesh>();
     mesh->subMeshes.reserve(numMeshes);
 
     for (unsigned int index = 0; index < numMeshes; index++)
     {
-        mesh->subMeshes.push_back(std::move(LoadSubMeshData(assimpMeshes[index])));
+        if(!assimpMeshesIndexes)
+            mesh->subMeshes.push_back(std::move(LoadSubMeshData(assimpMeshes[index])));
+        else
+            mesh->subMeshes.push_back(std::move(LoadSubMeshData(assimpMeshes[assimpMeshesIndexes[index]])));
     }
 
     return mesh;
@@ -206,11 +231,7 @@ std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials(const std::stri
     if (scene->mNumMaterials == 0)
         throw std::runtime_error("File: " + path + " does not contain any materials");
 
-	auto folderEnd = path.find_last_of("\\/");
-	std::string folder;
-	if(folderEnd != std::string::npos)
-		folder = path.substr(0, path.find_last_of("\\/") + 1);
-    auto materials = LoadMaterialsData(scene->mMaterials, scene->mNumMaterials, folder);
+    auto materials = LoadMaterialsData(scene->mMaterials, scene->mNumMaterials, path);
 
     std::vector<std::shared_ptr<Material>> orderedMaterials;
     orderedMaterials.reserve(scene->mNumMeshes);
@@ -259,8 +280,13 @@ std::unique_ptr<TextureCubeMap> FileSystem::LoadCubeMapHDR(const std::string& pa
     return cubeMapHDR;
 }
 
-std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials, const std::string& folder)
+std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials, const std::string& path)
 {
+    auto folderEnd = path.find_last_of("\\/");
+    std::string folder;
+    if (folderEnd != std::string::npos)
+        folder = path.substr(0, path.find_last_of("\\/") + 1);
+
     auto materials = std::vector<std::shared_ptr<Material>>();
 
     for (unsigned int index = 0; index < numMaterials; index++)

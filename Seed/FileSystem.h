@@ -9,22 +9,23 @@ public:
     FileSystem();
 
     std::string LoadTextFile(const std::string& path);
-    void LoadScene(const std::string& path);
-    std::vector<Object*> LoadModels();
-    std::vector<Object*> LoadCameras();
-    std::vector<Object*> LoadLights();
-    void UnloadScene();
+    std::vector<Object*> LoadObjects(const std::string& path);
     std::shared_ptr<Mesh> LoadMesh(const std::string& path);
     std::vector<std::shared_ptr<Material>> LoadMaterials(const std::string& path);
     std::unique_ptr<TextureCubeMap> LoadCubeMap(const std::string& path, const std::string& format);
     std::unique_ptr<TextureCubeMap> LoadCubeMapHDR(const std::string& path);
 
 private:
+    void LoadScene(const std::string& path);
+    void UnloadScene();
     const aiScene* GetScene(const std::string& path);
-    void LoadModel(aiNode* node, Object* parent, std::vector<Object*>& objects);
-    std::shared_ptr<Mesh> LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes);
+    void LoadNode(const aiScene* scene, aiNode* node, Object* parent, std::vector<Object*>& objects, const std::vector<std::shared_ptr<Material>>& materials);
+    void LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<Material>>& materials);
+    void LoadLight(const aiScene* scene, Object* object);
+    void LoadCamera(const aiScene* scene, Object* object);
+    std::shared_ptr<Mesh> LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes, unsigned* assimpMeshesIndexes = nullptr);
     Mesh::SubMesh LoadSubMeshData(aiMesh* assimpMesh);
-    std::vector<std::shared_ptr<Material>> LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials, const std::string& folder);
+    std::vector<std::shared_ptr<Material>> LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials, const std::string& path);
     Material LoadMaterialData(aiMaterial* assimpMaterial, const std::string& folder);
     bool LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, std::shared_ptr<Texture>& textureData, const std::string& folder, int bits = 0);
     void LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, std::shared_ptr<Texture>& textureData, aiColor4D defaultColor);
