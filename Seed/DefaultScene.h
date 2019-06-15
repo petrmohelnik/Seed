@@ -81,12 +81,14 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	//light->GetComponent<Light>()->SetCutoffAngle(0.7f);
 	//light->AddComponent<GameScript>();
 
-    auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
-    ground->GetComponent<Transform>()->SetScale(glm::vec3(100));
-    ground->GetComponent<Transform>()->TranslateY(-1);
+    //auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
+    //ground->GetComponent<Transform>()->SetScale(glm::vec3(100));
+    //ground->GetComponent<Transform>()->TranslateY(-1);
 
-	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
-	objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
+	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Protospace.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
 
     //objects.CreateObjectsFromScene("jaguar.dae");
     

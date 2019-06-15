@@ -20,7 +20,7 @@ layout(binding = 1) uniform sampler2D texNormal;
 layout(binding = 2) uniform sampler2D texHeight;
 layout(binding = 3) uniform sampler2D texSpecular;
 layout(binding = 4) uniform sampler2D texEmission;
-layout(binding = 5) uniform samplerCube texEnvironmental;
+layout(binding = 5) uniform samplerCube texIrradiance;
 
 in vec3 fPos;
 in vec3 fViewPos;
@@ -105,7 +105,7 @@ vec3 CookTorranceLobe(float NdotV, float NdotL, float NdotH, float roughness, ve
 vec3 CalculateAmbient(float NdotV, float roughness, float ambientOclussion, vec3 F0, vec3 normal, vec3 albedo)
 {
 	vec3 kD = 1.0 - FresnelSchlickRoughness(F0, NdotV, roughness);
-	vec3 irradiance = texture(texEnvironmental, fTBN * normal).xyz;
+	vec3 irradiance = texture(texIrradiance, fTBN * normal).xyz;
 	return (kD * irradiance * albedo) * ambientOclussion;
 }
 
@@ -126,7 +126,7 @@ void main()
 	float HdotV = max(dot(halfVector, viewDir), 0.0);
 
 	//vec3 environmentalTexture = texture(texEnvironmental, fTBN * reflect(-viewDir, normal)).xyz;
-	vec3 environmentalTexture = texture(texEnvironmental, fTBN * normal).xyz;
+	//vec3 environmentalTexture = texture(texEnvironmental, fTBN * normal).xyz;
 
 	vec3 radiance = CalculateRadiance(lightDir);
 	vec3 albedo = diffuseTexture.xyz;
@@ -153,7 +153,7 @@ void main()
 		specularColor *= oppositeSideCoeff;
 	}
 
-	vec3 color = GammaCorrection(diffuseColor + specularColor + emissionColor);
+	vec3 color = GammaCorrection(diffuseColor + specularColor + emissionColor + ambientColor);
 
 	float alpha = diffuseTexture.w + (specularColor.r + specularColor.g + specularColor.b) * 0.3333333334;
 	if(alpha < 0.05)

@@ -30,7 +30,7 @@ void EnvironmentalMap::Load(TextureCubeMap* environment)
 
     glViewport(0, 0, 32, 32);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    for (unsigned int i = 0; i < 6; ++i)
+    for (unsigned int i = 0; i < 6; i++)
     {
         camera.view = captureViews[i];
         RenderingPipeline::BindCameraUniform();

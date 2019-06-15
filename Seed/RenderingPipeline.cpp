@@ -22,6 +22,8 @@ void RenderingPipeline::SetRootTransform(Transform* root)
 
 void RenderingPipeline::Initialize()
 {
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
     glGenBuffers(1, &cameraUniform);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, cameraUniform);
 
@@ -130,6 +132,7 @@ void RenderingPipeline::RenderCamera(Camera* camera)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     camera->BindCamera();

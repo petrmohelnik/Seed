@@ -57,9 +57,9 @@ void Engine::CreateWindow()
 
 void Engine::Work()
 {
+    components.Initialize();
     scene.Initialize("Default");
     time.InitializeTime();
-    components.Initialize();
 
 	while (input.GameIsRunning() && !input.Key(SDLK_ESCAPE))
 	{

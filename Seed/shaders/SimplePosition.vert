@@ -14,6 +14,6 @@ out vec3 fPos;
 void main()
 {
     fPos = vPos;
-
-    gl_Position =  projection * view * vec4(vPos, 1.0);
+	
+    gl_Position = projection * view * vec4(vPos, 1.0);
 }

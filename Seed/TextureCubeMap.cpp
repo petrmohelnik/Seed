@@ -45,10 +45,10 @@ void TextureCubeMap::LoadFromEquirectangular(float* data, int width, int height)
     LoadCubeMesh(&vao, &vbo[0]);
 
     GenerateOpenglTexture();
-    DefineOpenglTexture(GL_RGB16F, 512, 512, GL_RGB, GL_FLOAT);
+    DefineOpenglTexture(GL_RGB16F, 2048, 2048, GL_RGB, GL_FLOAT);
 
     GLuint fbo, rbo;
-    GenerateFrameBuffer(&fbo, &rbo, 512, 512);
+    GenerateFrameBuffer(&fbo, &rbo, 2048, 2048);
 
     auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::EquirectangularToCubemap);
     shader->setup();
@@ -60,9 +60,9 @@ void TextureCubeMap::LoadFromEquirectangular(float* data, int width, int height)
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, equirectangularTexture);
 
-    glViewport(0, 0, 512, 512);
+    glViewport(0, 0, 2048, 2048);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    for (unsigned int i = 0; i < 6; ++i)
+    for (unsigned int i = 0; i < 6; i++)
     {
         camera.view = captureViews[i];
         RenderingPipeline::BindCameraUniform();
@@ -124,8 +124,8 @@ void TextureCubeMap::LoadCubeMesh(GLuint* vao, GLuint* vbo)
         glm::uvec3(7, 6, 5),
         glm::uvec3(0, 3, 7),
         glm::uvec3(7, 4, 0),
-        glm::uvec3(6, 5, 1),
-        glm::uvec3(1, 2, 6)
+        glm::uvec3(1, 5, 6),
+        glm::uvec3(6, 2, 1)
     };
 
     glGenBuffers(2, vbo);

@@ -42,7 +42,7 @@ void main()
 	vec3 B = normalize(tiModel * vBitang);
 	vec3 N = normalize(tiModel * vNorm);
 	T = normalize(T - dot(T, N) * N);
-	B = cross(N, T);
+	B = normalize(cross(N, T));
 	fTBN = mat3(T, B, N);
 	mat3 TBN_inverted = transpose(fTBN); //transpose equals inverse for orthogonal matrices
 

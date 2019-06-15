@@ -14,10 +14,16 @@ aiTextureType_LIGHTMAP - ambient occlusion
 attenuation jenom podle distance? a mit treba range jenom jeden parameter
 reflection probe
 https://blogs.unity3d.com/2015/02/18/working-with-physically-based-shading-a-practical-approach/
+https://github.com/dariomanesku/cmftStudio
 ---
 mel bych nekdy i u normalniho loadu volat unload scene
 modely muzou sdilet textury mezi materialy... :/ --treepack??
 predelat inputy mysi na vlastni enumy
+
+vytvaret kopie objektu
+https://stackoverflow.com/questions/5027456/copying-derived-entities-using-only-base-class-pointers-without-exhaustive-tes
+
+http://alextardif.com/arealights.html
 
 nastudovat - https://learnopengl.com/Advanced-OpenGL/Stencil-testing
 nastudovat - https://learnopengl.com/Advanced-OpenGL/Framebuffers
@@ -56,8 +62,14 @@ skripty by si asi fakt meli ty metody registrovat, kdyz jich je takhle hodne
 fixedUpate je pouze pro fyziku, napr physcs addFOrce
 pohyb jako transform.translate se dela v update
 
+https://learn.unity.com/tutorial/physics-best-practices#5c7f8528edbc2a002053b5b4
+
 textura nebo mesh by si meli drzet path, aby pri loadu na gpu, kdyz maji smazany data si ho mohly naloadovat,
 ale uz na primo, zadny sdileni pres file system
+
+http://www.adriancourreges.com/blog/2017/12/15/mgs-v-graphics-study/
+http://www.adriancourreges.com/blog/2016/09/09/doom-2016-graphics-study/
+http://www.adriancourreges.com/blog/2015/03/10/deus-ex-human-revolution-graphics-study/
 
 !!!!!!!
 https://unity3d.com/learn/tutorials/temas/performance-optimization/optimizing-graphics-rendering-unity-games
@@ -67,6 +79,16 @@ https://gamedev.stackexchange.com/questions/57108/what-is-the-best-method-to-upd
 https://blender.stackexchange.com/questions/32677/how-to-combine-two-different-textures-into-one
 https://github.com/assimp/assimp/wiki/Embedded-Textures-References
 https://stackoverflow.com/a/27895283
+https://www.haroldserrano.com/blog/books-i-used-to-develop-a-game-engine
+http://www.gameenginegems.net/geg1.php
+https://prideout.net/
+https://en.wikipedia.org/wiki/Collision_detection
+https://gamedev.stackexchange.com/questions/26501/how-does-a-collision-engine-work/26506#26506
+http://mmmovania.blogspot.com/2011/04/physx-basics-tutorial-simple-bouncing.html
+http://alextardif.com/Particles.html
+http://alextardif.com/eden.html
+
+https://stackoverflow.com/questions/16005952/opengl-gradient-banding-artifacts
 
 kdybych chtel ukladat data submeshu do jednoho vektoru, samostatne mi staci jenom indices
 https://computergraphics.stackexchange.com/questions/4623/multiple-vao-share-a-vbo
