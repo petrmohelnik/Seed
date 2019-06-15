@@ -83,9 +83,9 @@ void RenderingPipeline::AddLight(Light* light)
 
 void RenderingPipeline::Render()
 {
-    for (const auto camera : cameras)
+    //for (const auto camera : cameras)
     {
-        RenderCamera(camera);
+        RenderCamera(mainCamera);
     }
 }
 

@@ -5,49 +5,6 @@
 
 void DefaultScene(Objects& objects, FileSystem& fileSystem)
 {
-    /*auto cameraObject = objects.CreateObject<CameraObject>("camera");
-    auto cameraObject1 = objects.CreateObject<CameraObject>("camera1");
-    auto cameraObject2 = objects.CreateObject<CameraObject>("camera2");
-    auto cameraObject3 = objects.CreateObject<CameraObject>("camera3");
-    auto cameraObject4 = objects.CreateObject<CameraObject>("camera4");
-    cameraObject1->GetComponent<Transform>()->SetParent(cameraObject);
-    cameraObject2->GetComponent<Transform>()->SetParent(cameraObject->GetComponent<Transform>());
-    cameraObject3->GetComponent<Transform>()->SetParent(cameraObject2->GetComponent<Transform>());
-    cameraObject4->GetComponent<Transform>()->SetParent(cameraObject2->GetComponent<Transform>());
-    cameraObject->AddTag("tag");
-    cameraObject->AddComponent<Light>()->Destroy(16000);
-    cameraObject4->AddComponent<Camera>();
-    cameraObject->AddComponent<MeshRenderer>();
-    cameraObject4->AddComponent<CameraScript>();
-    cameraObject2->AddComponent<Audio>();
-    cameraObject3->AddComponent<Rigidbody>();
-    cameraObject->AddComponent<Collider>();
-    cameraObject->AddComponent<Audio>();
-    cameraObject->GetComponent<MeshRenderer>();
-    cameraObject->GetComponent<Light>();
-    cameraObject4->GetComponent<Camera>()->Destroy();
-    cameraObject->GetComponent<Transform>();
-    cameraObject->GetComponent<Audio>();
-    cameraObject->GetComponent<Collider>();
-    cameraObject3->GetComponent<Rigidbody>()->Destroy(15000);
-    cameraObject->Destroy(5000);
-    objects.GetObjectsByName("camera");
-    objects.GetObjects<CameraObject>();
-    objects.GetObjectsByTag("tag");
-    
-    cameraObject->GetComponent<MeshRenderer>()->SetMesh(fileSystem.LoadMesh("venom joker.dae"));
-    cameraObject->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
-    fileSystem.LoadCameras();
-    auto cameras = objects.GetObjectsByName("camera1");
-    cameraObject->GetComponent<MeshRenderer>()->GetSharedMesh()->Load();
-    cameraObject->GetComponent<MeshRenderer>()->GetSharedMesh()->Unload();
-    cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->Load();
-    cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->SetShader(ShaderFactory::Type::Basic);
-    cameraObject->GetComponent<MeshRenderer>()->GetSharedMaterial()->Unload();
-
-    ShaderFactory shaders;
-    shaders.GetShader(ShaderFactory::Type::Basic);*/
-
 	auto brickMaterial1 = fileSystem.LoadMaterials("brickMaterial.dae")[0];
 	auto brickMaterial2 = fileSystem.LoadMaterials("brickMaterial2.dae")[0];
 	auto brickMaterial3 = fileSystem.LoadMaterials("brickMaterial3.dae")[0];
@@ -59,30 +16,16 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     joker->AddComponent<MeshRenderer>()->Load("cube.dae");
 	joker->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial1);
 
-    //oker->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("statue.dae"));
-    //joker->GetComponent<Transform>()->SetScale(glm::vec3(0.1f));
-    //joker->GetComponent<Transform>()->TranslateX(1.0f);
-    //joker->GetComponent<Transform>()->RotateX(-1.57f);
-    //joker->AddComponent<GameScript>();
-
     auto joker2 = objects.CreateObject("joker2");
     joker2->AddComponent<MeshRenderer>()->Load("cube.dae");
 	joker2->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial2);
-    //joker2->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("LuxuryLivingRoomSofa.obj"));
     joker2->GetComponent<Transform>()->TranslateX(3.0f);
-    //joker2->GetComponent<Transform>()->SetScale(glm::vec3(0.1f));
-    //joker2->GetComponent<Transform>()->SetParent(joker);
-    //joker2->AddComponent<GameScript>();
-    //joker2->GetComponent<GameScript>()->increaseXZPosition = (2.0f * 3.14f) / 15.0f;
+
 
     auto joker3 = objects.CreateObject("joker3");
-    //joker3->GetComponent<Transform>()->SetParent(joker2);
     joker3->AddComponent<MeshRenderer>()->Load("cube.dae");
 	joker3->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial3);
-    //joker3->GetComponent<MeshRenderer>()->SetMaterials(fileSystem.LoadMaterials("venom joker.dae"));
     joker3->GetComponent<Transform>()->TranslateX(-3.0f, Transform::Space::World);
-    //joker3->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
-    joker3->GetComponent<Transform>()->RotateX(3.14f);
     joker3->AddComponent<RotateWorldScript>();
 	joker2->AddComponent<RotateWorldScript>();
 	joker->AddComponent<RotateWorldScript>();
@@ -101,11 +44,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	auto console = objects.CreateObjectWithMesh("console", "console/console.gltf", glm::vec3(0.0f, 0.0f, 3.0f));
 	scifi->GetComponent<Transform>()->RotateY(-1.57f);
 	console->AddComponent<RotateWorldScript>();
-
-	//auto nyra = objects.CreateObjectWithMesh("nura", "console/console.gltf", glm::vec3(0.0f, 0.0f, 3.0f));
-	//nyra->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
-	//nyra->GetComponent<MeshRenderer>()->GetMaterial()->Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
-	//nyra->GetComponent<MeshRenderer>()->GetMaterial()->Diffuse->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
 
 	auto oldcar = objects.CreateObjectWithMesh("nyra", "oldcar/scene.gltf", glm::vec3(10.0f, -1.01f, 3.0f));
 	oldcar->GetComponent<Transform>()->RotateX(-1.57f);
@@ -149,6 +87,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
 	objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
+
+    //objects.CreateObjectsFromScene("jaguar.dae");
     
     for (int i = 0; i < 5; i++)
     {
@@ -169,4 +109,15 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 		sphere->GetComponent<MeshRenderer>()->GetMaterial()->SetMetallic();
 		sphere->GetComponent<MeshRenderer>()->GetMaterial()->Diffuse->SetColor(glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
 	}
+    
+    //auto lamp = objects.CreateObjectWithMesh("lamp", "lamp/scene.gltf", glm::vec3(0.0f, 5.0f, 0.0f));
+    //objects.CreateObjectsFromScene("tomons_lamp/lamp.dae");
+    //auto spot = objects.GetObjectByName("Spot");
+    //spot->AddComponent<MeshRenderer>()->Load("sphere.obj");
+    //spot->GetComponent<MeshRenderer>()->GetMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
+    //spot->GetComponent<Light>()->SetRange(20);
+    //spot->GetComponent<Light>()->SetCutoffAngle(0.5);
+
+    RenderingPipeline::SetMainCamera(camera->GetComponent<Camera>());
+    //RenderingPipeline::MainCamera()->GetObject()->AddComponent<CameraMovementScript>();
 }

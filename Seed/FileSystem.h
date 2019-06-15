@@ -33,6 +33,8 @@ private:
     float GetMaterialFloat(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, float defaultAlpha);
     std::shared_ptr<Texture> LoadTexture(const std::string& path, int bits = 0, bool flipHorizontal = false);
 
+    static glm::vec3 ToGlmVec3(const aiVector3D& aiVector);
+
     std::unordered_map<std::string, std::weak_ptr<Mesh>> loadedMeshes;
 	std::unordered_map<std::string, std::vector<std::weak_ptr<Material>>> loadedMaterials;
     

@@ -15,17 +15,7 @@ attenuation jenom podle distance? a mit treba range jenom jeden parameter
 reflection probe
 https://blogs.unity3d.com/2015/02/18/working-with-physically-based-shading-a-practical-approach/
 ---
-library_visual_scenes obsahuje transformace - v assimpu m_rootNode
-ten jaguar pokud ma vic geometrii se musi naloadovat pres loadscene
-jak poznam ze to ma vic geometrii a ze by to meli byt separatni objekty?
-pro klasicky load jednoho meshe uvazuju, ze je tam jeden mesh a nema zadnou
-transform, zbytek necham na assimpu
-pro loadsceny, prochazim strom sceny a vytvarim pro kazdy node separatni mesh
-ten load sceny by mel rovnou vytvaret objekty anastavovat jim komponenty a nemel by asi nic vracet
-cachovat i sceny? Musel bych mit separe mapy a v nich ukladat vsechny meshe ze sceny
 mel bych nekdy i u normalniho loadu volat unload scene
-jak naloadovat anpr kamery, kdyz se odkazuji do tech models? predam vectory pres referenci do jedne metody, ktere naplnim kdyz nejsou null
-maincamera?
 modely muzou sdilet textury mezi materialy... :/ --treepack??
 predelat inputy mysi na vlastni enumy
 

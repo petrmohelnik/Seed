@@ -25,6 +25,9 @@ public:
 
     void BindLight();
 
+protected:
+    friend class FileSystem;
+
 private:
     struct LightBlock
     {

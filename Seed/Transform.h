@@ -40,7 +40,8 @@ public:
     void SetScale(glm::vec3 scale_);
     glm::vec3 GetScale();
     glm::vec3 GetLocalScale();
-    void LookAt(glm::vec3 worldPosition, glm::vec3 upAxis = glm::vec3(0.0f, 1.0f, 0.0f));
+    void LookAt(glm::vec3 position, glm::vec3 upAxis = glm::vec3(0.0f, 1.0f, 0.0f));
+    void LookAtLocal(glm::vec3 position, glm::vec3 upAxis = glm::vec3(0.0f, 1.0f, 0.0f));
     void RotateAround(float angle, glm::vec3 worldAxis, glm::vec3 worldPoint = glm::vec3(0.0f, 0.0f, 0.0f));
 
     glm::mat4 GetModelMatrix();
@@ -61,8 +62,8 @@ private:
     void MakeRoot();
     glm::mat4 CalculateLocalMatrix();
     glm::mat4 CalculateWorldMatrix();
-	void DecomposeMatrix(glm::mat4 matrix, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation);
-	void TransformInWorldAndDecompose(glm::mat4 worldTransformation, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation);
+	void DecomposeMatrix(glm::mat4 matrix, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation, glm::mat4& decomposedScale);
+	void TransformInWorldAndDecompose(glm::mat4 worldTransformation, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation, glm::mat4& decomposedScale);
 
     bool isRoot = false;
 
@@ -71,7 +72,7 @@ private:
 
     glm::vec3 position = glm::vec3(0.0);
     glm::quat orientation = glm::angleAxis(0.0f, glm::vec3(0.0, 0.0, 1.0));
-    glm::vec3 scale = glm::vec3(1.0);
+    glm::mat4 scale = glm::mat4(1.0);
 
     glm::mat4 modelMatrix = glm::mat4(1.0);
 };

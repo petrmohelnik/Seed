@@ -14,6 +14,8 @@ public:
 
     void BindCamera();
 
+    void SetProjectionMatrix(float fieldOfView, float aspectRatio, float clipPlaneNear, float clipPlaneFar);
+
 private:
 
 	CameraBlock dataBlock;

@@ -28,7 +28,7 @@ void Transform::MakeRoot()
 
 glm::mat4 Transform::CalculateLocalMatrix()
 {
-    return glm::translate(position) * glm::toMat4(orientation) * glm::scale(scale);
+    return glm::translate(position) * glm::toMat4(orientation) * scale;
 }
 
 glm::mat4 Transform::CalculateWorldMatrix()
@@ -39,19 +39,27 @@ glm::mat4 Transform::CalculateWorldMatrix()
     return modelMatrix;
 }
 
-void Transform::DecomposeMatrix(glm::mat4 matrix, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation)
+void Transform::DecomposeMatrix(glm::mat4 matrix, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation, glm::mat4& decomposedScale)
 {
-	glm::vec3 dummyScale, dummySkew;
+	glm::vec3 scale, skew;
 	glm::vec4 dummyPerspective;
-	glm::decompose(matrix, dummyScale, decomposedOrientation, decomposedTranslation, dummySkew, dummyPerspective);
+	glm::decompose(matrix, scale, decomposedOrientation, decomposedTranslation, skew, dummyPerspective);
+    
+    auto shearX = glm::mat4(1.0f);
+    auto shearY = glm::mat4(1.0f);
+    auto shearZ = glm::mat4(1.0f);
+    shearX[2][1] = skew.x;
+    shearY[2][0] = skew.y;
+    shearZ[1][0] = skew.z;
+    decomposedScale = shearX * shearY * shearZ * glm::scale(scale);
 }
 
-void Transform::TransformInWorldAndDecompose(glm::mat4 worldTransformation, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation)
+void Transform::TransformInWorldAndDecompose(glm::mat4 worldTransformation, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation, glm::mat4& decomposedScale)
 {
 	auto localToWorldMatrix = GetLocalToWorldMatrix();
 	auto worldTransformationLocalMatrix = glm::inverse(localToWorldMatrix) * worldTransformation * localToWorldMatrix * CalculateLocalMatrix();
 
-	DecomposeMatrix(worldTransformationLocalMatrix, decomposedTranslation, decomposedOrientation);
+	DecomposeMatrix(worldTransformationLocalMatrix, decomposedTranslation, decomposedOrientation, decomposedScale);
 }
 
 void Transform::SetParent(Transform* parent_)
@@ -154,7 +162,7 @@ void Transform::Rotate(glm::quat quaternion, Space space)
     else
     {
         glm::vec3 dummyTranslation;
-        TransformInWorldAndDecompose(glm::toMat4(quaternion), dummyTranslation, orientation);
+        TransformInWorldAndDecompose(glm::toMat4(quaternion), dummyTranslation, orientation, scale);
     }
 }
 
@@ -193,7 +201,8 @@ void Transform::Translate(glm::vec3 translation, Space space)
     else
     {
         glm::quat dummyRotation;
-        TransformInWorldAndDecompose(glm::translate(translation), position, dummyRotation);
+        glm::mat4 dummyScale;
+        TransformInWorldAndDecompose(glm::translate(translation), position, dummyRotation, dummyScale);
     }
 }
 
@@ -251,7 +260,9 @@ glm::vec3 Transform::GetForwardAxis()
 
 void Transform::SetScale(glm::vec3 scale_)
 {
-    scale = scale_;
+    scale[0][0] = scale_.x;
+    scale[1][1] = scale_.y;
+    scale[2][2] = scale_.z;
 }
 
 glm::vec3 Transform::GetScale()
@@ -264,19 +275,25 @@ glm::vec3 Transform::GetScale()
 
 glm::vec3 Transform::GetLocalScale()
 {
-    return scale;
+    return glm::vec3(scale[0][0], scale[1][1], scale[2][2]);
 }
 
-void Transform::LookAt(glm::vec3 worldPosition, glm::vec3 upAxis)
+void Transform::LookAt(glm::vec3 position, glm::vec3 upAxis)
 {
     auto const localToWorldMatrix = GetLocalToWorldMatrix();
     auto const currentWorldPosition = glm::vec3(localToWorldMatrix * glm::vec4(position, 1.0f));
     glm::vec3 dummyTranslation;
-    DecomposeMatrix(glm::inverse(localToWorldMatrix) * glm::inverse(glm::lookAt(currentWorldPosition, worldPosition, upAxis)), dummyTranslation, orientation);
+    DecomposeMatrix(glm::inverse(localToWorldMatrix) * glm::inverse(glm::lookAt(currentWorldPosition, position, upAxis)), dummyTranslation, orientation, scale);
+}
+
+void Transform::LookAtLocal(glm::vec3 position, glm::vec3 upAxis)
+{
+    glm::vec3 dummyTranslation;
+    DecomposeMatrix(glm::lookAt(glm::vec3(0.0f), position, upAxis), dummyTranslation, orientation, scale);
 }
 
 void Transform::RotateAround(float angle, glm::vec3 worldAxis, glm::vec3 worldPoint)
 {
-    auto const worldTransfromationMatrix = glm::translate(worldPoint) * glm::toMat4(glm::angleAxis(angle, worldAxis)) * glm::translate(-worldPoint);
-    TransformInWorldAndDecompose(worldTransfromationMatrix, position, orientation);
+    auto const worldTransformationMatrix = glm::translate(worldPoint) * glm::toMat4(glm::angleAxis(angle, worldAxis)) * glm::translate(-worldPoint);
+    TransformInWorldAndDecompose(worldTransformationMatrix, position, orientation, scale);
 }

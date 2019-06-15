@@ -67,8 +67,14 @@ std::vector<Object*> FileSystem::LoadObjects(const std::string& path)
 void FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent, std::vector<Object*>& objects, const std::vector<std::shared_ptr<Material>>& materials)
 {
     auto object = Engine::GetObjects().CreateObject<Object>(node->mName.C_Str());
-    object->GetComponent<Transform>()->SetParent(parent);
-    //object->GetComponent<Transform>()->SetPosition(node->mTransformation)
+    if(parent != nullptr)
+        object->GetComponent<Transform>()->SetParent(parent);
+
+    aiVector3D translation, rotation, scale;
+    node->mTransformation.Decompose(scale, rotation, translation);
+    object->GetComponent<Transform>()->Translate(ToGlmVec3(translation));
+    object->GetComponent<Transform>()->Rotate(ToGlmVec3(rotation));
+    object->GetComponent<Transform>()->SetScale(ToGlmVec3(scale));
 
     LoadMesh(scene, node, object, materials);
     LoadLight(scene, object);
@@ -77,7 +83,7 @@ void FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent, st
     objects.push_back(object);
     for(unsigned int childIndex = 0; childIndex < node->mNumChildren; childIndex++)
     {
-        LoadNode(scene, node->mChildren[childIndex], parent, objects, materials);
+        LoadNode(scene, node->mChildren[childIndex], object, objects, materials);
     }
 }
 
@@ -103,7 +109,34 @@ void FileSystem::LoadLight(const aiScene* scene, Object* object)
     {
         if(aiString(object->GetName()) == scene->mLights[index]->mName)
         {
-            object->AddComponent<Light>();
+            auto assimpLight = scene->mLights[index];
+            auto light = object->AddComponent<Light>();
+
+            //if I want to support delta transformations I have to create another transform in light that will be child to object
+            //if (assimpLight->mType != aiLightSourceType::aiLightSource_POINT)
+            //{
+            //    if(ToGlmVec3(assimpLight->mUp) != glm::vec3(0.0f))
+            //        light->GetTransform()->LookAtLocal(ToGlmVec3(assimpLight->mDirection), ToGlmVec3(assimpLight->mUp));
+            //    else
+            //        light->GetTransform()->LookAtLocal(ToGlmVec3(assimpLight->mDirection));
+            //}
+            auto fwd = light->GetTransform()->GetForwardAxis();
+            light->SetColor(glm::vec3(assimpLight->mColorDiffuse.r, assimpLight->mColorDiffuse.g, assimpLight->mColorDiffuse.b));
+
+            if (assimpLight->mType == aiLightSourceType::aiLightSource_DIRECTIONAL)
+                light->SetType(Light::Type::Directional);
+            else
+            {
+                light->GetTransform()->Translate(ToGlmVec3(assimpLight->mPosition));
+                light->dataBlock.lightAttenuationCoeffs = glm::vec3(assimpLight->mAttenuationConstant, assimpLight->mAttenuationLinear, assimpLight->mAttenuationQuadratic);
+                if (assimpLight->mType == aiLightSourceType::aiLightSource_SPOT)
+                {
+                    light->SetType(Light::Type::Spot);
+                    light->dataBlock.lightCutoff = glm::vec2(assimpLight->mAngleInnerCone, assimpLight->mAngleOuterCone);
+                }
+                else
+                    light->SetType(Light::Type::Point);
+            }
         }
     }
 }
@@ -114,9 +147,15 @@ void FileSystem::LoadCamera(const aiScene* scene, Object* object)
     {
         if (aiString(object->GetName()) == scene->mCameras[index]->mName)
         {
+            auto assimpCamera = scene->mCameras[index];
             auto camera = object->AddComponent<Camera>();
             if (index == 0)
                 RenderingPipeline::SetMainCamera(camera);
+
+            //if I want to support delta transformations I have to create another transform in camera that will be child to object
+            //camera->GetTransform()->LookAtLocal(ToGlmVec3(assimpCamera->mLookAt), ToGlmVec3(assimpCamera->mUp));
+            camera->GetTransform()->Translate(ToGlmVec3(assimpCamera->mPosition));
+            camera->SetProjectionMatrix(assimpCamera->mHorizontalFOV, assimpCamera->mAspect, assimpCamera->mClipPlaneNear, assimpCamera->mClipPlaneFar);
         }
     }
 }
@@ -175,24 +214,35 @@ Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
             assimpMesh->mVertices[index].y,
             assimpMesh->mVertices[index].z));
 
-        subMesh.normals.emplace_back(glm::vec3(
+        subMesh.normals.emplace_back(glm::normalize(glm::vec3(
             assimpMesh->mNormals[index].x,
             assimpMesh->mNormals[index].y,
-            assimpMesh->mNormals[index].z));
+            assimpMesh->mNormals[index].z)));
 
-        subMesh.tangents.emplace_back(glm::vec3(
-            assimpMesh->mTangents[index].x,
-            assimpMesh->mTangents[index].y,
-            assimpMesh->mTangents[index].z));
+        if (assimpMesh->mTangents)
+        {
+            subMesh.tangents.emplace_back(glm::vec3(
+                assimpMesh->mTangents[index].x,
+                assimpMesh->mTangents[index].y,
+                assimpMesh->mTangents[index].z));
 
-        subMesh.bitangents.emplace_back(glm::vec3(
-            assimpMesh->mBitangents[index].x,
-            assimpMesh->mBitangents[index].y,
-            assimpMesh->mBitangents[index].z));
+            subMesh.bitangents.emplace_back(glm::vec3(
+                assimpMesh->mBitangents[index].x,
+                assimpMesh->mBitangents[index].y,
+                assimpMesh->mBitangents[index].z));
 
-        subMesh.texCoords.emplace_back(glm::vec2(
-            assimpMesh->mTextureCoords[0][index].x,
-            assimpMesh->mTextureCoords[0][index].y));
+            subMesh.texCoords.emplace_back(glm::vec2(
+                assimpMesh->mTextureCoords[0][index].x,
+                assimpMesh->mTextureCoords[0][index].y));
+        }
+        else
+        {
+            glm::vec3 tangent = glm::cross(subMesh.normals.back(), glm::vec3(0.0f, 1.0f, 0.0f));
+            glm::vec3 bitangent = glm::cross(tangent, subMesh.normals.back());
+            subMesh.tangents.emplace_back(tangent);
+            subMesh.bitangents.emplace_back(bitangent);
+            subMesh.texCoords.emplace_back(glm::vec2(0.0f));
+        }
     }
 
     for (unsigned int index = 0; index < assimpMesh->mNumFaces; index++)
@@ -412,4 +462,9 @@ std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bi
     FreeImage_Unload(loadedTexture);
 
     return texture;
+}
+
+glm::vec3 FileSystem::ToGlmVec3(const aiVector3D& aiVector)
+{
+    return glm::vec3(aiVector.x, aiVector.y, aiVector.z);
 }

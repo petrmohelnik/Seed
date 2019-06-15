@@ -32,7 +32,7 @@ void Light::SetCutoffAngle(float angle)
 
 void Light::SetDirection(glm::vec3 direction)
 {
-    dataBlock.lightOrientation = glm::normalize(direction);
+    GetTransform()->LookAtLocal(glm::normalize(direction));
 }
 
 void Light::SetDirectionalLight(glm::vec3 direction)
@@ -61,5 +61,6 @@ void Light::BindLight()
     RenderingPipeline::BindLightUniform();
 
 	dataBlock.lightPos = GetTransform()->GetPosition();
+    dataBlock.lightOrientation = glm::mat3(glm::inverse(glm::transpose(GetTransform()->GetModelMatrix()))) * glm::vec3(0.0f, 0.0f, -1.0f);
     glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);
 }
