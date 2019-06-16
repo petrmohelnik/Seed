@@ -1,6 +1,6 @@
 #version 460
 
-layout(binding = 5) uniform samplerCube texEnvironmental;
+layout(binding = 6) uniform samplerCube texEnvironmental;
 
 in vec3 fTexCoords;
 

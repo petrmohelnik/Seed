@@ -9,7 +9,9 @@ public:
         Basic,
         Skybox,
         EquirectangularToCubemap,
-        PrecalculateIrradiance
+        PrecalculateIrradiance,
+        PrecalculateEnvironmentMap,
+        PrecalculateBRDFIntegrationMap
     };
 
     ShaderFactory();

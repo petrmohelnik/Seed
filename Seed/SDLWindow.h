@@ -9,6 +9,7 @@ public:
 protected:
     friend class Time;
     friend class Engine;
+    friend class Texture;
     friend class TextureCubeMap;
     friend class EnvironmentalMap;
 

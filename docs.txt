@@ -15,6 +15,7 @@ https://stackoverflow.com/questions/37942389/correctly-transforming-a-node-relat
 material:
 http://assimp.sourceforge.net/lib_html/materials.html
 http://assimp.sourceforge.net/lib_html/material_8h.html
+https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 
 shading:
 https://paroj.github.io/gltut/Illumination/Tut11%20BlinnPhong%20Model.html

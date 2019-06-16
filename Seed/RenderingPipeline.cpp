@@ -65,6 +65,10 @@ void RenderingPipeline::BindSkyboxEnvironmentalMap()
 
         glActiveTexture(GL_TEXTURE5);
         environmentalMap->BindIrradiance();
+        glActiveTexture(GL_TEXTURE6);
+        environmentalMap->BindEnvironmentalMap();
+        glActiveTexture(GL_TEXTURE7);
+        environmentalMap->BindBRDFIntegrationMap();
     }
 }
 

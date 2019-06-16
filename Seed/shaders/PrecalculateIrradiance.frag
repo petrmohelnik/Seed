@@ -1,10 +1,10 @@
 #version 460
 
-layout(binding = 5) uniform samplerCube texEnvironmental;
+layout(binding = 6) uniform samplerCube texEnvironmental;
 
 in vec3 fPos;
 
-out vec4 gl_FragColor;
+layout(location = 0) out vec4 gl_FragColor;
 
 const float PI = 3.14159265359;
 

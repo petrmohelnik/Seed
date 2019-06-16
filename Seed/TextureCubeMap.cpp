@@ -40,47 +40,10 @@ void TextureCubeMap::LoadFromEquirectangular(float* data, int width, int height)
         throw std::runtime_error("Texture is already loaded");
 
     GLuint equirectangularTexture = GenerateEquirectangularTexture(data, width, height);
+    
+    RenderIntoHDRCubeMapFromTexture(2048, ShaderFactory::Type::EquirectangularToCubemap, GL_TEXTURE6, GL_TEXTURE_2D, equirectangularTexture);
 
-    GLuint vao, vbo[2];
-    LoadCubeMesh(&vao, &vbo[0]);
-
-    GenerateOpenglTexture();
-    DefineOpenglTexture(GL_RGB16F, 2048, 2048, GL_RGB, GL_FLOAT);
-
-    GLuint fbo, rbo;
-    GenerateFrameBuffer(&fbo, &rbo, 2048, 2048);
-
-    auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::EquirectangularToCubemap);
-    shader->setup();
-
-    Camera::CameraBlock camera;
-    camera.projection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-    auto const captureViews = GenerateCameraViewsForCube();
-
-    glActiveTexture(GL_TEXTURE5);
-    glBindTexture(GL_TEXTURE_2D, equirectangularTexture);
-
-    glViewport(0, 0, 2048, 2048);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    for (unsigned int i = 0; i < 6; i++)
-    {
-        camera.view = captureViews[i];
-        RenderingPipeline::BindCameraUniform();
-        glBufferData(GL_UNIFORM_BUFFER, sizeof(camera), &camera, GL_DYNAMIC_DRAW);
-
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture, 0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glBindVertexArray(vao);
-        shader->draw(36);
-    }
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    UnloadCubeMesh(&vao, &vbo[0]);
-    DeleteFrameBuffer(&fbo, &rbo);
     glDeleteTextures(1, &equirectangularTexture);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-    Engine::GetWindow().ResetViewport();
 }
 
 void TextureCubeMap::Unload()
@@ -149,30 +112,13 @@ void TextureCubeMap::UnloadCubeMesh(GLuint* vao, GLuint* vbo)
     glDeleteVertexArrays(1, vao);
 }
 
-void TextureCubeMap::GenerateFrameBuffer(GLuint* fbo, GLuint* rbo, int width, int height)
-{
-    glGenFramebuffers(1, fbo);
-    glGenRenderbuffers(1, rbo);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, *fbo);
-    glBindRenderbuffer(GL_RENDERBUFFER, *rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, *rbo);
-}
-
-void TextureCubeMap::DeleteFrameBuffer(GLuint* fbo, GLuint* rbo)
-{
-    glDeleteRenderbuffers(1, rbo);
-    glDeleteFramebuffers(1, fbo);
-}
-
-void TextureCubeMap::GenerateOpenglTexture()
+void TextureCubeMap::GenerateOpenglTexture(bool generateMipMaps)
 {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, generateMipMaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -184,7 +130,7 @@ void TextureCubeMap::DefineOpenglTexture()
     {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, faces[i]->GetInternalFormat(), faces[i]->width, faces[i]->height, 0, faces[i]->GetFormat(), GL_UNSIGNED_BYTE, &faces[i]->data[0]);
         if (deleteAfterLoad)
-            faces[i]->data.clear(); faces[i]->data.clear();
+            faces[i]->data.clear(); faces[i]->data.shrink_to_fit();
     }
 }
 
@@ -216,10 +162,95 @@ std::vector<glm::mat4> TextureCubeMap::GenerateCameraViewsForCube()
     };
 }
 
-void TextureCubeMap::DefineOpenglTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, const void* pixels)
+void TextureCubeMap::RenderIntoHDRCubeMapFromTexture(int width, ShaderFactory::Type shaderType, GLuint textureSourceSlot, GLuint textureSourceType, GLuint textureSource,
+    bool generateMipMaps, GLuint mipLevelUniformLocation, int mipLevels)
+{
+    GenerateOpenglTexture(generateMipMaps);
+    DefineOpenglTexture(GL_RGB16F, width, width, GL_RGB, GL_FLOAT, generateMipMaps);
+
+    GLuint vao, vbo[2];
+    LoadCubeMesh(&vao, &vbo[0]);
+
+    GLuint fbo, rbo;
+    Texture::GenerateFrameBuffer(&fbo, &rbo, width, width);
+
+    auto shader = Engine::GetShaderFactory().GetShader(shaderType);
+    shader->setup();
+
+    glActiveTexture(textureSourceSlot);
+    glBindTexture(textureSourceType, textureSource);
+
+    glViewport(0, 0, width, width);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    if(generateMipMaps)
+        RenderViewsIntoCubeMapWithMipMaps(vao, rbo, shader, mipLevelUniformLocation, mipLevels, width);
+    else
+        RenderViewsIntoCubeMap(vao, shader);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    Engine::GetWindow().ResetViewport();
+
+    UnloadCubeMesh(&vao, &vbo[0]);
+    Texture::DeleteFrameBuffer(&fbo, &rbo);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+}
+
+void TextureCubeMap::RenderViewsIntoCubeMap(GLuint vao, Shader* shader)
+{
+    Camera::CameraBlock camera;
+    camera.projection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+    auto const captureViews = GenerateCameraViewsForCube();
+
+    for (unsigned int i = 0; i < 6; i++)
+    {
+        camera.view = captureViews[i];
+        RenderingPipeline::BindCameraUniform();
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(camera), &camera, GL_DYNAMIC_DRAW);
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glBindVertexArray(vao);
+        shader->draw(36);
+    }
+}
+
+void TextureCubeMap::RenderViewsIntoCubeMapWithMipMaps(GLuint vao, GLuint rbo, Shader* shader, GLuint mipLevelUniformLocation, int mipLevels, int width)
+{
+    Camera::CameraBlock camera;
+    camera.projection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+    auto const captureViews = GenerateCameraViewsForCube();
+
+    for (unsigned int mipLevel = 0; mipLevel < mipLevels; mipLevel++)
+    {
+        unsigned int mipWidth = width * std::pow(0.5, mipLevel);
+        glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipWidth);
+        glViewport(0, 0, mipWidth, mipWidth);
+
+        float mipLevelUniform = static_cast<float>(mipLevel) / static_cast<float>(mipLevels - 1);
+        glUniform1f(mipLevelUniformLocation, mipLevelUniform);
+
+        for (unsigned int i = 0; i < 6; i++)
+        {
+            camera.view = captureViews[i];
+            RenderingPipeline::BindCameraUniform();
+            glBufferData(GL_UNIFORM_BUFFER, sizeof(camera), &camera, GL_DYNAMIC_DRAW);
+
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture, mipLevel);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glBindVertexArray(vao);
+            shader->draw(36);
+        }
+    }
+}
+
+void TextureCubeMap::DefineOpenglTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, bool generateMipMaps, const void* pixels)
 {
     for (int i = 0; i < 6; i++)
     {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalFormat, width, height, 0, format, type, pixels);
     }
+    if (generateMipMaps)
+        glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 }

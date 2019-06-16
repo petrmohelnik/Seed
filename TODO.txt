@@ -1,20 +1,17 @@
+predavat resolution do PrecalculateEnvMap pres uniform? - podpora nastavovat jednoduche uniformy pres jmeno, MAX_REFLECTION_LOD 
 udelat druhy shader pro kalsickyho phonga
 mit nekde globalne nadefinovany targety textur
 umoznit nastavit texturu jako kanal jine - napr rougness u te cihlove zdi
-metallic jako deafult?
-TBN - vybrat T takovy, aby odpovidal puvodnimu smeru - musim noramlizovat abych nemel videt trojuhelniky
+metallic jako default?
 lightAmbient odstranit?
 stahnout example modely z https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0
-https://learnopengl.com/PBR/Theory
-https://developer.download.nvidia.com/CgTutorial/cg_tutorial_chapter07.html
 #include <assimp/pbrmaterial.h>
-!!!inspirovat se https://docs.unity3d.com/Manual/StandardShaderMaterialParameters.html
 paralax - https://www.gamedev.net/forums/topic/687418-parallax-displacement-mapping-in-2017/
 aiTextureType_LIGHTMAP - ambient occlusion
 attenuation jenom podle distance? a mit treba range jenom jeden parameter
 reflection probe
-https://blogs.unity3d.com/2015/02/18/working-with-physically-based-shading-a-practical-approach/
-https://github.com/dariomanesku/cmftStudio
+https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
+https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 ---
 mel bych nekdy i u normalniho loadu volat unload scene
 modely muzou sdilet textury mezi materialy... :/ --treepack??

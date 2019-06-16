@@ -33,6 +33,14 @@ void ShaderFactory::CreateShader(Type type)
     {
         shaders.insert({ type , std::make_unique<BasicShader>("SimplePosition.vert", "PrecalculateIrradiance.frag") });
     }
+    else if (type == Type::PrecalculateEnvironmentMap)
+    {
+        shaders.insert({ type , std::make_unique<BasicShader>("SimplePosition.vert", "PrecalculateEnvironmentMap.frag") });
+    }
+    else if (type == Type::PrecalculateBRDFIntegrationMap)
+    {
+        shaders.insert({ type , std::make_unique<BasicShader>("SimplePosition2D.vert", "PrecalculateBRDFIntegrationMap.frag") });
+    }
     else
     {
         throw std::runtime_error("Unsupported shader type");

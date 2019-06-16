@@ -315,5 +315,14 @@
     <None Include="shaders\SimplePosition.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="shaders\PrecalculateEnvironmentMap.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\PrecalculateBRDFIntegrationMap.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\SimplePosition2D.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

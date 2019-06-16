@@ -19,7 +19,7 @@ Skybox::~Skybox()
 
 void Skybox::Render()
 {
-	glActiveTexture(GL_TEXTURE5);
+	glActiveTexture(GL_TEXTURE6);
     skybox->BindTexture();
 
     auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::Skybox);
