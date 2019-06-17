@@ -6,6 +6,9 @@ class Light;
 class RenderQueue;
 class Transform;
 class Skybox;
+class Framebuffer;
+class Texture;
+class SimpleMesh;
 
 class RenderingPipeline
 {
@@ -38,6 +41,10 @@ private:
     std::vector<Camera*> cameras;
     std::vector<Light*> lights;
     Transform* rootTransform;
+
+    std::unique_ptr<Framebuffer> framebuffer;
+    std::unique_ptr<Texture> framebufferTexture;
+    std::unique_ptr<SimpleMesh> quad;
 
     static Camera* mainCamera;
     static Skybox* skybox;

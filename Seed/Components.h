@@ -9,6 +9,8 @@
 #include "Rigidbody.h"
 #include "Script.h"
 #include "Skybox.h"
+#include "Texture.h"
+#include "Framebuffer.h"
 
 class Input;
 class Time;

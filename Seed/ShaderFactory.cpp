@@ -41,6 +41,10 @@ void ShaderFactory::CreateShader(Type type)
     {
         shaders.insert({ type , std::make_unique<BasicShader>("SimplePosition2D.vert", "PrecalculateBRDFIntegrationMap.frag") });
     }
+    else if (type == Type::ToneMapping)
+    {
+        shaders.insert({ type , std::make_unique<BasicShader>("SimplePosition2D.vert", "ToneMapping.frag") });
+    }
     else
     {
         throw std::runtime_error("Unsupported shader type");

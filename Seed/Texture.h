@@ -7,6 +7,10 @@ public:
     Texture();
     Texture(glm::vec4 color);
     ~Texture();
+    Texture(Texture&& m) = default;
+    Texture(const Texture& m) = default;
+    Texture& operator=(const Texture& m) = default;
+    Texture& operator=(Texture&& m) = default;
 
     void SetColor(glm::vec4 color);
     void SetColor(glm::vec3 color);
@@ -18,20 +22,18 @@ protected:
     friend class Material;
     friend class TextureCubeMap;
     friend class EnvironmentalMap;
+    friend class RenderingPipeline;
 
     void Load();
     void Unload();
 
-    void BindTexture();
+    void Bind();
 
     void SetAlphaColor(float alpha);
     void AddAlphaChannel(float alpha);
 
-    static void LoadQuadMesh(GLuint* vao, GLuint* vbo);
-    static void UnloadQuadMesh(GLuint* vao, GLuint* vbo);
+    void GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width, int height, GLuint format, GLuint type, bool generateMipMaps = false, const void* pixels = nullptr);
     void RenderIntoHDRTexture(float width, float height, ShaderFactory::Type shaderType, GLuint format);
-    static void GenerateFrameBuffer(GLuint* fbo, GLuint* rbo, int width, int height);
-    static void DeleteFrameBuffer(GLuint* fbo, GLuint* rbo);
 
 private:
 	GLuint GetInternalFormat();

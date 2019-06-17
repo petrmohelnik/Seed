@@ -1,6 +1,7 @@
-#include "stdafx.h"
 #include "Texture.h"
 #include "Engine.h"
+#include "SimpleMesh.h"
+#include "Framebuffer.h"
 
 Texture::Texture()
 {
@@ -22,15 +23,7 @@ void Texture::Load()
     if (texture != 0)
         return;
 
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(), width, height, 0, GetFormat(), GL_UNSIGNED_BYTE, &data[0]);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    
-    glBindTexture(GL_TEXTURE_2D, 0);
+    GenerateTexture(GL_REPEAT, GetInternalFormat(), width, height, GetFormat(), GL_UNSIGNED_BYTE, true, &data[0]);
 
     if (deleteAfterLoad)
     {
@@ -71,7 +64,7 @@ void Texture::Unload()
     texture = 0;
 }
 
-void Texture::BindTexture()
+void Texture::Bind()
 {
     Load();
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -142,93 +135,44 @@ void Texture::AddAlphaChannel(float alpha)
     Unload();
 }
 
-void Texture::LoadQuadMesh(GLuint* vao, GLuint* vbo)
-{
-    std::vector<glm::vec3> vertices =
-    {
-        glm::vec3(-1.0f,  1.0f, 0.0f),
-        glm::vec3(-1.0f, -1.0f, 0.0f),
-        glm::vec3(1.0f, -1.0f, 0.0f),
-        glm::vec3(1.0f,  1.0f, 0.0f),
-    };
-
-    std::vector<glm::uvec3> indices =
-    {
-        glm::uvec3(0, 1, 2),
-        glm::uvec3(2, 3, 0),
-    };
-
-    glGenBuffers(2, vbo);
-    glGenVertexArrays(1, vao);
-    glBindVertexArray(*vao);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float) * 3, &vertices[0].x, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(Uint32) * 3, &indices[0].x, GL_STATIC_DRAW);
-
-    glBindVertexArray(0);
-}
-
-void Texture::UnloadQuadMesh(GLuint* vao, GLuint* vbo)
-{
-    glDeleteBuffers(2, vbo);
-    glDeleteVertexArrays(1, vao);
-}
-
-void Texture::RenderIntoHDRTexture(float width, float height, ShaderFactory::Type shaderType, GLuint format)
+void Texture::GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width, int height, GLuint format, GLuint type, bool generateMipMaps, const void* pixels)
 {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, generateMipMaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, width, height, 0, format, GL_FLOAT, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapParam);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapParam);
 
-    GLuint vao, vbo[2];
-    LoadQuadMesh(&vao, &vbo[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, pixels);
 
-    GLuint fbo, rbo;
-    Texture::GenerateFrameBuffer(&fbo, &rbo, width, width);
+    if(generateMipMaps)
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Texture::RenderIntoHDRTexture(float width, float height, ShaderFactory::Type shaderType, GLuint format)
+{
+    GenerateTexture(GL_CLAMP_TO_EDGE, GL_RG16F, width, height, format, GL_FLOAT);
+
+    SimpleMesh quad(SimpleMesh::Shape::Quad);
+
+    Framebuffer framebuffer(width, height);
 
     auto shader = Engine::GetShaderFactory().GetShader(shaderType);
     shader->setup();
 
-    glViewport(0, 0, width, width);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    framebuffer.Bind();
+    framebuffer.AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glBindVertexArray(vao);
+    quad.Bind();
     shader->draw(6);
     
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    Engine::GetWindow().ResetViewport();
+    framebuffer.Unbind();
 
-    UnloadQuadMesh(&vao, &vbo[0]);
-    Texture::DeleteFrameBuffer(&fbo, &rbo);
     glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void Texture::GenerateFrameBuffer(GLuint* fbo, GLuint* rbo, int width, int height)
-{
-    glGenFramebuffers(1, fbo);
-    glGenRenderbuffers(1, rbo);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, *fbo);
-    glBindRenderbuffer(GL_RENDERBUFFER, *rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, *rbo);
-}
-
-void Texture::DeleteFrameBuffer(GLuint* fbo, GLuint* rbo)
-{
-    glDeleteRenderbuffers(1, rbo);
-    glDeleteFramebuffers(1, fbo);
 }

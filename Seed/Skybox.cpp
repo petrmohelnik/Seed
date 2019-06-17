@@ -1,31 +1,24 @@
 #include "Skybox.h"
-#include "TextureCubeMap.h"
 #include "Engine.h"
+#include "TextureCubeMap.h"
 #include "EnvironmentalMap.h"
 
-Skybox::Skybox(std::unique_ptr<TextureCubeMap> skybox_) : skybox(std::move(skybox_))
+Skybox::Skybox(std::unique_ptr<TextureCubeMap> skybox_) : skybox(std::move(skybox_)), cube(SimpleMesh::Shape::Cube)
 {
     skybox->Load();
-    skybox->LoadCubeMesh(&vao, &vbo[0]);
     environmentalMap = std::make_unique<EnvironmentalMap>();
     environmentalMap->Load(skybox.get());
-}
-
-Skybox::~Skybox()
-{
-    glDeleteBuffers(2, &vbo[0]);
-    glDeleteVertexArrays(1, &vao);
 }
 
 void Skybox::Render()
 {
 	glActiveTexture(GL_TEXTURE6);
-    skybox->BindTexture();
+    skybox->Bind();
 
     auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::Skybox);
     shader->setup();
 
-    glBindVertexArray(vao);
+    cube.Bind();
 
     shader->draw(36);
 }

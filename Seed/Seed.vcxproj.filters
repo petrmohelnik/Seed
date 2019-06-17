@@ -149,6 +149,12 @@
     <ClCompile Include="EnvironmentalMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SimpleMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -292,6 +298,12 @@
     <ClInclude Include="stb\stb_image.h">
       <Filter>stb</Filter>
     </ClInclude>
+    <ClInclude Include="SimpleMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Framebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\Basic.frag">
@@ -322,6 +334,9 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="shaders\SimplePosition2D.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\ToneMapping.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

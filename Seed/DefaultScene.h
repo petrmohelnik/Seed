@@ -10,7 +10,9 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	auto brickMaterial3 = fileSystem.LoadMaterials("brickMaterial3.dae")[0];
     brickMaterial1->Specular->SetColor(glm::vec4(0.15f, 0.15f, 0.15f, 0.2f));
     brickMaterial2->Specular->SetColor(glm::vec4(0.15f, 0.15f, 0.15f, 0.2f));
-    brickMaterial3->Specular->SetColor(glm::vec4(0.15f, 0.15f, 0.15f, 0.8f));
+    brickMaterial3->Diffuse->SetColor(glm::vec4(0.95, 0.72f, 0.61f, 1.0f));
+    brickMaterial3->Specular->SetColor(glm::vec4(1.0f, 0.3f, 0.95f, 1.0f));
+    brickMaterial3->SetMetallic();
 
     auto joker = objects.CreateObject("joker");
     joker->AddComponent<MeshRenderer>()->Load("cube.dae");
@@ -68,22 +70,22 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     camera->GetComponent<Transform>()->TranslateX(-10.0);
 	auto light = objects.CreateObject("light");
 	light->AddComponent<Light>();
-	light->GetComponent<Transform>()->TranslateZ(50.0, Transform::Space::World);
-	light->GetComponent<Transform>()->TranslateY(40.0, Transform::Space::World);
-	light->GetComponent<Transform>()->TranslateX(-20.0, Transform::Space::World);
+	light->GetComponent<Transform>()->TranslateZ(5.0, Transform::Space::World);
+	light->GetComponent<Transform>()->TranslateY(4.0, Transform::Space::World);
+	light->GetComponent<Transform>()->TranslateX(-2.0, Transform::Space::World);
 	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
 	light->AddComponent<MeshRenderer>()->Load("sphere.obj");
     light->GetComponent<MeshRenderer>()->GetMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
-	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 0.95f));
+	light->GetComponent<Light>()->SetColor(glm::vec3(5.0f, 5.0f, 5.0f));
 	light->GetComponent<Light>()->SetAmbientColor(glm::vec3(0.1f));
-	light->GetComponent<Light>()->SetRange(10000000);
+	light->GetComponent<Light>()->SetRange(100);
 	//light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.0f));
 	//light->GetComponent<Light>()->SetCutoffAngle(0.7f);
-	//light->AddComponent<GameScript>();
+	light->AddComponent<GameScript>();
 
-    //auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
-    //ground->GetComponent<Transform>()->SetScale(glm::vec3(100));
-    //ground->GetComponent<Transform>()->TranslateY(-1);
+    auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
+    ground->GetComponent<Transform>()->SetScale(glm::vec3(10));
+    ground->GetComponent<Transform>()->TranslateY(-1);
 
 	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));

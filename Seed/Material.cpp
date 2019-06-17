@@ -38,15 +38,15 @@ void Material::BindMaterial()
     glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);
 
     glActiveTexture(GL_TEXTURE0);
-    Diffuse->BindTexture();
+    Diffuse->Bind();
     glActiveTexture(GL_TEXTURE1);
-    Normal->BindTexture();
+    Normal->Bind();
     glActiveTexture(GL_TEXTURE2);
-    Height->BindTexture();
+    Height->Bind();
     glActiveTexture(GL_TEXTURE3);
-    Specular->BindTexture();
+    Specular->Bind();
     glActiveTexture(GL_TEXTURE4);
-    Emission->BindTexture();
+    Emission->Bind();
 
     RenderingPipeline::BindSkyboxEnvironmentalMap();
 }

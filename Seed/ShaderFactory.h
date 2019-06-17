@@ -11,7 +11,8 @@ public:
         EquirectangularToCubemap,
         PrecalculateIrradiance,
         PrecalculateEnvironmentMap,
-        PrecalculateBRDFIntegrationMap
+        PrecalculateBRDFIntegrationMap,
+        ToneMapping
     };
 
     ShaderFactory();

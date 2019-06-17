@@ -25,15 +25,15 @@ void EnvironmentalMap::Load(TextureCubeMap* environment)
 
 void EnvironmentalMap::BindIrradiance()
 {
-    irradiance->BindTexture();
+    irradiance->Bind();
 }
 
 void EnvironmentalMap::BindEnvironmentalMap()
 {
-    environmentalMap->BindTexture();
+    environmentalMap->Bind();
 }
 
 void EnvironmentalMap::BindBRDFIntegrationMap()
 {
-    BRDFIntegrationMap->BindTexture();
+    BRDFIntegrationMap->Bind();
 }

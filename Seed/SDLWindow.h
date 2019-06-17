@@ -9,9 +9,8 @@ public:
 protected:
     friend class Time;
     friend class Engine;
-    friend class Texture;
-    friend class TextureCubeMap;
-    friend class EnvironmentalMap;
+    friend class Framebuffer;
+    friend class RenderingPipeline;
 
 	void CreateWindow(int width, int height);
 	void InitializeOpenGL();
@@ -19,6 +18,7 @@ protected:
 	Uint32 GetTime();
 	void Swap();
     void ResetViewport();
+    std::pair<int, int> GetWindowSize();
 
 private:
     SDL_Window* window = nullptr;

@@ -43,11 +43,6 @@ vec3 FresnelSchlick(vec3 F0, float HdotV)
 vec3 FresnelSchlickRoughness(vec3 F0, float HdotV, float roughness)
 {
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - HdotV, 5.0);
-}  
-
-vec3 GammaCorrection(vec3 color)
-{
-	return pow(color / (color + vec3(1.0)), vec3(1.0/2.2));
 }
 
 vec3 BlinnPhongLobe(float NdotH, float shininess, vec3 kS)
@@ -127,6 +122,12 @@ void main()
 	vec4 specularTexture = texture(texSpecular, fTexCoords);
 	vec3 emissionColor = texture(texEmission, fTexCoords).xyz;
 
+	vec3 albedo = pow(albedoTexture.xyz, vec3(2.2));
+	float ambientOclussion = isMetallic ? specularTexture.x : 1.0;
+	float roughness = isMetallic ? specularTexture.y : 1.0 - specularTexture.w;
+	float smoothness = 1.0 - roughness;
+	float metallic = isMetallic ? specularTexture.z : 0.0;
+
 	vec3 viewDir = normalize(fViewPos - fPos);
 	vec3 lightDir = normalize(fLightPos - fPos);
 	vec3 halfVector = normalize(lightDir + viewDir);
@@ -137,15 +138,7 @@ void main()
 	float NdotH = max(dot(normal, halfVector), 0.0);
 	float HdotV = max(dot(halfVector, viewDir), 0.0);
 
-	//vec3 environmentalTexture = texture(texEnvironmental, fTBN * reflectionVector).xyz;
-	//vec3 environmentalTexture = texture(texEnvironmental, fTBN * normal).xyz;
-
 	vec3 radiance = CalculateRadiance(lightDir);
-	vec3 albedo = pow(albedoTexture.xyz, vec3(2.2));
-	float roughness = isMetallic ? specularTexture.g : 1.0 - specularTexture.w;
-	float smoothness = 1.0 - roughness;
-	float metallic = isMetallic ? specularTexture.b : 0.0;
-	float ambientOclussion = isMetallic ? specularTexture.r : 1.0;
 
 	vec3 F0 = isMetallic ? mix(vec3(0.04), albedo, metallic) : specularTexture.xyz;
 	vec3 kS = FresnelSchlick(F0, HdotV);
@@ -165,9 +158,10 @@ void main()
 		specularColor *= oppositeSideCoeff;
 	}
 
-	vec3 color = GammaCorrection(diffuseColor + specularColor + emissionColor + ambientColor);
+	vec3 color = diffuseColor + specularColor + emissionColor + ambientColor;
 
 	float alpha = albedoTexture.w + (specularColor.r + specularColor.g + specularColor.b) * 0.3333333334;
+	alpha = clamp(alpha, 0, 1);
 	if(alpha < 0.05)
         discard;
 
