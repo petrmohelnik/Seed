@@ -2,6 +2,7 @@ predavat resolution do PrecalculateEnvMap pres uniform? - podpora nastavovat jed
 mit nekde globalne nadefinovany targety textur
 diffuse predelat na albedo?
 umoznit nastavit texturu jako kanal jine - napr rougness u te cihlove zdi
+podporovat jenom namixovany textury ze sktechfabu a nebo nacitani pojednom - nejlepsi asi to rozdelit pri loadu do jednotlivych
 ty pbr textury mit samostatne, kdyz jsou v jedne tak to pri loadu rozdelit - nebo naopak
 udelat si scenu v bleneru z tech tilu a tak
 metallic jako default?
@@ -12,15 +13,20 @@ nacitat albedo textury pomoci SRGB a nemuset to delat v shaderu? ten neHDR skybo
 stahnout example modely z https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0
 #include <assimp/pbrmaterial.h>
 paralax - https://www.gamedev.net/forums/topic/687418-parallax-displacement-mapping-in-2017/
+https://github.com/UPBGE/blender/issues/1009
 aiTextureType_LIGHTMAP - ambient occlusion
 attenuation jenom podle distance? a mit treba range jenom jeden parameter - je treba vzit v uvahu gamma korekci
 reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 https://freepbr.com/about-free-pbr/
+imgui poresit, umoznit napojit nejaky double pres input
+overit funkcnost lookat
+ajk pocitat s rangem a intensitou?
 ---
 mel bych nekdy i u normalniho loadu volat unload scene
 modely muzou sdilet textury mezi materialy... :/ --treepack??
+textury se ted necachuji ve filesystemu
 predelat inputy mysi na vlastni enumy
 
 deffered rendere podle metal gearu
@@ -35,6 +41,8 @@ nastudovat - https://learnopengl.com/Advanced-OpenGL/Stencil-testing
 nastudovat - https://learnopengl.com/Advanced-OpenGL/Framebuffers
 
 teren - https://victorbush.com/2015/01/tessellated-terrain/
+
+http://antongerdelan.net/opengl/raycasting.html
 
 vice svetel
 https://community.khronos.org/t/sending-an-array-of-structs-to-shader-via-an-uniform-buffer-object/75092/2

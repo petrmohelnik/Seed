@@ -14,6 +14,7 @@ public:
     std::vector<std::shared_ptr<Material>> LoadMaterials(const std::string& path);
     std::unique_ptr<TextureCubeMap> LoadCubeMap(const std::string& path, const std::string& format);
     std::unique_ptr<TextureCubeMap> LoadCubeMapHDR(const std::string& path);
+    std::shared_ptr<Texture> LoadTexture(const std::string& path, int bits = 0, bool flipHorizontal = false);
 
 private:
     void LoadScene(const std::string& path);
@@ -31,7 +32,6 @@ private:
     void LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, std::shared_ptr<Texture>& textureData, aiColor4D defaultColor);
     void LoadMaterialAlpha(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, std::shared_ptr<Texture>& textureData, float defaultAlpha);
     float GetMaterialFloat(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, float defaultAlpha);
-    std::shared_ptr<Texture> LoadTexture(const std::string& path, int bits = 0, bool flipHorizontal = false);
 
     static glm::vec3 ToGlmVec3(const aiVector3D& aiVector);
 

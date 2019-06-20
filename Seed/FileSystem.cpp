@@ -128,11 +128,13 @@ void FileSystem::LoadLight(const aiScene* scene, Object* object)
             else
             {
                 light->GetTransform()->Translate(ToGlmVec3(assimpLight->mPosition));
-                light->dataBlock.lightAttenuationCoeffs = glm::vec3(assimpLight->mAttenuationConstant, assimpLight->mAttenuationLinear, assimpLight->mAttenuationQuadratic);
+                float quadraticRange = std::sqrt(75.0 / assimpLight->mAttenuationQuadratic);
+                float linearRange = 4.5 / assimpLight->mAttenuationQuadratic;
+                light->dataBlock.Range = (quadraticRange + linearRange) / 2.0;
                 if (assimpLight->mType == aiLightSourceType::aiLightSource_SPOT)
                 {
                     light->SetType(Light::Type::Spot);
-                    light->dataBlock.lightCutoff = glm::vec2(assimpLight->mAngleInnerCone, assimpLight->mAngleOuterCone);
+                    light->dataBlock.SpotAngle = glm::cos(assimpLight->mAngleInnerCone);
                 }
                 else
                     light->SetType(Light::Type::Point);
@@ -299,7 +301,7 @@ std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials(const std::stri
 
 std::unique_ptr<TextureCubeMap> FileSystem::LoadCubeMap(const std::string& path, const std::string& format)
 {
-	std::string prefixPath = parentFolder + (*(path.end() - 1) == '/' || *(path.end() - 1) == '\\' ? path : path + '_');
+	std::string prefixPath = (*(path.end() - 1) == '/' || *(path.end() - 1) == '\\' ? path : path + '_');
 
 	auto cubeMap = std::make_unique<TextureCubeMap>();
 
@@ -381,7 +383,7 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
         LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_EMISSIVE, material.Emission, aiColor4D(0.0f));
 
     if(!LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.Height, folder, 8))
-        material.Height->SetColor(1.0f);
+        material.Height->SetColor(0.0f);
 
     return material;
 }
@@ -394,7 +396,7 @@ bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType t
         if (assimpMaterial->GetTexture(textureType, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
             throw std::runtime_error("Failed to load texture from material");
 
-        textureData = LoadTexture(parentFolder + folder + texturePath.C_Str(), bits);
+        textureData = LoadTexture(folder + texturePath.C_Str(), bits);
 
         return true;
     }
@@ -432,19 +434,20 @@ float FileSystem::GetMaterialFloat(aiMaterial * assimpMaterial, const char * pKe
 
 std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bits, bool flipHorizontal)
 {
+    auto const absolutePath = parentFolder + path;
     auto texture = std::make_shared<Texture>();
 
-    auto textureFormat = FreeImage_GetFileType(path.c_str(), 0);
+    auto textureFormat = FreeImage_GetFileType(absolutePath.c_str(), 0);
     if (textureFormat == FIF_UNKNOWN)
-        textureFormat = FreeImage_GetFIFFromFilename(path.c_str());
+        textureFormat = FreeImage_GetFIFFromFilename(absolutePath.c_str());
     if (!textureFormat)
-        throw std::runtime_error("Failed to load texture (" + path + "): unknown format");
+        throw std::runtime_error("Failed to load texture (" + absolutePath + "): unknown format");
     if (!FreeImage_FIFSupportsReading(textureFormat))
-        throw std::runtime_error("Failed to load texture (" + path + "): texture format is not supported");
+        throw std::runtime_error("Failed to load texture (" + absolutePath + "): texture format is not supported");
 
-    auto loadedTexture = FreeImage_Load(textureFormat, path.c_str());
+    auto loadedTexture = FreeImage_Load(textureFormat, absolutePath.c_str());
     if (!loadedTexture)
-        throw std::runtime_error("Failed to load texture (" + path + ")");
+        throw std::runtime_error("Failed to load texture (" + absolutePath + ")");
 
     if (bits == 8 && FreeImage_GetBPP(loadedTexture) > 8)
         loadedTexture = FreeImage_ConvertTo8Bits(loadedTexture);

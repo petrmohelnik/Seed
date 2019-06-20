@@ -5,7 +5,7 @@
 
 Texture::Texture()
 {
-    SetColor(glm::vec4(1.0f));
+    SetColor(glm::vec4(0.0f));
 }
 
 Texture::Texture(glm::vec4 color)

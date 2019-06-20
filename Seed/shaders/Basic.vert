@@ -9,13 +9,13 @@ layout(std140, binding = 0) uniform CameraBlock
 
 layout(std140, binding = 1) uniform LightBlock
 {
-	vec3 lightPos;
-	vec3 lightColor;
-	vec3 lightAttenuationCoeffs;
-	vec2 lightCutoff;
-	vec3 lightOrientation;
-	vec3 lightAmbient;
-};
+	vec3 Pos;
+	vec3 Color;
+	vec3 Orientation;
+	float Range;
+	float Intensity;
+	float SpotAngle;
+} Light;
 
 layout(std140, binding = 2) uniform ModelBlock
 {
@@ -50,8 +50,8 @@ void main()
 
 	fPos = TBN_inverted * vec3(model * vec4(vPos, 1.0));
 	fViewPos = TBN_inverted * viewPos;
-	fLightPos = TBN_inverted * lightPos;
-	fLightOrienation = TBN_inverted * lightOrientation;
+	fLightPos = TBN_inverted * Light.Pos;
+	fLightOrienation = TBN_inverted * Light.Orientation;
 	fTexCoords = vTexCoords;
 
 	gl_Position = projection * view * model * vec4(vPos, 1.0);

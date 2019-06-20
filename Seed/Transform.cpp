@@ -278,18 +278,18 @@ glm::vec3 Transform::GetLocalScale()
     return glm::vec3(scale[0][0], scale[1][1], scale[2][2]);
 }
 
-void Transform::LookAt(glm::vec3 position, glm::vec3 upAxis)
+void Transform::LookAt(glm::vec3 position_, glm::vec3 upAxis)
 {
     auto const localToWorldMatrix = GetLocalToWorldMatrix();
     auto const currentWorldPosition = glm::vec3(localToWorldMatrix * glm::vec4(position, 1.0f));
     glm::vec3 dummyTranslation;
-    DecomposeMatrix(glm::inverse(localToWorldMatrix) * glm::inverse(glm::lookAt(currentWorldPosition, position, upAxis)), dummyTranslation, orientation, scale);
+    DecomposeMatrix(glm::inverse(localToWorldMatrix) * glm::inverse(glm::lookAt(currentWorldPosition, position_, upAxis)) * scale, dummyTranslation, orientation, scale);
 }
 
 void Transform::LookAtLocal(glm::vec3 position, glm::vec3 upAxis)
 {
     glm::vec3 dummyTranslation;
-    DecomposeMatrix(glm::lookAt(glm::vec3(0.0f), position, upAxis), dummyTranslation, orientation, scale);
+    DecomposeMatrix(glm::inverse(glm::lookAt(glm::vec3(0.0f), position, upAxis)) * scale, dummyTranslation, orientation, scale);
 }
 
 void Transform::RotateAround(float angle, glm::vec3 worldAxis, glm::vec3 worldPoint)

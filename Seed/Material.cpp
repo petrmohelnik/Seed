@@ -3,11 +3,11 @@
 
 Material::Material()
 {
-    Diffuse = std::make_shared<Texture>();
-    Specular = std::make_shared<Texture>();
-    Normal = std::make_shared<Texture>();
-    Emission = std::make_shared<Texture>();
-    Height = std::make_shared<Texture>();
+    Diffuse = std::make_shared<Texture>(glm::vec4(1.0f));
+    Specular = std::make_shared<Texture>(glm::vec4(0.0f));
+    Normal = std::make_shared<Texture>(glm::vec4(0.5f, 0.5f, 1.0f, 0.0f));
+    Emission = std::make_shared<Texture>(glm::vec4(0.0f));
+    Height = std::make_shared<Texture>(glm::vec4(0.0f));
 }
 
 Material::~Material()

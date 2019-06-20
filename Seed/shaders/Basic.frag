@@ -2,13 +2,13 @@
 
 layout(std140, binding = 1) uniform LightBlock
 {
-	vec3 lightPos;
-	vec3 lightColor;
-	vec3 lightAttenuationCoeffs;
-	vec2 lightCutoff;
-	vec3 lightOrientation;
-	vec3 lightAmbient;
-};
+	vec3 Pos;
+	vec3 Color;
+	vec3 Orientation;
+	float Range;
+	float Intensity;
+	float SpotAngle;
+} Light;
 
 layout(std140, binding = 3) uniform MaterialBlock
 {
@@ -45,18 +45,16 @@ vec3 FresnelSchlickRoughness(vec3 F0, float HdotV, float roughness)
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - HdotV, 5.0);
 }
 
-vec3 BlinnPhongLobe(float NdotH, float shininess, vec3 kS)
-{
-	return kS * pow(NdotH, pow(2.0, 13.0 * shininess));
-}
-
 vec3 CalculateRadiance(vec3 lightDir)
 {
-	float lightDist = length(fLightPos - fPos);
-	float lightAttenuation = 1.0 / (lightAttenuationCoeffs.x + lightAttenuationCoeffs.y * lightDist + lightAttenuationCoeffs.z * lightDist * lightDist);
-	float lightAngleSpot = dot(lightDir, normalize(-fLightOrienation));
-	float lightSpotIntensity = clamp((lightAngleSpot - lightCutoff.y) / (lightCutoff.x - lightCutoff.y), 0.0, 1.0);
-	return lightColor * lightSpotIntensity * lightAttenuation;
+	float dist = length(fLightPos - fPos);
+	float attenuation = clamp(1.0 / (dist * dist), 0.0, 1.0);
+	float centerAngle = dot(lightDir, normalize(-fLightOrienation));
+	//float spotIntensity = clamp((centerAngle - Light.SpotAngle) / (Light.Cutoff.x - Light.Cutoff.y), 0.0, 1.0);
+	float angleDifference = centerAngle - Light.SpotAngle;
+	float spotIntensity = angleDifference >= 0.0 ? 1.0 : clamp((0.0001 / Light.Intensity) / (angleDifference * angleDifference), 0.0, 1.0);
+	spotIntensity = spotIntensity >= 0.001 ? spotIntensity : 0.0;
+	return Light.Color * Light.Intensity * spotIntensity * attenuation;
 }
 
 float DistributionGGX(float NdotH, float roughness)
@@ -115,23 +113,70 @@ vec3 CalculateAmbient(float NdotV, float roughness, float metallic, float ambien
 	return (diffuseColor + specularColor) * ambientOclussion;
 }
 
+vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
+{
+    const float minLayers = 8.0;
+	const float maxLayers = 32.0;
+	float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));  
+    // calculate the size of each layer
+    float layerDepth = 1.0 / numLayers;
+    // depth of current layer
+    float currentLayerDepth = 0.0;
+    // the amount to shift the texture coordinates per layer (from vector P)
+    vec2 P = viewDir.xy * 0.01; 
+    vec2 deltaTexCoords = P / numLayers;
+
+	// get initial values
+vec2  currentTexCoords     = texCoords;
+float currentDepthMapValue = abs(texture(texHeight, currentTexCoords).r - 1.0);
+  
+while(currentLayerDepth < currentDepthMapValue)
+{
+    // shift texture coordinates along direction of P
+    currentTexCoords -= deltaTexCoords;
+    // get depthmap value at current texture coordinates
+    currentDepthMapValue = abs(texture(texHeight, currentTexCoords).r - 1.0);  
+    // get depth of next layer
+    currentLayerDepth += layerDepth;  
+}
+
+
+	// get texture coordinates before collision (reverse operations)
+vec2 prevTexCoords = currentTexCoords + deltaTexCoords;
+
+// get depth after and before collision for linear interpolation
+float afterDepth  = currentDepthMapValue - currentLayerDepth;
+float beforeDepth = abs(texture(texHeight, prevTexCoords).r - 1.0) - currentLayerDepth + layerDepth;
+ 
+// interpolation of texture coordinates
+float weight = afterDepth / (afterDepth - beforeDepth);
+vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
+
+return finalTexCoords;  
+}
+
 void main()
 {
-	vec4 albedoTexture = texture(texAlbedo, fTexCoords);
-	vec3 normalTexture = texture(texNormal, fTexCoords).xyz;
-	vec4 specularTexture = texture(texSpecular, fTexCoords);
-	vec3 emissionColor = texture(texEmission, fTexCoords).xyz;
+	vec3 viewDir = normalize(fViewPos - fPos);
+	vec3 lightDir = normalize(fLightPos - fPos);
+	vec3 halfVector = normalize(lightDir + viewDir);
+
+	vec2 texCoords = fTexCoords;//ParallaxMapping(fTexCoords, viewDir);
+//	if(texCoords.x > 1.0 || texCoords.y > 1.0 || texCoords.x < 0.0 || texCoords.y < 0.0)
+//    discard;
+//
+	vec4 albedoTexture = texture(texAlbedo, texCoords);
+	vec3 normalTexture = texture(texNormal, texCoords).xyz;
+	vec4 specularTexture = texture(texSpecular, texCoords);
+	vec3 emissionColor = texture(texEmission, texCoords).xyz;
 
 	vec3 albedo = pow(albedoTexture.xyz, vec3(2.2));
 	float ambientOclussion = isMetallic ? specularTexture.x : 1.0;
 	float roughness = isMetallic ? specularTexture.y : 1.0 - specularTexture.w;
 	float smoothness = 1.0 - roughness;
 	float metallic = isMetallic ? specularTexture.z : 0.0;
-
-	vec3 viewDir = normalize(fViewPos - fPos);
-	vec3 lightDir = normalize(fLightPos - fPos);
-	vec3 halfVector = normalize(lightDir + viewDir);
 	vec3 normal = normalize(normalTexture * 2.0 - 1.0); normal.y = -normal.y;
+
 	vec3 reflectionVector = reflect(-viewDir, normal);
 	float NdotV = max(dot(normal, viewDir), 0.0);
 	float NdotL = max(dot(normal, lightDir), 0.0);
