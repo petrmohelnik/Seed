@@ -5,6 +5,7 @@ class SDLWindow
 {
 public:
 	SDLWindow();
+	~SDLWindow();
 
 protected:
     friend class Time;
@@ -23,6 +24,7 @@ protected:
 private:
     SDL_Window* window = nullptr;
 	SDL_GLContext context;
+    ImGuiIO* imguiIO;
 	Input& input;
 };
 

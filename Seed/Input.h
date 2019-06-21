@@ -11,6 +11,7 @@ public:
     bool MouseButton(Uint8 button); //SDL_BUTTON_RIGHT, SDL_BUTTON_LEFT
     bool MouseButtonDown(Uint8 button); //SDL_BUTTON_RIGHT, SDL_BUTTON_LEFT
     glm::ivec2 MouseMovement();
+    void SliderFloat(const std::string& name, float& value, float min, float max);
 
 protected:
     friend class SDLWindow;

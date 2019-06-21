@@ -48,13 +48,12 @@ vec3 FresnelSchlickRoughness(vec3 F0, float HdotV, float roughness)
 vec3 CalculateRadiance(vec3 lightDir)
 {
 	float dist = length(fLightPos - fPos);
-	float attenuation = clamp(1.0 / (dist * dist), 0.0, 1.0);
+	float normalizedDist = dist / Light.Range;
+	float attenuation = 1.0 / (10.0 * normalizedDist * normalizedDist);
 	float centerAngle = dot(lightDir, normalize(-fLightOrienation));
-	//float spotIntensity = clamp((centerAngle - Light.SpotAngle) / (Light.Cutoff.x - Light.Cutoff.y), 0.0, 1.0);
 	float angleDifference = centerAngle - Light.SpotAngle;
-	float spotIntensity = angleDifference >= 0.0 ? 1.0 : clamp((0.0001 / Light.Intensity) / (angleDifference * angleDifference), 0.0, 1.0);
-	spotIntensity = spotIntensity >= 0.001 ? spotIntensity : 0.0;
-	return Light.Color * Light.Intensity * spotIntensity * attenuation;
+	float spotAttenuation = angleDifference >= 0.0 ? 1.0 : clamp(1.0 / (1000.0 * angleDifference * angleDifference), 0.0, 1.0);
+	return Light.Color * Light.Intensity * spotAttenuation * attenuation;
 }
 
 float DistributionGGX(float NdotH, float roughness)

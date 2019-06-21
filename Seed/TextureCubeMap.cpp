@@ -167,6 +167,8 @@ void TextureCubeMap::RenderViewsIntoCubeMapWithMipMaps(Shader* shader, Framebuff
     camera.projection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
     auto const captureViews = GenerateCameraViewsForCube();
 
+    //shader->SetUniformInt(mipLevels)
+
     for (unsigned int mipLevel = 0; mipLevel < mipLevels; mipLevel++)
     {
         unsigned int mipWidth = width * std::pow(0.5, mipLevel);

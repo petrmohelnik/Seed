@@ -1,6 +1,6 @@
 #pragma once
-
 #define GLM_ENABLE_EXPERIMENTAL
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
@@ -16,6 +16,10 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/pbrmaterial.h>
+
+#include "imgui/imgui.h""
+#include "imgui/imgui_impl_sdl.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 #include <iostream>
 #include <vector>

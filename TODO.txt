@@ -1,4 +1,3 @@
-predavat resolution do PrecalculateEnvMap pres uniform? - podpora nastavovat jednoduche uniformy pres jmeno, MAX_REFLECTION_LOD 
 mit nekde globalne nadefinovany targety textur
 diffuse predelat na albedo?
 umoznit nastavit texturu jako kanal jine - napr rougness u te cihlove zdi
@@ -6,8 +5,6 @@ podporovat jenom namixovany textury ze sktechfabu a nebo nacitani pojednom - nej
 ty pbr textury mit samostatne, kdyz jsou v jedne tak to pri loadu rozdelit - nebo naopak
 udelat si scenu v bleneru z tech tilu a tak
 metallic jako default?
-lightAmbient odstranit?
-pomoci tonemappingu a exposure muzu udelat tmave sceny a tak
 Basic.frag neni uplne basic...
 nacitat albedo textury pomoci SRGB a nemuset to delat v shaderu? ten neHDR skybox taky je v srgb a je potreba ho prevest
 stahnout example modely z https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0
@@ -15,14 +12,11 @@ stahnout example modely z https://github.com/KhronosGroup/glTF-Sample-Models/tre
 paralax - https://www.gamedev.net/forums/topic/687418-parallax-displacement-mapping-in-2017/
 https://github.com/UPBGE/blender/issues/1009
 aiTextureType_LIGHTMAP - ambient occlusion
-attenuation jenom podle distance? a mit treba range jenom jeden parameter - je treba vzit v uvahu gamma korekci
 reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 https://freepbr.com/about-free-pbr/
-imgui poresit, umoznit napojit nejaky double pres input
 overit funkcnost lookat
-ajk pocitat s rangem a intensitou?
 ---
 mel bych nekdy i u normalniho loadu volat unload scene
 modely muzou sdilet textury mezi materialy... :/ --treepack??

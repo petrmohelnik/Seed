@@ -6,6 +6,17 @@ SDLWindow::SDLWindow()
 {
 }
 
+SDLWindow::~SDLWindow()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+
+    SDL_GL_DeleteContext(context);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+}
+
 void SDLWindow::CreateWindow(int width, int height)
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) 
@@ -35,7 +46,7 @@ void SDLWindow::InitializeOpenGL()
 
 	//vertical synchronization
 	SDL_GL_SetSwapInterval(1);
-    SDL_SetRelativeMouseMode(SDL_TRUE);
+    //SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	glewExperimental = GL_TRUE;
 	GLenum result = glewInit();
@@ -59,6 +70,14 @@ void SDLWindow::InitializeOpenGL()
 	{
 		std::cout << "Unable to get any OpenGL version from GLEW!";
 	}
+
+    ImGui::CreateContext();
+    imguiIO = &ImGui::GetIO();
+    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsClassic();
+
+    ImGui_ImplSDL2_InitForOpenGL(window, context);
+    ImGui_ImplOpenGL3_Init("#version 410");
 }
 
 void SDLWindow::PollInputs()
@@ -69,8 +88,13 @@ void SDLWindow::PollInputs()
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
+        ImGui_ImplSDL2_ProcessEvent(&event);
 		input.AddInput(event);
 	}
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame(Engine::GetWindow().window);
+    ImGui::NewFrame();
 }
 
 Uint32 SDLWindow::GetTime()
@@ -80,6 +104,9 @@ Uint32 SDLWindow::GetTime()
 
 void SDLWindow::Swap()
 {
+    ImGui::ShowDemoWindow();
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	SDL_GL_SwapWindow(window);
 }
 

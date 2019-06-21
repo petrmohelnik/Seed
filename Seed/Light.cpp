@@ -1,6 +1,7 @@
 #include "Light.h"
 #include "RenderingPipeline.h"
 #include "Transform.h"
+#include "Engine.h"
 
 void Light::SetType(Type type_)
 {
@@ -58,6 +59,9 @@ void Light::SetSpotLight(glm::vec3 position, glm::vec3 direction, float range, f
 
 void Light::BindLight()
 {
+    Engine::GetInput().SliderFloat("Range", dataBlock.Range, 0.0, 100);
+    Engine::GetInput().SliderFloat("Intensity", dataBlock.Itensity, 0.0, 100);
+
     RenderingPipeline::BindLightUniform();
 
 	dataBlock.Pos = GetTransform()->GetPosition();

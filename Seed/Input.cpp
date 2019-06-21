@@ -77,3 +77,8 @@ glm::ivec2 Input::MouseMovement()
 {
     return mouseMovement;
 }
+
+void Input::SliderFloat(const std::string& name, float& value, float min, float max)
+{
+    ImGui::SliderFloat(name.c_str(), &value, min, max);
+}
