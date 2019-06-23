@@ -25,3 +25,6 @@ https://gamedev.stackexchange.com/questions/74879/specular-map-what-about-the-sp
 
 tone mapping:
 https://64.github.io/tonemapping/
+
+hdri:
+https://www.daz3d.com/forums/discussion/57531/list-of-sites-with-free-hdri

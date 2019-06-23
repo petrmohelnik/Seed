@@ -100,4 +100,5 @@ void MeshRenderer::Load(const std::string& path)
 {
 	SetMesh(Engine::GetFileSystem().LoadMesh(path));
 	SetMaterials(Engine::GetFileSystem().LoadMaterials(path));
+    Engine::GetFileSystem().UnloadScene();
 }

@@ -104,7 +104,7 @@ Uint32 SDLWindow::GetTime()
 
 void SDLWindow::Swap()
 {
-    ImGui::ShowDemoWindow();
+    //ImGui::ShowDemoWindow();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	SDL_GL_SwapWindow(window);

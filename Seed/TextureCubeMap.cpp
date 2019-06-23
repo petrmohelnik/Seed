@@ -43,7 +43,7 @@ void TextureCubeMap::LoadFromEquirectangular(float* data, int width, int height)
 
     GLuint equirectangularTexture = GenerateEquirectangularTexture(data, width, height);
     
-    RenderIntoHDRCubeMapFromTexture(2048, ShaderFactory::Type::EquirectangularToCubemap, GL_TEXTURE6, GL_TEXTURE_2D, equirectangularTexture);
+    RenderIntoHDRCubeMapFromTexture(2048, ShaderFactory::Type::EquirectangularToCubemap, GL_TEXTURE11, GL_TEXTURE_2D, equirectangularTexture);
 
     glDeleteTextures(1, &equirectangularTexture);
 }

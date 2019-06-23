@@ -14,11 +14,15 @@ public:
     std::vector<std::shared_ptr<Material>> LoadMaterials(const std::string& path);
     std::unique_ptr<TextureCubeMap> LoadCubeMap(const std::string& path, const std::string& format);
     std::unique_ptr<TextureCubeMap> LoadCubeMapHDR(const std::string& path);
-    std::shared_ptr<Texture> LoadTexture(const std::string& path, int bits = 0, bool flipHorizontal = false);
+    std::shared_ptr<Texture> LoadTexture(const std::string& path, int bitsMinimum = 0, int bitsMaximum = 0, bool flipHorizontal = false);
+
+protected:
+    friend class MeshRenderer;
+
+    void UnloadScene();
 
 private:
     void LoadScene(const std::string& path);
-    void UnloadScene();
     const aiScene* GetScene(const std::string& path);
     void LoadNode(const aiScene* scene, aiNode* node, Object* parent, std::vector<Object*>& objects, const std::vector<std::shared_ptr<Material>>& materials);
     void LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<Material>>& materials);
@@ -28,7 +32,7 @@ private:
     Mesh::SubMesh LoadSubMeshData(aiMesh* assimpMesh);
     std::vector<std::shared_ptr<Material>> LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials, const std::string& path);
     Material LoadMaterialData(aiMaterial* assimpMaterial, const std::string& folder);
-    bool LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, std::shared_ptr<Texture>& textureData, const std::string& folder, int bits = 0);
+    bool LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, std::shared_ptr<Texture>& textureData, const std::string& folder, int bitsMinimum = 0, int bitsMaximum = 0);
     void LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, std::shared_ptr<Texture>& textureData, aiColor4D defaultColor);
     void LoadMaterialAlpha(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, std::shared_ptr<Texture>& textureData, float defaultAlpha);
     float GetMaterialFloat(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, float defaultAlpha);

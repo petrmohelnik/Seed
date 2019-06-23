@@ -30,7 +30,8 @@ Object::Object(std::string name_)
 
 Object::~Object()
 {
-    if(auto parent = transform->GetParent())
+    auto parent = transform->GetParent();
+    if(parent)
         parent->CleanChildren();
 }
 

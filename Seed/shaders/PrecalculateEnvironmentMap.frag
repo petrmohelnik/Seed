@@ -1,6 +1,6 @@
 #version 460
 
-layout(binding = 6) uniform samplerCube texEnvironmental;
+layout(binding = 11) uniform samplerCube texEnvironmental;
 layout(location = 0) uniform float roughness;
 
 in vec3 fPos;

@@ -12,17 +12,19 @@ layout(std140, binding = 1) uniform LightBlock
 
 layout(std140, binding = 3) uniform MaterialBlock
 {
-	bool isMetallic;
-};
+	bool SpecularWorkflow;
+	bool UseOcclusionMap;
+} Material;
 
 layout(binding = 0) uniform sampler2D texAlbedo;
 layout(binding = 1) uniform sampler2D texNormal;
 layout(binding = 2) uniform sampler2D texHeight;
-layout(binding = 3) uniform sampler2D texSpecular;
+layout(binding = 3) uniform sampler2D texMetallic;
 layout(binding = 4) uniform sampler2D texEmission;
-layout(binding = 5) uniform samplerCube texIrradiance;
-layout(binding = 6) uniform samplerCube texEnvironmental;
-layout(binding = 7) uniform sampler2D texBRDFIntegration;
+layout(binding = 5) uniform sampler2D texOcclusion;
+layout(binding = 10) uniform samplerCube texIrradiance;
+layout(binding = 11) uniform samplerCube texEnvironmental;
+layout(binding = 12) uniform sampler2D texBRDFIntegration;
 
 in vec3 fPos;
 in vec3 fViewPos;
@@ -102,14 +104,14 @@ vec3 CalculateAmbient(float NdotV, float roughness, float metallic, float ambien
 	vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
 
 	vec3 irradiance = texture(texIrradiance, fTBN * normal).xyz;
-	vec3 diffuseColor = kD * irradiance * albedo;
+	vec3 AlbedoColor = kD * irradiance * albedo;
 
 	const float MAX_REFLECTION_LOD = 4.0;
     vec3 environmentalColor = textureLod(texEnvironmental, fTBN * reflectionVector, roughness * MAX_REFLECTION_LOD).xyz;
 	vec2 environmentBRDF = texture(texBRDFIntegration, vec2(NdotV, roughness)).xy;
-	vec3 specularColor = environmentalColor * (kS * environmentBRDF.x + environmentBRDF.y);
+	vec3 MetallicColor = environmentalColor * (kS * environmentBRDF.x + environmentBRDF.y);
 
-	return (diffuseColor + specularColor) * ambientOclussion;
+	return (AlbedoColor + MetallicColor) * ambientOclussion;
 }
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
@@ -166,14 +168,14 @@ void main()
 //
 	vec4 albedoTexture = texture(texAlbedo, texCoords);
 	vec3 normalTexture = texture(texNormal, texCoords).xyz;
-	vec4 specularTexture = texture(texSpecular, texCoords);
+	vec4 metallicTexture = texture(texMetallic, texCoords);
+	float occlusionTexture = texture(texOcclusion, texCoords).x;
 	vec3 emissionColor = texture(texEmission, texCoords).xyz;
 
 	vec3 albedo = pow(albedoTexture.xyz, vec3(2.2));
-	float ambientOclussion = isMetallic ? specularTexture.x : 1.0;
-	float roughness = isMetallic ? specularTexture.y : 1.0 - specularTexture.w;
-	float smoothness = 1.0 - roughness;
-	float metallic = isMetallic ? specularTexture.z : 0.0;
+	float ambientOclussion = (Material.SpecularWorkflow || Material.UseOcclusionMap) ? occlusionTexture : metallicTexture.x;
+	float roughness = Material.SpecularWorkflow ? 1.0 - metallicTexture.w : metallicTexture.y;
+	float metallic = Material.SpecularWorkflow ? 0.0 : metallicTexture.z;
 	vec3 normal = normalize(normalTexture * 2.0 - 1.0); normal.y = -normal.y;
 
 	vec3 reflectionVector = reflect(-viewDir, normal);
@@ -184,13 +186,13 @@ void main()
 
 	vec3 radiance = CalculateRadiance(lightDir);
 
-	vec3 F0 = isMetallic ? mix(vec3(0.04), albedo, metallic) : specularTexture.xyz;
+	vec3 F0 = Material.SpecularWorkflow ? metallicTexture.xyz : mix(vec3(0.04), albedo, metallic);
 	vec3 kS = FresnelSchlick(F0, HdotV);
 	vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
 	
-	vec3 diffuseColor = kD * albedo / PI * radiance * NdotL;
+	vec3 AlbedoColor = kD * albedo / PI * radiance * NdotL;
 	
-	vec3 specularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
+	vec3 SpecularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
 
 	vec3 ambientColor = CalculateAmbient(NdotV, roughness, metallic, ambientOclussion, F0, normal, reflectionVector, albedo);
 
@@ -198,15 +200,14 @@ void main()
 	if (lightToGeometryAngle < 0.0)
 	{	// we are on the opposite side from light, slowly fade away so we dont have illuminated hidden surface due to normal mapping
 		float oppositeSideCoeff = pow(1 + lightToGeometryAngle, 3);
-		diffuseColor *= oppositeSideCoeff;
-		specularColor *= oppositeSideCoeff;
+		AlbedoColor *= oppositeSideCoeff;
+		SpecularColor *= oppositeSideCoeff;
 	}
 
-	vec3 color = diffuseColor + specularColor + emissionColor + ambientColor;
+	vec3 color = AlbedoColor + SpecularColor + emissionColor + ambientColor;
 
-	float alpha = albedoTexture.w + (specularColor.r + specularColor.g + specularColor.b) * 0.3333333334;
-	alpha = clamp(alpha, 0, 1);
-	if(alpha < 0.05)
+	float alpha = albedoTexture.w;
+	if(alpha < 0.1)
         discard;
 
 	gl_FragColor = vec4(color, alpha);

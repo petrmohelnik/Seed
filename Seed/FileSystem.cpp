@@ -61,6 +61,8 @@ std::vector<Object*> FileSystem::LoadObjects(const std::string& path)
     auto const materials = LoadMaterialsData(scene->mMaterials, scene->mNumMaterials, path);
     LoadNode(scene, scene->mRootNode, nullptr, objects, materials);
 
+    UnloadScene();
+
     return objects;
 }
 
@@ -232,10 +234,6 @@ Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
                 assimpMesh->mBitangents[index].x,
                 assimpMesh->mBitangents[index].y,
                 assimpMesh->mBitangents[index].z));
-
-            subMesh.texCoords.emplace_back(glm::vec2(
-                assimpMesh->mTextureCoords[0][index].x,
-                assimpMesh->mTextureCoords[0][index].y));
         }
         else
         {
@@ -243,6 +241,16 @@ Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
             glm::vec3 bitangent = glm::cross(tangent, subMesh.normals.back());
             subMesh.tangents.emplace_back(tangent);
             subMesh.bitangents.emplace_back(bitangent);
+        }
+
+        if (assimpMesh->mTextureCoords[0])
+        {
+            subMesh.texCoords.emplace_back(glm::vec2(
+                assimpMesh->mTextureCoords[0][index].x,
+                assimpMesh->mTextureCoords[0][index].y));
+        }
+        else
+        {
             subMesh.texCoords.emplace_back(glm::vec2(0.0f));
         }
     }
@@ -353,42 +361,46 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
 {
     Material material;
 
-    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_DIFFUSE, material.Diffuse, folder))
+    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_DIFFUSE, material.Albedo, folder, 24, 32))
     {
-        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_DIFFUSE, material.Diffuse, aiColor4D(1.0f));
-        LoadMaterialAlpha(assimpMaterial, AI_MATKEY_OPACITY, material.Diffuse, 1.0f);
+        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_DIFFUSE, material.Albedo, aiColor4D(1.0f));
+        LoadMaterialAlpha(assimpMaterial, AI_MATKEY_OPACITY, material.Albedo, 1.0f);
     }
 
-    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.Normal, folder, 24))
+    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.Normal, folder, 24, 24))
 		material.Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
     
-    if (!LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.Specular, folder))
+    if (LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.Metallic, folder, 24, 32))
     {
-        if (LoadMaterialTexture(assimpMaterial, aiTextureType_UNKNOWN, material.Specular, folder, 24))
-        {
-            material.dataBlock.isMetallic = true;
-        }
-        else
-        {
-            LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Specular, aiColor4D(0.15f));
-            LoadMaterialAlpha(assimpMaterial, AI_MATKEY_SHININESS, material.Specular, 0.4f);
-        }
+        material.SetSpecularWorkflow();
+        if (material.Metallic->bytesPerPixel != 4)
+            material.Metallic->AddAlphaChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_SHININESS, 0.0f));
     }
-    else if (material.Specular->bytesPerPixel != 4)
+    else
     {
-        material.Specular->AddAlphaChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_SHININESS, 0.4f));
+        if (!LoadMaterialTexture(assimpMaterial, aiTextureType_UNKNOWN, material.Metallic, folder, 24, 24))
+        {
+            LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Metallic, aiColor4D(0.15f));
+            LoadMaterialAlpha(assimpMaterial, AI_MATKEY_SHININESS, material.Metallic, 0.0f);
+            material.SetSpecularWorkflow();
+        }
     }
 
-    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_EMISSIVE, material.Emission, folder, 24))
+    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_EMISSIVE, material.Emission, folder, 24, 24))
         LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_EMISSIVE, material.Emission, aiColor4D(0.0f));
 
-    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.Height, folder, 8))
+    if(!LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.Height, folder, 8, 8))
         material.Height->SetColor(0.0f);
+
+    if (LoadMaterialTexture(assimpMaterial, aiTextureType_LIGHTMAP, material.Occlusion, folder, 8, 8))
+        material.UseOcclusionMap();
+    else
+        material.Occlusion->SetColor(1.0f);
 
     return material;
 }
 
-bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, std::shared_ptr<Texture>& textureData, const std::string& folder, int bits)
+bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, std::shared_ptr<Texture>& textureData, const std::string& folder, int bitsMinimum, int bitsMaximum)
 {
     if (assimpMaterial->GetTextureCount(textureType) != 0)
     {
@@ -396,7 +408,7 @@ bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType t
         if (assimpMaterial->GetTexture(textureType, 0, &texturePath, nullptr, nullptr, nullptr, nullptr, nullptr) != AI_SUCCESS)
             throw std::runtime_error("Failed to load texture from material");
 
-        textureData = LoadTexture(folder + texturePath.C_Str(), bits);
+        textureData = LoadTexture(folder + texturePath.C_Str(), bitsMinimum, bitsMaximum);
 
         return true;
     }
@@ -432,7 +444,7 @@ float FileSystem::GetMaterialFloat(aiMaterial * assimpMaterial, const char * pKe
     return alpha;
 }
 
-std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bits, bool flipHorizontal)
+std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bitsMinimum, int bitsMaximum, bool flipHorizontal)
 {
     auto const absolutePath = parentFolder + path;
     auto texture = std::make_shared<Texture>();
@@ -449,9 +461,11 @@ std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bi
     if (!loadedTexture)
         throw std::runtime_error("Failed to load texture (" + absolutePath + ")");
 
-    if (bits == 8 && FreeImage_GetBPP(loadedTexture) > 8)
+    if (bitsMaximum == 8 && FreeImage_GetBPP(loadedTexture) > 8)
         loadedTexture = FreeImage_ConvertTo8Bits(loadedTexture);
-    if (bits == 24 && FreeImage_GetBPP(loadedTexture) > 24)
+    if (bitsMaximum == 24 && FreeImage_GetBPP(loadedTexture) > 24)
+        loadedTexture = FreeImage_ConvertTo24Bits(loadedTexture);
+    if (bitsMinimum == 24 && FreeImage_GetBPP(loadedTexture) < 24)
         loadedTexture = FreeImage_ConvertTo24Bits(loadedTexture);
     if (flipHorizontal && !FreeImage_FlipVertical(loadedTexture))
         throw std::runtime_error("Could not flip texture");

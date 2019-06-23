@@ -1,6 +1,6 @@
 #version 460
 
-layout(binding = 6) uniform sampler2D texEnvironmental;
+layout(binding = 11) uniform sampler2D texEnvironmental;
 
 in vec3 fPos;
 

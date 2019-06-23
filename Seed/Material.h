@@ -20,13 +20,16 @@ public:
 
     void SetShader(ShaderFactory::Type shader);
     ShaderFactory::Type GetShader();
-	void SetMetallic();
+	void SetSpecularWorkflow();
+	void SetMetallicWorkflow();
+    void UseOcclusionMap();
 
-    std::shared_ptr<Texture> Diffuse;
+    std::shared_ptr<Texture> Albedo;
     std::shared_ptr<Texture> Normal;
     std::shared_ptr<Texture> Height;
-    std::shared_ptr<Texture> Specular;
+    std::shared_ptr<Texture> Metallic;
     std::shared_ptr<Texture> Emission;
+    std::shared_ptr<Texture> Occlusion;
 
 protected:
     friend class FileSystem;
@@ -34,7 +37,8 @@ protected:
 private:
     struct MaterialBlock
     {
-        Uint32 isMetallic = false;
+        alignas(4) Uint32 SpecularWorkflow = false;
+        alignas(4) Uint32 UseOcclusionMap = false;
     };
 
     MaterialBlock dataBlock;

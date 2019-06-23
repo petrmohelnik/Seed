@@ -1,45 +1,32 @@
-mit nekde globalne nadefinovany targety textur
-diffuse predelat na albedo?
+ve scene dodelat svetla a fixnout normaly - apply modifiers
+meshe pri loadu sceny mohou byt sdilene stejne jako jsou textury
 umoznit nastavit texturu jako kanal jine - napr rougness u te cihlove zdi
-podporovat jenom namixovany textury ze sktechfabu a nebo nacitani pojednom - nejlepsi asi to rozdelit pri loadu do jednotlivych
-ty pbr textury mit samostatne, kdyz jsou v jedne tak to pri loadu rozdelit - nebo naopak
-udelat si scenu v bleneru z tech tilu a tak
-metallic jako default?
-Basic.frag neni uplne basic...
+podporovat pri loadu z filu jenom rgb metallic a rucne naloadovat channel z jine textury
+mit nekde globalne nadefinovany targety textur
 nacitat albedo textury pomoci SRGB a nemuset to delat v shaderu? ten neHDR skybox taky je v srgb a je potreba ho prevest
-stahnout example modely z https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0
-#include <assimp/pbrmaterial.h>
 paralax - https://www.gamedev.net/forums/topic/687418-parallax-displacement-mapping-in-2017/
 https://github.com/UPBGE/blender/issues/1009
-aiTextureType_LIGHTMAP - ambient occlusion
+deffered renderer podle metal gearu
+https://docs.microsoft.com/en-us/windows/desktop/dxtecharts/cascaded-shadow-maps
+http://alextardif.com/arealights.html - je tam i lepsi light falloff
+CascadedShadowMaps a SoftShadow projekty
 reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-https://freepbr.com/about-free-pbr/
 overit funkcnost lookat
 ---
-mel bych nekdy i u normalniho loadu volat unload scene
 modely muzou sdilet textury mezi materialy... :/ --treepack??
 textury se ted necachuji ve filesystemu
 predelat inputy mysi na vlastni enumy
 
-deffered rendere podle metal gearu
 Screen Space Reflections
 
 vytvaret kopie objektu
 https://stackoverflow.com/questions/5027456/copying-derived-entities-using-only-base-class-pointers-without-exhaustive-tes
 
-http://alextardif.com/arealights.html
-
-nastudovat - https://learnopengl.com/Advanced-OpenGL/Stencil-testing
-nastudovat - https://learnopengl.com/Advanced-OpenGL/Framebuffers
-
 teren - https://victorbush.com/2015/01/tessellated-terrain/
 
 http://antongerdelan.net/opengl/raycasting.html
-
-vice svetel
-https://community.khronos.org/t/sending-an-array-of-structs-to-shader-via-an-uniform-buffer-object/75092/2
 
 v render queue se budou radit objekty prioritne podle vrstvy materialu, potom podle programu
 pruhlednej material musi mit specialni flag
@@ -48,8 +35,6 @@ https://docs.unity3d.com/Manual/SL-SubShaderTags.html -- inspirace poradi
 
 submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?
-
-moznost nacist alpha jeste ze samostatne textury?
 
 All Awake calls
 All Start Calls
@@ -93,6 +78,9 @@ https://gamedev.stackexchange.com/questions/26501/how-does-a-collision-engine-wo
 http://mmmovania.blogspot.com/2011/04/physx-basics-tutorial-simple-bouncing.html
 http://alextardif.com/Particles.html
 http://alextardif.com/eden.html
+https://github.com/NVIDIAGameWorks/WaveWorks
+https://github.com/NVIDIAGameWorks/GraphicsSamples/tree/master/samples/gl4-maxwell
+https://github.com/NVIDIAGameWorks/VolumetricLighting
 
 https://stackoverflow.com/questions/16005952/opengl-gradient-banding-artifacts
 

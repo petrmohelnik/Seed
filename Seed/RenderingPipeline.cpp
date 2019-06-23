@@ -79,11 +79,11 @@ void RenderingPipeline::BindSkyboxEnvironmentalMap()
     {
         auto environmentalMap = skybox->GetEnvironmentalMapRawPtr();
 
-        glActiveTexture(GL_TEXTURE5);
+        glActiveTexture(GL_TEXTURE10);
         environmentalMap->BindIrradiance();
-        glActiveTexture(GL_TEXTURE6);
+        glActiveTexture(GL_TEXTURE11);
         environmentalMap->BindEnvironmentalMap();
-        glActiveTexture(GL_TEXTURE7);
+        glActiveTexture(GL_TEXTURE12);
         environmentalMap->BindBRDFIntegrationMap();
     }
 }
