@@ -313,12 +313,12 @@ std::unique_ptr<TextureCubeMap> FileSystem::LoadCubeMap(const std::string& path,
 
 	auto cubeMap = std::make_unique<TextureCubeMap>();
 
-	cubeMap->faces[0] = LoadTexture(prefixPath + "right." + format, 24, true);
-	cubeMap->faces[1] = LoadTexture(prefixPath + "left." + format, 24, true);
-	cubeMap->faces[2] = LoadTexture(prefixPath + "top." + format, 24, true);
-	cubeMap->faces[3] = LoadTexture(prefixPath + "bottom." + format, 24, true);
-	cubeMap->faces[4] = LoadTexture(prefixPath + "front." + format, 24, true);
-	cubeMap->faces[5] = LoadTexture(prefixPath + "back." + format, 24, true);
+    cubeMap->faces[0] = LoadTexture(prefixPath + "right." + format, 24, 24, true); cubeMap->faces[0]->SetSRGB();
+	cubeMap->faces[1] = LoadTexture(prefixPath + "left." + format, 24, 24, true); cubeMap->faces[1]->SetSRGB();
+	cubeMap->faces[2] = LoadTexture(prefixPath + "top." + format, 24, 24, true); cubeMap->faces[2]->SetSRGB();
+	cubeMap->faces[3] = LoadTexture(prefixPath + "bottom." + format, 24, 24, true); cubeMap->faces[3]->SetSRGB();
+	cubeMap->faces[4] = LoadTexture(prefixPath + "front." + format, 24, 24, true); cubeMap->faces[4]->SetSRGB();
+	cubeMap->faces[5] = LoadTexture(prefixPath + "back." + format, 24, 24, true); cubeMap->faces[5]->SetSRGB();
 
 	return cubeMap;
 }
@@ -366,6 +366,7 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
         LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_DIFFUSE, material.Albedo, aiColor4D(1.0f));
         LoadMaterialAlpha(assimpMaterial, AI_MATKEY_OPACITY, material.Albedo, 1.0f);
     }
+    material.Albedo->SetSRGB();
 
     if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.Normal, folder, 24, 24))
 		material.Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
@@ -376,14 +377,11 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
         if (material.Metallic->bytesPerPixel != 4)
             material.Metallic->AddAlphaChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_SHININESS, 0.0f));
     }
-    else
+    else if (!LoadMaterialTexture(assimpMaterial, aiTextureType_UNKNOWN, material.Metallic, folder, 24, 24))
     {
-        if (!LoadMaterialTexture(assimpMaterial, aiTextureType_UNKNOWN, material.Metallic, folder, 24, 24))
-        {
-            LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Metallic, aiColor4D(0.15f));
-            LoadMaterialAlpha(assimpMaterial, AI_MATKEY_SHININESS, material.Metallic, 0.0f);
-            material.SetSpecularWorkflow();
-        }
+        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Metallic, aiColor4D(0.0f));
+        LoadMaterialAlpha(assimpMaterial, AI_MATKEY_SHININESS, material.Metallic, 0.0f);
+        material.SetSpecularWorkflow();
     }
 
     if(!LoadMaterialTexture(assimpMaterial, aiTextureType_EMISSIVE, material.Emission, folder, 24, 24))

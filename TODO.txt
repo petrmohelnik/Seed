@@ -1,4 +1,4 @@
-ve scene dodelat svetla a fixnout normaly - apply modifiers
+ve scene zmensit textury
 meshe pri loadu sceny mohou byt sdilene stejne jako jsou textury
 umoznit nastavit texturu jako kanal jine - napr rougness u te cihlove zdi
 podporovat pri loadu z filu jenom rgb metallic a rucne naloadovat channel z jine textury

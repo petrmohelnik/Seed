@@ -28,3 +28,5 @@ https://64.github.io/tonemapping/
 
 hdri:
 https://www.daz3d.com/forums/discussion/57531/list-of-sites-with-free-hdri
+https://hdrihaven.com/hdris/
+https://texturehaven.com/textures/

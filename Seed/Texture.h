@@ -16,6 +16,7 @@ public:
     void SetColor(glm::vec3 color);
     void SetColor(glm::vec2 color);
     void SetColor(float color);
+    void SetSRGB();
 
 protected:
     friend class FileSystem;
@@ -45,6 +46,7 @@ private:
 	unsigned int bytesPerPixel;
 
     bool deleteAfterLoad = true;
+    bool isSRGB = false;
 
     GLuint texture = 0;
 };

@@ -93,7 +93,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //ground->GetComponent<MeshRenderer>()->GetMaterial()->Normal = brickMaterial1->Normal;
     //ground->GetComponent<MeshRenderer>()->GetMaterial()->Height = brickMaterial1->Height;
 
-	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Milkyway.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
+	objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Protospace.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
@@ -131,7 +132,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 
     objects.CreateObjectsFromScene("scene/scene.gltf");
 
-    auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(-10.0f, 0.0f, 0.0f));
+    auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));
     spheres->GetComponent<MeshRenderer>()->GetMaterial()->UseOcclusionMap();
 
     RenderingPipeline::SetMainCamera(camera->GetComponent<Camera>());

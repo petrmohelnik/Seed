@@ -38,9 +38,9 @@ GLuint Texture::GetInternalFormat()
 	if (bytesPerPixel == 2)
 		return GL_R16;
 	if (bytesPerPixel == 3)
-		return GL_RGB8;
+		return isSRGB ? GL_SRGB8 : GL_RGB8;
 
-	return GL_RGBA8;
+	return isSRGB ? GL_SRGB8_ALPHA8 : GL_RGBA8;
 }
 
 GLuint Texture::GetFormat()
@@ -104,6 +104,11 @@ void Texture::SetColor(float color)
 	height = 1;
 	bytesPerPixel = 1;
     Unload();
+}
+
+void Texture::SetSRGB()
+{
+    isSRGB = true;
 }
 
 void Texture::SetAlphaColor(float alpha)

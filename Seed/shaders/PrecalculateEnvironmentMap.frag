@@ -64,7 +64,7 @@ void main()
     vec3 normal = normalize(fPos);
     vec3 viewDir = normal;
 
-	const uint SAMPLE_COUNT = 2048u;
+	const uint SAMPLE_COUNT = 4096;
     float totalWeight = 0.0;   
     vec3 prefilteredColor = vec3(0.0);     
     for(uint i = 0u; i < SAMPLE_COUNT; i++)
