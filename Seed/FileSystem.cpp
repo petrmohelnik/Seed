@@ -366,7 +366,6 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
         LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_DIFFUSE, material.Albedo, aiColor4D(1.0f));
         LoadMaterialAlpha(assimpMaterial, AI_MATKEY_OPACITY, material.Albedo, 1.0f);
     }
-    material.Albedo->SetSRGB();
 
     if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.Normal, folder, 24, 24))
 		material.Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
@@ -374,8 +373,8 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
     if (LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.Metallic, folder, 24, 32))
     {
         material.SetSpecularWorkflow();
-        if (material.Metallic->bytesPerPixel != 4)
-            material.Metallic->AddAlphaChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_SHININESS, 0.0f));
+        if (material.Metallic->bytesPerPixel == 3)
+            material.Metallic->AddChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_SHININESS, 0.0f));
     }
     else if (!LoadMaterialTexture(assimpMaterial, aiTextureType_UNKNOWN, material.Metallic, folder, 24, 24))
     {
@@ -388,7 +387,9 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
         LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_EMISSIVE, material.Emission, aiColor4D(0.0f));
 
     if(!LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.Height, folder, 8, 8))
-        material.Height->SetColor(0.0f);
+        material.Height->SetColor(1.0f);
+	else
+		material.dataBlock.ParallaxStrength = GetMaterialFloat(assimpMaterial, AI_MATKEY_BUMPSCALING, 0.05f);
 
     if (LoadMaterialTexture(assimpMaterial, aiTextureType_LIGHTMAP, material.Occlusion, folder, 8, 8))
         material.UseOcclusionMap();

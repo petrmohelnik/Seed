@@ -14,6 +14,7 @@ layout(std140, binding = 3) uniform MaterialBlock
 {
 	bool SpecularWorkflow;
 	bool UseOcclusionMap;
+	float ParallaxStrength;
 } Material;
 
 layout(binding = 0) uniform sampler2D texAlbedo;
@@ -116,44 +117,49 @@ vec3 CalculateAmbient(float NdotV, float roughness, float metallic, float ambien
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 {
-    const float minLayers = 8.0;
-	const float maxLayers = 32.0;
-	float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));  
-    // calculate the size of each layer
-    float layerDepth = 1.0 / numLayers;
-    // depth of current layer
-    float currentLayerDepth = 0.0;
-    // the amount to shift the texture coordinates per layer (from vector P)
-    vec2 P = viewDir.xy * 0.01; 
-    vec2 deltaTexCoords = P / numLayers;
+    float currentHeight = 1.0;
+	vec2 currentTexCoords = texCoords;
+	float currentTextureHeight = texture(texHeight, currentTexCoords).r;
+	if(currentTextureHeight == 1.0)
+		return texCoords;
 
-	// get initial values
-vec2  currentTexCoords     = texCoords;
-float currentDepthMapValue = abs(texture(texHeight, currentTexCoords).r - 1.0);
+	viewDir.y = -viewDir.y;
+
+    const float minSteps = 32.0;
+	const float maxSteps = 8.0;
+	float numSteps = mix(maxSteps, minSteps, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));  
+    
+    float deltaHeight = 1.0 / numSteps;
+    
+    vec2 P = viewDir.xy / (viewDir.z + 0.42) * Material.ParallaxStrength; 
+    vec2 deltaTexCoords = P / numSteps;
   
-while(currentLayerDepth < currentDepthMapValue)
-{
-    // shift texture coordinates along direction of P
-    currentTexCoords -= deltaTexCoords;
-    // get depthmap value at current texture coordinates
-    currentDepthMapValue = abs(texture(texHeight, currentTexCoords).r - 1.0);  
-    // get depth of next layer
-    currentLayerDepth += layerDepth;  
-}
+	for(int i = 0; i < numSteps && currentHeight > currentTextureHeight; i++)
+	{
+		currentTexCoords -= deltaTexCoords;
+		currentHeight -= deltaHeight;
+		currentTextureHeight = texture(texHeight, currentTexCoords).r;
+	}
 
+	for(int i = 0; i < numSteps / 4; i++)
+	{
+		deltaTexCoords *= 0.5;
+		deltaHeight *= 0.5; 
 
-	// get texture coordinates before collision (reverse operations)
-vec2 prevTexCoords = currentTexCoords + deltaTexCoords;
+		if(currentHeight < currentTextureHeight)
+		{
+			currentTexCoords += deltaTexCoords;
+			currentHeight += deltaHeight;  
+		}
+		else
+		{
+			currentTexCoords -= deltaTexCoords;
+			currentHeight -= deltaHeight;
+		}
+		currentTextureHeight = texture(texHeight, currentTexCoords).r;
+	}
 
-// get depth after and before collision for linear interpolation
-float afterDepth  = currentDepthMapValue - currentLayerDepth;
-float beforeDepth = abs(texture(texHeight, prevTexCoords).r - 1.0) - currentLayerDepth + layerDepth;
- 
-// interpolation of texture coordinates
-float weight = afterDepth / (afterDepth - beforeDepth);
-vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
-
-return finalTexCoords;  
+	return currentTexCoords;
 }
 
 void main()
@@ -162,10 +168,8 @@ void main()
 	vec3 lightDir = normalize(fLightPos - fPos);
 	vec3 halfVector = normalize(lightDir + viewDir);
 
-	vec2 texCoords = fTexCoords;//ParallaxMapping(fTexCoords, viewDir);
-//	if(texCoords.x > 1.0 || texCoords.y > 1.0 || texCoords.x < 0.0 || texCoords.y < 0.0)
-//    discard;
-//
+	vec2 texCoords = ParallaxMapping(fTexCoords, viewDir);
+
 	vec4 albedoTexture = texture(texAlbedo, texCoords);
 	vec3 normalTexture = texture(texNormal, texCoords).xyz;
 	vec4 metallicTexture = texture(texMetallic, texCoords);
@@ -190,9 +194,9 @@ void main()
 	vec3 kS = FresnelSchlick(F0, HdotV);
 	vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
 	
-	vec3 AlbedoColor = kD * albedo / PI * radiance * NdotL;
+	vec3 diffuseColor = kD * albedo / PI * radiance * NdotL;
 	
-	vec3 SpecularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
+	vec3 specularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
 
 	vec3 ambientColor = CalculateAmbient(NdotV, roughness, metallic, ambientOclussion, F0, normal, reflectionVector, albedo);
 
@@ -200,11 +204,11 @@ void main()
 	if (lightToGeometryAngle < 0.0)
 	{	// we are on the opposite side from light, slowly fade away so we dont have illuminated hidden surface due to normal mapping
 		float oppositeSideCoeff = pow(1 + lightToGeometryAngle, 3);
-		AlbedoColor *= oppositeSideCoeff;
-		SpecularColor *= oppositeSideCoeff;
+		diffuseColor *= oppositeSideCoeff;
+		specularColor *= oppositeSideCoeff;
 	}
 
-	vec3 color = AlbedoColor + SpecularColor + emissionColor + ambientColor;
+	vec3 color = diffuseColor + specularColor + emissionColor + ambientColor;
 
 	float alpha = albedoTexture.w;
 	if(alpha < 0.1)

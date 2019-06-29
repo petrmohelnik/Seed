@@ -80,6 +80,7 @@ void Engine::Work()
             time.EndFixedUpdate();
 		}
 
+		input.CreateSceneGraph();
 		scene.OnFrameUpdate();
         objects.UpdateForDestruction();
 		scene.Render();

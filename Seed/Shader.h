@@ -9,10 +9,11 @@ public:
     void SetUniformFloat(const std::string& name, float value);
     void SetUniformInt(const std::string& name, int value);
 
+protected:
+    GLuint program;
+
 private:
     GLuint GetUniformLocation(const std::string& name);
-
-    GLuint program;
 
     std::unordered_map<std::string, GLuint> uniforms;
 };

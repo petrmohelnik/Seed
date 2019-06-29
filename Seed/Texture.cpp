@@ -120,24 +120,52 @@ void Texture::SetAlphaColor(float alpha)
     Unload();
 }
 
-void Texture::AddAlphaChannel(float alpha)
+void Texture::AddChannel(float value)
 {
-    if (bytesPerPixel != 3)
-        throw std::runtime_error("cannot add alpha value, because data is not of size 3");
+    if (bytesPerPixel == 4)
+        throw std::runtime_error("cannot add channel, texture already has 4");
 
     std::vector<Uint8> newData;
-    newData.resize(data.size() / 3 * 4, static_cast<int>(alpha * 255));
+    newData.resize(data.size() / bytesPerPixel * (bytesPerPixel + 1), static_cast<int>(value * 255));
 
     for (int i = 0, j = 0; i < data.size(); i++, j++)
     {
         newData[j] = data[i];
-        if ((i + 1) % 3 == 0)
+        if ((i + 1) % bytesPerPixel == 0)
             j++;
     }
 
     data = std::move(newData);
-    bytesPerPixel = 4;
+    bytesPerPixel++;
     Unload();
+}
+
+void Texture::AddChannelFromTexture(std::shared_ptr<Texture> textureFrom, int channelFrom)
+{
+	if (bytesPerPixel == 4)
+		throw std::runtime_error("cannot add channel, texture already has 4");
+	if (textureFrom->bytesPerPixel < channelFrom)
+		throw std::runtime_error("source texture does not have enough channels");
+	if(width != textureFrom->width || height != textureFrom->height)
+		throw std::runtime_error("source texture does not have same size as destination");
+
+	std::vector<Uint8> newData;
+	newData.resize(data.size() / bytesPerPixel * (bytesPerPixel + 1));
+
+	for (int i = 0, j = 0, k = 0; i < data.size(); i++, j++)
+	{
+		newData[j] = data[i];
+		if ((i + 1) % bytesPerPixel == 0)
+		{
+			j++;
+			newData[j] = textureFrom->data[k * textureFrom->bytesPerPixel + channelFrom];
+			k++;
+		}
+	}
+
+	data = std::move(newData);
+	bytesPerPixel++;
+	Unload();
 }
 
 void Texture::GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width, int height, GLuint format, GLuint type, bool generateMipMaps, const void* pixels)

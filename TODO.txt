@@ -1,11 +1,12 @@
+nacteni individualnich default metalic hodnot z materialu kdyz neni metalic textura
+mit nekde globalne nadefinovany targety textur
+dodelat nacitani svetel z gltf do assimpu
 ve scene zmensit textury
 meshe pri loadu sceny mohou byt sdilene stejne jako jsou textury
-umoznit nastavit texturu jako kanal jine - napr rougness u te cihlove zdi
-podporovat pri loadu z filu jenom rgb metallic a rucne naloadovat channel z jine textury
-mit nekde globalne nadefinovany targety textur
-nacitat albedo textury pomoci SRGB a nemuset to delat v shaderu? ten neHDR skybox taky je v srgb a je potreba ho prevest
-paralax - https://www.gamedev.net/forums/topic/687418-parallax-displacement-mapping-in-2017/
-https://github.com/UPBGE/blender/issues/1009
+overit funkcnost lookat
+modely muzou sdilet textury mezi materialy... :/ --treepack??
+textury se ted necachuji ve filesystemu
+---
 deffered renderer podle metal gearu
 https://docs.microsoft.com/en-us/windows/desktop/dxtecharts/cascaded-shadow-maps
 http://alextardif.com/arealights.html - je tam i lepsi light falloff
@@ -13,11 +14,6 @@ CascadedShadowMaps a SoftShadow projekty
 reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-overit funkcnost lookat
----
-modely muzou sdilet textury mezi materialy... :/ --treepack??
-textury se ted necachuji ve filesystemu
-predelat inputy mysi na vlastni enumy
 
 Screen Space Reflections
 

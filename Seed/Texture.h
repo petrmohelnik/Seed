@@ -17,6 +17,9 @@ public:
     void SetColor(glm::vec2 color);
     void SetColor(float color);
     void SetSRGB();
+    void SetAlphaColor(float alpha);
+    void AddChannel(float value);
+	void AddChannelFromTexture(std::shared_ptr<Texture> textureFrom, int channelFrom);
 
 protected:
     friend class FileSystem;
@@ -29,9 +32,6 @@ protected:
     void Unload();
 
     void Bind();
-
-    void SetAlphaColor(float alpha);
-    void AddAlphaChannel(float alpha);
 
     void GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width, int height, GLuint format, GLuint type, bool generateMipMaps = false, const void* pixels = nullptr);
     void RenderIntoHDRTexture(float width, float height, ShaderFactory::Type shaderType, GLuint format);

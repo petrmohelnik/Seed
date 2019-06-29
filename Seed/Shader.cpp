@@ -12,8 +12,8 @@ void Shader::SetUniformInt(const std::string & name, int value)
 
 GLuint Shader::GetUniformLocation(const std::string& name)
 {
-    if (auto uniform = uniforms.find(name) != uniforms.end())
-        return uniform;
+    if (uniforms.find(name) != uniforms.end())
+        return uniforms[name];
 
     auto uniform = glGetUniformLocation(program, name.c_str());;
     uniforms.insert({ name, uniform });

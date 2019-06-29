@@ -4,10 +4,11 @@
 Material::Material()
 {
     Albedo = std::make_shared<Texture>(glm::vec4(1.0f));
-    Metallic = std::make_shared<Texture>(glm::vec4(0.0f));
+	Albedo->SetSRGB();
+    Metallic = std::make_shared<Texture>(glm::vec4(1.0f));
     Normal = std::make_shared<Texture>(glm::vec4(0.5f, 0.5f, 1.0f, 0.0f));
     Emission = std::make_shared<Texture>(glm::vec4(0.0f));
-    Height = std::make_shared<Texture>(glm::vec4(0.0f));
+    Height = std::make_shared<Texture>(glm::vec4(1.0f));
     Occlusion = std::make_shared<Texture>(glm::vec4(1.0f));
 }
 
@@ -79,4 +80,9 @@ void Material::SetMetallicWorkflow()
 void Material::UseOcclusionMap()
 {
     dataBlock.UseOcclusionMap = true;
+}
+
+void Material::SetParallaxStrength(float strength)
+{
+	dataBlock.ParallaxStrength = strength;
 }

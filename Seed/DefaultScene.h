@@ -82,7 +82,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->GetComponent<Light>()->SetIntensity(1);
 	light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.0f));
 	//light->GetComponent<Light>()->SetSpotAngle(0.5f);
-	light->AddComponent<GameScript>();
+	//light->AddComponent<GameScript>();
 
     //auto scifiCube = objects.CreateObjectWithMesh("scifiCube", "scifi_cube/scene.gltf", glm::vec3(-3.0f, 0.0f, 0.0f));
     //scifiCube->AddComponent<RotateWorldScript>();
@@ -94,10 +94,11 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //ground->GetComponent<MeshRenderer>()->GetMaterial()->Height = brickMaterial1->Height;
 
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
-	objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Protospace.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
+	//objects.SetSkybox(std::make_unique<TextureCubeMap>(glm::vec4(0.4f, 0.4f, 0.7f, 1.0f)));
 
     //objects.CreateObjectsFromScene("jaguar.dae");
     
@@ -130,10 +131,40 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //spot->GetComponent<Light>()->SetRange(20);
     //spot->GetComponent<Light>()->SetCutoffAngle(0.5);
 
-    objects.CreateObjectsFromScene("scene/scene.gltf");
+    //objects.CreateObjectsFromScene("scene/scene.gltf");
 
     auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));
     spheres->GetComponent<MeshRenderer>()->GetMaterial()->UseOcclusionMap();
+
+	auto harshBricksMaterial = std::make_shared<Material>();
+	harshBricksMaterial->Albedo = fileSystem.LoadTexture("harshbricks/albedo.png", 24, 24);
+	harshBricksMaterial->Normal = fileSystem.LoadTexture("harshbricks/normal.png", 24, 24);
+	harshBricksMaterial->Height = fileSystem.LoadTexture("harshbricks/height.png", 8, 8);
+	harshBricksMaterial->Metallic = fileSystem.LoadTexture("harshbricks/ao.png", 8, 8);
+	harshBricksMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("harshbricks/roughness.png", 8, 8), 0);
+	harshBricksMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("harshbricks/metallic.png", 8, 8), 0);
+	harshBricksMaterial->SetParallaxStrength(0.05);
+
+	auto cubeBricks = objects.CreateObject("cubeBricks");
+	cubeBricks->AddComponent<MeshRenderer>()->Load("cube.dae");
+	cubeBricks->GetComponent<MeshRenderer>()->SetMaterial(0, harshBricksMaterial);
+	cubeBricks->AddComponent<RotateWorldScript>();
+
+	auto fabricMaterial = std::make_shared<Material>();
+	fabricMaterial->Albedo = fileSystem.LoadTexture("fabric/albedo.png", 24, 24);
+	fabricMaterial->Normal = fileSystem.LoadTexture("fabric/normal.png", 24, 24);
+	fabricMaterial->Height = fileSystem.LoadTexture("fabric/height.png", 8, 8);
+	fabricMaterial->Metallic = fileSystem.LoadTexture("fabric/ao.png", 8, 8);
+	fabricMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("fabric/roughness.png", 8, 8), 0);
+	fabricMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("fabric/metallic.png", 8, 8), 0);
+	fabricMaterial->SetParallaxStrength(0.1);
+
+	auto cubeFabric = objects.CreateObject("cubeFabric");
+	cubeFabric->AddComponent<MeshRenderer>()->Load("cube.dae");
+	cubeFabric->GetComponent<MeshRenderer>()->SetMaterial(0, fabricMaterial);
+	cubeFabric->GetComponent<Transform>()->TranslateX(-3.0f);
+	cubeFabric->AddComponent<RotateWorldScript>();
+	cubeFabric->GetComponent<Transform>()->SetParent(cubeBricks);
 
     RenderingPipeline::SetMainCamera(camera->GetComponent<Camera>());
     //RenderingPipeline::MainCamera()->GetObject()->AddComponent<CameraMovementScript>();

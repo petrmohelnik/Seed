@@ -1,5 +1,7 @@
 #pragma once
 
+class Object;
+
 class Input
 {
 public:
@@ -15,11 +17,16 @@ public:
 
 protected:
     friend class SDLWindow;
+	friend class Engine;
+
     void InitializeState();
 	void AddInput(SDL_Event event);
 	void ClearInputs();
+	void CreateSceneGraph();
 
 private:
+	void CreateSceneGraphNode(Object* object);
+
 	std::set<SDL_Keycode> keyHoldDown;
 	std::set<SDL_Keycode> keyPressedDown;
 	std::set<Uint8> mouseHoldDown;

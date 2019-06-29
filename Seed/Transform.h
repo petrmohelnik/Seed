@@ -15,6 +15,8 @@ public:
     Transform* GetParent();
     void SetParent(Transform* parent_);
     void SetParent(Object* parent_);
+	int GetChildCount();
+	Transform* GetChild(int index);
 
     void RotateAngle(float angle, glm::vec3 axis, Space space = Space::Local);
     void Rotate(glm::vec3 angles, Space space = Space::Local);
@@ -52,6 +54,7 @@ protected:
     friend class Object;
     friend class Objects;
     friend class Components;
+
     void DestroyAllChildren();
     void CleanChildren();
     void UpdateModelMatrix();

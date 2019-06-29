@@ -1,4 +1,6 @@
 #include "Input.h"
+#include "Object.h"
+#include "Engine.h"
 
 bool Input::GameIsRunning()
 {
@@ -81,4 +83,24 @@ glm::ivec2 Input::MouseMovement()
 void Input::SliderFloat(const std::string& name, float& value, float min, float max)
 {
     ImGui::SliderFloat(name.c_str(), &value, min, max);
+}
+
+void Input::CreateSceneGraph()
+{
+	ImGui::ShowDemoWindow();
+
+	auto root = Engine::GetComponents().GetRoot()->GetComponent<Transform>();
+	CreateSceneGraphNode(root->GetObject());
+}
+
+void Input::CreateSceneGraphNode(Object* object)
+{
+	auto transform = object->GetComponent<Transform>();
+	if (ImGui::TreeNode(object->GetName().c_str()))
+	{
+		
+		for (int index = 0; index < transform->GetChildCount(); index++)
+			CreateSceneGraphNode(transform->GetChild(index)->GetObject());
+		ImGui::TreePop();
+	}
 }

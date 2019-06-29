@@ -10,5 +10,4 @@ public:
     void draw(int count) override;
 
 private:
-    GLuint program;
 };

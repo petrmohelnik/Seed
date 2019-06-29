@@ -78,6 +78,19 @@ void Transform::SetParent(Object* parent_)
     SetParent(parent_->GetComponent<Transform>());
 }
 
+int Transform::GetChildCount()
+{
+	return children.size();
+}
+
+Transform* Transform::GetChild(int index)
+{
+	if (index > children.size())
+		throw std::runtime_error("Index for children is out of bounds");
+
+	return children[index];
+}
+
 void Transform::DestroyAllChildren()
 {
     for (const auto& child : children)

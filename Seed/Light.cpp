@@ -59,7 +59,7 @@ void Light::SetSpotLight(glm::vec3 position, glm::vec3 direction, float range, f
 
 void Light::BindLight()
 {
-    Engine::GetInput().SliderFloat("Range", dataBlock.Range, 0.0, 100);
+    Engine::GetInput().SliderFloat("Range", dataBlock.Range, 0.0, 1000);
     Engine::GetInput().SliderFloat("Intensity", dataBlock.Itensity, 0.0, 100);
 
     RenderingPipeline::BindLightUniform();
