@@ -136,35 +136,34 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));
     spheres->GetComponent<MeshRenderer>()->GetMaterial()->UseOcclusionMap();
 
-	auto harshBricksMaterial = std::make_shared<Material>();
-	harshBricksMaterial->Albedo = fileSystem.LoadTexture("harshbricks/albedo.png", 24, 24);
-	harshBricksMaterial->Normal = fileSystem.LoadTexture("harshbricks/normal.png", 24, 24);
-	harshBricksMaterial->Height = fileSystem.LoadTexture("harshbricks/height.png", 8, 8);
-	harshBricksMaterial->Metallic = fileSystem.LoadTexture("harshbricks/ao.png", 8, 8);
-	harshBricksMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("harshbricks/roughness.png", 8, 8), 0);
-	harshBricksMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("harshbricks/metallic.png", 8, 8), 0);
-	harshBricksMaterial->SetParallaxStrength(0.05);
+	auto cobblestoneMaterial = std::make_shared<Material>();
+	cobblestoneMaterial->Albedo = fileSystem.LoadTexture("cobblestone/albedo.png", 24, 24);
+	cobblestoneMaterial->Normal = fileSystem.LoadTexture("cobblestone/normal.png", 24, 24);
+	cobblestoneMaterial->Height = fileSystem.LoadTexture("cobblestone/height.png", 8, 8);
+	cobblestoneMaterial->Metallic = fileSystem.LoadTexture("cobblestone/specular.png", 24, 24);
+	cobblestoneMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("cobblestone/shininess.png", 8, 8), 0);
+	cobblestoneMaterial->SetSpecularWorkflow();
+	cobblestoneMaterial->SetParallaxStrength(0.1);
 
-	auto cubeBricks = objects.CreateObject("cubeBricks");
-	cubeBricks->AddComponent<MeshRenderer>()->Load("cube.dae");
-	cubeBricks->GetComponent<MeshRenderer>()->SetMaterial(0, harshBricksMaterial);
-	cubeBricks->AddComponent<RotateWorldScript>();
+	auto cobblestone = objects.CreateObject("cobblestone");
+	cobblestone->AddComponent<MeshRenderer>()->Load("cube.dae");
+	cobblestone->GetComponent<MeshRenderer>()->SetMaterial(0, cobblestoneMaterial);
+	cobblestone->AddComponent<RotateWorldScript>();
 
-	auto fabricMaterial = std::make_shared<Material>();
-	fabricMaterial->Albedo = fileSystem.LoadTexture("fabric/albedo.png", 24, 24);
-	fabricMaterial->Normal = fileSystem.LoadTexture("fabric/normal.png", 24, 24);
-	fabricMaterial->Height = fileSystem.LoadTexture("fabric/height.png", 8, 8);
-	fabricMaterial->Metallic = fileSystem.LoadTexture("fabric/ao.png", 8, 8);
-	fabricMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("fabric/roughness.png", 8, 8), 0);
-	fabricMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("fabric/metallic.png", 8, 8), 0);
-	fabricMaterial->SetParallaxStrength(0.1);
+	auto redbricksMaterial = std::make_shared<Material>();
+	redbricksMaterial->Albedo = fileSystem.LoadTexture("redbricks/albedo.png", 24, 24);
+	redbricksMaterial->Normal = fileSystem.LoadTexture("redbricks/normal.png", 24, 24);
+	redbricksMaterial->Height = fileSystem.LoadTexture("redbricks/height.png", 8, 8);
+	redbricksMaterial->Metallic = fileSystem.LoadTexture("redbricks/ao.png", 8, 8);
+	redbricksMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("redbricks/roughness.png", 8, 8), 0);
+	redbricksMaterial->Metallic->AddChannel(0.0);
+	redbricksMaterial->SetParallaxStrength(0.1);
 
-	auto cubeFabric = objects.CreateObject("cubeFabric");
-	cubeFabric->AddComponent<MeshRenderer>()->Load("cube.dae");
-	cubeFabric->GetComponent<MeshRenderer>()->SetMaterial(0, fabricMaterial);
-	cubeFabric->GetComponent<Transform>()->TranslateX(-3.0f);
-	cubeFabric->AddComponent<RotateWorldScript>();
-	cubeFabric->GetComponent<Transform>()->SetParent(cubeBricks);
+	auto redbricks = objects.CreateObject("redbricks");
+	redbricks->AddComponent<MeshRenderer>()->Load("cube.dae");
+	redbricks->GetComponent<MeshRenderer>()->SetMaterial(0, redbricksMaterial);
+	redbricks->GetComponent<Transform>()->TranslateX(-3.0f);
+	redbricks->AddComponent<RotateWorldScript>();
 
     RenderingPipeline::SetMainCamera(camera->GetComponent<Camera>());
     //RenderingPipeline::MainCamera()->GetObject()->AddComponent<CameraMovementScript>();

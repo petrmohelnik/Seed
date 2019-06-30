@@ -26,6 +26,7 @@ protected:
     friend class Object;
     friend class Scene;
     friend class Engine;
+	friend class Input;
 
     void Initialize();
 

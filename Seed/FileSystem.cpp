@@ -457,8 +457,6 @@ std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bi
         throw std::runtime_error("Failed to load texture (" + absolutePath + "): texture format is not supported");
 
     auto loadedTexture = FreeImage_Load(textureFormat, absolutePath.c_str());
-    if (!loadedTexture)
-        throw std::runtime_error("Failed to load texture (" + absolutePath + ")");
 
     if (bitsMaximum == 8 && FreeImage_GetBPP(loadedTexture) > 8)
         loadedTexture = FreeImage_ConvertTo8Bits(loadedTexture);
@@ -468,6 +466,9 @@ std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bi
         loadedTexture = FreeImage_ConvertTo24Bits(loadedTexture);
     if (flipHorizontal && !FreeImage_FlipVertical(loadedTexture))
         throw std::runtime_error("Could not flip texture");
+
+    if (!loadedTexture)
+        throw std::runtime_error("Failed to load texture (" + absolutePath + ")");
 
     auto textureData = FreeImage_GetBits(loadedTexture);
     texture->width = FreeImage_GetWidth(loadedTexture);
