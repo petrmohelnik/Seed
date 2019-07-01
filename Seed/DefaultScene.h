@@ -5,39 +5,7 @@
 
 void DefaultScene(Objects& objects, FileSystem& fileSystem)
 {
- //   auto brickMaterial1 = std::make_shared<Material>();
- //   brickMaterial1->Albedo = fileSystem.LoadTexture("Brick_Wall_014_COLOR.jpg");
- //   brickMaterial1->Normal = fileSystem.LoadTexture("Brick_Wall_014_NORM.jpg");
- //   brickMaterial1->Height = fileSystem.LoadTexture("Brick_Wall_014_DISP.png", 8, 8);
- //   brickMaterial1->Metallic->SetColor(glm::vec4(0.1f));
-
-	//auto brickMaterial2 = fileSystem.LoadMaterials("brickMaterial2.dae")[0];
- //   brickMaterial2->Metallic->SetColor(glm::vec4(0.15f, 0.15f, 0.15f, 0.2f));
-	//
- //   auto brickMaterial3 = fileSystem.LoadMaterials("brickMaterial3.dae")[0];
- //   brickMaterial3->Albedo->SetColor(glm::vec4(0.95, 0.72f, 0.61f, 1.0f));
- //   brickMaterial3->Metallic->SetColor(glm::vec4(1.0f, 0.3f, 0.95f, 1.0f));
- //   brickMaterial3->SetMetallic();
-
- //   auto joker = objects.CreateObject("joker");
- //   joker->AddComponent<MeshRenderer>()->Load("cube.dae");
-	//joker->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial1);
-
- //   auto joker2 = objects.CreateObject("joker2");
- //   joker2->AddComponent<MeshRenderer>()->Load("cube.dae");
-	//joker2->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial2);
- //   joker2->GetComponent<Transform>()->TranslateX(3.0f);
-
-
- //   auto joker3 = objects.CreateObject("joker3");
- //   joker3->AddComponent<MeshRenderer>()->Load("cube.dae");
-	//joker3->GetComponent<MeshRenderer>()->SetMaterial(0, brickMaterial3);
- //   joker3->GetComponent<Transform>()->TranslateX(-3.0f, Transform::Space::World);
- //   joker3->AddComponent<RotateWorldScript>();
-	//joker2->AddComponent<RotateWorldScript>();
-	//joker->AddComponent<RotateWorldScript>();
-
-	//auto scifi = objects.CreateObjectWithMesh("scifi", "chair2/scene.gltf", glm::vec3(0.0f, 3.0f, 0.0f));
+ 	//auto scifi = objects.CreateObjectWithMesh("scifi", "chair2/scene.gltf", glm::vec3(0.0f, 3.0f, 0.0f));
 	//scifi->GetComponent<Transform>()->SetScale(glm::vec3(1.0f));
 	//scifi->GetComponent<Transform>()->RotateY(3.14f);
 
@@ -94,7 +62,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //ground->GetComponent<MeshRenderer>()->GetMaterial()->Height = brickMaterial1->Height;
 
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
-	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
+	objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Protospace.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
@@ -131,7 +100,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //spot->GetComponent<Light>()->SetRange(20);
     //spot->GetComponent<Light>()->SetCutoffAngle(0.5);
 
-    //objects.CreateObjectsFromScene("scene/scene.gltf");
+    objects.CreateObjectsFromScene("scene/scene.gltf");
 
     auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));
     spheres->GetComponent<MeshRenderer>()->GetMaterial()->UseOcclusionMap();
@@ -157,6 +126,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	redbricksMaterial->Metallic = fileSystem.LoadTexture("redbricks/ao.png", 8, 8);
 	redbricksMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("redbricks/roughness.png", 8, 8), 0);
 	redbricksMaterial->Metallic->AddChannel(0.0);
+    redbricksMaterial->Metallic->SetIsRGBOrder();
 	redbricksMaterial->SetParallaxStrength(0.1);
 
 	auto redbricks = objects.CreateObject("redbricks");
@@ -164,6 +134,22 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	redbricks->GetComponent<MeshRenderer>()->SetMaterial(0, redbricksMaterial);
 	redbricks->GetComponent<Transform>()->TranslateX(-3.0f);
 	redbricks->AddComponent<RotateWorldScript>();
+
+    auto roughblockMaterial = std::make_shared<Material>();
+    roughblockMaterial->Albedo = fileSystem.LoadTexture("roughblock/albedo.png", 24, 24);
+    roughblockMaterial->Normal = fileSystem.LoadTexture("roughblock/normal.png", 24, 24);
+    roughblockMaterial->Height = fileSystem.LoadTexture("roughblock/height.png", 8, 8);
+    roughblockMaterial->Metallic = fileSystem.LoadTexture("roughblock/ao.png", 8, 8);
+    roughblockMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("roughblock/roughness.png", 8, 8), 0);
+    roughblockMaterial->Metallic->AddChannel(0.0);
+    roughblockMaterial->Metallic->SetIsRGBOrder();
+    roughblockMaterial->SetParallaxStrength(0.1);
+
+    auto roughblock = objects.CreateObject("roughblock");
+    roughblock->AddComponent<MeshRenderer>()->Load("cube.dae");
+    roughblock->GetComponent<MeshRenderer>()->SetMaterial(0, roughblockMaterial);
+    roughblock->GetComponent<Transform>()->TranslateX(3.0f);
+    roughblock->AddComponent<RotateWorldScript>();
 
     RenderingPipeline::SetMainCamera(camera->GetComponent<Camera>());
     //RenderingPipeline::MainCamera()->GetObject()->AddComponent<CameraMovementScript>();

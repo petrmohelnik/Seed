@@ -16,7 +16,8 @@ public:
     void SetColor(glm::vec3 color);
     void SetColor(glm::vec2 color);
     void SetColor(float color);
-    void SetSRGB();
+    void SetIsSRGB();
+    void SetIsRGBOrder();
     void SetAlphaColor(float alpha);
     void AddChannel(float value);
 	void AddChannelFromTexture(std::shared_ptr<Texture> textureFrom, int channelFrom);
@@ -47,6 +48,7 @@ private:
 
     bool deleteAfterLoad = true;
     bool isSRGB = false;
+    bool isRGB = false;
 
     GLuint texture = 0;
 };

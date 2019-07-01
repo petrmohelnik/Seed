@@ -50,9 +50,9 @@ GLuint Texture::GetFormat()
 	if (bytesPerPixel == 2)
 		return GL_RED;
     if (bytesPerPixel == 3)
-        return GL_BGR;
+        return isRGB ? GL_RGB : GL_BGR;
 
-	return GL_BGRA;
+	return isRGB ? GL_RGBA : GL_BGRA;
 }
 
 void Texture::Unload()
@@ -106,9 +106,14 @@ void Texture::SetColor(float color)
     Unload();
 }
 
-void Texture::SetSRGB()
+void Texture::SetIsSRGB()
 {
     isSRGB = true;
+}
+
+void Texture::SetIsRGBOrder()
+{
+    isRGB = true;
 }
 
 void Texture::SetAlphaColor(float alpha)

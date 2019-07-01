@@ -96,6 +96,11 @@ void Input::CreateSceneGraph()
 void Input::CreateSceneGraphNode(Object* object)
 {
 	auto transform = object->GetComponent<Transform>();
+    if (object->GetComponent<Transform>()->GetChildCount() == 0)
+    {
+        ImGui::BulletText(object->GetName().c_str());
+        return;
+    }
 	if (ImGui::TreeNode(object->GetName().c_str()))
 	{
 		

@@ -313,12 +313,12 @@ std::unique_ptr<TextureCubeMap> FileSystem::LoadCubeMap(const std::string& path,
 
 	auto cubeMap = std::make_unique<TextureCubeMap>();
 
-    cubeMap->faces[0] = LoadTexture(prefixPath + "right." + format, 24, 24, true); cubeMap->faces[0]->SetSRGB();
-	cubeMap->faces[1] = LoadTexture(prefixPath + "left." + format, 24, 24, true); cubeMap->faces[1]->SetSRGB();
-	cubeMap->faces[2] = LoadTexture(prefixPath + "top." + format, 24, 24, true); cubeMap->faces[2]->SetSRGB();
-	cubeMap->faces[3] = LoadTexture(prefixPath + "bottom." + format, 24, 24, true); cubeMap->faces[3]->SetSRGB();
-	cubeMap->faces[4] = LoadTexture(prefixPath + "front." + format, 24, 24, true); cubeMap->faces[4]->SetSRGB();
-	cubeMap->faces[5] = LoadTexture(prefixPath + "back." + format, 24, 24, true); cubeMap->faces[5]->SetSRGB();
+    cubeMap->faces[0] = LoadTexture(prefixPath + "right." + format, 24, 24, true); cubeMap->faces[0]->SetIsSRGB();
+	cubeMap->faces[1] = LoadTexture(prefixPath + "left." + format, 24, 24, true); cubeMap->faces[1]->SetIsSRGB();
+	cubeMap->faces[2] = LoadTexture(prefixPath + "top." + format, 24, 24, true); cubeMap->faces[2]->SetIsSRGB();
+	cubeMap->faces[3] = LoadTexture(prefixPath + "bottom." + format, 24, 24, true); cubeMap->faces[3]->SetIsSRGB();
+	cubeMap->faces[4] = LoadTexture(prefixPath + "front." + format, 24, 24, true); cubeMap->faces[4]->SetIsSRGB();
+	cubeMap->faces[5] = LoadTexture(prefixPath + "back." + format, 24, 24, true); cubeMap->faces[5]->SetIsSRGB();
 
 	return cubeMap;
 }
