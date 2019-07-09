@@ -1,6 +1,6 @@
 #version 460
 
-layout(binding = 10) uniform sampler2D texScene;
+layout(binding = 11) uniform sampler2D texScene;
 
 in vec2 fTexCoords;
 

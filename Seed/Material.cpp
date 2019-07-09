@@ -41,17 +41,17 @@ void Material::BindMaterial()
     RenderingPipeline::BindMaterialUniform();
     glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);
 
-    glActiveTexture(GL_TEXTURE0);
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Albedo);
     Albedo->Bind();
-    glActiveTexture(GL_TEXTURE1);
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Normal);
     Normal->Bind();
-    glActiveTexture(GL_TEXTURE2);
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Height);
     Height->Bind();
-    glActiveTexture(GL_TEXTURE3);
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Metallic);
     Metallic->Bind();
-    glActiveTexture(GL_TEXTURE4);
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Emission);
     Emission->Bind();
-    glActiveTexture(GL_TEXTURE5);
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Occlusion);
     Occlusion->Bind();
 
     RenderingPipeline::BindSkyboxEnvironmentalMap();

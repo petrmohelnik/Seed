@@ -79,13 +79,18 @@ void RenderingPipeline::BindSkyboxEnvironmentalMap()
     {
         auto environmentalMap = skybox->GetEnvironmentalMapRawPtr();
 
-        glActiveTexture(GL_TEXTURE10);
+        ActivateTexture(TextureSlot::Irradiance);
         environmentalMap->BindIrradiance();
-        glActiveTexture(GL_TEXTURE11);
+        ActivateTexture(TextureSlot::Environmental);
         environmentalMap->BindEnvironmentalMap();
-        glActiveTexture(GL_TEXTURE12);
+        ActivateTexture(TextureSlot::BRDFIntegration);
         environmentalMap->BindBRDFIntegrationMap();
     }
+}
+
+void RenderingPipeline::ActivateTexture(TextureSlot textureSlot)
+{
+    glActiveTexture(GL_TEXTURE0 + static_cast<int>(textureSlot));
 }
 
 void RenderingPipeline::AddRenderer(Renderer* renderer)
@@ -175,9 +180,8 @@ void RenderingPipeline::RenderCamera(Camera* camera)
 	}
 
     framebuffer->Unbind();
-
     
-    glActiveTexture(GL_TEXTURE10);
+    ActivateTexture(TextureSlot::Environmental);
     framebufferTexture->Bind();
     
     auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::ToneMapping);

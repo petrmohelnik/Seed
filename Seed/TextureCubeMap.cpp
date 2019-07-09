@@ -43,7 +43,7 @@ void TextureCubeMap::LoadFromEquirectangular(float* data, int width, int height)
 
     GLuint equirectangularTexture = GenerateEquirectangularTexture(data, width, height);
     
-    RenderIntoHDRCubeMapFromTexture(2048, ShaderFactory::Type::EquirectangularToCubemap, GL_TEXTURE11, GL_TEXTURE_2D, equirectangularTexture);
+    RenderIntoHDRCubeMapFromTexture(2048, ShaderFactory::Type::EquirectangularToCubemap, RenderingPipeline::TextureSlot::Environmental, GL_TEXTURE_2D, equirectangularTexture);
 
     glDeleteTextures(1, &equirectangularTexture);
 }
@@ -113,7 +113,7 @@ std::vector<glm::mat4> TextureCubeMap::GenerateCameraViewsForCube()
     };
 }
 
-void TextureCubeMap::RenderIntoHDRCubeMapFromTexture(int width, ShaderFactory::Type shaderType, GLuint textureSourceSlot, GLuint textureSourceType, GLuint textureSource,
+void TextureCubeMap::RenderIntoHDRCubeMapFromTexture(int width, ShaderFactory::Type shaderType, RenderingPipeline::TextureSlot textureSourceSlot, GLuint textureSourceType, GLuint textureSource,
     bool generateMipMaps, GLuint mipLevelUniformLocation, int mipLevels)
 {
     GenerateTexture(generateMipMaps);
@@ -124,7 +124,7 @@ void TextureCubeMap::RenderIntoHDRCubeMapFromTexture(int width, ShaderFactory::T
     auto shader = Engine::GetShaderFactory().GetShader(shaderType);
     shader->setup();
 
-    glActiveTexture(textureSourceSlot);
+    RenderingPipeline::ActivateTexture(textureSourceSlot);
     glBindTexture(textureSourceType, textureSource);
 
     framebuffer.Bind();

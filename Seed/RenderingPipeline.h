@@ -24,6 +24,21 @@ public:
     static void BindMaterialUniform();
     static void BindSkyboxEnvironmentalMap();
 
+    enum class TextureSlot : int
+    {
+        Albedo = 0,
+        Normal = 1,
+        Height = 2,
+        Metallic = 3,
+        Emission = 4,
+        Occlusion = 5,
+        Irradiance = 10,
+        Environmental = 11,
+        BRDFIntegration = 12
+    };
+
+    static void ActivateTexture(TextureSlot textureSlot);
+
     void AddRenderer(Renderer* renderer);
     void AddCamera(Camera* camera);
     void AddLight(Light* light);

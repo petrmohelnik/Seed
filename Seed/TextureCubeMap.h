@@ -1,6 +1,7 @@
 #pragma once
 #include "ShaderFactory.h"
 #include "Camera.h"
+#include "RenderingPipeline.h"
 
 class Texture;
 class Framebuffer;
@@ -32,7 +33,7 @@ protected:
     void DefineTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, bool generateMipMaps = false, const void* pixels = nullptr);
     void GenerateTexture(bool generateMipMaps = false);
     static std::vector<glm::mat4> GenerateCameraViewsForCube();
-    void RenderIntoHDRCubeMapFromTexture(int width, ShaderFactory::Type shaderType, GLuint textureSourceSlot, GLuint textureSourceType, GLuint textureSource,
+    void RenderIntoHDRCubeMapFromTexture(int width, ShaderFactory::Type shaderType, RenderingPipeline::TextureSlot textureSourceSlot, GLuint textureSourceType, GLuint textureSource,
         bool generateMipMaps = false, GLuint mipLevelUniformLocation = 0, int mipLevels = 0);
 
 private:

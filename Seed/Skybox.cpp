@@ -12,7 +12,7 @@ Skybox::Skybox(std::unique_ptr<TextureCubeMap> skybox_) : skybox(std::move(skybo
 
 void Skybox::Render()
 {
-	glActiveTexture(GL_TEXTURE11);
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Environmental);
     skybox->Bind();
 
     auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::Skybox);
