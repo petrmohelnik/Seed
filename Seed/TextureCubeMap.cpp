@@ -169,9 +169,9 @@ void TextureCubeMap::RenderViewsIntoCubeMapWithMipMaps(Shader* shader, Framebuff
 
     //shader->SetUniformInt(mipLevels)
 
-    for (unsigned int mipLevel = 0; mipLevel < mipLevels; mipLevel++)
+    for (int mipLevel = 0; mipLevel < mipLevels; mipLevel++)
     {
-        unsigned int mipWidth = width * std::pow(0.5, mipLevel);
+        int mipWidth = static_cast<int>(width * std::pow(0.5f, mipLevel));
         framebuffer.ChangeSize(mipWidth, mipWidth);
         framebuffer.Bind();
 

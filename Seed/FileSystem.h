@@ -24,12 +24,13 @@ protected:
 private:
     void LoadScene(const std::string& path);
     const aiScene* GetScene(const std::string& path);
-    void LoadNode(const aiScene* scene, aiNode* node, Object* parent, std::vector<Object*>& objects, const std::vector<std::shared_ptr<Material>>& materials);
-    void LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<Material>>& materials);
+    void LoadNode(const aiScene* scene, aiNode* node, Object* parent, std::vector<Object*>& objects, 
+        const std::vector<std::shared_ptr<Mesh::SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials);
+    void LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<Mesh::SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials);
     void LoadLight(const aiScene* scene, Object* object);
     void LoadCamera(const aiScene* scene, Object* object);
-    std::shared_ptr<Mesh> LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes, unsigned* assimpMeshesIndexes = nullptr);
-    Mesh::SubMesh LoadSubMeshData(aiMesh* assimpMesh);
+    std::shared_ptr<Mesh> LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes);
+    std::shared_ptr<Mesh::SubMesh> LoadSubMeshData(aiMesh* assimpMesh);
     std::vector<std::shared_ptr<Material>> LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials, const std::string& path);
     Material LoadMaterialData(aiMaterial* assimpMaterial, const std::string& folder);
     bool LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType textureType, std::shared_ptr<Texture>& textureData, const std::string& folder, int bitsMinimum = 0, int bitsMaximum = 0);

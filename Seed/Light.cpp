@@ -30,7 +30,7 @@ void Light::SetSpotAngle(float spotAngle)
 
 void Light::SetDirection(glm::vec3 direction)
 {
-    direction.x += 0.01;
+    direction.x += 0.001f;
     GetTransform()->LookAtLocal(direction);
 }
 

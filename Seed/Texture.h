@@ -35,16 +35,16 @@ protected:
     void Bind();
 
     void GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width, int height, GLuint format, GLuint type, bool generateMipMaps = false, const void* pixels = nullptr);
-    void RenderIntoHDRTexture(float width, float height, ShaderFactory::Type shaderType, GLuint format);
+    void RenderIntoHDRTexture(int width, int height, ShaderFactory::Type shaderType, GLuint format);
 
 private:
 	GLuint GetInternalFormat();
 	GLuint GetFormat();
 
     std::vector<Uint8> data;
-    unsigned int width;
-    unsigned int height;
-	unsigned int bytesPerPixel;
+    int width;
+    int height;
+	int bytesPerPixel;
 
     bool deleteAfterLoad = true;
     bool isSRGB = false;

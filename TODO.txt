@@ -1,10 +1,11 @@
 nacteni individualnich default metalic hodnot z materialu kdyz neni metalic textura
 dodelat nacitani svetel z gltf do assimpu
-meshe pri loadu sceny mohou byt sdilene stejne jako jsou textury
 overit funkcnost lookat
 modely muzou sdilet textury mezi materialy... :/ --treepack??
 textury se ted necachuji ve filesystemu
-fixnout warningy
+fixnout sekani
+mit ty data submeshe aspol. nejak zabaleny do pointeru a zbavit se jich pres reset misto ty shrink_to_fit?
+udelat submesh classu s Loadem a Unloadem
 ---
 deffered renderer podle metal gearu
 https://docs.microsoft.com/en-us/windows/desktop/dxtecharts/cascaded-shadow-maps

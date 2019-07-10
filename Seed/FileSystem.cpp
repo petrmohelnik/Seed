@@ -59,14 +59,16 @@ std::vector<Object*> FileSystem::LoadObjects(const std::string& path)
     std::vector<Object*> objects;
 
     auto const materials = LoadMaterialsData(scene->mMaterials, scene->mNumMaterials, path);
-    LoadNode(scene, scene->mRootNode, nullptr, objects, materials);
+    auto const mesh = LoadMeshData(scene->mMeshes, scene->mNumMeshes);
+    LoadNode(scene, scene->mRootNode, nullptr, objects, mesh->subMeshes, materials);
 
     UnloadScene();
 
     return objects;
 }
 
-void FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent, std::vector<Object*>& objects, const std::vector<std::shared_ptr<Material>>& materials)
+void FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent, std::vector<Object*>& objects, 
+    const std::vector<std::shared_ptr<Mesh::SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials)
 {
     auto object = Engine::GetObjects().CreateObject<Object>(node->mName.C_Str());
     if(parent != nullptr)
@@ -78,29 +80,35 @@ void FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent, st
     object->GetComponent<Transform>()->Rotate(ToGlmVec3(rotation));
     object->GetComponent<Transform>()->SetScale(ToGlmVec3(scale));
 
-    LoadMesh(scene, node, object, materials);
+    LoadMesh(scene, node, object, subMeshes, materials);
     LoadLight(scene, object);
     LoadCamera(scene, object);
 
     objects.push_back(object);
     for(unsigned int childIndex = 0; childIndex < node->mNumChildren; childIndex++)
     {
-        LoadNode(scene, node->mChildren[childIndex], object, objects, materials);
+        LoadNode(scene, node->mChildren[childIndex], object, objects, subMeshes, materials);
     }
 }
 
-void FileSystem::LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<Material>>& materials)
+void FileSystem::LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<Mesh::SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials)
 {
     if (node->mNumMeshes != 0)
     {
-        object->AddComponent<MeshRenderer>()->SetMesh(LoadMeshData(scene->mMeshes, node->mNumMeshes, node->mMeshes));
+        object->AddComponent<MeshRenderer>();
 
+        auto mesh = std::make_shared<Mesh>();
         std::vector<std::shared_ptr<Material>> orderedMaterials;
+        mesh->subMeshes.reserve(node->mNumMeshes);
         orderedMaterials.reserve(node->mNumMeshes);
+
         for (unsigned int index = 0; index < node->mNumMeshes; index++)
         {
+            mesh->subMeshes.push_back(subMeshes[node->mMeshes[index]]);
             orderedMaterials.push_back(materials[scene->mMeshes[node->mMeshes[index]]->mMaterialIndex]);
         }
+
+        object->GetComponent<MeshRenderer>()->SetMesh(mesh);
         object->GetComponent<MeshRenderer>()->SetMaterials(orderedMaterials);
     }
 }
@@ -130,9 +138,9 @@ void FileSystem::LoadLight(const aiScene* scene, Object* object)
             else
             {
                 light->GetTransform()->Translate(ToGlmVec3(assimpLight->mPosition));
-                float quadraticRange = std::sqrt(75.0 / assimpLight->mAttenuationQuadratic);
-                float linearRange = 4.5 / assimpLight->mAttenuationQuadratic;
-                light->dataBlock.Range = (quadraticRange + linearRange) / 2.0;
+                float quadraticRange = std::sqrt(75.0f / assimpLight->mAttenuationQuadratic);
+                float linearRange = 4.5f / assimpLight->mAttenuationQuadratic;
+                light->dataBlock.Range = (quadraticRange + linearRange) / 2.0f;
                 if (assimpLight->mType == aiLightSourceType::aiLightSource_SPOT)
                 {
                     light->SetType(Light::Type::Spot);
@@ -186,78 +194,75 @@ std::shared_ptr<Mesh> FileSystem::LoadMesh(const std::string& path)
     return mesh;
 }
 
-std::shared_ptr<Mesh> FileSystem::LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes, unsigned* assimpMeshesIndexes)
+std::shared_ptr<Mesh> FileSystem::LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes)
 {
     auto mesh = std::make_shared<Mesh>();
     mesh->subMeshes.reserve(numMeshes);
 
     for (unsigned int index = 0; index < numMeshes; index++)
     {
-        if(!assimpMeshesIndexes)
-            mesh->subMeshes.push_back(std::move(LoadSubMeshData(assimpMeshes[index])));
-        else
-            mesh->subMeshes.push_back(std::move(LoadSubMeshData(assimpMeshes[assimpMeshesIndexes[index]])));
+        mesh->subMeshes.push_back(LoadSubMeshData(assimpMeshes[index]));
     }
 
     return mesh;
 }
 
-Mesh::SubMesh FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
+std::shared_ptr<Mesh::SubMesh> FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
 {
-    Mesh::SubMesh subMesh;
-    subMesh.vertices.reserve(assimpMesh->mNumVertices);
-    subMesh.normals.reserve(assimpMesh->mNumVertices);
-    subMesh.tangents.reserve(assimpMesh->mNumVertices);
-    subMesh.texCoords.reserve(assimpMesh->mNumVertices);
-    subMesh.indices.reserve(assimpMesh->mNumFaces);
+    auto subMesh = std::make_shared<Mesh::SubMesh>();
+    subMesh->vertices.reserve(assimpMesh->mNumVertices);
+    subMesh->normals.reserve(assimpMesh->mNumVertices);
+    subMesh->tangents.reserve(assimpMesh->mNumVertices);
+    subMesh->texCoords.reserve(assimpMesh->mNumVertices);
+    subMesh->indices.reserve(assimpMesh->mNumFaces);
 
     for (unsigned int index = 0; index < assimpMesh->mNumVertices; index++)
     {
-        subMesh.vertices.emplace_back(glm::vec3(
+        subMesh->vertices.emplace_back(glm::vec3(
             assimpMesh->mVertices[index].x,
             assimpMesh->mVertices[index].y,
             assimpMesh->mVertices[index].z));
 
-        subMesh.normals.emplace_back(glm::normalize(glm::vec3(
+        subMesh->normals.emplace_back(glm::normalize(glm::vec3(
             assimpMesh->mNormals[index].x,
             assimpMesh->mNormals[index].y,
             assimpMesh->mNormals[index].z)));
 
         if (assimpMesh->mTangents)
         {
-            subMesh.tangents.emplace_back(glm::vec3(
+            subMesh->tangents.emplace_back(glm::vec3(
                 assimpMesh->mTangents[index].x,
                 assimpMesh->mTangents[index].y,
                 assimpMesh->mTangents[index].z));
 
-            subMesh.bitangents.emplace_back(glm::vec3(
+            subMesh->bitangents.emplace_back(glm::vec3(
                 assimpMesh->mBitangents[index].x,
                 assimpMesh->mBitangents[index].y,
                 assimpMesh->mBitangents[index].z));
         }
         else
         {
-            glm::vec3 tangent = glm::cross(subMesh.normals.back(), glm::vec3(0.0f, 1.0f, 0.0f));
-            glm::vec3 bitangent = glm::cross(tangent, subMesh.normals.back());
-            subMesh.tangents.emplace_back(tangent);
-            subMesh.bitangents.emplace_back(bitangent);
+            glm::vec3 tangent = glm::cross(subMesh->normals.back(), glm::vec3(0.0f, 1.0f, 0.0f));
+            glm::vec3 bitangent = glm::cross(tangent, subMesh->normals.back());
+            subMesh->tangents.emplace_back(tangent);
+            subMesh->bitangents.emplace_back(bitangent);
         }
 
         if (assimpMesh->mTextureCoords[0])
         {
-            subMesh.texCoords.emplace_back(glm::vec2(
+            subMesh->texCoords.emplace_back(glm::vec2(
                 assimpMesh->mTextureCoords[0][index].x,
                 assimpMesh->mTextureCoords[0][index].y));
         }
         else
         {
-            subMesh.texCoords.emplace_back(glm::vec2(0.0f));
+            subMesh->texCoords.emplace_back(glm::vec2(0.0f));
         }
     }
 
     for (unsigned int index = 0; index < assimpMesh->mNumFaces; index++)
     {
-        subMesh.indices.emplace_back(glm::uvec3(
+        subMesh->indices.emplace_back(glm::uvec3(
             assimpMesh->mFaces[index].mIndices[0],
             assimpMesh->mFaces[index].mIndices[1],
             assimpMesh->mFaces[index].mIndices[2]));

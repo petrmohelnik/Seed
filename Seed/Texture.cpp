@@ -191,7 +191,7 @@ void Texture::GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::RenderIntoHDRTexture(float width, float height, ShaderFactory::Type shaderType, GLuint format)
+void Texture::RenderIntoHDRTexture(int width, int height, ShaderFactory::Type shaderType, GLuint format)
 {
     GenerateTexture(GL_CLAMP_TO_EDGE, GL_RG16F, width, height, format, GL_FLOAT);
 

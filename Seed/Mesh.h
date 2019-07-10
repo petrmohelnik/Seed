@@ -33,11 +33,14 @@ private:
         int indicesCount;
         GLuint vao = 0;
         GLuint vbo[6];
+
+        ~SubMesh();
+        void Unload();
     };
 
-    void LoadSubMesh(SubMesh& subMesh);
+    void LoadSubMesh(SubMesh* subMesh);
 
     bool deleteAfterLoad = true;
     
-    std::vector<SubMesh> subMeshes;
+    std::vector<std::shared_ptr<SubMesh>> subMeshes;
 };

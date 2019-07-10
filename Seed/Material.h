@@ -40,7 +40,7 @@ private:
     {
         alignas(4) Uint32 SpecularWorkflow = false;
         alignas(4) Uint32 UseOcclusionMap = false;
-		alignas(4) float ParallaxStrength = 0.05;
+		alignas(4) float ParallaxStrength = 0.05f;
     };
 
     MaterialBlock dataBlock;

@@ -80,7 +80,7 @@ void Transform::SetParent(Object* parent_)
 
 int Transform::GetChildCount()
 {
-	return children.size();
+	return static_cast<int>(children.size());
 }
 
 Transform* Transform::GetChild(int index)

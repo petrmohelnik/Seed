@@ -112,7 +112,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	cobblestoneMaterial->Metallic = fileSystem.LoadTexture("cobblestone/specular.png", 24, 24);
 	cobblestoneMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("cobblestone/shininess.png", 8, 8), 0);
 	cobblestoneMaterial->SetSpecularWorkflow();
-	cobblestoneMaterial->SetParallaxStrength(0.1);
+	cobblestoneMaterial->SetParallaxStrength(0.1f);
 
 	auto cobblestone = objects.CreateObject("cobblestone");
 	cobblestone->AddComponent<MeshRenderer>()->Load("cube.dae");
@@ -127,7 +127,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	redbricksMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("redbricks/roughness.png", 8, 8), 0);
 	redbricksMaterial->Metallic->AddChannel(0.0);
     redbricksMaterial->Metallic->SetIsRGBOrder();
-	redbricksMaterial->SetParallaxStrength(0.1);
+	redbricksMaterial->SetParallaxStrength(0.1f);
 
 	auto redbricks = objects.CreateObject("redbricks");
 	redbricks->AddComponent<MeshRenderer>()->Load("cube.dae");
@@ -143,7 +143,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     roughblockMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("roughblock/roughness.png", 8, 8), 0);
     roughblockMaterial->Metallic->AddChannel(0.0);
     roughblockMaterial->Metallic->SetIsRGBOrder();
-    roughblockMaterial->SetParallaxStrength(0.1);
+    roughblockMaterial->SetParallaxStrength(0.1f);
 
     auto roughblock = objects.CreateObject("roughblock");
     roughblock->AddComponent<MeshRenderer>()->Load("cube.dae");
