@@ -44,7 +44,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->GetComponent<Transform>()->TranslateX(-2.0, Transform::Space::World);
 	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
 	light->AddComponent<MeshRenderer>()->Load("sphere.obj");
-    light->GetComponent<MeshRenderer>()->GetMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
+    light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
 	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
 	light->GetComponent<Light>()->SetRange(1);
 	light->GetComponent<Light>()->SetIntensity(1);
@@ -62,9 +62,9 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //ground->GetComponent<MeshRenderer>()->GetMaterial()->Height = brickMaterial1->Height;
 
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
-	objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
-	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
+	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Protospace.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
 	//objects.SetSkybox(std::make_unique<TextureCubeMap>(glm::vec4(0.4f, 0.4f, 0.7f, 1.0f)));
@@ -103,7 +103,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     objects.CreateObjectsFromScene("scene/scene.gltf");
 
     auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));
-    spheres->GetComponent<MeshRenderer>()->GetMaterial()->UseOcclusionMap();
+    spheres->GetComponent<MeshRenderer>()->GetSharedMaterial()->UseOcclusionMap();
 
 	auto cobblestoneMaterial = std::make_shared<Material>();
 	cobblestoneMaterial->Albedo = fileSystem.LoadTexture("cobblestone/albedo.png", 24, 24);

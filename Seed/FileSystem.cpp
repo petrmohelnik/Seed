@@ -450,6 +450,10 @@ float FileSystem::GetMaterialFloat(aiMaterial * assimpMaterial, const char * pKe
 
 std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bitsMinimum, int bitsMaximum, bool flipHorizontal)
 {
+    auto const result = loadedTextures.find(path);
+    if (result != loadedTextures.end() && !result->second.expired())
+        return result->second.lock();
+
     auto const absolutePath = parentFolder + path;
     auto texture = std::make_shared<Texture>();
 
@@ -482,6 +486,8 @@ std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bi
     texture->data.assign(textureData, textureData + texture->bytesPerPixel * texture->width * texture->height);
 
     FreeImage_Unload(loadedTexture);
+
+    loadedTextures.insert_or_assign(path, texture);
 
     return texture;
 }

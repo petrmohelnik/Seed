@@ -45,11 +45,13 @@ void MeshRenderer::SetMesh(std::shared_ptr<Mesh> mesh_)
     mesh->Load();
 }
 
-std::shared_ptr<Mesh> MeshRenderer::GetMesh()
-{
-    mesh = std::make_shared<Mesh>(*mesh);
-    return mesh;
-}
+//std::shared_ptr<Mesh> MeshRenderer::GetMesh()
+//{
+//    mesh = std::make_shared<Mesh>(*mesh);
+//    for (auto& subMesh : mesh->subMeshes)
+//        subMesh = std::make_shared<Mesh::SubMesh>(*subMesh);
+//    return mesh;
+//}
 
 std::shared_ptr<Mesh> MeshRenderer::GetSharedMesh()
 {
@@ -73,27 +75,41 @@ void MeshRenderer::SetMaterials(std::vector<std::shared_ptr<Material>> materials
     }
 }
 
-std::shared_ptr<Material> MeshRenderer::GetMaterial()
-{
-    materials[0] = std::make_shared<Material>(*materials[0]);
-    return materials[0];
-}
+//std::shared_ptr<Material> MeshRenderer::GetMaterial()
+//{
+//    materials[0] = std::make_shared<Material>(*materials[0]);
+//    CloneMaterialTextures(materials[0]);
+//    return materials[0];
+//}
 
 std::shared_ptr<Material> MeshRenderer::GetSharedMaterial()
 {
     return materials[0];
 }
 
-std::vector<std::shared_ptr<Material>> MeshRenderer::GetMaterials()
-{
-    for (auto& material : materials)
-        material = std::make_shared<Material>(*material);
-    return materials;
-}
+//std::vector<std::shared_ptr<Material>> MeshRenderer::GetMaterials()
+//{
+//    for (auto& material : materials)
+//    {
+//        material = std::make_shared<Material>(*material);
+//        CloneMaterialTextures(material);
+//    }
+//    return materials;
+//}
 
 std::vector<std::shared_ptr<Material>> MeshRenderer::GetSharedMaterials()
 {
     return materials;
+}
+
+void MeshRenderer::CloneMaterialTextures(std::shared_ptr<Material>& material)
+{
+    material->Albedo = std::make_shared<Texture>(*material->Albedo);
+    material->Normal = std::make_shared<Texture>(*material->Normal);
+    material->Height = std::make_shared<Texture>(*material->Height);
+    material->Metallic = std::make_shared<Texture>(*material->Metallic);
+    material->Emission = std::make_shared<Texture>(*material->Emission);
+    material->Occlusion = std::make_shared<Texture>(*material->Occlusion);
 }
 
 void MeshRenderer::Load(const std::string& path)

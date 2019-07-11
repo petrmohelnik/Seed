@@ -20,6 +20,7 @@ public:
 
 protected:
     friend class FileSystem;
+    friend class MeshRenderer;
     
 private:
     struct SubMesh

@@ -1,11 +1,10 @@
-nacteni individualnich default metalic hodnot z materialu kdyz neni metalic textura
-dodelat nacitani svetel z gltf do assimpu
-overit funkcnost lookat
-modely muzou sdilet textury mezi materialy... :/ --treepack??
-textury se ted necachuji ve filesystemu
-fixnout sekani
 mit ty data submeshe aspol. nejak zabaleny do pointeru a zbavit se jich pres reset misto ty shrink_to_fit?
 udelat submesh classu s Loadem a Unloadem
+
+overit funkcnost lookat
+fixnout sekani
+nacteni individualnich default metalic hodnot z materialu kdyz neni metalic textura
+dodelat nacitani svetel z gltf do assimpu
 ---
 deffered renderer podle metal gearu
 https://docs.microsoft.com/en-us/windows/desktop/dxtecharts/cascaded-shadow-maps
@@ -48,6 +47,8 @@ pohyby zpusobene fyzkou se aplikujou pred mouseDown a Update ale po OnCollision 
 skripty by si asi fakt meli ty metody registrovat, kdyz jich je takhle hodne
 fixedUpate je pouze pro fyziku, napr physcs addFOrce
 pohyb jako transform.translate se dela v update
+
+doresit clonovani pres GetMaterial a GetMesh vuci loadu a unloadu z gpu - problem pri zmene dat a destrukci se to porad sdili
 
 https://learn.unity.com/tutorial/physics-best-practices#5c7f8528edbc2a002053b5b4
 
