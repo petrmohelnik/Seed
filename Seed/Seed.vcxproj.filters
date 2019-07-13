@@ -161,6 +161,9 @@
     <ClCompile Include="imgui\imgui_impl_sdl.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="SubMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -315,6 +318,9 @@
     </ClInclude>
     <ClInclude Include="imgui\imgui_impl_sdl.h">
       <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="SubMesh.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

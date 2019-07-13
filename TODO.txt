@@ -1,14 +1,11 @@
-mit ty data submeshe aspol. nejak zabaleny do pointeru a zbavit se jich pres reset misto ty shrink_to_fit?
-udelat submesh classu s Loadem a Unloadem
-
-overit funkcnost lookat
-fixnout sekani
 nacteni individualnich default metalic hodnot z materialu kdyz neni metalic textura
+fixnout sekani
 dodelat nacitani svetel z gltf do assimpu
 ---
 deffered renderer podle metal gearu
 https://docs.microsoft.com/en-us/windows/desktop/dxtecharts/cascaded-shadow-maps
 http://alextardif.com/arealights.html - je tam i lepsi light falloff
+
 CascadedShadowMaps a SoftShadow projekty
 reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
@@ -49,6 +46,7 @@ fixedUpate je pouze pro fyziku, napr physcs addFOrce
 pohyb jako transform.translate se dela v update
 
 doresit clonovani pres GetMaterial a GetMesh vuci loadu a unloadu z gpu - problem pri zmene dat a destrukci se to porad sdili
+mit ty data submeshe aspol. nejak zabaleny do pointeru a zbavit se jich pres reset misto ty shrink_to_fit?
 
 https://learn.unity.com/tutorial/physics-best-practices#5c7f8528edbc2a002053b5b4
 

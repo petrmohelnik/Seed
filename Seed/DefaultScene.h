@@ -64,7 +64,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
-	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Protospace.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
 	//objects.SetSkybox(std::make_unique<TextureCubeMap>(glm::vec4(0.4f, 0.4f, 0.7f, 1.0f)));
@@ -100,7 +100,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //spot->GetComponent<Light>()->SetRange(20);
     //spot->GetComponent<Light>()->SetCutoffAngle(0.5);
 
-    objects.CreateObjectsFromScene("scene/scene.gltf");
+    //objects.CreateObjectsFromScene("scene/scene.gltf");
 
     auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));
     spheres->GetComponent<MeshRenderer>()->GetSharedMaterial()->UseOcclusionMap();

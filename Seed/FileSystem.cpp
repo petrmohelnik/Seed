@@ -68,7 +68,7 @@ std::vector<Object*> FileSystem::LoadObjects(const std::string& path)
 }
 
 void FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent, std::vector<Object*>& objects, 
-    const std::vector<std::shared_ptr<Mesh::SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials)
+    const std::vector<std::shared_ptr<SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials)
 {
     auto object = Engine::GetObjects().CreateObject<Object>(node->mName.C_Str());
     if(parent != nullptr)
@@ -91,7 +91,7 @@ void FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent, st
     }
 }
 
-void FileSystem::LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<Mesh::SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials)
+void FileSystem::LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials)
 {
     if (node->mNumMeshes != 0)
     {
@@ -207,9 +207,9 @@ std::shared_ptr<Mesh> FileSystem::LoadMeshData(aiMesh** assimpMeshes, unsigned i
     return mesh;
 }
 
-std::shared_ptr<Mesh::SubMesh> FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
+std::shared_ptr<SubMesh> FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
 {
-    auto subMesh = std::make_shared<Mesh::SubMesh>();
+    auto subMesh = std::make_shared<SubMesh>();
     subMesh->vertices.reserve(assimpMesh->mNumVertices);
     subMesh->normals.reserve(assimpMesh->mNumVertices);
     subMesh->tangents.reserve(assimpMesh->mNumVertices);
