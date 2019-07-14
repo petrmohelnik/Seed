@@ -383,9 +383,20 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
     }
     else if (!LoadMaterialTexture(assimpMaterial, aiTextureType_UNKNOWN, material.Metallic, folder, 24, 24))
     {
-        LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Metallic, aiColor4D(0.0f));
-        LoadMaterialAlpha(assimpMaterial, AI_MATKEY_SHININESS, material.Metallic, 0.0f);
-        material.SetSpecularWorkflow();
+        unsigned int isSpecular;
+        assimpMaterial->Get(AI_MATKEY_GLTF_PBRSPECULARGLOSSINESS, isSpecular);
+        if (isSpecular == 1)
+        {
+            LoadMaterialColor(assimpMaterial, AI_MATKEY_COLOR_SPECULAR, material.Metallic, aiColor4D(0.0f));
+            LoadMaterialAlpha(assimpMaterial, AI_MATKEY_SHININESS, material.Metallic, 0.0f);
+            material.SetSpecularWorkflow();
+        }
+        else
+        {
+            material.Metallic->SetColor(1.0f); //ambient occlusion
+            material.Metallic->AddChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR, 1.0f));
+            material.Metallic->AddChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR, 1.0f));
+        }
     }
 
     if(!LoadMaterialTexture(assimpMaterial, aiTextureType_EMISSIVE, material.Emission, folder, 24, 24))

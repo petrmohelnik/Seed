@@ -9,10 +9,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	//scifi->GetComponent<Transform>()->SetScale(glm::vec3(1.0f));
 	//scifi->GetComponent<Transform>()->RotateY(3.14f);
 
-	////auto treepack = objects.CreateObjectWithMesh("treepack", "treepack/treepack.obj");
-	////treepack->AddComponent<RotateWorldScript>();
-	////treepack->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
-
 	//auto console = objects.CreateObjectWithMesh("console", "console/console.gltf", glm::vec3(0.0f, 0.0f, 3.0f));
  //   console->GetComponent<Transform>()->RotateY(-1.57f);
 	//console->AddComponent<RotateWorldScript>();
@@ -24,10 +20,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
  //   auto chair = objects.CreateObjectWithMesh("chair", "holotech_bench/scene.gltf", glm::vec3(0.0f, -1.01f, 6.0f));
  //   //chair->GetComponent<Transform>()->RotateX(-1.57f);
  //   chair->GetComponent<Transform>()->SetScale(glm::vec3(0.005f));
-
-	//auto datsun = objects.CreateObjectWithMesh("datsun", "datsun/scene.gltf", glm::vec3(-6.0f, 0.1f, 6.0f));
- //   datsun->GetComponent<Transform>()->SetScale(glm::vec3(0.1f));
- //   datsun->GetComponent<Transform>()->RotateX(-3.14f);
 
 	//auto nanosuit = objects.CreateObjectWithMesh("nanosuit", "nanosuit/nanosuit.obj");
 	//nanosuit->AddComponent<RotateWorldScript>();
@@ -64,7 +56,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
-	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
+	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Protospace.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
 	//objects.SetSkybox(std::make_unique<TextureCubeMap>(glm::vec4(0.4f, 0.4f, 0.7f, 1.0f)));
@@ -100,7 +92,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //spot->GetComponent<Light>()->SetRange(20);
     //spot->GetComponent<Light>()->SetCutoffAngle(0.5);
 
-    //objects.CreateObjectsFromScene("scene/scene.gltf");
+    objects.CreateObjectsFromScene("scene/scene.gltf");
 
     auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));
     spheres->GetComponent<MeshRenderer>()->GetSharedMaterial()->UseOcclusionMap();
