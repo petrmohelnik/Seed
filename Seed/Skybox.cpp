@@ -8,6 +8,7 @@ Skybox::Skybox(std::unique_ptr<TextureCubeMap> skybox_) : skybox(std::move(skybo
     skybox->Load();
     environmentalMap = std::make_unique<EnvironmentalMap>();
     environmentalMap->Load(skybox.get());
+    skybox->ConvertFromHDRToSRGB();
 }
 
 void Skybox::Render()

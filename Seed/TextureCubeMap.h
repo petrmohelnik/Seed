@@ -35,6 +35,7 @@ protected:
     static std::vector<glm::mat4> GenerateCameraViewsForCube();
     void RenderIntoHDRCubeMapFromTexture(int width, ShaderFactory::Type shaderType, RenderingPipeline::TextureSlot textureSourceSlot, GLuint textureSourceType, GLuint textureSource,
         bool generateMipMaps = false, GLuint mipLevelUniformLocation = 0, int mipLevels = 0);
+    void ConvertFromHDRToSRGB();
 
 private:
     void DefineTexture();
@@ -47,4 +48,5 @@ private:
     bool deleteAfterLoad = true;
 
     GLuint texture = 0;
+    int width;
 };

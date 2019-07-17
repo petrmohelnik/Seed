@@ -128,12 +128,14 @@
     <None Include="shaders\EquirectangularToCubemap.frag" />
     <None Include="shaders\PrecalculateBRDFIntegrationMap.frag" />
     <None Include="shaders\PrecalculateEnvironmentMap.frag" />
+    <None Include="shaders\SimpleCopy.frag" />
     <None Include="shaders\SimplePosition.vert" />
     <None Include="shaders\PrecalculateIrradiance.frag" />
     <None Include="shaders\SimplePosition2D.vert" />
     <None Include="shaders\Skybox.frag" />
     <None Include="shaders\Skybox.vert" />
     <None Include="shaders\ToneMapping.frag" />
+    <None Include="shaders\ToneMappingSkybox.frag" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

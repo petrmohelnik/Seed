@@ -357,5 +357,11 @@
     <None Include="shaders\ToneMapping.frag">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="shaders\ToneMappingSkybox.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\SimpleCopy.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

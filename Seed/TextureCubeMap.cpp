@@ -77,6 +77,7 @@ void TextureCubeMap::GenerateTexture(bool generateMipMaps)
 
 void TextureCubeMap::DefineTexture()
 {
+    width = faces[0]->width;
     for (int i = 0; i < 6; i++)
     {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, faces[i]->GetInternalFormat(), faces[i]->width, faces[i]->height, 0, faces[i]->GetFormat(), GL_UNSIGNED_BYTE, &faces[i]->data[0]);
@@ -137,6 +138,28 @@ void TextureCubeMap::RenderIntoHDRCubeMapFromTexture(int width, ShaderFactory::T
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
+void TextureCubeMap::ConvertFromHDRToSRGB()
+{
+    auto hdrTexture = texture;
+    GenerateTexture();
+    DefineTexture(GL_RGB, width, width, GL_RGB, GL_UNSIGNED_BYTE);
+
+    Framebuffer framebuffer(width, width);
+
+    auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::SkyboxToneMapping);
+    shader->setup();
+
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Environmental);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, hdrTexture);
+
+    framebuffer.Bind();
+    RenderViewsIntoCubeMap(shader, framebuffer);
+    framebuffer.Unbind();
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    glDeleteTextures(1, &hdrTexture);
+}
+
 void TextureCubeMap::RenderViewsIntoCubeMap(Shader* shader, const Framebuffer& framebuffer)
 {
     SimpleMesh cube(SimpleMesh::Shape::Cube);
@@ -193,8 +216,9 @@ void TextureCubeMap::RenderViewsIntoCubeMapWithMipMaps(Shader* shader, Framebuff
     }
 }
 
-void TextureCubeMap::DefineTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, bool generateMipMaps, const void* pixels)
+void TextureCubeMap::DefineTexture(GLuint internalFormat, int width_, int height, GLuint format, GLuint type, bool generateMipMaps, const void* pixels)
 {
+    width = width_;
     for (int i = 0; i < 6; i++)
     {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalFormat, width, height, 0, format, type, pixels);

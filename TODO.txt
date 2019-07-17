@@ -1,4 +1,3 @@
-fixnout sekani - asi je potreba prevest skybox z hdr do srgb
 dodelat nacitani svetel z gltf do assimpu
 ---
 deffered renderer podle metal gearu

@@ -45,6 +45,14 @@ void ShaderFactory::CreateShader(Type type)
     {
         shaders.insert({ type , std::make_unique<BasicShader>("SimplePosition2D.vert", "ToneMapping.frag") });
     }
+    else if (type == Type::SkyboxToneMapping)
+    {
+        shaders.insert({ type , std::make_unique<BasicShader>("SimplePosition.vert", "ToneMappingSkybox.frag") });
+    }
+    else if (type == Type::SimpleCopy)
+    {
+        shaders.insert({ type , std::make_unique<BasicShader>("SimplePosition2D.vert", "SimpleCopy.frag") });
+    }
     else
     {
         throw std::runtime_error("Unsupported shader type");

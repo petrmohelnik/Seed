@@ -169,16 +169,6 @@ void RenderingPipeline::RenderCamera(Camera* camera)
         renderTarget.first->Render(renderTarget.second);
     }
 
-	if (skybox)
-	{
-		RenderingPipeline::BindCameraUniform();
-		auto skyboxViewMatrix = glm::mat4(glm::mat3(glm::inverse(camera->GetTransform()->GetModelMatrix())));
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(skyboxViewMatrix), &skyboxViewMatrix);
-		glDepthFunc(GL_LEQUAL);
-		skybox->Render();
-		glDepthFunc(GL_LESS);
-	}
-
     framebuffer->Unbind();
     
     ActivateTexture(TextureSlot::Environmental);
@@ -187,13 +177,23 @@ void RenderingPipeline::RenderCamera(Camera* camera)
     auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::ToneMapping);
     shader->setup();
 
-    glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     quad->Bind();
     shader->draw(6);
 
     glBindTexture(GL_TEXTURE_2D, 0);
+
+	if (skybox)
+	{
+		RenderingPipeline::BindCameraUniform();
+		auto skyboxViewMatrix = glm::mat4(glm::mat3(glm::inverse(camera->GetTransform()->GetModelMatrix())));
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(skyboxViewMatrix), &skyboxViewMatrix);
+		glDepthFunc(GL_LEQUAL);
+        framebuffer->BlitDepthBufferToDefaultFramebuffer();
+		skybox->Render();
+		glDepthFunc(GL_LESS);
+	}
 }
 
 void RenderingPipeline::FillRenderQueue(RenderQueue* queue, Camera* camera)

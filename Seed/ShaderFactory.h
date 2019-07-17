@@ -12,7 +12,9 @@ public:
         PrecalculateIrradiance,
         PrecalculateEnvironmentMap,
         PrecalculateBRDFIntegrationMap,
-        ToneMapping
+        ToneMapping,
+        SkyboxToneMapping,
+        SimpleCopy
     };
 
     ShaderFactory();
