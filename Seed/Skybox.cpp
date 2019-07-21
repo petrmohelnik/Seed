@@ -19,9 +19,7 @@ void Skybox::Render()
     auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::Skybox);
     shader->setup();
 
-    cube.Bind();
-
-    shader->draw(36);
+    cube.Draw(shader);
 }
 
 TextureCubeMap* Skybox::GetSkyboxCubeMapRawPtr()

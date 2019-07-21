@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "RenderQueue.h"
+#include "ShaderFactory.h"
 
 class Input;
 class Time;
@@ -13,6 +14,7 @@ public:
 
     virtual void AddToRenderQueue(RenderQueue* queue) = 0;
 	virtual void Render(int index) = 0;
+    virtual void Render(int index, ShaderFactory::Type shaderType) = 0;
 
 private:
     Input& input;

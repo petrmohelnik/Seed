@@ -7,16 +7,6 @@ layout(std140, binding = 0) uniform CameraBlock
 	vec3 viewPos;
 };
 
-layout(std140, binding = 1) uniform LightBlock
-{
-	vec3 Pos;
-	vec3 Color;
-	vec3 Orientation;
-	float Range;
-	float Intensity;
-	float SpotAngle;
-} Light;
-
 layout(std140, binding = 2) uniform ModelBlock
 {
 	mat4 model;
@@ -31,8 +21,6 @@ layout(location = 4) in vec2 vTexCoords;
 
 out vec3 fPos;
 out vec3 fViewPos;
-out vec3 fLightPos;
-out vec3 fLightOrienation;
 out vec2 fTexCoords;
 out mat3 fTBN;
 
@@ -48,10 +36,8 @@ void main()
 	fTBN = mat3(T, B, N);
 	mat3 TBN_inverted = transpose(fTBN); //transpose equals inverse for orthogonal matrices
 
-	fPos = TBN_inverted * vec3(model * vec4(vPos, 1.0));
+    fPos = TBN_inverted * vec3(model * vec4(vPos, 1.0));
 	fViewPos = TBN_inverted * viewPos;
-	fLightPos = TBN_inverted * Light.Pos;
-	fLightOrienation = TBN_inverted * Light.Orientation;
 	fTexCoords = vTexCoords;
 
 	gl_Position = projection * view * model * vec4(vPos, 1.0);

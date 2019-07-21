@@ -22,15 +22,20 @@ void MeshRenderer::AddToRenderQueue(RenderQueue* queue)
 
 void MeshRenderer::Render(int index)
 {
+    Render(index, materials[index]->GetShader());
+}
+
+void MeshRenderer::Render(int index, ShaderFactory::Type shaderType)
+{
     materials[index]->BindMaterial();
-    auto shader = Engine::GetShaderFactory().GetShader(materials[index]->GetShader());
+    auto shader = Engine::GetShaderFactory().GetShader(shaderType);
     shader->setup();
 
     RenderingPipeline::BindModelUniform();
     ModelBlock modelBlockData
-    { 
-        GetTransform()->GetModelMatrix(), 
-        glm::mat4(glm::inverse(glm::transpose(GetTransform()->GetModelMatrix()))) 
+    {
+        GetTransform()->GetModelMatrix(),
+        glm::mat4(glm::inverse(glm::transpose(GetTransform()->GetModelMatrix())))
     };
     glBufferData(GL_UNIFORM_BUFFER, sizeof(modelBlockData), &modelBlockData, GL_DYNAMIC_DRAW);
 

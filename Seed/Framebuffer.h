@@ -11,7 +11,8 @@ public:
 
     void Bind() const;
     void AttachTexture(GLuint attachment, GLuint textureTarget, GLuint texture, GLuint mipLevel = 0) const;
-    void Unbind() const;
+    void SetDrawBuffers(std::vector<GLuint> buffers);
+    static void Unbind();
     void BlitDepthBufferToDefaultFramebuffer();
 
 private:

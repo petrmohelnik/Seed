@@ -6,7 +6,8 @@ class ShaderFactory
 public:
     enum class Type
     {
-        Basic,
+        GBuffer,
+        PBR,
         Skybox,
         EquirectangularToCubemap,
         PrecalculateIrradiance,

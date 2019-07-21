@@ -1,4 +1,5 @@
 #include "SimpleMesh.h"
+#include "Shader.h"
 
 SimpleMesh::SimpleMesh(Shape shape)
 {
@@ -22,6 +23,8 @@ SimpleMesh::SimpleMesh(Shape shape)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.indices.size() * sizeof(Uint32) * 3, &data.indices[0].x, GL_STATIC_DRAW);
 
     glBindVertexArray(0);
+
+    indicesCount = data.indices.size() * 3;
 }
 
 SimpleMesh::~SimpleMesh()
@@ -30,9 +33,10 @@ SimpleMesh::~SimpleMesh()
     glDeleteVertexArrays(1, &vao);
 }
 
-void SimpleMesh::Bind()
+void SimpleMesh::Draw(Shader* shader)
 {
     glBindVertexArray(vao);
+    shader->draw(indicesCount);
 }
 
 SimpleMesh::MeshData SimpleMesh::GenerateQuadData()

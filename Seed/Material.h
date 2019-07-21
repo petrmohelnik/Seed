@@ -44,5 +44,5 @@ private:
     };
 
     MaterialBlock dataBlock;
-    ShaderFactory::Type shader = ShaderFactory::Type::Basic;
+    ShaderFactory::Type shader = ShaderFactory::Type::PBR;
 };

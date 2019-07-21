@@ -177,8 +177,7 @@ void TextureCubeMap::RenderViewsIntoCubeMap(Shader* shader, const Framebuffer& f
         framebuffer.AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        cube.Bind();
-        shader->draw(36);
+        cube.Draw(shader);
     }
 }
 
@@ -210,8 +209,7 @@ void TextureCubeMap::RenderViewsIntoCubeMapWithMipMaps(Shader* shader, Framebuff
             framebuffer.AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture, mipLevel);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            cube.Bind();
-            shader->draw(36);
+            cube.Draw(shader);
         }
     }
 }

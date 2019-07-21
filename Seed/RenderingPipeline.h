@@ -38,6 +38,7 @@ public:
     };
 
     static void ActivateTexture(TextureSlot textureSlot);
+    static void ActivateTexture(TextureSlot textureSlot, Texture* textureToBind);
 
     void AddRenderer(Renderer* renderer);
     void AddCamera(Camera* camera);
@@ -49,7 +50,13 @@ public:
 	void SetSkybox(Skybox* skybox);
 
 private:
+    void IntializeGBuffer(int width, int height);
     void RenderCamera(Camera* camera);
+    void RenderGBuffer(RenderQueue* queue);
+    void RenderLights();
+    void RenderToneMapping();
+    void RenderSkybox(Camera* camera);
+    void RenderToDefaultFrameBuffer(Texture* texture);
     void FillRenderQueue(RenderQueue* queue, Camera* camera);
 
     std::vector<Renderer*> renderers;
@@ -57,8 +64,22 @@ private:
     std::vector<Light*> lights;
     Transform* rootTransform;
 
-    std::unique_ptr<Framebuffer> framebuffer;
-    std::unique_ptr<Texture> framebufferTexture;
+    struct GBuffer
+    {
+        std::unique_ptr<Framebuffer> buffer;
+        std::unique_ptr<Texture> colorTexture;
+        std::unique_ptr<Texture> normalTexture;
+        std::unique_ptr<Texture> metallicTexture;
+        std::unique_ptr<Texture> depthTexture;
+    };
+    GBuffer gbuffer;
+    
+    std::unique_ptr<Framebuffer> illuminationBuffer;
+    std::unique_ptr<Texture> illuminationTexture;
+
+    std::unique_ptr<Framebuffer> tonemappingBuffer;
+    std::unique_ptr<Texture> tonemappingTexture;
+
     std::unique_ptr<SimpleMesh> quad;
 
     static Camera* mainCamera;

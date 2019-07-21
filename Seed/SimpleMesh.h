@@ -1,5 +1,7 @@
 #pragma once
 
+class Shader;
+
 class SimpleMesh
 {
 public:
@@ -16,7 +18,7 @@ public:
     SimpleMesh& operator=(const SimpleMesh& m) = default;
     SimpleMesh& operator=(SimpleMesh&& m) = default;
 
-    void Bind();
+    void Draw(Shader* shader);
 
 private:
     struct MeshData
@@ -30,5 +32,6 @@ private:
 
     GLuint vbo[2];
     GLuint vao;
+    int indicesCount;
 };
 

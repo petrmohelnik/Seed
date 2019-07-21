@@ -17,9 +17,13 @@ Shader* ShaderFactory::GetShader(Type type)
 
 void ShaderFactory::CreateShader(Type type)
 {
-    if (type == Type::Basic)
+    if (type == Type::GBuffer)
     {
-        shaders.insert({ type , std::make_unique<BasicShader>("Basic.vert", "Basic.frag") });
+        shaders.insert({ type , std::make_unique<BasicShader>("GBuffer.vert", "GBuffer.frag") });
+    }
+    else if (type == Type::PBR)
+    {
+        shaders.insert({ type , std::make_unique<BasicShader>("PBR.vert", "PBR.frag") });
     }
     else if (type == Type::Skybox)
     {

@@ -41,20 +41,12 @@ void Material::BindMaterial()
     RenderingPipeline::BindMaterialUniform();
     glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);
 
-    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Albedo);
-    Albedo->Bind();
-    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Normal);
-    Normal->Bind();
-    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Height);
-    Height->Bind();
-    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Metallic);
-    Metallic->Bind();
-    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Emission);
-    Emission->Bind();
-    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Occlusion);
-    Occlusion->Bind();
-
-    RenderingPipeline::BindSkyboxEnvironmentalMap();
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Albedo, Albedo.get());
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Normal, Normal.get());
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Height, Height.get());
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Metallic, Metallic.get());
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Emission, Emission.get());
+    RenderingPipeline::ActivateTexture(RenderingPipeline::TextureSlot::Occlusion, Occlusion.get());
 }
 
 void Material::SetShader(ShaderFactory::Type shader_)

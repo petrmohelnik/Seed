@@ -207,9 +207,8 @@ void Texture::RenderIntoHDRTexture(int width, int height, ShaderFactory::Type sh
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    quad.Bind();
-    shader->draw(6);
-    
+    quad.Draw(shader);
+        
     framebuffer.Unbind();
 
     glBindTexture(GL_TEXTURE_2D, 0);

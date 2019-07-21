@@ -22,7 +22,8 @@ void Framebuffer::AddDepthRenderbuffer()
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-    glBindRenderbuffer(GL_FRAMEBUFFER, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 }
 
 void Framebuffer::ChangeSize(int width_, int height_)
@@ -46,10 +47,17 @@ void Framebuffer::Bind() const
 
 void Framebuffer::AttachTexture(GLuint attachment, GLuint textureTarget, GLuint texture, GLuint mipLevel) const
 {
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, textureTarget, texture, mipLevel);
 }
 
-void Framebuffer::Unbind() const
+void Framebuffer::SetDrawBuffers(std::vector<GLuint> buffers)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glDrawBuffers(buffers.size(), &buffers[0]);
+}
+
+void Framebuffer::Unbind()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     Engine::GetWindow().ResetViewport();

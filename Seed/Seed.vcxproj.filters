@@ -324,12 +324,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\Basic.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="shaders\Basic.vert">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="shaders\Skybox.frag">
       <Filter>Shaders</Filter>
     </None>
@@ -361,6 +355,18 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="shaders\SimpleCopy.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\Gbuffer.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\GBuffer.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\PBR.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\PBR.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

@@ -26,6 +26,7 @@ protected:
 
     void AddToRenderQueue(RenderQueue* queue) override;
 	void Render(int index) override;
+    void Render(int index, ShaderFactory::Type shaderType) override;
 
 private:
     void CloneMaterialTextures(std::shared_ptr<Material>& material);
