@@ -6,7 +6,8 @@ probelm bude poznat, kdy je obhjekt transapernti
 deffered renderer podle metal gearu
 http://alextardif.com/arealights.html - je tam i lepsi light falloff
 emisse nakonec separatni draw se separatnim shaderem a transparentni objekty
-
+pocitat svetlo jenom pro osvetleny pixely
+mam nejaky rozbity normaly zase - staic spojit vertexy by disatnce a ty ostry hrany zmizej
 ---
 CascadedShadowMaps a SoftShadow projekty
 reflection probe

@@ -363,10 +363,13 @@
     <None Include="shaders\GBuffer.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="shaders\PBR.frag">
+    <None Include="shaders\PBR_Illumination.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="shaders\PBR.vert">
+    <None Include="shaders\PBR_IlluminationLights.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\PBR_IlluminationGlobal.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

@@ -32,10 +32,15 @@ void RenderingPipeline::Initialize()
 
     IntializeGBuffer(width, height);
 
-    illuminationTexture = std::make_unique<Texture>();
-    illuminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA16F, width, height, GL_RGBA, GL_FLOAT);
-    illuminationBuffer = std::make_unique<Framebuffer>(width, height);
-    illuminationBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, illuminationTexture->texture);
+    lightsIlluminationTexture = std::make_unique<Texture>();
+    lightsIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA16F, width, height, GL_RGBA, GL_FLOAT);
+    lightsIlluminationBuffer = std::make_unique<Framebuffer>(width, height);
+    lightsIlluminationBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, lightsIlluminationTexture->texture);
+
+    globalIlluminationTexture = std::make_unique<Texture>();
+    globalIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA16F, width, height, GL_RGBA, GL_FLOAT);
+    globalIlluminationBuffer = std::make_unique<Framebuffer>(width, height);
+    globalIlluminationBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, globalIlluminationTexture->texture);
 
     tonemappingTexture = std::make_unique<Texture>();
     tonemappingTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA8, width, height, GL_RGBA, GL_UNSIGNED_BYTE);
@@ -189,7 +194,9 @@ void RenderingPipeline::RenderCamera(Camera* camera)
     camera->BindCamera();
 
     RenderGBuffer(&queue);
+    RenderGlobalIllumination();
     RenderLights();
+    BlendIllumination();
     RenderToneMapping();
     if(skybox)
         RenderSkybox(camera);
@@ -215,14 +222,13 @@ void RenderingPipeline::RenderGBuffer(RenderQueue* queue)
     }
 }
 
-void RenderingPipeline::RenderLights()
+void RenderingPipeline::RenderGlobalIllumination()
 {
-    illuminationBuffer->Bind();
+    globalIlluminationBuffer->Bind();
 
     glClear(GL_COLOR_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE);
+    glDisable(GL_BLEND);
 
     RenderingPipeline::BindSkyboxEnvironmentalMap();
     ActivateTexture(TextureSlot::Albedo, gbuffer.colorTexture.get());
@@ -230,7 +236,27 @@ void RenderingPipeline::RenderLights()
     ActivateTexture(TextureSlot::Height, gbuffer.depthTexture.get());
     ActivateTexture(TextureSlot::Metallic, gbuffer.metallicTexture.get());
 
-    auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR);
+    auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationGlobal);
+    shader->setup();
+
+    quad->Draw(shader);
+}
+
+void RenderingPipeline::RenderLights()
+{
+    lightsIlluminationBuffer->Bind();
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    ActivateTexture(TextureSlot::Albedo, gbuffer.colorTexture.get());
+    ActivateTexture(TextureSlot::Normal, gbuffer.normalTexture.get());
+    ActivateTexture(TextureSlot::Height, gbuffer.depthTexture.get());
+    ActivateTexture(TextureSlot::Metallic, gbuffer.metallicTexture.get());
+
+    auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationLights);
     shader->setup();
 
     for (const auto& light : lights)
@@ -240,15 +266,29 @@ void RenderingPipeline::RenderLights()
     }
 }
 
+void RenderingPipeline::BlendIllumination()
+{
+    lightsIlluminationBuffer->Bind();
+
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    ActivateTexture(TextureSlot::Environmental, globalIlluminationTexture.get());
+
+    auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::SimpleCopy);
+    shader->setup();
+    quad->Draw(shader);
+}
+
 void RenderingPipeline::RenderToneMapping()
 {
     tonemappingBuffer->Bind();
 
-    glClear(GL_COLOR_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
 
-    ActivateTexture(TextureSlot::Environmental, illuminationTexture.get());
+    ActivateTexture(TextureSlot::Environmental, lightsIlluminationTexture.get());
 
     auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::ToneMapping);
     shader->setup();
@@ -279,7 +319,7 @@ void RenderingPipeline::RenderToDefaultFrameBuffer(Texture* texture)
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
 
-    ActivateTexture(TextureSlot::Environmental, tonemappingTexture.get());
+    ActivateTexture(TextureSlot::Environmental, gbuffer.normalTexture.get());
 
     auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::SimpleCopy);
     shader->setup();

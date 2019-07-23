@@ -126,8 +126,9 @@
     <None Include="shaders\Gbuffer.frag" />
     <None Include="shaders\GBuffer.vert" />
     <None Include="shaders\EquirectangularToCubemap.frag" />
-    <None Include="shaders\PBR.frag" />
-    <None Include="shaders\PBR.vert" />
+    <None Include="shaders\PBR_IlluminationGlobal.frag" />
+    <None Include="shaders\PBR_IlluminationLights.frag" />
+    <None Include="shaders\PBR_Illumination.vert" />
     <None Include="shaders\PrecalculateBRDFIntegrationMap.frag" />
     <None Include="shaders\PrecalculateEnvironmentMap.frag" />
     <None Include="shaders\SimpleCopy.frag" />

@@ -92,9 +92,9 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //ground->GetComponent<MeshRenderer>()->GetMaterial()->Normal = brickMaterial1->Normal;
     //ground->GetComponent<MeshRenderer>()->GetMaterial()->Height = brickMaterial1->Height;
 
-	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
-	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
+	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Protospace.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));

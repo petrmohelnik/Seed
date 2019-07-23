@@ -54,7 +54,7 @@ void Framebuffer::AttachTexture(GLuint attachment, GLuint textureTarget, GLuint 
 void Framebuffer::SetDrawBuffers(std::vector<GLuint> buffers)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glDrawBuffers(buffers.size(), &buffers[0]);
+    glDrawBuffers(static_cast<GLuint>(buffers.size()), &buffers[0]);
 }
 
 void Framebuffer::Unbind()

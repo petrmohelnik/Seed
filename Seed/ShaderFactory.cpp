@@ -21,9 +21,13 @@ void ShaderFactory::CreateShader(Type type)
     {
         shaders.insert({ type , std::make_unique<BasicShader>("GBuffer.vert", "GBuffer.frag") });
     }
-    else if (type == Type::PBR)
+    else if (type == Type::PBR_IlluminationGlobal)
     {
-        shaders.insert({ type , std::make_unique<BasicShader>("PBR.vert", "PBR.frag") });
+        shaders.insert({ type , std::make_unique<BasicShader>("PBR_Illumination.vert", "PBR_IlluminationGlobal.frag") });
+    }
+    else if (type == Type::PBR_IlluminationLights)
+    {
+        shaders.insert({ type , std::make_unique<BasicShader>("PBR_Illumination.vert", "PBR_IlluminationLights.frag") });
     }
     else if (type == Type::Skybox)
     {

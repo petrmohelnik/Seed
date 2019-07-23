@@ -7,7 +7,8 @@ public:
     enum class Type
     {
         GBuffer,
-        PBR,
+        PBR_IlluminationGlobal,
+        PBR_IlluminationLights,
         Skybox,
         EquirectangularToCubemap,
         PrecalculateIrradiance,

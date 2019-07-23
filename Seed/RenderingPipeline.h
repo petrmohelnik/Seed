@@ -53,7 +53,9 @@ private:
     void IntializeGBuffer(int width, int height);
     void RenderCamera(Camera* camera);
     void RenderGBuffer(RenderQueue* queue);
+    void RenderGlobalIllumination();
     void RenderLights();
+    void BlendIllumination();
     void RenderToneMapping();
     void RenderSkybox(Camera* camera);
     void RenderToDefaultFrameBuffer(Texture* texture);
@@ -74,8 +76,11 @@ private:
     };
     GBuffer gbuffer;
     
-    std::unique_ptr<Framebuffer> illuminationBuffer;
-    std::unique_ptr<Texture> illuminationTexture;
+    std::unique_ptr<Framebuffer> lightsIlluminationBuffer;
+    std::unique_ptr<Texture> lightsIlluminationTexture;
+
+    std::unique_ptr<Framebuffer> globalIlluminationBuffer;
+    std::unique_ptr<Texture> globalIlluminationTexture;
 
     std::unique_ptr<Framebuffer> tonemappingBuffer;
     std::unique_ptr<Texture> tonemappingTexture;
