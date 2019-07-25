@@ -30,23 +30,8 @@ void RenderingPipeline::Initialize()
     auto width = windowSize.first;
     auto height = windowSize.second;
 
-    IntializeGBuffer(width, height);
-
-    lightsIlluminationTexture = std::make_unique<Texture>();
-    lightsIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA16F, width, height, GL_RGBA, GL_FLOAT);
-    lightsIlluminationBuffer = std::make_unique<Framebuffer>(width, height);
-    lightsIlluminationBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, lightsIlluminationTexture->texture);
-
-    globalIlluminationTexture = std::make_unique<Texture>();
-    globalIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA16F, width, height, GL_RGBA, GL_FLOAT);
-    globalIlluminationBuffer = std::make_unique<Framebuffer>(width, height);
-    globalIlluminationBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, globalIlluminationTexture->texture);
-
-    tonemappingTexture = std::make_unique<Texture>();
-    tonemappingTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA8, width, height, GL_RGBA, GL_UNSIGNED_BYTE);
-    tonemappingBuffer = std::make_unique<Framebuffer>(width, height);
-    tonemappingBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tonemappingTexture->texture);
-    tonemappingBuffer->AttachTexture(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthTexture->texture);
+    IntializeTextures(width, height);
+    IntializeBuffers(width, height);
 
     quad = std::make_unique<SimpleMesh>(SimpleMesh::Shape::Quad);
 
@@ -65,7 +50,7 @@ void RenderingPipeline::Initialize()
     glBindBufferBase(GL_UNIFORM_BUFFER, 3, materialUniform);
 }
 
-void RenderingPipeline::IntializeGBuffer(int width, int height)
+void RenderingPipeline::IntializeTextures(int width, int height)
 {
     gbuffer.colorTexture = std::make_unique<Texture>();
     gbuffer.colorTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA8, width, height, GL_RGBA, GL_UNSIGNED_BYTE);
@@ -76,12 +61,36 @@ void RenderingPipeline::IntializeGBuffer(int width, int height)
     gbuffer.depthTexture = std::make_unique<Texture>();
     gbuffer.depthTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_DEPTH_COMPONENT32, width, height, GL_DEPTH_COMPONENT, GL_FLOAT);
 
+    lightsIlluminationTexture = std::make_unique<Texture>();
+    lightsIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height, GL_RGB, GL_FLOAT);
+
+    globalIlluminationTexture = std::make_unique<Texture>();
+    globalIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height, GL_RGB, GL_FLOAT);
+
+    tonemappingTexture = std::make_unique<Texture>();
+    tonemappingTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB8, width, height, GL_RGB, GL_UNSIGNED_BYTE);
+}
+
+void RenderingPipeline::IntializeBuffers(int width, int height)
+{
     gbuffer.buffer = std::make_unique<Framebuffer>(width, height);
     gbuffer.buffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gbuffer.colorTexture->texture);
     gbuffer.buffer->AttachTexture(GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gbuffer.normalTexture->texture);
     gbuffer.buffer->AttachTexture(GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gbuffer.metallicTexture->texture);
+    gbuffer.buffer->AttachTexture(GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, lightsIlluminationTexture->texture);
     gbuffer.buffer->AttachTexture(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthTexture->texture);
-    gbuffer.buffer->SetDrawBuffers({ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 });
+    gbuffer.buffer->SetDrawBuffers({ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 });
+
+    lightsIlluminationBuffer = std::make_unique<Framebuffer>(width, height);
+    lightsIlluminationBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, lightsIlluminationTexture->texture);
+    lightsIlluminationBuffer->AttachTexture(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthTexture->texture);
+
+    globalIlluminationBuffer = std::make_unique<Framebuffer>(width, height);
+    globalIlluminationBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, globalIlluminationTexture->texture);
+
+    tonemappingBuffer = std::make_unique<Framebuffer>(width, height);
+    tonemappingBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tonemappingTexture->texture);
+    tonemappingBuffer->AttachTexture(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthTexture->texture);
 }
 
 void RenderingPipeline::BindCameraUniform()
@@ -246,7 +255,6 @@ void RenderingPipeline::RenderLights()
 {
     lightsIlluminationBuffer->Bind();
 
-    glClear(GL_COLOR_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE);
@@ -285,6 +293,7 @@ void RenderingPipeline::RenderToneMapping()
 {
     tonemappingBuffer->Bind();
 
+    glClear(GL_COLOR_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
 
@@ -319,7 +328,7 @@ void RenderingPipeline::RenderToDefaultFrameBuffer(Texture* texture)
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
 
-    ActivateTexture(TextureSlot::Environmental, gbuffer.normalTexture.get());
+    ActivateTexture(TextureSlot::Environmental, tonemappingTexture.get());
 
     auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::SimpleCopy);
     shader->setup();

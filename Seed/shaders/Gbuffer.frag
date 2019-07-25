@@ -22,6 +22,7 @@ in mat3 fTBN;
 layout (location = 0) out vec4 gColor;
 layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gMetallic;
+layout (location = 3) out vec3 gIllumination;
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 {
@@ -78,6 +79,7 @@ void main()
 	vec4 albedoTexture = texture(texAlbedo, texCoords);
 	vec3 normalTexture = texture(texNormal, texCoords).xyz;
 	vec4 metallicTexture = texture(texMetallic, texCoords);
+	vec3 emissionTexture = texture(texEmission, texCoords).xyz;
 	float occlusionTexture = texture(texOcclusion, texCoords).x;
 
 	float ambientOclussion = (Material.SpecularWorkflow || Material.UseOcclusionMap) ? occlusionTexture : metallicTexture.x;
@@ -101,4 +103,5 @@ void main()
         gNormal = vec4(normal, -1.0);
         gMetallic = vec4(ambientOclussion, roughness, metallic, 0.0);
     }
+    gIllumination = emissionTexture;
 }

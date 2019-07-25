@@ -50,7 +50,8 @@ public:
 	void SetSkybox(Skybox* skybox);
 
 private:
-    void IntializeGBuffer(int width, int height);
+    void IntializeTextures(int width, int height);
+    void IntializeBuffers(int width, int height);
     void RenderCamera(Camera* camera);
     void RenderGBuffer(RenderQueue* queue);
     void RenderGlobalIllumination();

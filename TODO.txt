@@ -5,7 +5,6 @@ http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
 probelm bude poznat, kdy je obhjekt transapernti
 deffered renderer podle metal gearu
 http://alextardif.com/arealights.html - je tam i lepsi light falloff
-emisse nakonec separatni draw se separatnim shaderem a transparentni objekty
 pocitat svetlo jenom pro osvetleny pixely
 mam nejaky rozbity normaly zase - staic spojit vertexy by disatnce a ty ostry hrany zmizej
 ---

@@ -135,6 +135,7 @@
     <None Include="shaders\SimplePosition.vert" />
     <None Include="shaders\PrecalculateIrradiance.frag" />
     <None Include="shaders\SimplePosition2D.vert" />
+    <None Include="shaders\SimpleTexCoords.vert" />
     <None Include="shaders\Skybox.frag" />
     <None Include="shaders\Skybox.vert" />
     <None Include="shaders\ToneMapping.frag" />
