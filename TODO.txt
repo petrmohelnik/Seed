@@ -1,10 +1,9 @@
 dodelat nacitani svetel z gltf do assimpu
 udelat directions pres lookatglobal?
-PBR bude jeidiny pro deferred, ale dodelat moznost nakonec priplacnout pres forward jiny typ?
+PBR bude jediny pro deferred, ale dodelat moznost nakonec priplacnout pres forward jiny typ?
 http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
-probelm bude poznat, kdy je obhjekt transapernti
+problem bude poznat, kdy je objekt transapernti
 deffered renderer podle metal gearu
-http://alextardif.com/arealights.html - je tam i lepsi light falloff
 pocitat svetlo jenom pro osvetleny pixely
 mam nejaky rozbity normaly zase - staic spojit vertexy by disatnce a ty ostry hrany zmizej
 ---
@@ -13,6 +12,7 @@ reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 https://docs.microsoft.com/en-us/windows/desktop/dxtecharts/cascaded-shadow-maps
+http://alextardif.com/arealights.html
 
 Screen Space Reflections
 

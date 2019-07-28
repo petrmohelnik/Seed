@@ -32,7 +32,7 @@ vec3 CalculateRadiance(vec3 lightDir, vec3 worldPos)
 {
 	float dist = length(Light.Pos - worldPos);
 	float normalizedDist = dist / Light.Range;
-	float attenuation = 1.0 / (10.0 * normalizedDist * normalizedDist);
+	float attenuation = pow(clamp(1.0 - pow(normalizedDist, 4), 0.0, 1.0), 2) / ((dist * dist) + 1.0);//1.0 / (10.0 * normalizedDist * normalizedDist);
 	float centerAngle = dot(lightDir, normalize(-Light.Orientation));
 	float angleDifference = centerAngle - Light.SpotAngle;
 	float spotAttenuation = angleDifference >= 0.0 ? 1.0 : clamp(1.0 / (1000.0 * angleDifference * angleDifference), 0.0, 1.0);

@@ -32,7 +32,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	auto light = objects.CreateObject("light");
 	light->AddComponent<Light>();
 	light->GetComponent<Transform>()->TranslateZ(5.0, Transform::Space::World);
-	light->GetComponent<Transform>()->TranslateY(10.0, Transform::Space::World);
+	light->GetComponent<Transform>()->TranslateY(2.0, Transform::Space::World);
 	light->GetComponent<Transform>()->TranslateX(-2.0, Transform::Space::World);
 	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
 	light->AddComponent<MeshRenderer>()->Load("sphere.obj");
@@ -42,44 +42,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->GetComponent<Light>()->SetIntensity(1);
 	light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.0f));
 
-    light = objects.CreateObject("light");
-    light->AddComponent<Light>();
-    light->GetComponent<Transform>()->TranslateZ(-4.0, Transform::Space::World);
-    light->GetComponent<Transform>()->TranslateY(5.0, Transform::Space::World);
-    light->GetComponent<Transform>()->TranslateX(-2.0, Transform::Space::World);
-    light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
-    light->AddComponent<MeshRenderer>()->Load("sphere.obj");
-    light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
-    light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-    light->GetComponent<Light>()->SetRange(1);
-    light->GetComponent<Light>()->SetIntensity(1);
-    light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.0f));
-
-    light = objects.CreateObject("light");
-    light->AddComponent<Light>();
-    light->GetComponent<Transform>()->TranslateZ(15.0, Transform::Space::World);
-    light->GetComponent<Transform>()->TranslateY(4.0, Transform::Space::World);
-    light->GetComponent<Transform>()->TranslateX(-0.0, Transform::Space::World);
-    light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
-    light->AddComponent<MeshRenderer>()->Load("sphere.obj");
-    light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
-    light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-    light->GetComponent<Light>()->SetRange(1);
-    light->GetComponent<Light>()->SetIntensity(1);
-    light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.0f));
-
-    light = objects.CreateObject("light");
-    light->AddComponent<Light>();
-    light->GetComponent<Transform>()->TranslateZ(5.0, Transform::Space::World);
-    light->GetComponent<Transform>()->TranslateY(3.0, Transform::Space::World);
-    light->GetComponent<Transform>()->TranslateX(7.0, Transform::Space::World);
-    light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
-    light->AddComponent<MeshRenderer>()->Load("sphere.obj");
-    light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
-    light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-    light->GetComponent<Light>()->SetRange(1);
-    light->GetComponent<Light>()->SetIntensity(1);
-    light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.0f));
 	//light->GetComponent<Light>()->SetSpotAngle(0.5f);
 	//light->AddComponent<GameScript>();
 
@@ -94,7 +56,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
-	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Protospace.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
