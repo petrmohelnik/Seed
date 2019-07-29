@@ -159,7 +159,7 @@ void RenderingPipeline::Render()
 {
     //for (const auto camera : cameras)
     {
-        RenderCamera(mainCamera);
+        RenderCamera(*mainCamera);
     }
 }
 
@@ -196,25 +196,26 @@ void RenderingPipeline::SetSkybox(Skybox* skybox_)
 	skybox = skybox_;
 }
 
-void RenderingPipeline::RenderCamera(Camera* camera)
+void RenderingPipeline::RenderCamera(Camera& camera)
 {
-    RenderQueue queue;
-    FillRenderQueue(&queue, camera);
-    camera->BindCamera();
+    RenderQueue deferredQueue, forwardQueue;
+    FillRenderQueues(deferredQueue, forwardQueue, camera);
+    camera.BindCamera();
 
-    RenderGBuffer(&queue);
+    RenderGBuffer(deferredQueue);
     RenderGlobalIllumination();
     RenderLights();
     BlendIllumination();
     RenderToneMapping();
+    RenderForward(forwardQueue);
     if(skybox)
         RenderSkybox(camera);
-    RenderToDefaultFrameBuffer(tonemappingTexture.get());
+    RenderToDefaultFrameBuffer(*tonemappingTexture.get());
     
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void RenderingPipeline::RenderGBuffer(RenderQueue* queue)
+void RenderingPipeline::RenderGBuffer(RenderQueue& queue)
 {
     gbuffer.buffer->Bind();
 
@@ -225,9 +226,9 @@ void RenderingPipeline::RenderGBuffer(RenderQueue* queue)
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_CULL_FACE);
 
-    for (const auto& renderTarget : queue->queue)
+    for (const auto& renderTarget : queue.queue)
     {
-        renderTarget.first->Render(renderTarget.second, ShaderFactory::Type::GBuffer);
+        renderTarget.first->Render(renderTarget.second);
     }
 }
 
@@ -304,7 +305,22 @@ void RenderingPipeline::RenderToneMapping()
     quad->Draw(shader);
 }
 
-void RenderingPipeline::RenderSkybox(Camera* camera)
+void RenderingPipeline::RenderForward(RenderQueue& queue)
+{
+    tonemappingBuffer->Bind();
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_CULL_FACE);
+
+    for (const auto& renderTarget : queue.queue)
+    {
+        renderTarget.first->Render(renderTarget.second);
+    }
+}
+
+void RenderingPipeline::RenderSkybox(Camera& camera)
 {
     tonemappingBuffer->Bind();
 
@@ -312,7 +328,7 @@ void RenderingPipeline::RenderSkybox(Camera* camera)
     glDepthFunc(GL_LEQUAL);
 
     RenderingPipeline::BindCameraUniform();
-    auto skyboxViewMatrix = glm::mat4(glm::mat3(glm::inverse(camera->GetTransform()->GetModelMatrix())));
+    auto skyboxViewMatrix = glm::mat4(glm::mat3(glm::inverse(camera.GetTransform()->GetModelMatrix())));
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(skyboxViewMatrix), &skyboxViewMatrix);
 
     skybox->Render();
@@ -320,7 +336,7 @@ void RenderingPipeline::RenderSkybox(Camera* camera)
     glDepthFunc(GL_LESS);
 }
 
-void RenderingPipeline::RenderToDefaultFrameBuffer(Texture* texture)
+void RenderingPipeline::RenderToDefaultFrameBuffer(Texture& texture)
 {
     Framebuffer::Unbind();
 
@@ -335,10 +351,11 @@ void RenderingPipeline::RenderToDefaultFrameBuffer(Texture* texture)
     quad->Draw(shader);
 }
 
-void RenderingPipeline::FillRenderQueue(RenderQueue* queue, Camera* camera)
+void RenderingPipeline::FillRenderQueues(RenderQueue& deferredQueue, RenderQueue& forwardQueue, const Camera& camera)
 {
     for (auto renderer : renderers)
     {
-        renderer->AddToRenderQueue(queue);
+        renderer->AddToRenderQueueDeferred(deferredQueue);
+        renderer->AddToRenderQueueForward(forwardQueue);
     }
 }

@@ -52,15 +52,16 @@ public:
 private:
     void IntializeTextures(int width, int height);
     void IntializeBuffers(int width, int height);
-    void RenderCamera(Camera* camera);
-    void RenderGBuffer(RenderQueue* queue);
+    void RenderCamera(Camera& camera);
+    void RenderGBuffer(RenderQueue& queue);
     void RenderGlobalIllumination();
     void RenderLights();
     void BlendIllumination();
     void RenderToneMapping();
-    void RenderSkybox(Camera* camera);
-    void RenderToDefaultFrameBuffer(Texture* texture);
-    void FillRenderQueue(RenderQueue* queue, Camera* camera);
+    void RenderForward(RenderQueue& queue);
+    void RenderSkybox(Camera& camera);
+    void RenderToDefaultFrameBuffer(Texture& texture);
+    void FillRenderQueues(RenderQueue& deferredQueue, RenderQueue& forwardQueue, const Camera& camera);
 
     std::vector<Renderer*> renderers;
     std::vector<Camera*> cameras;

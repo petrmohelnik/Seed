@@ -24,7 +24,8 @@ public:
 protected:
     friend class RenderingPipeline;
 
-    void AddToRenderQueue(RenderQueue* queue) override;
+    void AddToRenderQueueDeferred(RenderQueue& queue) override;
+    void AddToRenderQueueForward(RenderQueue& queue) override;
 	void Render(int index) override;
     void Render(int index, ShaderFactory::Type shaderType) override;
 

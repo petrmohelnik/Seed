@@ -12,11 +12,21 @@ MeshRenderer::MeshRenderer(Object* object)
     mesh = std::make_shared<Mesh>();
 }
 
-void MeshRenderer::AddToRenderQueue(RenderQueue* queue)
+void MeshRenderer::AddToRenderQueueDeferred(RenderQueue& queue)
 {
     for (int index = 0; index < mesh->NumberOfSubmeshes(); index++)
     {
-        queue->Add(this, index);
+        if(materials[index]->GetShader() == ShaderFactory::Type::GBuffer)
+            queue.Add(this, index);
+    }
+}
+
+void MeshRenderer::AddToRenderQueueForward(RenderQueue& queue)
+{
+    for (int index = 0; index < mesh->NumberOfSubmeshes(); index++)
+    {
+        if (materials[index]->GetShader() != ShaderFactory::Type::GBuffer)
+            queue.Add(this, index);
     }
 }
 

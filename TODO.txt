@@ -1,11 +1,10 @@
 dodelat nacitani svetel z gltf do assimpu
 udelat directions pres lookatglobal?
-PBR bude jediny pro deferred, ale dodelat moznost nakonec priplacnout pres forward jiny typ?
 http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
 problem bude poznat, kdy je objekt transapernti
 deffered renderer podle metal gearu
 pocitat svetlo jenom pro osvetleny pixely
-mam nejaky rozbity normaly zase - staic spojit vertexy by disatnce a ty ostry hrany zmizej
+mam nejaky rozbity normaly zase - staci spojit vertexy by disatnce a ty ostry hrany zmizej
 ---
 CascadedShadowMaps a SoftShadow projekty
 reflection probe
