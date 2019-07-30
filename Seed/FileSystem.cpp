@@ -130,25 +130,27 @@ void FileSystem::LoadLight(const aiScene* scene, Object* object)
             //    else
             //        light->GetTransform()->LookAtLocal(ToGlmVec3(assimpLight->mDirection));
             //}
-            auto fwd = light->GetTransform()->GetForwardAxis();
+            //auto fwd = light->GetTransform()->GetForwardAxis();
             light->SetColor(glm::vec3(assimpLight->mColorDiffuse.r, assimpLight->mColorDiffuse.g, assimpLight->mColorDiffuse.b));
 
-            if (assimpLight->mType == aiLightSourceType::aiLightSource_DIRECTIONAL)
-                light->SetType(Light::Type::Directional);
-            else
+
+            light->GetTransform()->Translate(ToGlmVec3(assimpLight->mPosition));
+            float quadraticRange = std::sqrt(75.0f / assimpLight->mAttenuationQuadratic);
+            float linearRange = 4.5f / assimpLight->mAttenuationQuadratic;
+            light->dataBlock.Range = (quadraticRange + linearRange) / 2.0f;
+            if (assimpLight->mType == aiLightSourceType::aiLightSource_SPOT)
             {
-                light->GetTransform()->Translate(ToGlmVec3(assimpLight->mPosition));
-                float quadraticRange = std::sqrt(75.0f / assimpLight->mAttenuationQuadratic);
-                float linearRange = 4.5f / assimpLight->mAttenuationQuadratic;
-                light->dataBlock.Range = (quadraticRange + linearRange) / 2.0f;
-                if (assimpLight->mType == aiLightSourceType::aiLightSource_SPOT)
-                {
-                    light->SetType(Light::Type::Spot);
-                    light->dataBlock.SpotAngle = glm::cos(assimpLight->mAngleInnerCone);
-                }
-                else
-                    light->SetType(Light::Type::Point);
+                light->SetType(Light::Type::Spot);
+                light->dataBlock.SpotAngle = glm::cos(assimpLight->mAngleInnerCone);
             }
+            else if(assimpLight->mType == aiLightSourceType::aiLightSource_POINT)
+                light->SetType(Light::Type::Point);
+            else
+                light->SetType(Light::Type::Directional);
+
+            //temporary for gltf2
+            light->dataBlock.Itensity = assimpLight->mAttenuationConstant;
+            light->dataBlock.Range = assimpLight->mAttenuationQuadratic;
         }
     }
 }

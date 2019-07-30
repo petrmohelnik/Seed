@@ -1,4 +1,5 @@
-dodelat nacitani svetel z gltf do assimpu
+https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_lights_punctual
+poresit range a spot attenuation
 udelat directions pres lookatglobal?
 http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
 problem bude poznat, kdy je objekt transapernti
