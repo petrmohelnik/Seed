@@ -1,20 +1,20 @@
-https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_lights_punctual
-poresit range a spot attenuation
-udelat directions pres lookatglobal?
 http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
-problem bude poznat, kdy je objekt transapernti
-deffered renderer podle metal gearu
-pocitat svetlo jenom pro osvetleny pixely
-mam nejaky rozbity normaly zase - staci spojit vertexy by disatnce a ty ostry hrany zmizej
+problem bude poznat, kdy je objekt transparentni
+pocitat svetlo jenom pro osvetleny pixely - stencil na radius
+dorucit assimp?
+https://github.com/ocornut/imgui/issues/381
 ---
 CascadedShadowMaps a SoftShadow projekty
-reflection probe
-https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
+SSAO
+Bloom
+Screen Space Reflections
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 https://docs.microsoft.com/en-us/windows/desktop/dxtecharts/cascaded-shadow-maps
 http://alextardif.com/arealights.html
+https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf
 
-Screen Space Reflections
+reflection probe
+https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
 
 vytvaret kopie objektu
 https://stackoverflow.com/questions/5027456/copying-derived-entities-using-only-base-class-pointers-without-exhaustive-tes

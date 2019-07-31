@@ -85,6 +85,11 @@ void Input::SliderFloat(const std::string& name, float& value, float min, float 
     ImGui::SliderFloat(name.c_str(), &value, min, max);
 }
 
+void Input::SliderFloatLog(const std::string& name, float& value, float min, float max, float power)
+{
+    ImGui::SliderFloat(name.c_str(), &value, min, max, "%.3f", power);
+}
+
 void Input::CreateSceneGraph()
 {
 	ImGui::ShowDemoWindow();

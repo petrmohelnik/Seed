@@ -23,15 +23,17 @@ void Light::SetIntensity(float intensity)
     dataBlock.Itensity = intensity;
 }
 
-void Light::SetSpotAngle(float spotAngle)
+void Light::SetSpotAngle(float outerAngle, float blend)
 {
-    dataBlock.SpotAngle = glm::cos(spotAngle);
+    outerAngle *= 0.5f;
+    float innerAngle = outerAngle * (1.0f - blend);
+    dataBlock.SpotAngleScale = 1.0f / std::max(0.001f, (std::cos(innerAngle) - std::cos(outerAngle)));
+    dataBlock.SpotAngleOffset = -glm::cos(outerAngle) * dataBlock.SpotAngleScale;
 }
 
 void Light::SetDirection(glm::vec3 direction)
 {
-    direction.x += 0.001f;
-    GetTransform()->LookAtLocal(direction);
+    GetTransform()->LookAt(GetTransform()->GetPosition() + direction);
 }
 
 void Light::SetDirectionalLight(glm::vec3 direction)
@@ -45,22 +47,23 @@ void Light::SetPointLight(glm::vec3 position, float range, float intensity)
     SetType(Type::Point);
     SetRange(range);
     SetIntensity(intensity);
-    dataBlock.SpotAngle = -1.0f;
+    dataBlock.SpotAngleScale = 0.0f;
+    dataBlock.SpotAngleOffset = 1.0f;
 }
 
-void Light::SetSpotLight(glm::vec3 position, glm::vec3 direction, float range, float spotAngle, float intensity)
+void Light::SetSpotLight(glm::vec3 position, glm::vec3 direction, float range, float intensity, float spotOuterAngle, float spotBlend)
 {
     SetType(Type::Spot);
     SetDirection(direction);
     SetRange(range);
-    SetSpotAngle(spotAngle);
+    SetSpotAngle(spotOuterAngle, spotBlend);
     SetIntensity(intensity);
 }
 
 void Light::BindLight()
 {
-    Engine::GetInput().SliderFloat("Range", dataBlock.Range, 0.0, 1000);
-    Engine::GetInput().SliderFloat("Intensity", dataBlock.Itensity, 0.0, 100);
+    Engine::GetInput().SliderFloatLog(std::string(GetObject()->GetName() + "_Range"), dataBlock.Range, -1.0, 100);
+    Engine::GetInput().SliderFloatLog(std::string(GetObject()->GetName() + "_Intensity"), dataBlock.Itensity, 0.0, 100);
 
     RenderingPipeline::BindLightUniform();
 

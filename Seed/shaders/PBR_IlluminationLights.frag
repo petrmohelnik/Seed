@@ -7,7 +7,8 @@ layout(std140, binding = 1) uniform LightBlock
 	vec3 Orientation;
 	float Range;
 	float Intensity;
-	float SpotAngle;
+	float SpotAngleScale;
+	float SpotAngleOffset;
 } Light;
 
 layout(binding = 0) uniform sampler2D texColor;
@@ -31,12 +32,12 @@ vec3 FresnelSchlick(vec3 F0, float HdotV)
 vec3 CalculateRadiance(vec3 lightDir, vec3 worldPos)
 {
 	float dist = length(Light.Pos - worldPos);
-	float normalizedDist = dist / Light.Range;
+	float normalizedDist = clamp(dist / Light.Range, 0.0, 1.0);
 	float attenuation = pow(clamp(1.0 - pow(normalizedDist, 4), 0.0, 1.0), 2) / ((dist * dist) + 1.0);//1.0 / (10.0 * normalizedDist * normalizedDist);
 	float centerAngle = dot(lightDir, normalize(-Light.Orientation));
-	float angleDifference = centerAngle - Light.SpotAngle;
-	float spotAttenuation = angleDifference >= 0.0 ? 1.0 : clamp(1.0 / (1000.0 * angleDifference * angleDifference), 0.0, 1.0);
-	return Light.Color * Light.Intensity * spotAttenuation * attenuation;
+	float angleAttenuation = clamp(Light.SpotAngleOffset + centerAngle * Light.SpotAngleScale, 0.0, 1.0);
+    angleAttenuation *= angleAttenuation;
+	return Light.Color * Light.Intensity * angleAttenuation * attenuation;
 }
 
 float DistributionGGX(float NdotH, float roughness)

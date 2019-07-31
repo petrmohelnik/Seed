@@ -37,12 +37,10 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
 	light->AddComponent<MeshRenderer>()->Load("sphere.obj");
     light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
-	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-	light->GetComponent<Light>()->SetRange(1);
-	light->GetComponent<Light>()->SetIntensity(1);
-	light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.0f));
-
-	//light->GetComponent<Light>()->SetSpotAngle(0.5f);
+	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+	light->GetComponent<Light>()->SetIntensity(100.0f);
+	light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.01f));
+	light->GetComponent<Light>()->SetSpotAngle(M_PI / 2.0f, 0.2f);
 	//light->AddComponent<GameScript>();
 
     //auto scifiCube = objects.CreateObjectWithMesh("scifiCube", "scifi_cube/scene.gltf", glm::vec3(-3.0f, 0.0f, 0.0f));
@@ -50,14 +48,11 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 
     //auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
     //ground->GetComponent<Transform>()->SetScale(glm::vec3(1000));
-    //ground->GetComponent<Transform>()->TranslateY(-1);
-    //ground->GetComponent<MeshRenderer>()->GetMaterial()->Normal = brickMaterial1->Normal;
-    //ground->GetComponent<MeshRenderer>()->GetMaterial()->Height = brickMaterial1->Height;
 
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
-	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
-	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
+	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Protospace.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
 	//objects.SetSkybox(std::make_unique<TextureCubeMap>(glm::vec4(0.4f, 0.4f, 0.7f, 1.0f)));

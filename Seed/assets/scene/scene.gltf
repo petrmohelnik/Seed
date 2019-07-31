@@ -164,7 +164,7 @@
                         1,
                         1
                     ],
-                    "intensity" : 20000,
+                    "intensity" : 2000,
                     "spot" : {
                         "innerConeAngle" : 0.4450589685225559,
                         "outerConeAngle" : 0.5235987901687622

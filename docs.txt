@@ -30,3 +30,6 @@ hdri:
 https://www.daz3d.com/forums/discussion/57531/list-of-sites-with-free-hdri
 https://hdrihaven.com/hdris/
 https://texturehaven.com/textures/
+
+import:
+https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_lights_punctual

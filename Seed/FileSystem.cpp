@@ -141,7 +141,7 @@ void FileSystem::LoadLight(const aiScene* scene, Object* object)
             if (assimpLight->mType == aiLightSourceType::aiLightSource_SPOT)
             {
                 light->SetType(Light::Type::Spot);
-                light->dataBlock.SpotAngle = glm::cos(assimpLight->mAngleInnerCone);
+                light->SetSpotAngle(assimpLight->mAngleOuterCone * 2.0f, 1.0f - (assimpLight->mAngleInnerCone / assimpLight->mAngleOuterCone));
             }
             else if(assimpLight->mType == aiLightSourceType::aiLightSource_POINT)
                 light->SetType(Light::Type::Point);
@@ -149,8 +149,8 @@ void FileSystem::LoadLight(const aiScene* scene, Object* object)
                 light->SetType(Light::Type::Directional);
 
             //temporary for gltf2
-            light->dataBlock.Itensity = assimpLight->mAttenuationConstant;
-            light->dataBlock.Range = assimpLight->mAttenuationQuadratic;
+            light->dataBlock.Itensity = assimpLight->mAttenuationQuadratic / (4.0f * M_PI); //convert from power to intenisty
+            light->dataBlock.Range = assimpLight->mAttenuationLinear;
         }
     }
 }

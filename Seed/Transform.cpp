@@ -41,6 +41,9 @@ glm::mat4 Transform::CalculateWorldMatrix()
 
 void Transform::DecomposeMatrix(glm::mat4 matrix, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation, glm::mat4& decomposedScale)
 {
+    if (!std::isfinite(matrix[0][0]))
+        throw std::runtime_error("matrix to be decomposed is undefined!");
+
 	glm::vec3 scale, skew;
 	glm::vec4 dummyPerspective;
 	glm::decompose(matrix, scale, decomposedOrientation, decomposedTranslation, skew, dummyPerspective);
