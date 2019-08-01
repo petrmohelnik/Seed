@@ -149,7 +149,7 @@ void FileSystem::LoadLight(const aiScene* scene, Object* object)
                 light->SetType(Light::Type::Directional);
 
             //temporary for gltf2
-            light->dataBlock.Itensity = assimpLight->mAttenuationQuadratic / (4.0f * M_PI); //convert from power to intenisty
+            light->dataBlock.Itensity = assimpLight->mAttenuationQuadratic / static_cast<float>(4.0f * M_PI); //convert from power to intensity
             light->dataBlock.Range = assimpLight->mAttenuationLinear;
         }
     }

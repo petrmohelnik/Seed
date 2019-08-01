@@ -1,6 +1,7 @@
 #pragma once
 
 class Object;
+class Component;
 
 class Input
 {
@@ -13,8 +14,8 @@ public:
     bool MouseButton(Uint8 button); //SDL_BUTTON_RIGHT, SDL_BUTTON_LEFT
     bool MouseButtonDown(Uint8 button); //SDL_BUTTON_RIGHT, SDL_BUTTON_LEFT
     glm::ivec2 MouseMovement();
-    void SliderFloat(const std::string& name, float& value, float min, float max);
-    void SliderFloatLog(const std::string& name, float& value, float min, float max, float power = 4.0f);
+    void SliderFloat(Component* component, const std::string& name, float& value, float min, float max);
+    void SliderFloatLog(Component* component, const std::string& name, float& value, float min, float max, float power = 4.0f);
 
 protected:
     friend class SDLWindow;
@@ -27,6 +28,7 @@ protected:
 
 private:
 	void CreateSceneGraphNode(Object* object);
+    std::string GetFullName(Component* component, const std::string& name);
 
 	std::set<SDL_Keycode> keyHoldDown;
 	std::set<SDL_Keycode> keyPressedDown;

@@ -39,8 +39,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
 	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
 	light->GetComponent<Light>()->SetIntensity(100.0f);
-	light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, 0.01f));
-	light->GetComponent<Light>()->SetSpotAngle(M_PI / 2.0f, 0.2f);
+	light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, -0.4f));
+	light->GetComponent<Light>()->SetSpotAngle(1.57f, 0.2f);
 	//light->AddComponent<GameScript>();
 
     //auto scifiCube = objects.CreateObjectWithMesh("scifiCube", "scifi_cube/scene.gltf", glm::vec3(-3.0f, 0.0f, 0.0f));

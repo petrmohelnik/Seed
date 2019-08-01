@@ -1,5 +1,6 @@
 #include "Input.h"
 #include "Object.h"
+#include "Component.h"
 #include "Engine.h"
 
 bool Input::GameIsRunning()
@@ -80,14 +81,14 @@ glm::ivec2 Input::MouseMovement()
     return mouseMovement;
 }
 
-void Input::SliderFloat(const std::string& name, float& value, float min, float max)
+void Input::SliderFloat(Component* component, const std::string& name, float& value, float min, float max)
 {
-    ImGui::SliderFloat(name.c_str(), &value, min, max);
+    ImGui::SliderFloat(GetFullName(component, name).c_str(), &value, min, max);
 }
 
-void Input::SliderFloatLog(const std::string& name, float& value, float min, float max, float power)
+void Input::SliderFloatLog(Component* component, const std::string& name, float& value, float min, float max, float power)
 {
-    ImGui::SliderFloat(name.c_str(), &value, min, max, "%.3f", power);
+    ImGui::SliderFloat(GetFullName(component, name).c_str(), &value, min, max, "%.3f", power);
 }
 
 void Input::CreateSceneGraph()
@@ -113,4 +114,9 @@ void Input::CreateSceneGraphNode(Object* object)
 			CreateSceneGraphNode(transform->GetChild(index)->GetObject());
 		ImGui::TreePop();
 	}
+}
+
+std::string Input::GetFullName(Component* component, const std::string& name)
+{
+    return component->GetObject()->GetName() + "_" + component->GetName() + "_" + name;
 }

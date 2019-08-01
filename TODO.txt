@@ -1,3 +1,4 @@
+range - staci preposlat hodnotu z blenderu
 http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
 problem bude poznat, kdy je objekt transparentni
 pocitat svetlo jenom pro osvetleny pixely - stencil na radius
