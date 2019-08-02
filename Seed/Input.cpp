@@ -81,14 +81,19 @@ glm::ivec2 Input::MouseMovement()
     return mouseMovement;
 }
 
-void Input::SliderFloat(Component* component, const std::string& name, float& value, float min, float max)
+void Input::SliderFloat(const std::string& name, float& value, float min, float max)
 {
-    ImGui::SliderFloat(GetFullName(component, name).c_str(), &value, min, max);
+    ImGui::SliderFloat(name.c_str(), &value, min, max);
 }
 
-void Input::SliderFloatLog(Component* component, const std::string& name, float& value, float min, float max, float power)
+void Input::SliderFloatLog(const std::string& name, float& value, float min, float max, float power)
 {
-    ImGui::SliderFloat(GetFullName(component, name).c_str(), &value, min, max, "%.3f", power);
+    ImGui::SliderFloat(name.c_str(), &value, min, max, "%.3f", power);
+}
+
+void Input::BulletText(const std::string& text)
+{
+    ImGui::BulletText(text.c_str());
 }
 
 void Input::CreateSceneGraph()
@@ -104,19 +109,23 @@ void Input::CreateSceneGraphNode(Object* object)
 	auto transform = object->GetComponent<Transform>();
     if (object->GetComponent<Transform>()->GetChildCount() == 0)
     {
-        ImGui::BulletText(object->GetName().c_str());
+        if (ImGui::TreeNode(object->GetName().c_str()))
+        {
+            for (const auto& component : object->GetAllComponents())
+                component->OnInputGraphUpdate();
+            ImGui::TreePop();
+        }
         return;
     }
 	if (ImGui::TreeNode(object->GetName().c_str()))
 	{
-		
 		for (int index = 0; index < transform->GetChildCount(); index++)
 			CreateSceneGraphNode(transform->GetChild(index)->GetObject());
 		ImGui::TreePop();
 	}
 }
 
-std::string Input::GetFullName(Component* component, const std::string& name)
+std::string Input::GetFullNameHash(Component* component, const std::string& name)
 {
-    return component->GetObject()->GetName() + "_" + component->GetName() + "_" + name;
+    return name + "##" + component->GetObject()->GetName() + "_" + component->GetName();
 }

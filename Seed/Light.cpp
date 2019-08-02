@@ -62,12 +62,16 @@ void Light::SetSpotLight(glm::vec3 position, glm::vec3 direction, float range, f
 
 void Light::BindLight()
 {
-    Engine::GetInput().SliderFloatLog(this, "Range", dataBlock.Range, -1.0, 100);
-    Engine::GetInput().SliderFloatLog(this, "Intensity", dataBlock.Itensity, 0.0, 100);
-
     RenderingPipeline::BindLightUniform();
 
 	dataBlock.Pos = GetTransform()->GetPosition();
     dataBlock.Orientation = glm::normalize(glm::mat3(glm::inverse(glm::transpose(GetTransform()->GetModelMatrix()))) * glm::vec3(0.0f, 0.0f, -1.0f));
     glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);
+}
+
+void Light::OnInputGraphUpdate()
+{
+    ImGui::BulletText("Light");
+    Engine::GetInput().SliderFloatLog("Range", dataBlock.Range, -0.0, 100);
+    Engine::GetInput().SliderFloatLog("Intensity", dataBlock.Itensity, 0.0, 100);
 }

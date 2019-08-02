@@ -19,8 +19,10 @@ protected:
     friend class Components;
     friend class RenderingPipeline;
     friend class PhysicsEngine;
+    friend class Input;
     bool UpdateForDestruction();
     bool ToBeDestroyed();
+    virtual void OnInputGraphUpdate() {};
 
 private:
     Object* object;

@@ -63,10 +63,12 @@ protected:
     friend class Component;
     friend class Objects;
     friend class Transform;
+    friend class Input;
 
     virtual void Initialize();
     bool UpdateForDestruction();
     bool DoDestruction();
+    std::vector<Component*> GetAllComponents();
 
 private:
 	std::unique_ptr<Transform> transform;

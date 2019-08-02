@@ -3,12 +3,12 @@ http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
 problem bude poznat, kdy je objekt transparentni
 pocitat svetlo jenom pro osvetleny pixely - stencil na radius
 dorucit assimp?
-https://github.com/ocornut/imgui/issues/381
 ---
 CascadedShadowMaps a SoftShadow projekty
 SSAO
 Bloom
 Screen Space Reflections
+AA
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 https://docs.microsoft.com/en-us/windows/desktop/dxtecharts/cascaded-shadow-maps
 http://alextardif.com/arealights.html

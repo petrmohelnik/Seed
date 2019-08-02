@@ -27,6 +27,7 @@ public:
 
 protected:
     friend class FileSystem;
+    void OnInputGraphUpdate() override;
 
 private:
     struct LightBlock
@@ -34,7 +35,7 @@ private:
         alignas(16) glm::vec3 Pos;
         alignas(16) glm::vec3 Color = glm::vec3(1.0f);
         alignas(16) glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, 1.0f);
-        alignas(4) float Range = -1.0f;
+        alignas(4) float Range = -0.0f;
         alignas(4) float Itensity = 1.0f;
         alignas(4) float SpotAngleScale = 0.0f;
         alignas(4) float SpotAngleOffset = 1.0f;

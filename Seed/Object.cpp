@@ -120,3 +120,27 @@ bool Object::DoDestruction()
 
     return false;
 }
+
+std::vector<Component*> Object::GetAllComponents()
+{
+    std::vector<Component*> components;
+
+    components.push_back(transform.get());
+    if(renderer.get() != nullptr)
+        components.push_back(renderer.get());
+    if(camera.get() != nullptr)
+        components.push_back(camera.get());
+    if(light.get() != nullptr)
+        components.push_back(light.get());
+    if(rigidbody.get() != nullptr)
+        components.push_back(rigidbody.get());
+
+    for (const auto& audio : audios)
+        components.push_back(audio.get());
+    for (const auto& collider : colliders)
+        components.push_back(collider.get());
+    for (const auto& script : scripts)
+        components.push_back(script.get());
+
+    return components;
+}
