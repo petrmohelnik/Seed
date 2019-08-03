@@ -27,7 +27,7 @@ private:
     void LoadNode(const aiScene* scene, aiNode* node, Object* parent, std::vector<Object*>& objects, 
         const std::vector<std::shared_ptr<SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials);
     void LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials);
-    void LoadLight(const aiScene* scene, Object* object);
+    void LoadLight(const aiScene* scene, aiNode* node, Object* object);
     void LoadCamera(const aiScene* scene, Object* object);
     std::shared_ptr<Mesh> LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes);
     std::shared_ptr<SubMesh> LoadSubMeshData(aiMesh* assimpMesh);

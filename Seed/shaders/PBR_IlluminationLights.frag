@@ -32,8 +32,8 @@ vec3 FresnelSchlick(vec3 F0, float HdotV)
 vec3 CalculateRadiance(vec3 lightDir, vec3 worldPos)
 {
 	float dist = length(Light.Pos - worldPos);
-	float normalizedDist = clamp(dist / Light.Range, 0.0, 1.0);
-	float attenuation = pow(clamp(1.0 - pow(normalizedDist, 4), 0.0, 1.0), 2) / ((dist * dist) + 1.0);
+	float normalizedDist = Light.Range == 0.0 ? 0.0 : dist / Light.Range;
+	float attenuation = pow(clamp(1.0 - pow(normalizedDist, 4), 0.0, 1.0), 2) / max(dist * dist, 0.01 * 0.01);
 	float centerAngle = dot(lightDir, normalize(-Light.Orientation));
 	float angleAttenuation = clamp(Light.SpotAngleOffset + centerAngle * Light.SpotAngleScale, 0.0, 1.0);
     angleAttenuation *= angleAttenuation;

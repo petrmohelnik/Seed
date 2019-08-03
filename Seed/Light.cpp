@@ -72,6 +72,6 @@ void Light::BindLight()
 void Light::OnInputGraphUpdate()
 {
     ImGui::BulletText("Light");
-    Engine::GetInput().SliderFloatLog("Range", dataBlock.Range, -0.0, 100);
+    Engine::GetInput().SliderFloatLog("Range", dataBlock.Range, 0.0, 100);
     Engine::GetInput().SliderFloatLog("Intensity", dataBlock.Itensity, 0.0, 100);
 }

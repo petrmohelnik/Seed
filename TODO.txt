@@ -1,8 +1,7 @@
-range - staci preposlat hodnotu z blenderu
 http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
 problem bude poznat, kdy je objekt transparentni
-pocitat svetlo jenom pro osvetleny pixely - stencil na radius
-dorucit assimp?
+zkusit udelat jednoducy preposlani range z blenderu
+dorucit assimp? - intensitu do color, na range pridat metadata do nodu?
 ---
 CascadedShadowMaps a SoftShadow projekty
 SSAO
@@ -13,6 +12,8 @@ https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_ep
 https://docs.microsoft.com/en-us/windows/desktop/dxtecharts/cascaded-shadow-maps
 http://alextardif.com/arealights.html
 https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf
+
+pocitat svetlo jenom pro osvetleny pixely - stencil na radius - range - staci preposlat hodnotu z blenderu
 
 reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/

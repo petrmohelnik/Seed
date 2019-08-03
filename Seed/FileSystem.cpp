@@ -81,7 +81,7 @@ void FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent, st
     object->GetComponent<Transform>()->SetScale(ToGlmVec3(scale));
 
     LoadMesh(scene, node, object, subMeshes, materials);
-    LoadLight(scene, object);
+    LoadLight(scene, node, object);
     LoadCamera(scene, object);
 
     objects.push_back(object);
@@ -113,7 +113,7 @@ void FileSystem::LoadMesh(const aiScene* scene, aiNode* node, Object* object, co
     }
 }
 
-void FileSystem::LoadLight(const aiScene* scene, Object* object)
+void FileSystem::LoadLight(const aiScene* scene, aiNode* node, Object* object)
 {
     for(unsigned int index = 0; index < scene->mNumLights; index++)
     {
@@ -131,13 +131,11 @@ void FileSystem::LoadLight(const aiScene* scene, Object* object)
             //        light->GetTransform()->LookAtLocal(ToGlmVec3(assimpLight->mDirection));
             //}
             //auto fwd = light->GetTransform()->GetForwardAxis();
-            light->SetColor(glm::vec3(assimpLight->mColorDiffuse.r, assimpLight->mColorDiffuse.g, assimpLight->mColorDiffuse.b));
-
 
             light->GetTransform()->Translate(ToGlmVec3(assimpLight->mPosition));
-            float quadraticRange = std::sqrt(75.0f / assimpLight->mAttenuationQuadratic);
-            float linearRange = 4.5f / assimpLight->mAttenuationQuadratic;
-            light->dataBlock.Range = (quadraticRange + linearRange) / 2.0f;
+            //float quadraticRange = std::sqrt(75.0f / assimpLight->mAttenuationQuadratic);
+            //float linearRange = 4.5f / assimpLight->mAttenuationQuadratic;
+            //light->dataBlock.Range = (quadraticRange + linearRange) / 2.0f;
             if (assimpLight->mType == aiLightSourceType::aiLightSource_SPOT)
             {
                 light->SetType(Light::Type::Spot);
@@ -147,10 +145,15 @@ void FileSystem::LoadLight(const aiScene* scene, Object* object)
                 light->SetType(Light::Type::Point);
             else
                 light->SetType(Light::Type::Directional);
+            
+            if(node->mMetaData)
+                node->mMetaData->Get("PBR_LightRange", light->dataBlock.Range);
 
-            //temporary for gltf2
-            light->dataBlock.Itensity = assimpLight->mAttenuationQuadratic / static_cast<float>(4.0f * M_PI); //convert from power to intensity
-            light->dataBlock.Range = assimpLight->mAttenuationLinear;
+            //adjust color so max value is 1.0, rest is intensity
+            auto color = glm::vec3(assimpLight->mColorDiffuse.r, assimpLight->mColorDiffuse.g, assimpLight->mColorDiffuse.b);
+            auto illuminationPower = glm::max(glm::max(color.x, color.y), color.z);
+            light->dataBlock.Color = color / illuminationPower;
+            light->dataBlock.Itensity = illuminationPower / static_cast<float>(4.0f * M_PI); //convert from power to intensity
         }
     }
 }
