@@ -1,19 +1,22 @@
+dorucit assimp
+pocitat svetlo jenom pro osvetleny pixely - stencil na radius - range - staci preposlat hodnotu z blenderu
+https://dqlin.xyz/tech/2018/01/02/stencil/
+AABB - frustum culling
 http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
-problem bude poznat, kdy je objekt transparentni
-zkusit udelat jednoducy preposlani range z blenderu
-dorucit assimp? - intensitu do color, na range pridat metadata do nodu?
+problem bude poznat, kdy je objekt transparentni - pruhlednej material musi mit specialni flag
 ---
 CascadedShadowMaps a SoftShadow projekty
 SSAO
 Bloom
 Screen Space Reflections
 AA
+Depth Of Field
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 https://docs.microsoft.com/en-us/windows/desktop/dxtecharts/cascaded-shadow-maps
 http://alextardif.com/arealights.html
 https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf
-
-pocitat svetlo jenom pro osvetleny pixely - stencil na radius - range - staci preposlat hodnotu z blenderu
+slunce
+http://www.adriancourreges.com/blog/2017/12/15/mgs-v-graphics-study/
 
 reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
@@ -26,8 +29,6 @@ teren - https://victorbush.com/2015/01/tessellated-terrain/
 http://antongerdelan.net/opengl/raycasting.html
 
 v render queue se budou radit objekty prioritne podle vrstvy materialu, potom podle programu
-pruhlednej material musi mit specialni flag
-https://learnopengl.com/Advanced-OpenGL/Blending
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html -- inspirace poradi
 
 submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
@@ -57,10 +58,6 @@ https://learn.unity.com/tutorial/physics-best-practices#5c7f8528edbc2a002053b5b4
 
 textura nebo mesh by si meli drzet path, aby pri loadu na gpu, kdyz maji smazany data si ho mohly naloadovat,
 ale uz na primo, zadny sdileni pres file system
-
-http://www.adriancourreges.com/blog/2017/12/15/mgs-v-graphics-study/
-http://www.adriancourreges.com/blog/2016/09/09/doom-2016-graphics-study/
-http://www.adriancourreges.com/blog/2015/03/10/deus-ex-human-revolution-graphics-study/
 
 !!!!!!!
 https://unity3d.com/learn/tutorials/temas/performance-optimization/optimizing-graphics-rendering-unity-games
