@@ -25,5 +25,4 @@ void RotateWorldScript::Update()
     {
         transform->Translate(transform->GetUpAxis(), Transform::Space::World);
     }
-
 }

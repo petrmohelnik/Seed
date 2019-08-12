@@ -26,8 +26,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	//nanosuit->GetComponent<Transform>()->TranslateX(3.0f);
 
     auto camera = objects.CreateObject<CameraObject>("camera");
+    camera->GetComponent<Transform>()->TranslateY(1.5);
     //camera->GetComponent<Transform>()->TranslateZ(10.0);
-    //camera->GetComponent<Transform>()->TranslateY(3.0);
     //camera->GetComponent<Transform>()->TranslateX(-10.0);
 	auto light = objects.CreateObject("light");
 	light->AddComponent<Light>();
@@ -36,12 +36,12 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->GetComponent<Transform>()->TranslateX(-2.0, Transform::Space::World);
 	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
 	light->AddComponent<MeshRenderer>()->Load("sphere.obj");
-    light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
+    light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
 	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
 	light->GetComponent<Light>()->SetIntensity(100.0f);
 	light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, -0.4f));
-	light->GetComponent<Light>()->SetSpotAngle(1.57f, 0.2f);
-	//light->AddComponent<GameScript>();
+	light->GetComponent<Light>()->SetSpotAngle(2.4f, 0.2f);
+	light->AddComponent<GameScript>();
 
     //auto scifiCube = objects.CreateObjectWithMesh("scifiCube", "scifi_cube/scene.gltf", glm::vec3(-3.0f, 0.0f, 0.0f));
     //scifiCube->AddComponent<RotateWorldScript>();

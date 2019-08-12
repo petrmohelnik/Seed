@@ -2,6 +2,7 @@ http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
 problem bude poznat, kdy je objekt transparentni
 zkusit udelat jednoducy preposlani range z blenderu
 dorucit assimp? - intensitu do color, na range pridat metadata do nodu?
+sun podle frostbite
 ---
 CascadedShadowMaps a SoftShadow projekty
 SSAO
@@ -14,6 +15,8 @@ http://alextardif.com/arealights.html
 https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf
 
 pocitat svetlo jenom pro osvetleny pixely - stencil na radius - range - staci preposlat hodnotu z blenderu
+
+aiProcess_GenBoundingBoxes
 
 reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
