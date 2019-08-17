@@ -198,9 +198,11 @@ void RenderingPipeline::SetSkybox(Skybox* skybox_)
 
 void RenderingPipeline::RenderCamera(Camera& camera)
 {
-    RenderQueue deferredQueue, forwardQueue;
-    FillRenderQueues(deferredQueue, forwardQueue, camera);
     camera.BindCamera();
+    camera.UpdateFrustum();
+    RenderQueue deferredQueue(camera);
+    RenderQueue forwardQueue(camera);
+    FillRenderQueues(deferredQueue, forwardQueue, camera);
 
     RenderGBuffer(deferredQueue);
     RenderGlobalIllumination();
@@ -228,7 +230,7 @@ void RenderingPipeline::RenderGBuffer(RenderQueue& queue)
 
     for (const auto& renderTarget : queue.queue)
     {
-        renderTarget.first->Render(renderTarget.second);
+        renderTarget.meshRenderer->Render(renderTarget.submeshIndex);
     }
 }
 
@@ -316,7 +318,7 @@ void RenderingPipeline::RenderForward(RenderQueue& queue)
 
     for (const auto& renderTarget : queue.queue)
     {
-        renderTarget.first->Render(renderTarget.second);
+        renderTarget.meshRenderer->Render(renderTarget.submeshIndex);
     }
 }
 

@@ -1,11 +1,7 @@
-dorucit assimp
 pocitat svetlo jenom pro osvetleny pixely - stencil na radius - range - staci preposlat hodnotu z blenderu
 https://dqlin.xyz/tech/2018/01/02/stencil/
-AABB - frustum culling
 http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
-problem bude poznat, kdy je objekt transparentni
-zkusit udelat jednoducy preposlani range z blenderu
-dorucit assimp? - intensitu do color, na range pridat metadata do nodu?
+zkusit udelat jednoducy preposlani range z blenderu - nedorucovat, udelat si to jenom u sebe a udelat si poznamku abych o tom vedel nekdy v budoucnu
 sun podle frostbite
 problem bude poznat, kdy je objekt transparentni - pruhlednej material musi mit specialni flag
 ---
@@ -19,10 +15,7 @@ https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_ep
 https://docs.microsoft.com/en-us/windows/desktop/dxtecharts/cascaded-shadow-maps
 http://alextardif.com/arealights.html
 https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf
-slunce
 http://www.adriancourreges.com/blog/2017/12/15/mgs-v-graphics-study/
-
-aiProcess_GenBoundingBoxes
 
 reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/

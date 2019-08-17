@@ -1,4 +1,5 @@
 #pragma once
+#include "AABB.h"
 
 class SubMesh
 {
@@ -12,6 +13,7 @@ public:
 	void Bind();
 
 	int GetIndicesCount();
+    const AABB& GetAABB();
 
 protected:
 	friend class FileSystem;
@@ -27,6 +29,8 @@ private:
 	int indicesCount;
 	GLuint vao = 0;
 	GLuint vbo[6];
+
+    AABB aabb;
 
 	bool deleteAfterLoad = true;
 };

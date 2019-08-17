@@ -38,6 +38,7 @@ void FileSystem::LoadScene(const std::string& path)
         | aiProcess_JoinIdenticalVertices
         | aiProcess_RemoveRedundantMaterials
         | aiProcess_ValidateDataStructure
+        | aiProcess_GenBoundingBoxes
     );
 
     if (!scene)
@@ -272,6 +273,8 @@ std::shared_ptr<SubMesh> FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
             assimpMesh->mFaces[index].mIndices[1],
             assimpMesh->mFaces[index].mIndices[2]));
     }
+
+    subMesh->aabb = AABB(ToGlmVec3(assimpMesh->mAABB.mMin), ToGlmVec3(assimpMesh->mAABB.mMax));
 
     return subMesh;
 }

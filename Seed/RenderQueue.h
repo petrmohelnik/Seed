@@ -1,18 +1,26 @@
 #pragma once
 
 class Renderer;
+class Camera;
 
 class RenderQueue
 {
 public:
-    RenderQueue();
+    RenderQueue(const Camera& camera);
 
     void Add(Renderer* renderer, int index);
 
 protected:
     friend class RenderingPipeline;
 
+    struct SubmeshRenderer
+    {
+        Renderer* meshRenderer;
+        int submeshIndex;
+    };
+
 private:
-    std::vector<std::pair<Renderer*, int>> queue;
+    const Camera& camera;
+    std::vector<SubmeshRenderer> queue;
 };
 

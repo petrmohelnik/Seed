@@ -105,6 +105,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	auto cobblestone = objects.CreateObject("cobblestone");
 	cobblestone->AddComponent<MeshRenderer>()->Load("cube.dae");
 	cobblestone->GetComponent<MeshRenderer>()->SetMaterial(0, cobblestoneMaterial);
+    cobblestone->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
 	cobblestone->AddComponent<RotateWorldScript>();
 
 	auto redbricksMaterial = std::make_shared<Material>();
@@ -120,7 +121,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	auto redbricks = objects.CreateObject("redbricks");
 	redbricks->AddComponent<MeshRenderer>()->Load("cube.dae");
 	redbricks->GetComponent<MeshRenderer>()->SetMaterial(0, redbricksMaterial);
-	redbricks->GetComponent<Transform>()->TranslateX(-3.0f);
+	redbricks->GetComponent<Transform>()->TranslateX(-1.5f);
+    redbricks->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
 	redbricks->AddComponent<RotateWorldScript>();
 
     auto roughblockMaterial = std::make_shared<Material>();
@@ -136,7 +138,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto roughblock = objects.CreateObject("roughblock");
     roughblock->AddComponent<MeshRenderer>()->Load("cube.dae");
     roughblock->GetComponent<MeshRenderer>()->SetMaterial(0, roughblockMaterial);
-    roughblock->GetComponent<Transform>()->TranslateX(3.0f);
+    roughblock->GetComponent<Transform>()->TranslateX(1.5f);
+    roughblock->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
     roughblock->AddComponent<RotateWorldScript>();
 
     RenderingPipeline::SetMainCamera(camera->GetComponent<Camera>());

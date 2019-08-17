@@ -1,4 +1,5 @@
 #include "SubMesh.h"
+#include "AABB.h"
 
 SubMesh::SubMesh()
 {
@@ -76,4 +77,9 @@ void SubMesh::Bind()
 int SubMesh::GetIndicesCount()
 {
 	return indicesCount;
+}
+
+const AABB& SubMesh::GetAABB()
+{
+    return aabb;
 }

@@ -12,6 +12,11 @@ MeshRenderer::MeshRenderer(Object* object)
     mesh = std::make_shared<Mesh>();
 }
 
+AABB MeshRenderer::GetAABB(int index)
+{
+    return mesh->subMeshes[index]->GetAABB().GetTransformedAABB(GetTransform()->GetModelMatrix());
+}
+
 void MeshRenderer::AddToRenderQueueDeferred(RenderQueue& queue)
 {
     for (int index = 0; index < mesh->NumberOfSubmeshes(); index++)
