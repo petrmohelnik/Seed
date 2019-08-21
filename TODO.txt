@@ -1,8 +1,6 @@
 pocitat svetlo jenom pro osvetleny pixely - stencil na radius - range - staci preposlat hodnotu z blenderu
 https://dqlin.xyz/tech/2018/01/02/stencil/
 http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
-zkusit udelat jednoducy preposlani range z blenderu - nedorucovat, udelat si to jenom u sebe a udelat si poznamku abych o tom vedel nekdy v budoucnu
-sun podle frostbite
 problem bude poznat, kdy je objekt transparentni - pruhlednej material musi mit specialni flag
 ---
 CascadedShadowMaps a SoftShadow projekty
@@ -24,6 +22,8 @@ vytvaret kopie objektu
 https://stackoverflow.com/questions/5027456/copying-derived-entities-using-only-base-class-pointers-without-exhaustive-tes
 
 teren - https://victorbush.com/2015/01/tessellated-terrain/
+
+sun podle frostbite
 
 http://antongerdelan.net/opengl/raycasting.html
 
