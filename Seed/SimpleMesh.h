@@ -8,7 +8,8 @@ public:
     enum class Shape
     {
         Quad,
-        Cube
+        Cube,
+		BoundingSphere
     };
 
     SimpleMesh(Shape shape);
@@ -29,6 +30,7 @@ private:
 
     MeshData GenerateQuadData();
     MeshData GenerateCubeData();
+    MeshData GenerateBoundingSphereData();
 
     GLuint vbo[2];
     GLuint vao;
