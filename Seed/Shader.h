@@ -8,6 +8,7 @@ public:
     virtual void draw(int count) = 0;
     void SetUniformFloat(const std::string& name, float value);
     void SetUniformInt(const std::string& name, int value);
+    void SetUniformIVec2(const std::string& name, glm::ivec2 value);
 
 protected:
     GLuint program;

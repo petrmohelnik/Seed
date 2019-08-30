@@ -1,9 +1,7 @@
-pocitat svetlo jenom pro osvetleny pixely - stencil na radius - range - staci preposlat hodnotu z blenderu
-https://dqlin.xyz/tech/2018/01/02/stencil/
 http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
 problem bude poznat, kdy je objekt transparentni - pruhlednej material musi mit specialni flag
----
 CascadedShadowMaps a SoftShadow projekty
+---
 SSAO
 Bloom
 Screen Space Reflections

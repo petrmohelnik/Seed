@@ -26,7 +26,7 @@ SimpleMesh::SimpleMesh(Shape shape)
 
     glBindVertexArray(0);
 
-    indicesCount = data.indices.size() * 3;
+    indicesCount = static_cast<int>(data.indices.size()) * 3;
 }
 
 SimpleMesh::~SimpleMesh()

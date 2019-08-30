@@ -51,7 +51,7 @@ SDLWindow& Engine::GetWindow()
 
 void Engine::CreateWindow()
 {
-	window.CreateWindow(1280, 720);
+	window.CreateWindow(1600, 900);
 	window.InitializeOpenGL();
 }
 

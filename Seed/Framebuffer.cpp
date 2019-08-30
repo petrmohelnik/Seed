@@ -8,19 +8,34 @@ Framebuffer::Framebuffer(int width, int height) : width(width), height(height)
 
 Framebuffer::~Framebuffer()
 {
-    if(rbo != 0)
-        glDeleteRenderbuffers(1, &rbo);
+    if(depthRbo != 0)
+        glDeleteRenderbuffers(1, &depthRbo);
+    if (stencilRbo != 0)
+        glDeleteRenderbuffers(1, &stencilRbo);
     glDeleteFramebuffers(1, &fbo);
 }
 
 void Framebuffer::AddDepthRenderbuffer()
 {
-    glGenRenderbuffers(1, &rbo);
+    glGenRenderbuffers(1, &depthRbo);
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, depthRbo);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRbo);
+
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+}
+
+void Framebuffer::AddStencilRenderbuffer()
+{
+    glGenRenderbuffers(1, &stencilRbo);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, stencilRbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencilRbo);
 
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -30,13 +45,25 @@ void Framebuffer::ChangeSize(int width_, int height_)
 {
     width = width_; height = height_;
 
-    if (rbo != 0)
+    if (depthRbo != 0)
     {
-        glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+        glBindRenderbuffer(GL_RENDERBUFFER, depthRbo);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
 
         glBindRenderbuffer(GL_FRAMEBUFFER, 0);
     }
+    if (stencilRbo != 0)
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, stencilRbo);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+
+        glBindRenderbuffer(GL_FRAMEBUFFER, 0);
+    }
+}
+
+glm::ivec2 Framebuffer::GetSize()
+{
+    return glm::ivec2(width, height);
 }
 
 void Framebuffer::Bind() const

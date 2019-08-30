@@ -74,7 +74,7 @@ private:
         std::unique_ptr<Texture> colorTexture;
         std::unique_ptr<Texture> normalTexture;
         std::unique_ptr<Texture> metallicTexture;
-        std::unique_ptr<Texture> depthTexture;
+        std::unique_ptr<Texture> depthStencilTexture;
     };
     GBuffer gbuffer;
     
@@ -88,6 +88,7 @@ private:
     std::unique_ptr<Texture> tonemappingTexture;
 
     std::unique_ptr<SimpleMesh> quad;
+    std::unique_ptr<SimpleMesh> boundingSphere;
 
     static Camera* mainCamera;
     static Skybox* skybox;

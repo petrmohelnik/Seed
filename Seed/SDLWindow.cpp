@@ -44,8 +44,7 @@ void SDLWindow::InitializeOpenGL()
 		throw std::runtime_error("Cannot create OpenGL context: " + std::string(SDL_GetError()));
 	}
 
-	//vertical synchronization
-	SDL_GL_SetSwapInterval(1);
+	SDL_GL_SetSwapInterval(0); //vertical synchronization
     //SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	glewExperimental = GL_TRUE;

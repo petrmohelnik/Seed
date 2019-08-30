@@ -16,8 +16,9 @@ layout(binding = 1) uniform sampler2D texNormal;
 layout(binding = 2) uniform sampler2D texDepth;
 layout(binding = 3) uniform sampler2D texMetallic;
 
+layout(location = 0) uniform ivec2 screenSize;
+
 in vec3 fViewPos;
-in vec2 fTexCoords;
 in mat4 fViewProjectionInverseMatrix;
 
 layout(location = 0) out vec4 gl_FragColor;
@@ -37,7 +38,12 @@ vec3 CalculateRadiance(vec3 lightDir, vec3 worldPos)
 	float centerAngle = dot(lightDir, normalize(-Light.Orientation));
 	float angleAttenuation = clamp(Light.SpotAngleOffset + centerAngle * Light.SpotAngleScale, 0.0, 1.0);
     angleAttenuation *= angleAttenuation;
-	return Light.Color * Light.Intensity * angleAttenuation * attenuation;
+
+    float finalAttenuation = angleAttenuation * attenuation;
+    if(finalAttenuation <= 0.0)
+        discard;
+
+	return Light.Color * Light.Intensity * finalAttenuation;
 }
 
 float DistributionGGX(float NdotH, float roughness)
@@ -80,18 +86,24 @@ vec3 CookTorranceLobe(float NdotV, float NdotL, float NdotH, float roughness, ve
 	return numerator / max(denominator, 0.0001);
 }
 
-vec3 CalculateWorldPosition()
+vec3 CalculateWorldPosition(vec2 texCoords)
 {
-    vec3 clipSpacePosition = vec3(fTexCoords, texture(texDepth, fTexCoords).r) * 2.0 - vec3(1.0);
+    vec3 clipSpacePosition = vec3(texCoords, texture(texDepth, texCoords).r) * 2.0 - vec3(1.0);
     vec4 worldPositionHomogenous = fViewProjectionInverseMatrix * vec4(clipSpacePosition, 1.0);
     return worldPositionHomogenous.xyz / worldPositionHomogenous.w;
 }
 
 void main()
 {
-	vec4 colorTexture = texture(texColor, fTexCoords);
-	vec4 normalTexture = texture(texNormal, fTexCoords);
-	vec4 metallicTexture = texture(texMetallic, fTexCoords);
+    vec2 texCoords = gl_FragCoord.xy / screenSize;
+
+    vec3 worldPos = CalculateWorldPosition(texCoords);
+	vec3 lightDir = normalize(Light.Pos - worldPos);
+	vec3 radiance = CalculateRadiance(lightDir, worldPos);
+
+	vec4 colorTexture = texture(texColor, texCoords);
+	vec4 normalTexture = texture(texNormal, texCoords);
+	vec4 metallicTexture = texture(texMetallic, texCoords);
 
 	vec3 albedo = colorTexture.xyz;
     bool isSpecularWorkflow = normalTexture.w != -1.0;
@@ -99,9 +111,7 @@ void main()
 	float metallic = isSpecularWorkflow ? 0.0 : metallicTexture.z;
 	vec3 normal = normalize(normalTexture.xyz);
 
-    vec3 worldPos = CalculateWorldPosition();
 	vec3 viewDir = normalize(fViewPos - worldPos);
-	vec3 lightDir = normalize(Light.Pos - worldPos);
 	vec3 halfVector = normalize(lightDir + viewDir);
 	float NdotV = max(dot(normal, viewDir), 0.0);
 	float NdotL = max(dot(normal, lightDir), 0.0);
@@ -112,7 +122,6 @@ void main()
 	vec3 kS = FresnelSchlick(F0, HdotV);
 	vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
 	
-	vec3 radiance = CalculateRadiance(lightDir, worldPos);
 	vec3 diffuseColor = kD * albedo / PI * radiance * NdotL;
 	vec3 specularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
 

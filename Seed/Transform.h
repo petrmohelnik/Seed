@@ -12,6 +12,7 @@ public:
 
     using Component::Component;
     Transform(Object* object, Transform* root);
+    ~Transform();
     Transform* GetParent();
     void SetParent(Transform* parent_);
     void SetParent(Object* parent_);
@@ -39,6 +40,7 @@ public:
     glm::vec3 GetRightAxis();
     glm::vec3 GetUpAxis();
     glm::vec3 GetForwardAxis();
+    void SetScale(float scale_);
     void SetScale(glm::vec3 scale_);
     glm::vec3 GetScale();
     glm::vec3 GetLocalScale();

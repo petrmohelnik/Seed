@@ -42,7 +42,7 @@ void Light::SetDirectionalLight(glm::vec3 direction)
     SetDirection(direction);
 }
 
-void Light::SetPointLight(glm::vec3 position, float range, float intensity)
+void Light::SetPointLight(float range, float intensity)
 {
     SetType(Type::Point);
     SetRange(range);
@@ -51,7 +51,7 @@ void Light::SetPointLight(glm::vec3 position, float range, float intensity)
     dataBlock.SpotAngleOffset = 1.0f;
 }
 
-void Light::SetSpotLight(glm::vec3 position, glm::vec3 direction, float range, float intensity, float spotOuterAngle, float spotBlend)
+void Light::SetSpotLight(glm::vec3 direction, float range, float intensity, float spotOuterAngle, float spotBlend)
 {
     SetType(Type::Spot);
     SetDirection(direction);

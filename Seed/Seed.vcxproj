@@ -130,7 +130,10 @@
     <None Include="shaders\EquirectangularToCubemap.frag" />
     <None Include="shaders\PBR_IlluminationGlobal.frag" />
     <None Include="shaders\PBR_IlluminationLights.frag" />
-    <None Include="shaders\PBR_Illumination.vert" />
+    <None Include="shaders\PBR_IlluminationQuad.vert" />
+    <None Include="shaders\PBR_IlluminationSphere.vert" />
+    <None Include="shaders\Dummy.frag" />
+    <None Include="shaders\SimplePositionModel.vert" />
     <None Include="shaders\PrecalculateBRDFIntegrationMap.frag" />
     <None Include="shaders\PrecalculateEnvironmentMap.frag" />
     <None Include="shaders\SimpleCopy.frag" />

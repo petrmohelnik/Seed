@@ -34,6 +34,7 @@ void RenderingPipeline::Initialize()
     IntializeBuffers(width, height);
 
     quad = std::make_unique<SimpleMesh>(SimpleMesh::Shape::Quad);
+    boundingSphere = std::make_unique<SimpleMesh>(SimpleMesh::Shape::BoundingSphere);
 
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
@@ -58,8 +59,8 @@ void RenderingPipeline::IntializeTextures(int width, int height)
     gbuffer.normalTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA16F, width, height, GL_RGBA, GL_FLOAT);
     gbuffer.metallicTexture = std::make_unique<Texture>();
     gbuffer.metallicTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA8, width, height, GL_RGBA, GL_UNSIGNED_BYTE);
-    gbuffer.depthTexture = std::make_unique<Texture>();
-    gbuffer.depthTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_DEPTH_COMPONENT32, width, height, GL_DEPTH_COMPONENT, GL_FLOAT);
+    gbuffer.depthStencilTexture = std::make_unique<Texture>();
+    gbuffer.depthStencilTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_DEPTH_STENCIL, width, height, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8);
 
     lightsIlluminationTexture = std::make_unique<Texture>();
     lightsIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height, GL_RGB, GL_FLOAT);
@@ -78,19 +79,19 @@ void RenderingPipeline::IntializeBuffers(int width, int height)
     gbuffer.buffer->AttachTexture(GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gbuffer.normalTexture->texture);
     gbuffer.buffer->AttachTexture(GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gbuffer.metallicTexture->texture);
     gbuffer.buffer->AttachTexture(GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, lightsIlluminationTexture->texture);
-    gbuffer.buffer->AttachTexture(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthTexture->texture);
+    gbuffer.buffer->AttachTexture(GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthStencilTexture->texture);
     gbuffer.buffer->SetDrawBuffers({ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 });
 
     lightsIlluminationBuffer = std::make_unique<Framebuffer>(width, height);
     lightsIlluminationBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, lightsIlluminationTexture->texture);
-    lightsIlluminationBuffer->AttachTexture(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthTexture->texture);
+    lightsIlluminationBuffer->AttachTexture(GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthStencilTexture->texture);
 
     globalIlluminationBuffer = std::make_unique<Framebuffer>(width, height);
     globalIlluminationBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, globalIlluminationTexture->texture);
 
     tonemappingBuffer = std::make_unique<Framebuffer>(width, height);
     tonemappingBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tonemappingTexture->texture);
-    tonemappingBuffer->AttachTexture(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthTexture->texture);
+    tonemappingBuffer->AttachTexture(GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthStencilTexture->texture);
 }
 
 void RenderingPipeline::BindCameraUniform()
@@ -245,11 +246,12 @@ void RenderingPipeline::RenderGlobalIllumination()
     RenderingPipeline::BindSkyboxEnvironmentalMap();
     ActivateTexture(TextureSlot::Albedo, gbuffer.colorTexture.get());
     ActivateTexture(TextureSlot::Normal, gbuffer.normalTexture.get());
-    ActivateTexture(TextureSlot::Height, gbuffer.depthTexture.get());
+    ActivateTexture(TextureSlot::Height, gbuffer.depthStencilTexture.get());
     ActivateTexture(TextureSlot::Metallic, gbuffer.metallicTexture.get());
 
     auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationGlobal);
     shader->setup();
+    shader->SetUniformIVec2("screenSize", globalIlluminationBuffer->GetSize());
 
     quad->Draw(shader);
 }
@@ -258,22 +260,72 @@ void RenderingPipeline::RenderLights()
 {
     lightsIlluminationBuffer->Bind();
 
-    glDisable(GL_DEPTH_TEST);
+    glClear(GL_STENCIL_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
+    glDepthMask(GL_FALSE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE);
 
     ActivateTexture(TextureSlot::Albedo, gbuffer.colorTexture.get());
     ActivateTexture(TextureSlot::Normal, gbuffer.normalTexture.get());
-    ActivateTexture(TextureSlot::Height, gbuffer.depthTexture.get());
+    ActivateTexture(TextureSlot::Height, gbuffer.depthStencilTexture.get());
     ActivateTexture(TextureSlot::Metallic, gbuffer.metallicTexture.get());
 
-    auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationLights);
-    shader->setup();
+    auto shaderStencil = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationLightsStencil);
+    auto shaderLights = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationLightsSphere);
+    auto shaderLightsQuad = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationLightsQuad);
 
     for (const auto& light : lights)
     {
+        if (light->dataBlock.Range == 0.0f)
+            continue;
+
+        glCullFace(GL_BACK);
+        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+        glDepthFunc(GL_LEQUAL);
+        glStencilOp(GL_KEEP, GL_INCR, GL_KEEP);
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glStencilMask(0x00);
+
         light->BindLight();
-        quad->Draw(shader);
+        auto modelMatrix = glm::translate(light->dataBlock.Pos) * glm::scale(glm::vec3(light->dataBlock.Range));
+        RenderingPipeline::BindModelUniform();
+        MeshRenderer::ModelBlock modelBlockData
+        {
+            modelMatrix,
+            glm::mat4(glm::inverse(modelMatrix))
+        };
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(modelBlockData), &modelBlockData, GL_DYNAMIC_DRAW);
+        shaderStencil->setup();
+        boundingSphere->Draw(shaderStencil);
+
+        glCullFace(GL_FRONT);
+        glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        glDepthFunc(GL_GEQUAL);
+        glStencilOp(GL_REPLACE, GL_KEEP, GL_KEEP);
+        glStencilFunc(GL_EQUAL, 0, 0xFF);
+        glStencilMask(0xFF);
+
+        shaderLights->setup();
+        shaderLights->SetUniformIVec2("screenSize", lightsIlluminationBuffer->GetSize());
+        boundingSphere->Draw(shaderLights);
+    }
+
+    glCullFace(GL_BACK);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LESS);
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_DEPTH_TEST);
+
+    for (const auto& light : lights)
+    {
+        if (light->dataBlock.Range != 0.0f)
+            continue;
+
+        light->BindLight();
+        shaderLightsQuad->setup();
+        quad->Draw(shaderLightsQuad);
     }
 }
 

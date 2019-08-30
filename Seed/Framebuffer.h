@@ -7,7 +7,9 @@ public:
     ~Framebuffer();
 
     void AddDepthRenderbuffer();
+    void AddStencilRenderbuffer();
     void ChangeSize(int width, int height);
+    glm::ivec2 GetSize();
 
     void Bind() const;
     void AttachTexture(GLuint attachment, GLuint textureTarget, GLuint texture, GLuint mipLevel = 0) const;
@@ -19,6 +21,6 @@ private:
     int width, height;
 
     GLuint fbo;
-    GLuint rbo = 0;
+    GLuint depthRbo, stencilRbo = 0;
 };
 

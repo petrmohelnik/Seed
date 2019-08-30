@@ -5,9 +5,14 @@ void Shader::SetUniformFloat(const std::string& name, float value)
     glUniform1f(GetUniformLocation(name), value);
 }
 
-void Shader::SetUniformInt(const std::string & name, int value)
+void Shader::SetUniformInt(const std::string& name, int value)
 {
     glUniform1i(GetUniformLocation(name), value);
+}
+
+void Shader::SetUniformIVec2(const std::string& name, glm::ivec2 value)
+{
+    glUniform2i(GetUniformLocation(name), value.x, value.y);
 }
 
 GLuint Shader::GetUniformLocation(const std::string& name)

@@ -5,46 +5,18 @@
 
 void DefaultScene(Objects& objects, FileSystem& fileSystem)
 {
- 	//auto scifi = objects.CreateObjectWithMesh("scifi", "chair2/scene.gltf", glm::vec3(0.0f, 3.0f, 0.0f));
-	//scifi->GetComponent<Transform>()->SetScale(glm::vec3(1.0f));
-	//scifi->GetComponent<Transform>()->RotateY(3.14f);
-
-	//auto console = objects.CreateObjectWithMesh("console", "console/console.gltf", glm::vec3(0.0f, 0.0f, 3.0f));
- //   console->GetComponent<Transform>()->RotateY(-1.57f);
-	//console->AddComponent<RotateWorldScript>();
-
-	//auto oldcar = objects.CreateObjectWithMesh("nyra", "oldcar/scene.gltf", glm::vec3(10.0f, -1.01f, 3.0f));
-	//oldcar->GetComponent<Transform>()->RotateX(-1.57f);
-	//oldcar->GetComponent<Transform>()->SetScale(glm::vec3(0.01f));
-
- //   auto chair = objects.CreateObjectWithMesh("chair", "holotech_bench/scene.gltf", glm::vec3(0.0f, -1.01f, 6.0f));
- //   //chair->GetComponent<Transform>()->RotateX(-1.57f);
- //   chair->GetComponent<Transform>()->SetScale(glm::vec3(0.005f));
-
-	//auto nanosuit = objects.CreateObjectWithMesh("nanosuit", "nanosuit/nanosuit.obj");
-	//nanosuit->AddComponent<RotateWorldScript>();
-	//nanosuit->GetComponent<Transform>()->TranslateX(3.0f);
-
     auto camera = objects.CreateObject<CameraObject>("camera");
-    camera->GetComponent<Transform>()->TranslateY(1.5);
-    //camera->GetComponent<Transform>()->TranslateZ(10.0);
-    //camera->GetComponent<Transform>()->TranslateX(-10.0);
+    camera->GetComponent<Transform>()->Translate(glm::vec3(0.0f, 1.5f, 0.0f));
+
 	auto light = objects.CreateObject("light");
 	light->AddComponent<Light>();
-	light->GetComponent<Transform>()->TranslateZ(5.0, Transform::Space::World);
-	light->GetComponent<Transform>()->TranslateY(2.0, Transform::Space::World);
-	light->GetComponent<Transform>()->TranslateX(-2.0, Transform::Space::World);
-	light->GetComponent<Transform>()->SetScale(glm::vec3(0.2f));
+	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+    light->GetComponent<Light>()->SetSpotLight(glm::vec3(0.0f, -1.0f, -0.4f), 0.0f, 100.0f, 2.4f, 0.2f);
+	light->GetComponent<Transform>()->Translate(glm::vec3(-2.0, 2.0, 5.0), Transform::Space::World);
+	light->GetComponent<Transform>()->SetScale(0.2f);
 	light->AddComponent<MeshRenderer>()->Load("sphere.obj");
     light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-	light->GetComponent<Light>()->SetIntensity(100.0f);
-	light->GetComponent<Light>()->SetDirection(glm::vec3(0.0f, -1.0f, -0.4f));
-	light->GetComponent<Light>()->SetSpotAngle(2.4f, 0.2f);
 	light->AddComponent<GameScript>();
-
-    //auto scifiCube = objects.CreateObjectWithMesh("scifiCube", "scifi_cube/scene.gltf", glm::vec3(-3.0f, 0.0f, 0.0f));
-    //scifiCube->AddComponent<RotateWorldScript>();
 
     //auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
     //ground->GetComponent<Transform>()->SetScale(glm::vec3(1000));
@@ -57,8 +29,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	//objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
 	//objects.SetSkybox(std::make_unique<TextureCubeMap>(glm::vec4(0.4f, 0.4f, 0.7f, 1.0f)));
 
-    //objects.CreateObjectsFromScene("jaguar.dae");
-    
  //   for (int i = 0; i < 5; i++)
  //   {
  //       float xPos = (i % 5) * 2 - 14.0f;
@@ -80,14 +50,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	//	sphere->GetComponent<MeshRenderer>()->GetMaterial()->Albedo->SetColor(glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
 	//}
     
-    //auto lamp = objects.CreateObjectWithMesh("lamp", "lamp/scene.gltf", glm::vec3(0.0f, 5.0f, 0.0f));
-    //objects.CreateObjectsFromScene("tomons_lamp/lamp.dae");
-    //auto spot = objects.GetObjectByName("Spot");
-    //spot->AddComponent<MeshRenderer>()->Load("sphere.obj");
-    //spot->GetComponent<MeshRenderer>()->GetMaterial()->Emission->SetColor(glm::vec3(1.0f, 1.0f, 0.4f));
-    //spot->GetComponent<Light>()->SetRange(20);
-    //spot->GetComponent<Light>()->SetCutoffAngle(0.5);
-
     objects.CreateObjectsFromScene("scene/scene.gltf");
 
     auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));

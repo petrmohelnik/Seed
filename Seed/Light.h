@@ -20,13 +20,14 @@ public:
     void SetSpotAngle(float outerAngle, float blend);
     void SetDirection(glm::vec3 direction);
     void SetDirectionalLight(glm::vec3 direction);
-    void SetPointLight(glm::vec3 position, float range, float intensity);
-    void SetSpotLight(glm::vec3 position, glm::vec3 direction, float range, float intensity, float spotOuterAngle, float spotBlend);
+    void SetPointLight(float range, float intensity);
+    void SetSpotLight(glm::vec3 direction, float range, float intensity, float spotOuterAngle, float spotBlend);
 
     void BindLight();
 
 protected:
     friend class FileSystem;
+    friend class RenderingPipeline;
     void OnInputGraphUpdate() override;
 
 private:

@@ -401,9 +401,9 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
         }
         else
         {
-            material.Metallic->SetColor(1.0f); //ambient occlusion
+            material.Metallic->SetColor(GetMaterialFloat(assimpMaterial, AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR, 1.0f));
             material.Metallic->AddChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR, 1.0f));
-            material.Metallic->AddChannel(GetMaterialFloat(assimpMaterial, AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR, 1.0f));
+            material.Metallic->AddChannel(1.0f); //ambient occlusion
         }
     }
 

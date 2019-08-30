@@ -9,8 +9,9 @@ layout(binding = 10) uniform samplerCube texIrradiance;
 layout(binding = 11) uniform samplerCube texEnvironmental;
 layout(binding = 12) uniform sampler2D texBRDFIntegration;
 
+layout(location = 0) uniform ivec2 screenSize;
+
 in vec3 fViewPos;
-in vec2 fTexCoords;
 in mat4 fViewProjectionInverseMatrix;
 
 layout(location = 0) out vec4 gl_FragColor;
@@ -38,18 +39,20 @@ vec3 CalculateAmbient(float NdotV, float roughness, float metallic, float ambien
 	return (albedoColor + specularColor) * ambientOclussion;
 }
 
-vec3 CalculateWorldPosition()
+vec3 CalculateWorldPosition(vec2 texCoords)
 {
-    vec3 clipSpacePosition = vec3(fTexCoords, texture(texDepth, fTexCoords).r) * 2.0 - vec3(1.0);
+    vec3 clipSpacePosition = vec3(texCoords, texture(texDepth, texCoords).r) * 2.0 - vec3(1.0);
     vec4 worldPositionHomogenous = fViewProjectionInverseMatrix * vec4(clipSpacePosition, 1.0);
     return worldPositionHomogenous.xyz / worldPositionHomogenous.w;
 }
 
 void main()
 {
-	vec4 colorTexture = texture(texColor, fTexCoords);
-	vec4 normalTexture = texture(texNormal, fTexCoords);
-	vec4 metallicTexture = texture(texMetallic, fTexCoords);
+    vec2 texCoords = gl_FragCoord.xy / screenSize;
+
+	vec4 colorTexture = texture(texColor, texCoords);
+	vec4 normalTexture = texture(texNormal, texCoords);
+	vec4 metallicTexture = texture(texMetallic, texCoords);
 
 	vec3 albedo = colorTexture.xyz;
     bool isSpecularWorkflow = normalTexture.w != -1.0;
@@ -58,7 +61,7 @@ void main()
 	float metallic = isSpecularWorkflow ? 0.0 : metallicTexture.z;
 	vec3 normal = normalize(normalTexture.xyz);
 
-    vec3 worldPos = CalculateWorldPosition();
+    vec3 worldPos = CalculateWorldPosition(texCoords);
 	vec3 viewDir = normalize(fViewPos - worldPos);
 	vec3 reflectionVector = reflect(-viewDir, normal);
 	float NdotV = max(dot(normal, viewDir), 0.0);

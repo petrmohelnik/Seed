@@ -369,9 +369,6 @@
     <None Include="shaders\GBuffer.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="shaders\PBR_Illumination.vert">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="shaders\PBR_IlluminationLights.frag">
       <Filter>Shaders</Filter>
     </None>
@@ -379,6 +376,18 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="shaders\SimpleTexCoords.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\Dummy.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\SimplePositionModel.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\PBR_IlluminationQuad.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\PBR_IlluminationSphere.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

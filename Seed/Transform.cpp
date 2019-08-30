@@ -8,6 +8,12 @@ Transform::Transform(Object* object, Transform* root)
     parent->AddChild(this);
 }
 
+Transform::~Transform()
+{
+    for (auto& child : children)
+        child->parent = nullptr;
+}
+
 Transform* Transform::GetParent()
 {
     if (IsParentRoot())
@@ -272,6 +278,11 @@ glm::vec3 Transform::GetUpAxis()
 glm::vec3 Transform::GetForwardAxis()
 {
     return glm::normalize(glm::vec3(CalculateWorldMatrix()[2]));
+}
+
+void Transform::SetScale(float scale_)
+{
+    SetScale(glm::vec3(scale_));
 }
 
 void Transform::SetScale(glm::vec3 scale_)

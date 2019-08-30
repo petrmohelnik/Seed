@@ -8,7 +8,9 @@ public:
     {
         GBuffer,
         PBR_IlluminationGlobal,
-        PBR_IlluminationLights,
+        PBR_IlluminationLightsStencil,
+        PBR_IlluminationLightsQuad,
+        PBR_IlluminationLightsSphere,
         Skybox,
         EquirectangularToCubemap,
         PrecalculateIrradiance,
