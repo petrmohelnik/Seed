@@ -8,6 +8,7 @@ public:
 
     void AddDepthRenderbuffer();
     void AddStencilRenderbuffer();
+    void SetNoColorAttachment();
     void ChangeSize(int width, int height);
     glm::ivec2 GetSize();
 

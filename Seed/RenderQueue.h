@@ -6,7 +6,8 @@ class Camera;
 class RenderQueue
 {
 public:
-    RenderQueue(const Camera& camera);
+    RenderQueue() = default;
+    RenderQueue(Camera* camera);
 
     void Add(Renderer* renderer, int index);
 
@@ -20,7 +21,7 @@ protected:
     };
 
 private:
-    const Camera& camera;
+    Camera* camera = nullptr;
     std::vector<SubmeshRenderer> queue;
 };
 

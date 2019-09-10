@@ -62,6 +62,9 @@ void RenderingPipeline::IntializeTextures(int width, int height)
     gbuffer.depthStencilTexture = std::make_unique<Texture>();
     gbuffer.depthStencilTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_DEPTH_STENCIL, width, height, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8);
 
+    shadowMapTexture = std::make_unique<Texture>();
+    shadowMapTexture->GenerateTexture(GL_REPEAT, GL_DEPTH_COMPONENT, 2048, 2048, GL_DEPTH_COMPONENT, GL_FLOAT);
+
     lightsIlluminationTexture = std::make_unique<Texture>();
     lightsIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height, GL_RGB, GL_FLOAT);
 
@@ -81,6 +84,10 @@ void RenderingPipeline::IntializeBuffers(int width, int height)
     gbuffer.buffer->AttachTexture(GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, lightsIlluminationTexture->texture);
     gbuffer.buffer->AttachTexture(GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthStencilTexture->texture);
     gbuffer.buffer->SetDrawBuffers({ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 });
+
+    shadowMapBuffer = std::make_unique<Framebuffer>(2048, 2048);
+    shadowMapBuffer->SetNoColorAttachment();
+    shadowMapBuffer->AttachTexture(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMapTexture->texture);
 
     lightsIlluminationBuffer = std::make_unique<Framebuffer>(width, height);
     lightsIlluminationBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, lightsIlluminationTexture->texture);
@@ -201,13 +208,13 @@ void RenderingPipeline::RenderCamera(Camera& camera)
 {
     camera.BindCamera();
     camera.UpdateFrustum();
-    RenderQueue deferredQueue(camera);
-    RenderQueue forwardQueue(camera);
+    RenderQueue deferredQueue(&camera);
+    RenderQueue forwardQueue(&camera);
     FillRenderQueues(deferredQueue, forwardQueue, camera);
 
     RenderGBuffer(deferredQueue);
     RenderGlobalIllumination();
-    RenderLights();
+    RenderLights(camera);
     BlendIllumination();
     RenderToneMapping();
     RenderForward(forwardQueue);
@@ -256,23 +263,56 @@ void RenderingPipeline::RenderGlobalIllumination()
     quad->Draw(shader);
 }
 
-void RenderingPipeline::RenderLights()
+void RenderingPipeline::RenderShadowMap(const Light& light)
 {
-    lightsIlluminationBuffer->Bind();
+    shadowMapBuffer->Bind();
 
-    glClear(GL_STENCIL_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::SimplePositionModel);
+
+    float near_plane = 1.0f, far_plane = 7.5f;
+    glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+
+    glm::mat4 lightView = glm::lookAt(light.dataBlock.Pos,
+        light.dataBlock.Pos + light.dataBlock.Orientation,
+        glm::vec3(0.0f, 1.0f, 0.0f));
+
+    RenderingPipeline::BindCameraUniform();
+    Camera::CameraBlock dataBlock;
+    dataBlock.projection = lightProjection;
+    dataBlock.view = lightView;
+    dataBlock.viewPos = light.dataBlock.Pos;
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);
+
+    RenderQueue shadowRenderQueue;
+    for (auto renderer : renderers)
+    {
+        if (glm::distance(renderer->GetTransform()->GetPosition(), light.dataBlock.Pos) < light.dataBlock.Range)
+        {
+            renderer->AddToRenderQueueDeferred(shadowRenderQueue);
+            renderer->AddToRenderQueueForward(shadowRenderQueue);
+        }
+    }
+
+    shader->setup();
+    for (const auto& renderTarget : shadowRenderQueue.queue)
+    {
+        renderTarget.meshRenderer->Render(renderTarget.submeshIndex);
+    }
+}
+
+void RenderingPipeline::RenderLights(Camera& camera)
+{
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
-    glDepthMask(GL_FALSE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE);
 
     ActivateTexture(TextureSlot::Albedo, gbuffer.colorTexture.get());
     ActivateTexture(TextureSlot::Normal, gbuffer.normalTexture.get());
     ActivateTexture(TextureSlot::Height, gbuffer.depthStencilTexture.get());
     ActivateTexture(TextureSlot::Metallic, gbuffer.metallicTexture.get());
 
-    auto shaderStencil = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationLightsStencil);
+    auto shaderStencil = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::SimplePositionModel);
     auto shaderLights = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationLightsSphere);
     auto shaderLightsQuad = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationLightsQuad);
 
@@ -281,14 +321,22 @@ void RenderingPipeline::RenderLights()
         if (light->dataBlock.Range == 0.0f)
             continue;
 
-        glCullFace(GL_BACK);
+        light->BindLight();
+
+        RenderShadowMap(*light);
+
+        lightsIlluminationBuffer->Bind();
+        camera.BindCamera();
+
+        glDepthMask(GL_FALSE);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
         glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
         glDepthFunc(GL_LEQUAL);
         glStencilOp(GL_KEEP, GL_INCR, GL_KEEP);
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
         glStencilMask(0x00);
 
-        light->BindLight();
         auto modelMatrix = glm::translate(light->dataBlock.Pos) * glm::scale(glm::vec3(light->dataBlock.Range));
         RenderingPipeline::BindModelUniform();
         MeshRenderer::ModelBlock modelBlockData
@@ -310,11 +358,12 @@ void RenderingPipeline::RenderLights()
         shaderLights->setup();
         shaderLights->SetUniformIVec2("screenSize", lightsIlluminationBuffer->GetSize());
         boundingSphere->Draw(shaderLights);
+    
+        glCullFace(GL_BACK);
+        glDepthMask(GL_TRUE);
+        glDepthFunc(GL_LESS);
     }
 
-    glCullFace(GL_BACK);
-    glDepthMask(GL_TRUE);
-    glDepthFunc(GL_LESS);
     glDisable(GL_STENCIL_TEST);
     glDisable(GL_DEPTH_TEST);
 

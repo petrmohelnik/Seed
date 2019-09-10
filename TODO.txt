@@ -1,8 +1,7 @@
-http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
-problem bude poznat, kdy je objekt transparentni - pruhlednej material musi mit specialni flag
 CascadedShadowMaps a SoftShadow projekty
 ---
 SSAO
+http://www.adriancourreges.com/blog/2018/12/02/ue4-optimized-post-effects/
 Bloom
 Screen Space Reflections
 AA
@@ -12,6 +11,8 @@ https://docs.microsoft.com/en-us/windows/desktop/dxtecharts/cascaded-shadow-maps
 http://alextardif.com/arealights.html
 https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf
 http://www.adriancourreges.com/blog/2017/12/15/mgs-v-graphics-study/
+http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
+problem bude poznat, kdy je objekt transparentni - pruhlednej material musi mit specialni flag
 
 reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/

@@ -41,6 +41,13 @@ void Framebuffer::AddStencilRenderbuffer()
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 }
 
+void Framebuffer::SetNoColorAttachment()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+}
+
 void Framebuffer::ChangeSize(int width_, int height_)
 {
     width = width_; height = height_;

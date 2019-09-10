@@ -8,7 +8,7 @@ public:
     {
         GBuffer,
         PBR_IlluminationGlobal,
-        PBR_IlluminationLightsStencil,
+        SimplePositionModel,
         PBR_IlluminationLightsQuad,
         PBR_IlluminationLightsSphere,
         Skybox,

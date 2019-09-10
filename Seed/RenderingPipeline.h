@@ -55,7 +55,8 @@ private:
     void RenderCamera(Camera& camera);
     void RenderGBuffer(RenderQueue& queue);
     void RenderGlobalIllumination();
-    void RenderLights();
+    void RenderShadowMap(const Light& light);
+    void RenderLights(Camera& camera);
     void BlendIllumination();
     void RenderToneMapping();
     void RenderForward(RenderQueue& queue);
@@ -78,6 +79,9 @@ private:
     };
     GBuffer gbuffer;
     
+    std::unique_ptr<Framebuffer> shadowMapBuffer;
+    std::unique_ptr<Texture> shadowMapTexture;
+
     std::unique_ptr<Framebuffer> lightsIlluminationBuffer;
     std::unique_ptr<Texture> lightsIlluminationTexture;
 

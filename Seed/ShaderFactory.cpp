@@ -25,7 +25,7 @@ void ShaderFactory::CreateShader(Type type)
     {
         shaders.insert({ type , std::make_unique<BasicShader>("PBR_IlluminationQuad.vert", "PBR_IlluminationGlobal.frag") });
     }
-    else if (type == Type::PBR_IlluminationLightsStencil)
+    else if (type == Type::SimplePositionModel)
     {
         shaders.insert({ type , std::make_unique<BasicShader>("SimplePositionModel.vert", "Dummy.frag") });
     }
