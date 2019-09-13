@@ -23,12 +23,13 @@ void Light::SetIntensity(float intensity)
     dataBlock.Itensity = intensity;
 }
 
-void Light::SetSpotAngle(float outerAngle, float blend)
+void Light::SetSpotAngle(float outerAngle_, float blend)
 {
-    outerAngle *= 0.5f;
-    float innerAngle = outerAngle * (1.0f - blend);
-    dataBlock.SpotAngleScale = 1.0f / std::max(0.001f, (std::cos(innerAngle) - std::cos(outerAngle)));
-    dataBlock.SpotAngleOffset = -glm::cos(outerAngle) * dataBlock.SpotAngleScale;
+    outerAngle = outerAngle_;
+    outerAngle_ *= 0.5f;
+    float innerAngle = outerAngle_ * (1.0f - blend);
+    dataBlock.SpotAngleScale = 1.0f / std::max(0.001f, (std::cos(innerAngle) - std::cos(outerAngle_)));
+    dataBlock.SpotAngleOffset = -glm::cos(outerAngle_) * dataBlock.SpotAngleScale;
 }
 
 void Light::SetDirection(glm::vec3 direction)

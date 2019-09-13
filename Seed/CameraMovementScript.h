@@ -8,7 +8,7 @@ public:
 
     void Update() override;
 
-    float RotationSensitivity = 1.0f;
+    float RotationSensitivity = 0.5f;
     float MoveSensitivity = 10.0f;
 };
 

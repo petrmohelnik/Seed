@@ -32,6 +32,7 @@ public:
         Metallic = 3,
         Emission = 4,
         Occlusion = 5,
+        Shadow = 6,
         Irradiance = 10,
         Environmental = 11,
         BRDFIntegration = 12

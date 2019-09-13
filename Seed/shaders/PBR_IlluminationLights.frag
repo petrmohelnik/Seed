@@ -2,6 +2,7 @@
 
 layout(std140, binding = 1) uniform LightBlock
 {
+    mat4 LightSpaceMatrix;
 	vec3 Pos;
 	vec3 Color;
 	vec3 Orientation;
@@ -15,6 +16,7 @@ layout(binding = 0) uniform sampler2D texColor;
 layout(binding = 1) uniform sampler2D texNormal;
 layout(binding = 2) uniform sampler2D texDepth;
 layout(binding = 3) uniform sampler2D texMetallic;
+layout(binding = 6) uniform sampler2DShadow texShadow;
 
 layout(location = 0) uniform ivec2 screenSize;
 
@@ -86,6 +88,28 @@ vec3 CookTorranceLobe(float NdotV, float NdotL, float NdotH, float roughness, ve
 	return numerator / max(denominator, 0.0001);
 }
 
+float CalculateShadow(vec3 worldPos, vec3 normal, vec3 lightDir)
+{
+    vec4 lightSpacePosClipSpace = Light.LightSpaceMatrix * vec4(worldPos, 1.0);
+    vec3 lightSpacePos = lightSpacePosClipSpace.xyz / lightSpacePosClipSpace.w;
+    lightSpacePos = lightSpacePos * 0.5 + 0.5;
+
+    if(lightSpacePos.z > 1.0)
+        return 0.0;
+
+    float bias = mix(0.001, 0.00001, dot(normal, lightDir));
+
+    vec2 texelSize = 1.0 / textureSize(texShadow, 0);
+    float shadow = 0.0;
+    
+    for(int x = -1; x <= 1; ++x)
+        for(int y = -1; y <= 1; ++y)
+            shadow += 1.0 - texture(texShadow, vec3(lightSpacePos.xy + vec2(x, y) * texelSize, lightSpacePos.z)).r;
+    shadow /= 9.0;
+
+    return shadow;
+}
+
 vec3 CalculateWorldPosition(vec2 texCoords)
 {
     vec3 clipSpacePosition = vec3(texCoords, texture(texDepth, texCoords).r) * 2.0 - vec3(1.0);
@@ -125,5 +149,7 @@ void main()
 	vec3 diffuseColor = kD * albedo / PI * radiance * NdotL;
 	vec3 specularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
 
-	gl_FragColor = vec4(diffuseColor + specularColor, 1.0);
+    float shadow = CalculateShadow(worldPos, normal, lightDir);
+
+    gl_FragColor = vec4((1.0 - shadow) * (diffuseColor + specularColor), 1.0);
 }

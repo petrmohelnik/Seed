@@ -37,12 +37,12 @@ void MeshRenderer::AddToRenderQueueForward(RenderQueue& queue)
 
 void MeshRenderer::Render(int index)
 {
+    materials[index]->BindMaterial();
     Render(index, materials[index]->GetShader());
 }
 
 void MeshRenderer::Render(int index, ShaderFactory::Type shaderType)
 {
-    materials[index]->BindMaterial();
     auto shader = Engine::GetShaderFactory().GetShader(shaderType);
     shader->setup();
 
