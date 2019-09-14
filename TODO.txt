@@ -1,11 +1,8 @@
 jak to udelat, abych mohl sdilet shader i pro cubemap? renderovat shadow do mezibufferu?
 mit v sahderu dva samplery a podle point nebo ne, vybirat, ktery se pouzije
-zkontrolovat presny nastaveni frusta
-directional - ortogonalni porjekce - asi taky muzu pouzit frustum culling, ale vlastne nedava vyznam - mit vubec tenhle pripad (nestaci point/spot)?
 spot - perspektivni projekce - vytvorit si ze svetla camera objekt a udelat normalne frustum culling?
-point - cube mapa - culling aabb na kruh
+point - cube mapa - culling aabb na kruh, light bude mit metody, ktera bude vracet jednotliva frusta podle indexu
 ??mohl by mi to svetlo rikat nebo ornvou plnit, zda je ten objekt ve frustu
-???mohlo by mi samo svetlo vracet projection a view matice
 ??pocitat dynamicky velikost shaodw mapy? potom by slo mit buffer na max velikost, ale menit jenom viewport
 culling na svetel a objektu, ze tkerych se pocitaji stiny?
 https://www.gamedev.net/forums/topic/660519-culling-out-of-frustum-models-that-contribute-shadows/
@@ -26,6 +23,7 @@ http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
 problem bude poznat, kdy je objekt transparentni - pruhlednej material musi mit specialni flag
 
 CascadedShadowMaps projekt a https://docs.microsoft.com/cs-cz/windows/win32/dxtecharts/cascaded-shadow-maps
+directional - ortogonalni porjekce - asi taky muzu pouzit frustum culling, ale vlastne nedava vyznam - mit vubec tenhle pripad (nestaci point/spot)?
 
 reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/

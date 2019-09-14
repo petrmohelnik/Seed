@@ -12,6 +12,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->AddComponent<Light>();
 	light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
     light->GetComponent<Light>()->SetSpotLight(glm::vec3(0.0f, -1.0f, -0.4f), 0.0f, 100.0f, 2.4f, 0.2f);
+    light->GetComponent<Light>()->SetShadowNearPlaneDistance(0.2f);
+    light->GetComponent<Light>()->SetShadowFarPlaneDistance(30.0f);
 	light->GetComponent<Transform>()->Translate(glm::vec3(-2.0, 2.0, 5.0), Transform::Space::World);
 	light->GetComponent<Transform>()->SetScale(0.2f);
 	light->AddComponent<MeshRenderer>()->Load("sphere.obj");

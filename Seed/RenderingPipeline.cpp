@@ -269,24 +269,20 @@ void RenderingPipeline::RenderGlobalIllumination()
 
 void RenderingPipeline::RenderShadowMap(const Light& light)
 {
+    if (!light.shadowCaster || light.type != Light::Type::Spot)
+        false;
+
     shadowMapBuffer->Bind();
 
     glClear(GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     glCullFace(GL_FRONT);
 
-    glm::mat4 lightProjection = glm::perspective(light.outerAngle, 1.0f, 0.2f, light.dataBlock.Range == 0.0f ? 1000.0f : light.dataBlock.Range);
-
-    glm::mat4 lightView = glm::lookAt(light.dataBlock.Pos,
-        light.dataBlock.Pos + light.dataBlock.Orientation,
-        glm::vec3(0.0f, 1.0f, 0.0f));
-
     RenderingPipeline::BindCameraUniform();
-    Camera::CameraBlock dataBlock;
-    dataBlock.projection = lightProjection;
-    dataBlock.view = lightView;
-    dataBlock.viewPos = light.dataBlock.Pos;
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);
+    Camera::CameraBlock cameraDataBlock;
+    cameraDataBlock.projection = light.dataBlock.LightSpaceMatrix; //already is mutiplied by view
+    cameraDataBlock.view = glm::mat4(1.0f);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(cameraDataBlock), &cameraDataBlock, GL_DYNAMIC_DRAW);
 
     RenderQueue shadowRenderQueue;
     for (auto renderer : renderers)
@@ -328,13 +324,6 @@ void RenderingPipeline::RenderLights(Camera& camera)
         camera.BindCamera();
 
         ActivateTexture(TextureSlot::Shadow, shadowMapTexture.get());
-
-        glm::mat4 lightProjection = glm::perspective(light->outerAngle, 1.0f, 0.2f, light->dataBlock.Range == 0.0f ? 1000.0f : light->dataBlock.Range);
-        glm::mat4 lightView = glm::lookAt(light->dataBlock.Pos,
-            light->dataBlock.Pos + light->dataBlock.Orientation,
-            glm::vec3(0.0f, 1.0f, 0.0f));
-
-        light->dataBlock.LightSpaceMatrix = lightProjection * lightView;
 
         if (light->dataBlock.Range == 0.0f)
         {

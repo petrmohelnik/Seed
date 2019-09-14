@@ -1,5 +1,10 @@
 #version 460
 
+const uint DirectionalLight = 0x00000001u;
+const uint PointLight       = 0x00000002u;
+const uint SpotLight        = 0x00000004u;
+const uint CastShadowLight  = 0x00000008u;
+
 layout(std140, binding = 1) uniform LightBlock
 {
     mat4 LightSpaceMatrix;
@@ -10,6 +15,7 @@ layout(std140, binding = 1) uniform LightBlock
 	float Intensity;
 	float SpotAngleScale;
 	float SpotAngleOffset;
+    uint Type;
 } Light;
 
 layout(binding = 0) uniform sampler2D texColor;
@@ -34,18 +40,25 @@ vec3 FresnelSchlick(vec3 F0, float HdotV)
 
 vec3 CalculateRadiance(vec3 lightDir, vec3 worldPos)
 {
+    if(bool(Light.Type & DirectionalLight))
+        return Light.Color * Light.Intensity;
+
 	float dist = length(Light.Pos - worldPos);
 	float normalizedDist = Light.Range == 0.0 ? 0.0 : dist / Light.Range;
 	float attenuation = pow(clamp(1.0 - pow(normalizedDist, 4), 0.0, 1.0), 2) / max(dist * dist, 0.01 * 0.01);
-	float centerAngle = dot(lightDir, normalize(-Light.Orientation));
-	float angleAttenuation = clamp(Light.SpotAngleOffset + centerAngle * Light.SpotAngleScale, 0.0, 1.0);
-    angleAttenuation *= angleAttenuation;
 
-    float finalAttenuation = angleAttenuation * attenuation;
-    if(finalAttenuation <= 0.0)
+    if(bool(Light.Type & SpotLight))
+    {
+	    float centerAngle = dot(lightDir, normalize(-Light.Orientation));
+	    float angleAttenuation = clamp(Light.SpotAngleOffset + centerAngle * Light.SpotAngleScale, 0.0, 1.0);
+        angleAttenuation *= angleAttenuation;
+        attenuation *= angleAttenuation;
+    }
+
+    if(attenuation <= 0.0)
         discard;
 
-	return Light.Color * Light.Intensity * finalAttenuation;
+	return Light.Color * Light.Intensity * attenuation;
 }
 
 float DistributionGGX(float NdotH, float roughness)
@@ -122,7 +135,7 @@ void main()
     vec2 texCoords = gl_FragCoord.xy / screenSize;
 
     vec3 worldPos = CalculateWorldPosition(texCoords);
-	vec3 lightDir = normalize(Light.Pos - worldPos);
+	vec3 lightDir = bool(Light.Type & DirectionalLight) ? normalize(Light.Orientation) : normalize(Light.Pos - worldPos);
 	vec3 radiance = CalculateRadiance(lightDir, worldPos);
 
 	vec4 colorTexture = texture(texColor, texCoords);
@@ -149,7 +162,9 @@ void main()
 	vec3 diffuseColor = kD * albedo / PI * radiance * NdotL;
 	vec3 specularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
 
-    float shadow = CalculateShadow(worldPos, normal, lightDir);
+    float shadow = 0.0f;
+    if(bool(Light.Type & CastShadowLight))
+        shadow = CalculateShadow(worldPos, normal, lightDir);
 
     gl_FragColor = vec4((1.0 - shadow) * (diffuseColor + specularColor), 1.0);
 }
