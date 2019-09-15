@@ -22,6 +22,7 @@ https://paroj.github.io/gltut/Illumination/Tut11%20BlinnPhong%20Model.html
 https://learnopengl.com/Advanced-Lighting/Normal-Mapping
 learnopengl.com
 https://gamedev.stackexchange.com/questions/74879/specular-map-what-about-the-specular-reflections-highlight-size
+https://www.gamedev.net/articles/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
 
 tone mapping:
 https://64.github.io/tonemapping/

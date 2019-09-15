@@ -1,26 +1,36 @@
+spot - perspektivni projekce - vytvorit si ze svetla camera objekt a udelat normalne frustum culling?
+culling frusta delat pres cameru v pipiline, pripadne pridat nejaky metody do camery
+culling pro point light muze byt ve svetle
+zda je svetlo zasahuje do camery by melo byt v camere porovnani frusta s kouli nebo jinym frustem (pripadne se da prevest na aabb)
+pro culling pracovat s far plane distance
+
 jak to udelat, abych mohl sdilet shader i pro cubemap? renderovat shadow do mezibufferu?
 mit v sahderu dva samplery a podle point nebo ne, vybirat, ktery se pouzije
-spot - perspektivni projekce - vytvorit si ze svetla camera objekt a udelat normalne frustum culling?
 point - cube mapa - culling aabb na kruh, light bude mit metody, ktera bude vracet jednotliva frusta podle indexu
-??mohl by mi to svetlo rikat nebo ornvou plnit, zda je ten objekt ve frustu
-??pocitat dynamicky velikost shaodw mapy? potom by slo mit buffer na max velikost, ale menit jenom viewport
-culling na svetel a objektu, ze tkerych se pocitaji stiny?
+??pocitat dynamicky velikost shadow mapy? potom by slo mit buffer na max velikost, ale menit jenom viewport
+nastavit zda je objekt shadowcaster
 https://www.gamedev.net/forums/topic/660519-culling-out-of-frustum-models-that-contribute-shadows/
 vyrenderuju kazde svetrlo, ktera dosahne do frusta kamery a vyrenderuju, vsechny objekty, ktere jsou v jeho dosahu
 
+bias https://dspace5.zcu.cz/bitstream/11025/29520/1/Ehm.pdf
+assert(glGetError() == GL_NO_ERROR);
 ---
+Depth Of Field - http://www.adriancourreges.com/blog/2018/12/02/ue4-optimized-post-effects/
 SSAO
-http://www.adriancourreges.com/blog/2018/12/02/ue4-optimized-post-effects/
 Bloom
 Screen Space Reflections
 AA
-Depth Of Field
+
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-http://alextardif.com/arealights.html
 https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf
 http://www.adriancourreges.com/blog/2017/12/15/mgs-v-graphics-study/
+
 http://martindevans.me/game-development/2015/10/09/Deferred-Transparency/
 problem bude poznat, kdy je objekt transparentni - pruhlednej material musi mit specialni flag
+
+http://alextardif.com/arealights.html
+https://www.gamedev.net/blogs/entry/2265228-effect-area-light-shadows-pt-1-pcss/
+https://www.gamedev.net/articles/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
 
 CascadedShadowMaps projekt a https://docs.microsoft.com/cs-cz/windows/win32/dxtecharts/cascaded-shadow-maps
 directional - ortogonalni porjekce - asi taky muzu pouzit frustum culling, ale vlastne nedava vyznam - mit vubec tenhle pripad (nestaci point/spot)?

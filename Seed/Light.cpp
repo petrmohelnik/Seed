@@ -58,19 +58,24 @@ void Light::SetSpotLight(glm::vec3 direction, float range, float intensity, floa
     SetIntensity(intensity);
 }
 
+void Light::SetSizeUV(float size)
+{
+    dataBlock.SizeUV = size;
+}
+
 void Light::SetShadowNearPlaneDistance(float distance)
 {
-    shadowNearPlaneDistance = distance;
+    shadowNearPlane = distance;
 }
 
 void Light::SetShadowFarPlaneDistance(float distance)
 {
-    shadowFarPlaneDistance = distance;
+    shadowFarPlane = distance;
 }
 
-void Light::SetShadowCaster(bool castShadows)
+void Light::SetIsShadowCaster(bool castShadows)
 {
-    shadowCaster = castShadows;
+    isShadowCaster = castShadows;
 }
 
 void Light::SetSpotAngleToDataBlock()
@@ -91,8 +96,8 @@ void Light::SetLighTypeToDataBlock()
     if (type == Type::Spot)
         dataBlock.Type = LightTypeMask::Spot;
 
-    if (shadowCaster)
-        dataBlock.Type |= LightTypeMask::CastShadow;
+    if (isShadowCaster)
+        dataBlock.Type |= LightTypeMask::IsShadowCaster;
 }
 
 void Light::BindLight()
@@ -103,17 +108,17 @@ void Light::BindLight()
 	dataBlock.Pos = GetTransform()->GetPosition();
     dataBlock.Orientation = glm::normalize(glm::mat3(glm::inverse(glm::transpose(GetTransform()->GetModelMatrix()))) * glm::vec3(0.0f, 0.0f, -1.0f));
 
-    dataBlock.LightSpaceMatrix == glm::mat4(1.0f);
-    if (shadowCaster && type == Type::Spot)
+    dataBlock.ViewMatrix == glm::mat4(1.0f);
+    dataBlock.ProjectionMatrix == glm::mat4(1.0f);
+    if (isShadowCaster && type == Type::Spot)
     {
-        glm::mat4 lightProjection = glm::perspective(spotOuterAngle, 1.0f, shadowNearPlaneDistance, 
-            dataBlock.Range == 0.0f ? shadowFarPlaneDistance : std::min(dataBlock.Range, shadowFarPlaneDistance));
-        glm::mat4 lightView = glm::lookAt(
+        dataBlock.ViewMatrix = glm::lookAt(
             dataBlock.Pos,
             dataBlock.Pos + dataBlock.Orientation,
             glm::vec3(0.0f, 1.0f, 0.0f));
         
-        dataBlock.LightSpaceMatrix = lightProjection * lightView;
+        dataBlock.ProjectionMatrix = glm::perspective(spotOuterAngle, 1.0f, shadowNearPlane,
+            dataBlock.Range == 0.0f ? shadowFarPlane : std::min(dataBlock.Range, shadowFarPlane));
     }
 
     glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);
@@ -124,4 +129,5 @@ void Light::OnInputGraphUpdate()
     ImGui::BulletText("Light");
     Engine::GetInput().SliderFloatLog("Range", dataBlock.Range, 0.0, 100);
     Engine::GetInput().SliderFloatLog("Intensity", dataBlock.Itensity, 0.0, 100);
+    Engine::GetInput().SliderFloat("SizeUV", dataBlock.SizeUV, 0.0, 1.0);
 }

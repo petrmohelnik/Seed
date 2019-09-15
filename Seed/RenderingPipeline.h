@@ -1,4 +1,5 @@
 #pragma once
+#include "Texture.h"
 
 class Renderer;
 class Camera;
@@ -33,6 +34,7 @@ public:
         Emission = 4,
         Occlusion = 5,
         Shadow = 6,
+        ShadowLerp = 7,
         Irradiance = 10,
         Environmental = 11,
         BRDFIntegration = 12
@@ -40,6 +42,7 @@ public:
 
     static void ActivateTexture(TextureSlot textureSlot);
     static void ActivateTexture(TextureSlot textureSlot, Texture* textureToBind);
+    static void BindSampler(TextureSlot textureSlot, GLuint sampler);
 
     void AddRenderer(Renderer* renderer);
     void AddCamera(Camera* camera);
@@ -53,6 +56,7 @@ public:
 private:
     void IntializeTextures(int width, int height);
     void IntializeBuffers(int width, int height);
+    void SetShadowSamplerParameters(GLuint sampler, GLuint compareMode = GL_NONE);
     void RenderCamera(Camera& camera);
     void RenderGBuffer(RenderQueue& queue);
     void RenderGlobalIllumination();
@@ -80,8 +84,14 @@ private:
     };
     GBuffer gbuffer;
     
-    std::unique_ptr<Framebuffer> shadowMapBuffer;
-    std::unique_ptr<Texture> shadowMapTexture;
+    struct ShadowMap
+    {
+        ~ShadowMap();
+        std::unique_ptr<Framebuffer> buffer;
+        std::unique_ptr<Texture> texture2D;
+        GLuint sampler2DShadow[2];
+    };
+    ShadowMap shadowMap;
 
     std::unique_ptr<Framebuffer> lightsIlluminationBuffer;
     std::unique_ptr<Texture> lightsIlluminationTexture;
