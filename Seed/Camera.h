@@ -19,6 +19,9 @@ public:
     bool IsInsideFrustum(AABB const& aabb) const;
     void SetProjectionMatrix(float fieldOfView, float aspectRatio, float clipPlaneNear, float clipPlaneFar);
 
+protected:
+    friend class RenderingPipeline;
+
 private:
 	CameraBlock dataBlock;
 

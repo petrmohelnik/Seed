@@ -10,7 +10,7 @@ public:
     Component(Object* object);
 	virtual ~Component() = default;
 
-    Object* GetObject();
+    Object* GetObject() const;
     Transform* GetTransform();
     void Destroy(float delay = 0);
 

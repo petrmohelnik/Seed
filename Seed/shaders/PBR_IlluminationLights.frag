@@ -127,15 +127,15 @@ float CalculateShadow(vec3 worldPos, vec3 normal, vec3 lightDir, vec2 texCoords)
 
     float bias = mix(0.001, 0.00001, dot(normal, lightDir));
     float gradientNoise = PI * 2 * InterleavedGradientNoise(gl_FragCoord.xy);
-    vec2 filterRadius = 1.0 / textureSize(texShadowLerp, 0) * 20.0 * Light.SizeUV;
+    vec2 filterRadius = 1.0 / textureSize(texShadowLerp, 0) * 10.0 * Light.SizeUV;
 
     float shadow = 0.0;
-    for(int i = 0; i < 24; i++)
+    for(int i = 0; i < 20; i++)
     {
-        vec2 sampleCoords = VogelDiskCoords(i, 24, gradientNoise) * filterRadius;
+        vec2 sampleCoords = VogelDiskCoords(i, 20, gradientNoise) * filterRadius;
         shadow += 1.0 - texture(texShadowLerp, vec3(lightSpacePos.xy + sampleCoords, lightSpacePos.z + bias)).r;
     }
-    shadow /= 24.0f;
+    shadow /= 20.0f;
 
     return shadow;
 }

@@ -294,19 +294,18 @@ void RenderingPipeline::RenderShadowMap(const Light& light)
     glCullFace(GL_FRONT);
 
     RenderingPipeline::BindCameraUniform();
-    Camera::CameraBlock cameraDataBlock;
-    cameraDataBlock.view = light.dataBlock.ViewMatrix;
-    cameraDataBlock.projection = light.dataBlock.ProjectionMatrix;
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(cameraDataBlock), &cameraDataBlock, GL_DYNAMIC_DRAW);
+    Camera cameraFromLight(light.GetObject());
+    cameraFromLight.dataBlock.view = light.dataBlock.ViewMatrix;
+    cameraFromLight.dataBlock.projection = light.dataBlock.ProjectionMatrix;
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(cameraFromLight.dataBlock), &cameraFromLight.dataBlock, GL_DYNAMIC_DRAW);
 
-    RenderQueue shadowRenderQueue;
+    cameraFromLight.UpdateFrustum();
+
+    RenderQueue shadowRenderQueue(&cameraFromLight);
     for (auto renderer : renderers)
     {
-        //if (glm::distance(renderer->GetTransform()->GetPosition(), light.dataBlock.Pos) < light.dataBlock.Range)
-        {
-            renderer->AddToRenderQueueDeferred(shadowRenderQueue);
-            renderer->AddToRenderQueueForward(shadowRenderQueue);
-        }
+        renderer->AddToRenderQueueDeferred(shadowRenderQueue);
+        renderer->AddToRenderQueueForward(shadowRenderQueue);
     }
 
     for (const auto& renderTarget : shadowRenderQueue.queue)

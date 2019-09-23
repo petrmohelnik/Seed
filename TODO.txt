@@ -1,12 +1,8 @@
-spot - perspektivni projekce - vytvorit si ze svetla camera objekt a udelat normalne frustum culling?
-culling frusta delat pres cameru v pipiline, pripadne pridat nejaky metody do camery
-culling pro point light muze byt ve svetle
-zda je svetlo zasahuje do camery by melo byt v camere porovnani frusta s kouli nebo jinym frustem (pripadne se da prevest na aabb)
-pro culling pracovat s far plane distance
+culling pro point light bude 6x jako pro spot
+zda je svetlo zasahuje do camery by melo byt v camere porovnani frusta s jinym frustem (pripadne se da prevest na aabb) pro spot 6x
 
-jak to udelat, abych mohl sdilet shader i pro cubemap? renderovat shadow do mezibufferu?
-mit v sahderu dva samplery a podle point nebo ne, vybirat, ktery se pouzije
-point - cube mapa - culling aabb na kruh, light bude mit metody, ktera bude vracet jednotliva frusta podle indexu
+mit v shaderu dva samplery a podle point nebo ne, vybirat, ktery se pouzije
+point - cube mapa - light bude mit metody, ktera bude vracet jednotliva frusta podle indexu
 ??pocitat dynamicky velikost shadow mapy? potom by slo mit buffer na max velikost, ale menit jenom viewport
 nastavit zda je objekt shadowcaster
 https://www.gamedev.net/forums/topic/660519-culling-out-of-frustum-models-that-contribute-shadows/

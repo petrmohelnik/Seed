@@ -8,7 +8,7 @@ Component::Component(Object* object) : object(object)
 {
 }
 
-Object* Component::GetObject()
+Object* Component::GetObject() const
 {
     return object;
 }
