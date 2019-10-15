@@ -25,6 +25,7 @@ layout(binding = 1) uniform sampler2D texNormal;
 layout(binding = 2) uniform sampler2D texDepth;
 layout(binding = 3) uniform sampler2D texMetallic;
 layout(binding = 7) uniform sampler2DShadow texShadowLerp;
+layout(binding = 9) uniform samplerCubeShadow texCubeShadowLerp;
 
 layout(location = 0) uniform ivec2 screenSize;
 

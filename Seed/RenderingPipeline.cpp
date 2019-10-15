@@ -68,6 +68,13 @@ void RenderingPipeline::IntializeTextures(int width, int height)
     SetShadowSamplerParameters(shadowMap.sampler2DShadow[0]);
     SetShadowSamplerParameters(shadowMap.sampler2DShadow[1], GL_COMPARE_REF_TO_TEXTURE);
 
+    shadowMap.textureCube = std::make_unique<TextureCubeMap>();
+    shadowMap.textureCube->GenerateTexture();
+    shadowMap.textureCube->DefineTexture(GL_DEPTH_COMPONENT, 1024, 1024, GL_DEPTH_COMPONENT, GL_FLOAT);
+    glGenSamplers(2, &shadowMap.samplerCubeShadow[0]);
+    SetShadowSamplerParameters(shadowMap.samplerCubeShadow[0]);
+    SetShadowSamplerParameters(shadowMap.samplerCubeShadow[1], GL_COMPARE_REF_TO_TEXTURE);
+
     lightsIlluminationTexture = std::make_unique<Texture>();
     lightsIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height, GL_RGB, GL_FLOAT, false);
 
@@ -88,9 +95,13 @@ void RenderingPipeline::IntializeBuffers(int width, int height)
     gbuffer.buffer->AttachTexture(GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthStencilTexture->texture);
     gbuffer.buffer->SetDrawBuffers({ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 });
 
-    shadowMap.buffer = std::make_unique<Framebuffer>(1024, 1024);
-    shadowMap.buffer->SetNoColorAttachment();
-    shadowMap.buffer->AttachTexture(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap.texture2D->texture);
+    shadowMap.buffer2D = std::make_unique<Framebuffer>(1024, 1024);
+    shadowMap.buffer2D->SetNoColorAttachment();
+    shadowMap.buffer2D->AttachTexture(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap.texture2D->texture);
+
+    shadowMap.bufferCube = std::make_unique<Framebuffer>(1024, 1024);
+    shadowMap.bufferCube->SetNoColorAttachment();
+    shadowMap.bufferCube->AttachCubeMapTexture(GL_DEPTH_ATTACHMENT, shadowMap.textureCube->texture);
 
     lightsIlluminationBuffer = std::make_unique<Framebuffer>(width, height);
     lightsIlluminationBuffer->AttachTexture(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, lightsIlluminationTexture->texture);
@@ -113,6 +124,7 @@ void RenderingPipeline::SetShadowSamplerParameters(GLuint sampler, GLuint compar
     glSamplerParameteri(sampler, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glSamplerParameteri(sampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glSamplerParameteri(sampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glSamplerParameteri(sampler, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
     glSamplerParameterfv(sampler, GL_TEXTURE_BORDER_COLOR, borderColor);
 }
 
@@ -285,9 +297,9 @@ void RenderingPipeline::RenderGlobalIllumination()
 void RenderingPipeline::RenderShadowMap(const Light& light)
 {
     if (!light.isShadowCaster || light.type != Light::Type::Spot)
-        false;
+        return;
 
-    shadowMap.buffer->Bind();
+    shadowMap.buffer2D->Bind();
 
     glClear(GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
@@ -329,6 +341,8 @@ void RenderingPipeline::RenderLights(Camera& camera)
     ActivateTexture(TextureSlot::ShadowLerp, shadowMap.texture2D.get());
     BindSampler(TextureSlot::Shadow, shadowMap.sampler2DShadow[0]);
     BindSampler(TextureSlot::ShadowLerp, shadowMap.sampler2DShadow[1]);
+    BindSampler(TextureSlot::ShadowCube, shadowMap.samplerCubeShadow[0]);
+    BindSampler(TextureSlot::ShadowCubeLerp, shadowMap.samplerCubeShadow[1]);
 
     auto shaderStencil = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::SimplePositionModel);
     auto shaderLights = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationLightsSphere);
@@ -388,6 +402,8 @@ void RenderingPipeline::RenderLights(Camera& camera)
 
     BindSampler(TextureSlot::Shadow, 0);
     BindSampler(TextureSlot::ShadowLerp, 0);
+    BindSampler(TextureSlot::ShadowCube, 0);
+    BindSampler(TextureSlot::ShadowCubeLerp, 0);
 }
 
 void RenderingPipeline::BlendIllumination()

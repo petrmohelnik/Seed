@@ -63,6 +63,17 @@ void TextureCubeMap::Bind()
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 }
 
+void TextureCubeMap::DefineTexture(GLuint internalFormat, int width_, int height, GLuint format, GLuint type, bool generateMipMaps, const void* pixels)
+{
+    width = width_;
+    for (int i = 0; i < 6; i++)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalFormat, width, height, 0, format, type, pixels);
+    }
+    if (generateMipMaps)
+        glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+}
+
 void TextureCubeMap::GenerateTexture(bool generateMipMaps)
 {
     glGenTextures(1, &texture);
@@ -212,15 +223,4 @@ void TextureCubeMap::RenderViewsIntoCubeMapWithMipMaps(Shader* shader, Framebuff
             cube.Draw(shader);
         }
     }
-}
-
-void TextureCubeMap::DefineTexture(GLuint internalFormat, int width_, int height, GLuint format, GLuint type, bool generateMipMaps, const void* pixels)
-{
-    width = width_;
-    for (int i = 0; i < 6; i++)
-    {
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalFormat, width, height, 0, format, type, pixels);
-    }
-    if (generateMipMaps)
-        glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 }

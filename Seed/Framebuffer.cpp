@@ -85,6 +85,12 @@ void Framebuffer::AttachTexture(GLuint attachment, GLuint textureTarget, GLuint 
     glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, textureTarget, texture, mipLevel);
 }
 
+void Framebuffer::AttachCubeMapTexture(GLuint attachment, GLuint texture, GLuint mipLevel) const
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture(GL_FRAMEBUFFER, attachment, texture, mipLevel);
+}
+
 void Framebuffer::SetDrawBuffers(std::vector<GLuint> buffers)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);

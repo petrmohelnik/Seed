@@ -35,6 +35,8 @@ public:
         Occlusion = 5,
         Shadow = 6,
         ShadowLerp = 7,
+        ShadowCube = 8,
+        ShadowCubeLerp = 9,
         Irradiance = 10,
         Environmental = 11,
         BRDFIntegration = 12
@@ -87,9 +89,12 @@ private:
     struct ShadowMap
     {
         ~ShadowMap();
-        std::unique_ptr<Framebuffer> buffer;
+        std::unique_ptr<Framebuffer> buffer2D;
         std::unique_ptr<Texture> texture2D;
         GLuint sampler2DShadow[2];
+        std::unique_ptr<Framebuffer> bufferCube;
+        std::unique_ptr<TextureCubeMap> textureCube;
+        GLuint samplerCubeShadow[2];
     };
     ShadowMap shadowMap;
 
