@@ -133,6 +133,8 @@
     <None Include="shaders\PBR_IlluminationQuad.vert" />
     <None Include="shaders\PBR_IlluminationSphere.vert" />
     <None Include="shaders\Dummy.frag" />
+    <None Include="shaders\PointLightShadow.frag" />
+    <None Include="shaders\PointLightShadow.geom" />
     <None Include="shaders\SimplePositionModel.vert" />
     <None Include="shaders\PrecalculateBRDFIntegrationMap.frag" />
     <None Include="shaders\PrecalculateEnvironmentMap.frag" />
@@ -140,6 +142,7 @@
     <None Include="shaders\SimplePosition.vert" />
     <None Include="shaders\PrecalculateIrradiance.frag" />
     <None Include="shaders\SimplePosition2D.vert" />
+    <None Include="shaders\SimplePositionWorld.vert" />
     <None Include="shaders\SimpleTexCoords.vert" />
     <None Include="shaders\Skybox.frag" />
     <None Include="shaders\Skybox.vert" />

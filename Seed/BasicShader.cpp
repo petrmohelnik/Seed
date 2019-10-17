@@ -1,8 +1,8 @@
 #include "BasicShader.h"
 
-BasicShader::BasicShader(const std::string& vertexShader, const std::string& fragmentShader)
+BasicShader::BasicShader(GLuint program_)
 {
-    program = ShaderCompiler::Compile(vertexShader, fragmentShader);
+    program = program_;
 }
 
 void BasicShader::setup()

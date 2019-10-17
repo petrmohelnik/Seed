@@ -120,6 +120,11 @@ void Light::BindLight()
         dataBlock.ProjectionMatrix = glm::perspective(spotOuterAngle, 1.0f, shadowNearPlane,
             dataBlock.Range == 0.0f ? shadowFarPlane : std::min(dataBlock.Range, shadowFarPlane));
     }
+    else if (isShadowCaster && type == Type::Point)
+    {
+        dataBlock.ProjectionMatrix = glm::perspective(glm::radians(90.0f), 1.0f, shadowNearPlane,
+            dataBlock.Range == 0.0f ? shadowFarPlane : std::min(dataBlock.Range, shadowFarPlane));
+    }
 
     glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);
 }

@@ -4,7 +4,7 @@
 class BasicShader : public Shader
 {
 public:
-    BasicShader(const std::string& vertexShader, const std::string& fragmentShader);
+    BasicShader(GLuint program);
 
     void setup() override;
     void draw(int count) override;

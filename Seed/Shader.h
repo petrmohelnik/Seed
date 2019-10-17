@@ -9,6 +9,7 @@ public:
     void SetUniformFloat(const std::string& name, float value);
     void SetUniformInt(const std::string& name, int value);
     void SetUniformIVec2(const std::string& name, glm::ivec2 value);
+    void SetUniformMat4Array(const std::string name, const std::vector<glm::mat4>& value);
 
 protected:
     GLuint program;

@@ -25,8 +25,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //ground->GetComponent<Transform>()->SetScale(glm::vec3(1000));
 
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
-	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
-	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
+	objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
+	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Protospace.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));

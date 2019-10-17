@@ -18,7 +18,8 @@ public:
         PrecalculateBRDFIntegrationMap,
         ToneMapping,
         SkyboxToneMapping,
-        SimpleCopy
+        SimpleCopy,
+        PointLightShadow
     };
 
     ShaderFactory();

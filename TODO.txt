@@ -1,8 +1,7 @@
-point light - cubemapu uz jsem delal pri renderovani toho iml
-udelat rbo pro depth cube mapu a predat tomu moznost ziskat kamery na spravne pozici
 proc neni rbo prolinkovany s tema texturama a nedrzije v sobe?
 
-culling pro point light bude 6x jako pro spot - asi ne, vsechno naraz
+nastavit farplane misto toho range do fragment shaderu
+culling pro point light na cube nebo 6x frustum?
 zda je svetlo zasahuje do camery by melo byt v camere porovnani frusta s jinym frustem (pripadne se da prevest na aabb) pro spot 6x
 
 mit v shaderu dva samplery a podle point nebo ne, vybirat, ktery se pouzije

@@ -296,33 +296,61 @@ void RenderingPipeline::RenderGlobalIllumination()
 
 void RenderingPipeline::RenderShadowMap(const Light& light)
 {
-    if (!light.isShadowCaster || light.type != Light::Type::Spot)
+    if (!light.isShadowCaster || light.type == Light::Type::Directional)
         return;
 
-    shadowMap.buffer2D->Bind();
-
-    glClear(GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-    glCullFace(GL_FRONT);
-
-    RenderingPipeline::BindCameraUniform();
-    Camera cameraFromLight(light.GetObject());
-    cameraFromLight.dataBlock.view = light.dataBlock.ViewMatrix;
-    cameraFromLight.dataBlock.projection = light.dataBlock.ProjectionMatrix;
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(cameraFromLight.dataBlock), &cameraFromLight.dataBlock, GL_DYNAMIC_DRAW);
-
-    cameraFromLight.UpdateFrustum();
-
-    RenderQueue shadowRenderQueue(&cameraFromLight);
-    for (auto renderer : renderers)
+    if (light.type == Light::Type::Spot)
     {
-        renderer->AddToRenderQueueDeferred(shadowRenderQueue);
-        renderer->AddToRenderQueueForward(shadowRenderQueue);
+        shadowMap.buffer2D->Bind();
+
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
+        glCullFace(GL_FRONT);
+
+        RenderingPipeline::BindCameraUniform();
+        Camera cameraFromLight(light.GetObject());
+        cameraFromLight.dataBlock.view = light.dataBlock.ViewMatrix;
+        cameraFromLight.dataBlock.projection = light.dataBlock.ProjectionMatrix;
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(cameraFromLight.dataBlock), &cameraFromLight.dataBlock, GL_DYNAMIC_DRAW);
+
+        cameraFromLight.UpdateFrustum();
+
+        RenderQueue shadowRenderQueue(&cameraFromLight);
+        for (auto renderer : renderers)
+        {
+            renderer->AddToRenderQueueDeferred(shadowRenderQueue);
+            renderer->AddToRenderQueueForward(shadowRenderQueue);
+        }
+
+        for (const auto& renderTarget : shadowRenderQueue.queue)
+        {
+            renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::SimplePositionModel);
+        }
     }
-
-    for (const auto& renderTarget : shadowRenderQueue.queue)
+    else if (light.type == Light::Type::Point)
     {
-        renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::SimplePositionModel);
+        shadowMap.bufferCube->Bind();
+
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
+        glCullFace(GL_FRONT);
+
+        auto views = TextureCubeMap::GenerateCameraViewsForCube(light.dataBlock.Pos);
+        for (auto& view : views)
+            view = light.dataBlock.ProjectionMatrix * view;
+        Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PointLightShadow)->SetUniformMat4Array("viewProjectionMatrices", views);
+
+        //RenderQueue shadowRenderQueue;
+        //for (auto renderer : renderers)
+        //{
+        //    renderer->AddToRenderQueueDeferred(shadowRenderQueue);
+        //    renderer->AddToRenderQueueForward(shadowRenderQueue);
+        //}
+
+        //for (const auto& renderTarget : shadowRenderQueue.queue)
+        //{
+        //    renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::PointLightShadow);
+        //}
     }
     
     glCullFace(GL_BACK);

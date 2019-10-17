@@ -390,5 +390,14 @@
     <None Include="shaders\PBR_IlluminationSphere.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="shaders\SimplePositionWorld.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\PointLightShadow.geom">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\PointLightShadow.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

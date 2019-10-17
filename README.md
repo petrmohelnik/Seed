@@ -4,4 +4,6 @@ My game engine. Serves as a place to try different rendering techniques and sati
 gltf 2.0 support
 Physically based renderer
 
-![example scene](https://github.com/petrmohelnik/Seed/raw/master/images/example.png "example scene")
+![example scene](https://github.com/petrmohelnik/Seed/raw/master/images/example1.png "example scene")
+
+![example scene](https://github.com/petrmohelnik/Seed/raw/master/images/example2.png "example scene")
