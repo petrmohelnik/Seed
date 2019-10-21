@@ -1,6 +1,5 @@
 #pragma once
 #include "Component.h"
-#include "AABB.h"
 
 class Camera final : public Component
 {
@@ -13,11 +12,18 @@ public:
         alignas(16) glm::vec3 viewPos;
     };
 
+    struct Frustum
+    {
+        std::array<glm::vec4, 6> planes;
+        std::array<glm::vec4, 8> points;
+    };
+
     void BindCamera();
 
     void UpdateFrustum();
-    bool IsInsideFrustum(AABB const& aabb) const;
     void SetProjectionMatrix(float fieldOfView, float aspectRatio, float clipPlaneNear, float clipPlaneFar);
+
+    Frustum const& GetFrustum();
 
 protected:
     friend class RenderingPipeline;
@@ -27,6 +33,6 @@ private:
 
     void UpdateFrustumPlanes(glm::mat4 const& viewProjection);
     void UpdateFrustumPoints(glm::mat4 const& viewProjection);
-    std::array<glm::vec4, 6> frustumPlanes;
-    std::array<glm::vec4, 8> frustumPoints;
+
+    Frustum frustum;
 };

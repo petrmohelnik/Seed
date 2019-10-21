@@ -339,18 +339,20 @@ void RenderingPipeline::RenderShadowMap(const Light& light)
         for (auto& view : views)
             view = light.dataBlock.ProjectionMatrix * view;
         Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PointLightShadow)->SetUniformMat4Array("viewProjectionMatrices", views);
+       
+        RenderQueue shadowRenderQueue;
+        shadowRenderQueue.SetCollisionFunction([light](const AABB& aabb) { return aabb.TestSphere(light.dataBlock.Pos, light.dataBlock.Range); });
 
-        //RenderQueue shadowRenderQueue;
-        //for (auto renderer : renderers)
-        //{
-        //    renderer->AddToRenderQueueDeferred(shadowRenderQueue);
-        //    renderer->AddToRenderQueueForward(shadowRenderQueue);
-        //}
+        for (auto renderer : renderers)
+        {
+            renderer->AddToRenderQueueDeferred(shadowRenderQueue);
+            renderer->AddToRenderQueueForward(shadowRenderQueue);
+        }
 
-        //for (const auto& renderTarget : shadowRenderQueue.queue)
-        //{
-        //    renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::PointLightShadow);
-        //}
+        for (const auto& renderTarget : shadowRenderQueue.queue)
+        {
+            renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::PointLightShadow);
+        }
     }
     
     glCullFace(GL_BACK);

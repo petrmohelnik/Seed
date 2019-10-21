@@ -5,10 +5,16 @@
 
 RenderQueue::RenderQueue(Camera* camera) : camera(camera)
 {
+    collisionFunction = [camera](const AABB& aabb) { return aabb.TestFrustum(camera->GetFrustum()); };
+}
+
+void RenderQueue::SetCollisionFunction(std::function<bool(const AABB&)> collisionFunction_)
+{
+    collisionFunction = collisionFunction_;
 }
 
 void RenderQueue::Add(Renderer* renderer, int index)
 {
-    if (camera == nullptr || camera->IsInsideFrustum(renderer->GetAABB(index)))
+    if (collisionFunction(renderer->GetAABB(index)))
         queue.push_back({ renderer, index });
 }
