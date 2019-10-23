@@ -1,7 +1,5 @@
 #version 460 core
 
-in vec4 FragPos;
-
 layout(std140, binding = 1) uniform LightBlock
 {
     mat4 ViewMatrix;
@@ -14,15 +12,13 @@ layout(std140, binding = 1) uniform LightBlock
     float SizeUV;
 	float SpotAngleScale;
 	float SpotAngleOffset;
+    float ShadowFarPlane;
     uint Type;
 } Light;
 
-layout(location = 0) out float gl_FragDepth;
+in vec4 WorldPos;
 
 void main()
 {
-    float lightDistance = length(FragPos.xyz - Light.Pos);
-    lightDistance /= Light.Range;
-    
-    gl_FragDepth = lightDistance;
+    gl_FragDepth = length(WorldPos.xyz - Light.Pos) / Light.ShadowFarPlane;
 } 

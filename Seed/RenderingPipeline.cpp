@@ -170,7 +170,13 @@ void RenderingPipeline::ActivateTexture(TextureSlot textureSlot)
 
 void RenderingPipeline::ActivateTexture(TextureSlot textureSlot, Texture* textureToBind)
 {
-    glActiveTexture(GL_TEXTURE0 + static_cast<int>(textureSlot));
+    ActivateTexture(textureSlot);
+    textureToBind->Bind();
+}
+
+void RenderingPipeline::ActivateTexture(TextureSlot textureSlot, TextureCubeMap* textureToBind)
+{
+    ActivateTexture(textureSlot);
     textureToBind->Bind();
 }
 
@@ -338,11 +344,12 @@ void RenderingPipeline::RenderShadowMap(const Light& light)
         auto views = TextureCubeMap::GenerateCameraViewsForCube(light.dataBlock.Pos);
         for (auto& view : views)
             view = light.dataBlock.ProjectionMatrix * view;
-        Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PointLightShadow)->SetUniformMat4Array("viewProjectionMatrices", views);
+        auto shader = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PointLightShadow);
+        shader->setup();
+        shader->SetUniformMat4Array("viewProjectionMatrices", views);
        
         RenderQueue shadowRenderQueue;
         shadowRenderQueue.SetCollisionFunction([light](const AABB& aabb) { return aabb.TestSphere(light.dataBlock.Pos, light.dataBlock.Range); });
-
         for (auto renderer : renderers)
         {
             renderer->AddToRenderQueueDeferred(shadowRenderQueue);
@@ -369,6 +376,8 @@ void RenderingPipeline::RenderLights(Camera& camera)
     ActivateTexture(TextureSlot::Metallic, gbuffer.metallicTexture.get());
     ActivateTexture(TextureSlot::Shadow, shadowMap.texture2D.get());
     ActivateTexture(TextureSlot::ShadowLerp, shadowMap.texture2D.get());
+    ActivateTexture(TextureSlot::ShadowCube, shadowMap.textureCube.get());
+    ActivateTexture(TextureSlot::ShadowCubeLerp, shadowMap.textureCube.get());
     BindSampler(TextureSlot::Shadow, shadowMap.sampler2DShadow[0]);
     BindSampler(TextureSlot::ShadowLerp, shadowMap.sampler2DShadow[1]);
     BindSampler(TextureSlot::ShadowCube, shadowMap.samplerCubeShadow[0]);

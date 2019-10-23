@@ -17,6 +17,7 @@ layout(std140, binding = 1) uniform LightBlock
     float SizeUV;
 	float SpotAngleScale;
 	float SpotAngleOffset;
+    float ShadowFarPlane;
     uint Type;
 } Light;
 
@@ -117,7 +118,7 @@ float InterleavedGradientNoise(vec2 texCoords)
     return fract(seed.z * fract(dot(texCoords, seed.xy)));
 }
 
-float CalculateShadow(vec3 worldPos, vec3 normal, vec3 lightDir, vec2 texCoords)
+float CalculateShadowSpot(vec3 worldPos, vec3 normal, vec3 lightDir, vec2 texCoords)
 {
     vec4 lightSpacePosClipSpace = Light.ProjectionMatrix * Light.ViewMatrix * vec4(worldPos, 1.0);
     vec3 lightSpacePos = lightSpacePosClipSpace.xyz / lightSpacePosClipSpace.w;
@@ -137,8 +138,29 @@ float CalculateShadow(vec3 worldPos, vec3 normal, vec3 lightDir, vec2 texCoords)
         shadow += 1.0 - texture(texShadowLerp, vec3(lightSpacePos.xy + sampleCoords, lightSpacePos.z + bias)).r;
     }
     shadow /= 20.0f;
+    
+    return shadow;
+}
+
+float CalculateShadowPoint(vec3 worldPos, vec3 normal, vec3 lightDir)
+{
+    vec3 vecToLight = worldPos - Light.Pos;
+    float currentDepth = length(vecToLight) / Light.ShadowFarPlane;
+    float bias = mix(0.001, 0.00001, dot(normal, lightDir));
+
+    float shadow = 1.0 - texture(texCubeShadowLerp, vec4(vecToLight, currentDepth + bias)).r;
 
     return shadow;
+}
+
+float CalculateShadow(vec3 worldPos, vec3 normal, vec3 lightDir, vec2 texCoords)
+{
+    if(bool(Light.Type & SpotLight))
+        return CalculateShadowSpot(worldPos, normal, lightDir, texCoords);
+    else if(bool(Light.Type & PointLight))
+        return CalculateShadowPoint(worldPos, normal, lightDir);
+    else 
+        return 0.0;
 }
 
 vec3 CalculateWorldPosition(vec2 texCoords)

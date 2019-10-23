@@ -110,6 +110,7 @@ void Light::BindLight()
 
     dataBlock.ViewMatrix == glm::mat4(1.0f);
     dataBlock.ProjectionMatrix == glm::mat4(1.0f);
+    dataBlock.ShadowFarPlane = dataBlock.Range == 0.0f ? shadowFarPlane : std::min(dataBlock.Range, shadowFarPlane);
     if (isShadowCaster && type == Type::Spot)
     {
         dataBlock.ViewMatrix = glm::lookAt(
@@ -117,13 +118,11 @@ void Light::BindLight()
             dataBlock.Pos + dataBlock.Orientation,
             glm::vec3(0.0f, 1.0f, 0.0f));
         
-        dataBlock.ProjectionMatrix = glm::perspective(spotOuterAngle, 1.0f, shadowNearPlane,
-            dataBlock.Range == 0.0f ? shadowFarPlane : std::min(dataBlock.Range, shadowFarPlane));
+        dataBlock.ProjectionMatrix = glm::perspective(spotOuterAngle, 1.0f, shadowNearPlane, dataBlock.ShadowFarPlane);
     }
     else if (isShadowCaster && type == Type::Point)
     {
-        dataBlock.ProjectionMatrix = glm::perspective(glm::radians(90.0f), 1.0f, shadowNearPlane,
-            dataBlock.Range == 0.0f ? shadowFarPlane : std::min(dataBlock.Range, shadowFarPlane));
+        dataBlock.ProjectionMatrix = glm::perspective(glm::radians(90.0f), 1.0f, shadowNearPlane, dataBlock.ShadowFarPlane);
     }
 
     glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);

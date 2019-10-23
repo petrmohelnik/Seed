@@ -44,6 +44,7 @@ public:
 
     static void ActivateTexture(TextureSlot textureSlot);
     static void ActivateTexture(TextureSlot textureSlot, Texture* textureToBind);
+    static void ActivateTexture(TextureSlot textureSlot, TextureCubeMap* textureToBind);
     static void BindSampler(TextureSlot textureSlot, GLuint sampler);
 
     void AddRenderer(Renderer* renderer);

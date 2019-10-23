@@ -1,11 +1,10 @@
+pcf
+opravit model - svetlo zluty
+
 proc neni rbo prolinkovany s tema texturama a nedrzije v sobe?
 
-nastavit farplane misto toho range do fragment shaderu
-culling pro point light na cube nebo 6x frustum?
-zda je svetlo zasahuje do camery by melo byt v camere porovnani frusta s jinym frustem (pripadne se da prevest na aabb) pro spot 6x
+zda je svetlo zasahuje do camery by melo byt v camere porovnani frusta s jinym frustem (pripadne se da prevest na aabb) pro spot s kouli
 
-mit v shaderu dva samplery a podle point nebo ne, vybirat, ktery se pouzije
-point - cube mapa - light bude mit metody, ktera bude vracet jednotliva frusta podle indexu
 ??pocitat dynamicky velikost shadow mapy? potom by slo mit buffer na max velikost, ale menit jenom viewport
 nastavit zda je objekt shadowcaster
 https://www.gamedev.net/forums/topic/660519-culling-out-of-frustum-models-that-contribute-shadows/
