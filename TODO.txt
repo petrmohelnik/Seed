@@ -1,5 +1,4 @@
 pcf
-opravit model - svetlo zluty
 
 proc neni rbo prolinkovany s tema texturama a nedrzije v sobe?
 
