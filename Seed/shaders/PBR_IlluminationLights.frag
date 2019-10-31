@@ -107,9 +107,17 @@ vec3 CookTorranceLobe(float NdotV, float NdotL, float NdotH, float roughness, ve
 
 vec2 VogelDiskCoords(int index, int count, float phi)
 {
-    float r = sqrt(index + 0.5) / sqrt(count);
     float theta = index * 2.4 + phi;
+    float r = sqrt(index + 0.5) / sqrt(count);
     return vec2(r * cos(theta), r * sin(theta));
+}
+
+vec3 VogelSphereCoords(int index, int count, float phi)
+{
+    float theta = index * 2.4 + phi;
+    float z = (1.0 - 1.0/count) * (1.0 - 2.0*index/(count - 1.0));
+    float r = sqrt(1.0 - z*z);
+    return vec3(r * cos(theta), r * sin(theta), z);
 }
 
 float InterleavedGradientNoise(vec2 texCoords)
@@ -129,7 +137,7 @@ float CalculateShadowSpot(vec3 worldPos, vec3 normal, vec3 lightDir, vec2 texCoo
 
     float bias = mix(0.001, 0.00001, dot(normal, lightDir));
     float gradientNoise = PI * 2 * InterleavedGradientNoise(gl_FragCoord.xy);
-    vec2 filterRadius = 1.0 / textureSize(texShadowLerp, 0) * 10.0 * Light.SizeUV;
+    float filterRadius = 0.01 * Light.SizeUV;
 
     float shadow = 0.0;
     for(int i = 0; i < 20; i++)
@@ -146,9 +154,21 @@ float CalculateShadowPoint(vec3 worldPos, vec3 normal, vec3 lightDir)
 {
     vec3 vecToLight = worldPos - Light.Pos;
     float currentDepth = length(vecToLight) / Light.ShadowFarPlane;
-    float bias = mix(0.001, 0.00001, dot(normal, lightDir));
 
-    float shadow = 1.0 - texture(texCubeShadowLerp, vec4(vecToLight, currentDepth + bias)).r;
+    if(currentDepth > 1.0)
+        return 0.0;
+
+    float bias = mix(0.001, 0.00001, dot(normal, lightDir));
+    float gradientNoise = PI * 2 * InterleavedGradientNoise(gl_FragCoord.xy);
+    float filterRadius = 0.05 * Light.SizeUV;
+
+    float shadow = 0.0;
+    for(int i = 0; i < 20; i++)
+    {
+        vec3 sampleCoords = VogelSphereCoords(i, 20, gradientNoise) * filterRadius;
+        shadow += 1.0 - texture(texCubeShadowLerp, vec4(vecToLight + sampleCoords, currentDepth + bias)).r;
+    }
+    shadow /= 20.0f;
 
     return shadow;
 }
