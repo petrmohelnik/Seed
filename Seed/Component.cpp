@@ -13,7 +13,7 @@ Object* Component::GetObject() const
     return object;
 }
 
-Transform* Component::GetTransform()
+Transform* Component::GetTransform() const
 {
     return object->GetComponent<Transform>();
 }

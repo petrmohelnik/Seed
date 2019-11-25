@@ -50,6 +50,9 @@ void Framebuffer::SetNoColorAttachment()
 
 void Framebuffer::ChangeSize(int width_, int height_)
 {
+    if (width == width_ && height == height_)
+        return;
+
     width = width_; height = height_;
 
     if (depthRbo != 0)

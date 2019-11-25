@@ -25,6 +25,9 @@ public:
     static void BindMaterialUniform();
     static void BindSkyboxEnvironmentalMap();
 
+    const int maxSpotLightShadowMapSize = 1024;
+    const int maxPointLightShadowMapSize = 512;
+
     enum class TextureSlot : int
     {
         Albedo = 0,
@@ -63,7 +66,8 @@ private:
     void RenderCamera(Camera& camera);
     void RenderGBuffer(RenderQueue& queue);
     void RenderGlobalIllumination();
-    void RenderShadowMap(const Light& light);
+    void RenderShadowMap(const Camera& camera, const Light& light);
+    int CalculateOptimumShadowMapSize(const Camera& camera, const Light& light);
     void RenderLights(Camera& camera);
     void BlendIllumination();
     void RenderToneMapping();

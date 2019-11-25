@@ -63,14 +63,14 @@ void RenderingPipeline::IntializeTextures(int width, int height)
     gbuffer.depthStencilTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_DEPTH_STENCIL, width, height, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, false);
 
     shadowMap.texture2D = std::make_unique<Texture>();
-    shadowMap.texture2D->GenerateTexture(GL_CLAMP_TO_BORDER, GL_DEPTH_COMPONENT, 1024, 1024, GL_DEPTH_COMPONENT, GL_FLOAT, false);
+    shadowMap.texture2D->GenerateTexture(GL_CLAMP_TO_BORDER, GL_DEPTH_COMPONENT, maxSpotLightShadowMapSize, maxSpotLightShadowMapSize, GL_DEPTH_COMPONENT, GL_FLOAT, false);
     glGenSamplers(2, &shadowMap.sampler2DShadow[0]);
     SetShadowSamplerParameters(shadowMap.sampler2DShadow[0]);
     SetShadowSamplerParameters(shadowMap.sampler2DShadow[1], GL_COMPARE_REF_TO_TEXTURE);
 
     shadowMap.textureCube = std::make_unique<TextureCubeMap>();
     shadowMap.textureCube->GenerateTexture();
-    shadowMap.textureCube->DefineTexture(GL_DEPTH_COMPONENT, 1024, 1024, GL_DEPTH_COMPONENT, GL_FLOAT);
+    shadowMap.textureCube->DefineTexture(GL_DEPTH_COMPONENT, maxPointLightShadowMapSize, maxPointLightShadowMapSize, GL_DEPTH_COMPONENT, GL_FLOAT);
     glGenSamplers(2, &shadowMap.samplerCubeShadow[0]);
     SetShadowSamplerParameters(shadowMap.samplerCubeShadow[0]);
     SetShadowSamplerParameters(shadowMap.samplerCubeShadow[1], GL_COMPARE_REF_TO_TEXTURE);
@@ -95,11 +95,11 @@ void RenderingPipeline::IntializeBuffers(int width, int height)
     gbuffer.buffer->AttachTexture(GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, gbuffer.depthStencilTexture->texture);
     gbuffer.buffer->SetDrawBuffers({ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 });
 
-    shadowMap.buffer2D = std::make_unique<Framebuffer>(1024, 1024);
+    shadowMap.buffer2D = std::make_unique<Framebuffer>(maxSpotLightShadowMapSize, maxSpotLightShadowMapSize);
     shadowMap.buffer2D->SetNoColorAttachment();
     shadowMap.buffer2D->AttachTexture(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap.texture2D->texture);
 
-    shadowMap.bufferCube = std::make_unique<Framebuffer>(1024, 1024);
+    shadowMap.bufferCube = std::make_unique<Framebuffer>(maxPointLightShadowMapSize, maxPointLightShadowMapSize);
     shadowMap.bufferCube->SetNoColorAttachment();
     shadowMap.bufferCube->AttachCubeMapTexture(GL_DEPTH_ATTACHMENT, shadowMap.textureCube->texture);
 
@@ -300,13 +300,17 @@ void RenderingPipeline::RenderGlobalIllumination()
     quad->Draw(shader);
 }
 
-void RenderingPipeline::RenderShadowMap(const Light& light)
+void RenderingPipeline::RenderShadowMap(const Camera& camera, const Light& light)
 {
     if (!light.isShadowCaster || light.type == Light::Type::Directional)
         return;
-
+    
+    auto shadowMapSize = CalculateOptimumShadowMapSize(camera, light);
+    
     if (light.type == Light::Type::Spot)
     {
+        shadowMap.texture2D->AllocateTexture(GL_DEPTH_COMPONENT, shadowMapSize, shadowMapSize, GL_DEPTH_COMPONENT, GL_FLOAT);
+        shadowMap.buffer2D->ChangeSize(shadowMapSize, shadowMapSize);
         shadowMap.buffer2D->Bind();
 
         glClear(GL_DEPTH_BUFFER_BIT);
@@ -335,6 +339,8 @@ void RenderingPipeline::RenderShadowMap(const Light& light)
     }
     else if (light.type == Light::Type::Point)
     {
+        shadowMap.textureCube->AllocateTexture(GL_DEPTH_COMPONENT, shadowMapSize, shadowMapSize, GL_DEPTH_COMPONENT, GL_FLOAT);
+        shadowMap.bufferCube->ChangeSize(shadowMapSize, shadowMapSize);
         shadowMap.bufferCube->Bind();
 
         glClear(GL_DEPTH_BUFFER_BIT);
@@ -365,6 +371,28 @@ void RenderingPipeline::RenderShadowMap(const Light& light)
     glCullFace(GL_BACK);
 }
 
+static unsigned int NextPowerOfTwo(glm::uint32 v)
+{
+    v--;
+    v |= v >> 1;
+    v |= v >> 2;
+    v |= v >> 4;
+    v |= v >> 8;
+    v |= v >> 16;
+    v++;
+
+    return v;
+}
+
+int RenderingPipeline::CalculateOptimumShadowMapSize(const Camera& camera, const Light& light)
+{
+    auto lightToCameraDist = glm::length(light.dataBlock.Pos - camera.GetTransform()->GetPosition());
+    auto screenPosition = camera.dataBlock.projection * glm::vec4(light.dataBlock.ShadowFarPlane, 0.0f, -lightToCameraDist, 1.0f);
+    auto pixelSize = static_cast<glm::uint32>(screenPosition.x / screenPosition.w * Engine::GetWindow().GetWindowSize().first * 0.5f);
+
+    return glm::clamp(static_cast<int>(NextPowerOfTwo(pixelSize)), 0, light.type == Light::Type::Spot ? maxSpotLightShadowMapSize : maxPointLightShadowMapSize);
+}
+
 void RenderingPipeline::RenderLights(Camera& camera)
 {
     glEnable(GL_BLEND);
@@ -390,7 +418,7 @@ void RenderingPipeline::RenderLights(Camera& camera)
     for (const auto& light : lights)
     {
         light->BindLight();
-        RenderShadowMap(*light);
+        RenderShadowMap(camera, *light);
         lightsIlluminationBuffer->Bind();
         camera.BindCamera();
         if (light->dataBlock.Range == 0.0f)

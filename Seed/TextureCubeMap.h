@@ -39,6 +39,7 @@ protected:
 
 private:
     void DefineTexture();
+    void AllocateTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, const void* pixels = nullptr);
     GLuint GenerateEquirectangularTexture(float* data, int width, int height);
     void RenderViewsIntoCubeMap(Shader* shader, const Framebuffer& framebuffer);
     void RenderViewsIntoCubeMapWithMipMaps(Shader* shader, Framebuffer& framebuffer, GLuint mipLevelUniformLocation, int mipLevels, int width);

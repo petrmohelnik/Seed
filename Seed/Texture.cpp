@@ -183,12 +183,18 @@ void Texture::GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapParam);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapParam);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, pixels);
+    AllocateTexture(internalFormat, width, height, format, type, pixels);
 
     if(generateMipMaps)
         glGenerateMipmap(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Texture::AllocateTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, const void* pixels)
+{
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, pixels);
 }
 
 void Texture::RenderIntoHDRTexture(int width, int height, ShaderFactory::Type shaderType, GLuint format)

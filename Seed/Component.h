@@ -11,7 +11,7 @@ public:
 	virtual ~Component() = default;
 
     Object* GetObject() const;
-    Transform* GetTransform();
+    Transform* GetTransform() const;
     void Destroy(float delay = 0);
 
 protected:

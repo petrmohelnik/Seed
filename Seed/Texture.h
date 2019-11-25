@@ -38,6 +38,7 @@ protected:
     void RenderIntoHDRTexture(int width, int height, ShaderFactory::Type shaderType, GLuint format);
 
 private:
+    void AllocateTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, const void* pixels = nullptr);
 	GLuint GetInternalFormat();
 	GLuint GetFormat();
 

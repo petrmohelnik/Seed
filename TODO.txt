@@ -1,16 +1,7 @@
-pcf
+zda je svetlo zasahuje do camery by melo byt v camere porovnani frusta s jinym frustem (pripadne se da prevest na aabb) pro point s kouli
 
-proc neni rbo prolinkovany s tema texturama a nedrzije v sobe?
-
-zda je svetlo zasahuje do camery by melo byt v camere porovnani frusta s jinym frustem (pripadne se da prevest na aabb) pro spot s kouli
-
-??pocitat dynamicky velikost shadow mapy? potom by slo mit buffer na max velikost, ale menit jenom viewport
 nastavit zda je objekt shadowcaster
-https://www.gamedev.net/forums/topic/660519-culling-out-of-frustum-models-that-contribute-shadows/
-vyrenderuju kazde svetrlo, ktera dosahne do frusta kamery a vyrenderuju, vsechny objekty, ktere jsou v jeho dosahu
 
-bias https://dspace5.zcu.cz/bitstream/11025/29520/1/Ehm.pdf
-assert(glGetError() == GL_NO_ERROR);
 ---
 Depth Of Field - http://www.adriancourreges.com/blog/2018/12/02/ue4-optimized-post-effects/
 SSAO
@@ -74,6 +65,8 @@ https://learn.unity.com/tutorial/physics-best-practices#5c7f8528edbc2a002053b5b4
 
 textura nebo mesh by si meli drzet path, aby pri loadu na gpu, kdyz maji smazany data si ho mohly naloadovat,
 ale uz na primo, zadny sdileni pres file system
+
+assert(glGetError() == GL_NO_ERROR);
 
 !!!!!!!
 https://unity3d.com/learn/tutorials/temas/performance-optimization/optimizing-graphics-rendering-unity-games
