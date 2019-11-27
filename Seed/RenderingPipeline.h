@@ -66,8 +66,8 @@ private:
     void RenderCamera(Camera& camera);
     void RenderGBuffer(RenderQueue& queue);
     void RenderGlobalIllumination();
-    void RenderShadowMap(const Camera& camera, const Light& light);
-    int CalculateOptimumShadowMapSize(const Camera& camera, const Light& light);
+    void RenderShadowMap(const Camera& camera, const Light& light, int shadowMapSize);
+    int CalculateOptimumShadowMapSize(const Camera& camera, Light& light);
     void RenderLights(Camera& camera);
     void BlendIllumination();
     void RenderToneMapping();

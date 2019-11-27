@@ -18,6 +18,7 @@ layout(std140, binding = 1) uniform LightBlock
 	float SpotAngleScale;
 	float SpotAngleOffset;
     float ShadowFarPlane;
+    float ViewPortScale;
     uint Type;
 } Light;
 
@@ -143,7 +144,7 @@ float CalculateShadowSpot(vec3 worldPos, vec3 normal, vec3 lightDir, vec2 texCoo
     for(int i = 0; i < 20; i++)
     {
         vec2 sampleCoords = VogelDiskCoords(i, 20, gradientNoise) * filterRadius;
-        shadow += 1.0 - texture(texShadowLerp, vec3(lightSpacePos.xy + sampleCoords, lightSpacePos.z + bias)).r;
+        shadow += 1.0 - texture(texShadowLerp, vec3(clamp(lightSpacePos.xy + sampleCoords, 0.0, 1.0) * Light.ViewPortScale, lightSpacePos.z + bias)).r;
     }
     shadow /= 20.0f;
     

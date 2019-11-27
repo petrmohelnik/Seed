@@ -56,6 +56,7 @@ private:
         alignas(4) float SpotAngleScale = 0.0f;
         alignas(4) float SpotAngleOffset = 1.0f;
         alignas(4) float ShadowFarPlane = 1.0f;
+        alignas(4) float ViewPortScale = 1.0f;
         alignas(4) unsigned int Type = LightTypeMask::Directional;
     };
 

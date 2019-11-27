@@ -300,16 +300,13 @@ void RenderingPipeline::RenderGlobalIllumination()
     quad->Draw(shader);
 }
 
-void RenderingPipeline::RenderShadowMap(const Camera& camera, const Light& light)
+void RenderingPipeline::RenderShadowMap(const Camera& camera, const Light& light, int shadowMapSize)
 {
     if (!light.isShadowCaster || light.type == Light::Type::Directional)
         return;
     
-    auto shadowMapSize = CalculateOptimumShadowMapSize(camera, light);
-    
     if (light.type == Light::Type::Spot)
     {
-        shadowMap.texture2D->AllocateTexture(GL_DEPTH_COMPONENT, shadowMapSize, shadowMapSize, GL_DEPTH_COMPONENT, GL_FLOAT);
         shadowMap.buffer2D->ChangeSize(shadowMapSize, shadowMapSize);
         shadowMap.buffer2D->Bind();
 
@@ -339,8 +336,8 @@ void RenderingPipeline::RenderShadowMap(const Camera& camera, const Light& light
     }
     else if (light.type == Light::Type::Point)
     {
-        shadowMap.textureCube->AllocateTexture(GL_DEPTH_COMPONENT, shadowMapSize, shadowMapSize, GL_DEPTH_COMPONENT, GL_FLOAT);
-        shadowMap.bufferCube->ChangeSize(shadowMapSize, shadowMapSize);
+        //point light do not use resolution optimization right now, because it is difficult to sample from only part of cube map
+        //different approach would be needed, where different light do not share the same cubemap
         shadowMap.bufferCube->Bind();
 
         glClear(GL_DEPTH_BUFFER_BIT);
@@ -384,13 +381,16 @@ static unsigned int NextPowerOfTwo(glm::uint32 v)
     return v;
 }
 
-int RenderingPipeline::CalculateOptimumShadowMapSize(const Camera& camera, const Light& light)
+int RenderingPipeline::CalculateOptimumShadowMapSize(const Camera& camera, Light& light)
 {
     auto lightToCameraDist = glm::length(light.dataBlock.Pos - camera.GetTransform()->GetPosition());
     auto screenPosition = camera.dataBlock.projection * glm::vec4(light.dataBlock.ShadowFarPlane, 0.0f, -lightToCameraDist, 1.0f);
     auto pixelSize = static_cast<glm::uint32>(screenPosition.x / screenPosition.w * Engine::GetWindow().GetWindowSize().first * 0.5f);
 
-    return glm::clamp(static_cast<int>(NextPowerOfTwo(pixelSize)), 0, light.type == Light::Type::Spot ? maxSpotLightShadowMapSize : maxPointLightShadowMapSize);
+    auto shadowMapSize = glm::clamp(static_cast<int>(NextPowerOfTwo(pixelSize)), 0, light.type == Light::Type::Spot ? maxSpotLightShadowMapSize : maxPointLightShadowMapSize);
+    light.dataBlock.ViewPortScale = static_cast<double>(shadowMapSize) / (light.type == Light::Type::Spot ? maxSpotLightShadowMapSize : maxPointLightShadowMapSize);
+    
+    return shadowMapSize;
 }
 
 void RenderingPipeline::RenderLights(Camera& camera)
@@ -417,8 +417,9 @@ void RenderingPipeline::RenderLights(Camera& camera)
 
     for (const auto& light : lights)
     {
+        auto shadowMapSize = CalculateOptimumShadowMapSize(camera, *light);
         light->BindLight();
-        RenderShadowMap(camera, *light);
+        RenderShadowMap(camera, *light, shadowMapSize);
         lightsIlluminationBuffer->Bind();
         camera.BindCamera();
         if (light->dataBlock.Range == 0.0f)
