@@ -113,6 +113,7 @@ inline std::unique_ptr<T> Components::CreateScript(Object* object)
 {
 	static_assert(std::is_base_of<Script, T>::value, "T must be derived from Script");
 	auto script = std::make_unique<T>(object, physics);
+    script->OnCreate();
     scripts.push_back(script.get());
 	return script;
 }

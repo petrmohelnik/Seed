@@ -331,7 +331,8 @@ void RenderingPipeline::RenderShadowMap(const Camera& camera, const Light& light
 
         for (const auto& renderTarget : shadowRenderQueue.queue)
         {
-            renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::SimplePositionModel);
+            if (renderTarget.meshRenderer->GetCastShadow())
+                renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::SimplePositionModel);
         }
     }
     else if (light.type == Light::Type::Point)
@@ -361,7 +362,8 @@ void RenderingPipeline::RenderShadowMap(const Camera& camera, const Light& light
 
         for (const auto& renderTarget : shadowRenderQueue.queue)
         {
-            renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::PointLightShadow);
+            if(renderTarget.meshRenderer->GetCastShadow())
+                renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::PointLightShadow);
         }
     }
     

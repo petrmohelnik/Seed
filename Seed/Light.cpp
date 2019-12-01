@@ -20,7 +20,12 @@ void Light::SetRange(float range)
 
 void Light::SetIntensity(float intensity)
 {
-    dataBlock.Itensity = intensity;
+    dataBlock.Intensity = intensity;
+}
+
+float Light::GetIntensity()
+{
+    return dataBlock.Intensity;
 }
 
 void Light::SetSpotAngle(float outerAngle, float blend)
@@ -132,6 +137,6 @@ void Light::OnInputGraphUpdate()
 {
     ImGui::BulletText("Light");
     Engine::GetInput().SliderFloatLog("Range", dataBlock.Range, 0.0, 100);
-    Engine::GetInput().SliderFloatLog("Intensity", dataBlock.Itensity, 0.0, 100);
+    Engine::GetInput().SliderFloatLog("Intensity", dataBlock.Intensity, 0.0, 100);
     Engine::GetInput().SliderFloat("SizeUV", dataBlock.SizeUV, 0.0, 1.0);
 }

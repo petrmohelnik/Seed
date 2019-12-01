@@ -61,7 +61,7 @@ void Engine::Work()
     scene.Initialize("Default");
     time.InitializeTime();
 
-	while (input.GameIsRunning() && !input.Key(SDLK_ESCAPE))
+	while (input.IsGameRunning() && !input.Key(SDLK_ESCAPE))
 	{
 		window.PollInputs();
 		time.UpdateTime();

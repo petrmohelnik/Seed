@@ -9,3 +9,13 @@ Renderer::Renderer(Object* object)
     , time(Engine::GetTime())
 {
 }
+
+void Renderer::SetCastShadow(bool castShadow_)
+{
+    castShadow = castShadow_;
+}
+
+bool Renderer::GetCastShadow()
+{
+    return castShadow;
+}

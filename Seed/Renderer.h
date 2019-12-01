@@ -18,8 +18,12 @@ public:
     virtual void AddToRenderQueueForward(RenderQueue& queue) = 0;
 	virtual void Render(int index) = 0;
     virtual void Render(int index, ShaderFactory::Type shaderType) = 0;
+    void SetCastShadow(bool castShadow);
+    bool GetCastShadow();
 
 private:
     Input& input;
     Time& time;
+
+    bool castShadow = true;
 };

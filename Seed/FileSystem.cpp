@@ -154,7 +154,7 @@ void FileSystem::LoadLight(const aiScene* scene, aiNode* node, Object* object)
             auto color = glm::vec3(assimpLight->mColorDiffuse.r, assimpLight->mColorDiffuse.g, assimpLight->mColorDiffuse.b);
             auto illuminationPower = glm::max(glm::max(color.x, color.y), color.z);
             light->dataBlock.Color = color / illuminationPower;
-            light->dataBlock.Itensity = illuminationPower / static_cast<float>(4.0f * M_PI); //convert from power to intensity
+            light->dataBlock.Intensity = illuminationPower / static_cast<float>(4.0f * M_PI); //convert from power to intensity
         }
     }
 }

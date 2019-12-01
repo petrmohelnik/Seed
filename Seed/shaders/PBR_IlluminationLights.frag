@@ -136,7 +136,7 @@ float CalculateShadowSpot(vec3 worldPos, vec3 normal, vec3 lightDir, vec2 texCoo
     if(lightSpacePos.z > 1.0)
         return 0.0;
 
-    float bias = mix(0.001, 0.00001, dot(normal, lightDir));
+    float bias = mix(0.001, 0.0001, dot(normal, lightDir));
     float gradientNoise = PI * 2 * InterleavedGradientNoise(gl_FragCoord.xy);
     float filterRadius = 0.01 * Light.SizeUV;
 
@@ -159,7 +159,7 @@ float CalculateShadowPoint(vec3 worldPos, vec3 normal, vec3 lightDir)
     if(currentDepth > 1.0)
         return 0.0;
 
-    float bias = mix(0.001, 0.00001, dot(normal, lightDir));
+    float bias = mix(0.001, 0.0001, dot(normal, lightDir));
     float gradientNoise = PI * 2 * InterleavedGradientNoise(gl_FragCoord.xy);
     float filterRadius = 0.05 * Light.SizeUV;
 

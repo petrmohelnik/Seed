@@ -6,7 +6,7 @@ class Component;
 class Input
 {
 public:
-	bool GameIsRunning();
+	bool IsGameRunning();
 	bool Pause();
 	bool Resume();
 	bool Key(SDL_Keycode key);

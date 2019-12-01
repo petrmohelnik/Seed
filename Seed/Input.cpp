@@ -3,7 +3,7 @@
 #include "Component.h"
 #include "Engine.h"
 
-bool Input::GameIsRunning()
+bool Input::IsGameRunning()
 {
 	return !quit;
 }

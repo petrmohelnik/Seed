@@ -17,6 +17,7 @@ public:
 	void SetColor(glm::vec3 color);
     void SetRange(float range);
     void SetIntensity(float intensity);
+    float GetIntensity();
     void SetSpotAngle(float outerAngle, float blend);
     void SetDirection(glm::vec3 direction);
     void SetDirectionalLight(glm::vec3 direction);
@@ -51,7 +52,7 @@ private:
         alignas(16) glm::vec3 Color = glm::vec3(1.0f);
         alignas(16) glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, 1.0f);
         alignas(4) float Range = 0.0f;
-        alignas(4) float Itensity = 1.0f;
+        alignas(4) float Intensity = 1.0f;
         alignas(4) float SizeUV = 0.2f;
         alignas(4) float SpotAngleScale = 0.0f;
         alignas(4) float SpotAngleOffset = 1.0f;
