@@ -112,10 +112,10 @@ void SDLWindow::Swap()
 void SDLWindow::ResetViewport()
 {
     auto windowSize = GetWindowSize();
-    glViewport(0, 0, windowSize.first, windowSize.second);
+    glViewport(0, 0, windowSize.x, windowSize.y);
 }
 
-std::pair<int, int> SDLWindow::GetWindowSize()
+glm::uvec2 SDLWindow::GetWindowSize()
 {
     int width, height;
     SDL_GL_GetDrawableSize(window, &width, &height);

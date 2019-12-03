@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 
+class Camera;
+
 class Light final : public Component
 {
 public:
@@ -28,7 +30,8 @@ public:
     void SetShadowFarPlaneDistance(float distance);
     void SetIsShadowCaster(bool castShadows);
 
-    void BindLight();
+    void BindLight(const Camera& camera);
+    bool IsVisible(const Camera& camera);
 
 protected:
     friend class FileSystem;
@@ -62,7 +65,9 @@ private:
     };
 
     void SetSpotAngleToDataBlock();
-    void SetLighTypeToDataBlock();
+    void SetLightTypeToDataBlock();
+    void CalculateOptimumViewPortScale(const Camera& camera);
+    void SetupShadowData(const Camera& camera);
 
 	LightBlock dataBlock;
     Type type = Type::Point;

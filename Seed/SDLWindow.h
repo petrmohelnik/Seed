@@ -7,6 +7,8 @@ public:
 	SDLWindow();
 	~SDLWindow();
 
+    glm::uvec2 GetWindowSize();
+
 protected:
     friend class Time;
     friend class Engine;
@@ -19,7 +21,6 @@ protected:
 	Uint32 GetTime();
 	void Swap();
     void ResetViewport();
-    std::pair<int, int> GetWindowSize();
 
 private:
     SDL_Window* window = nullptr;

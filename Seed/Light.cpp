@@ -2,6 +2,7 @@
 #include "RenderingPipeline.h"
 #include "Transform.h"
 #include "Engine.h"
+#include "Camera.h"
 
 void Light::SetType(Type type_)
 {
@@ -91,7 +92,51 @@ void Light::SetSpotAngleToDataBlock()
     dataBlock.SpotAngleOffset = -glm::cos(outerAngle) * dataBlock.SpotAngleScale;
 }
 
-void Light::SetLighTypeToDataBlock()
+static unsigned int NextPowerOfTwo(glm::uint32 v)
+{
+    v--;
+    v |= v >> 1;
+    v |= v >> 2;
+    v |= v >> 4;
+    v |= v >> 8;
+    v |= v >> 16;
+    v++;
+
+    return v;
+}
+
+void Light::CalculateOptimumViewPortScale(const Camera& camera)
+{
+    auto maxShadowMapSize = type == Light::Type::Spot ? RenderingPipeline::MaxSpotLightShadowMapSize : RenderingPipeline::MaxPointLightShadowMapSize;
+    auto lightToCameraDist = glm::length(GetTransform()->GetPosition() - camera.GetTransform()->GetPosition());
+    auto screenPosition = camera.dataBlock.projection * glm::vec4(dataBlock.ShadowFarPlane, 0.0f, -lightToCameraDist, 1.0f);
+    auto pixelSize = static_cast<glm::uint32>(screenPosition.x / screenPosition.w * Engine::GetWindow().GetWindowSize().x * 0.5f);
+
+    auto shadowMapSize = glm::clamp(static_cast<int>(NextPowerOfTwo(pixelSize)), 0, maxShadowMapSize);
+    dataBlock.ViewPortScale = static_cast<float>(shadowMapSize) / maxShadowMapSize;
+}
+
+void Light::SetupShadowData(const Camera & camera)
+{
+    dataBlock.ShadowFarPlane = dataBlock.Range == 0.0f ? shadowFarPlane : std::min(dataBlock.Range, shadowFarPlane);
+    if (type == Type::Spot)
+    {
+        dataBlock.ViewMatrix = glm::lookAt(
+            dataBlock.Pos,
+            dataBlock.Pos + dataBlock.Orientation,
+            glm::vec3(0.0f, 1.0f, 0.0f));
+
+        dataBlock.ProjectionMatrix = glm::perspective(spotOuterAngle, 1.0f, shadowNearPlane, dataBlock.ShadowFarPlane);
+    }
+    else if (type == Type::Point)
+    {
+        dataBlock.ProjectionMatrix = glm::perspective(glm::radians(90.0f), 1.0f, shadowNearPlane, dataBlock.ShadowFarPlane);
+    }
+
+    CalculateOptimumViewPortScale(camera);
+}
+
+void Light::SetLightTypeToDataBlock()
 {
     dataBlock.Type = 0;
     if (type == Type::Directional)
@@ -105,32 +150,29 @@ void Light::SetLighTypeToDataBlock()
         dataBlock.Type |= LightTypeMask::IsShadowCaster;
 }
 
-void Light::BindLight()
+void Light::BindLight(const Camera& camera)
 {
     RenderingPipeline::BindLightUniform();
 
-    SetLighTypeToDataBlock();
+    SetLightTypeToDataBlock();
 	dataBlock.Pos = GetTransform()->GetPosition();
     dataBlock.Orientation = glm::normalize(glm::mat3(glm::inverse(glm::transpose(GetTransform()->GetModelMatrix()))) * glm::vec3(0.0f, 0.0f, -1.0f));
 
     dataBlock.ViewMatrix == glm::mat4(1.0f);
     dataBlock.ProjectionMatrix == glm::mat4(1.0f);
-    dataBlock.ShadowFarPlane = dataBlock.Range == 0.0f ? shadowFarPlane : std::min(dataBlock.Range, shadowFarPlane);
-    if (isShadowCaster && type == Type::Spot)
-    {
-        dataBlock.ViewMatrix = glm::lookAt(
-            dataBlock.Pos,
-            dataBlock.Pos + dataBlock.Orientation,
-            glm::vec3(0.0f, 1.0f, 0.0f));
-        
-        dataBlock.ProjectionMatrix = glm::perspective(spotOuterAngle, 1.0f, shadowNearPlane, dataBlock.ShadowFarPlane);
-    }
-    else if (isShadowCaster && type == Type::Point)
-    {
-        dataBlock.ProjectionMatrix = glm::perspective(glm::radians(90.0f), 1.0f, shadowNearPlane, dataBlock.ShadowFarPlane);
-    }
+    
+    if (isShadowCaster)
+        SetupShadowData(camera);
 
     glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);
+}
+
+bool Light::IsVisible(const Camera& camera)
+{
+    Frustum lightFrustum;
+    lightFrustum.Update(dataBlock.ProjectionMatrix * dataBlock.ViewMatrix);
+
+    return true;
 }
 
 void Light::OnInputGraphUpdate()

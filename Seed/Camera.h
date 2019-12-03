@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "Frustum.h"
 
 class Camera final : public Component
 {
@@ -12,12 +13,6 @@ public:
         alignas(16) glm::vec3 viewPos;
     };
 
-    struct Frustum
-    {
-        std::array<glm::vec4, 6> planes;
-        std::array<glm::vec4, 8> points;
-    };
-
     void BindCamera();
 
     void UpdateFrustum();
@@ -27,12 +22,10 @@ public:
 
 protected:
     friend class RenderingPipeline;
+    friend class Light;
 
 private:
 	CameraBlock dataBlock;
-
-    void UpdateFrustumPlanes(glm::mat4 const& viewProjection);
-    void UpdateFrustumPoints(glm::mat4 const& viewProjection);
 
     Frustum frustum;
 };

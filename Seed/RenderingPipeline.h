@@ -25,8 +25,8 @@ public:
     static void BindMaterialUniform();
     static void BindSkyboxEnvironmentalMap();
 
-    const int maxSpotLightShadowMapSize = 1024;
-    const int maxPointLightShadowMapSize = 512;
+    static const int MaxSpotLightShadowMapSize = 1024;
+    static const int MaxPointLightShadowMapSize = 512;
 
     enum class TextureSlot : int
     {
@@ -66,8 +66,7 @@ private:
     void RenderCamera(Camera& camera);
     void RenderGBuffer(RenderQueue& queue);
     void RenderGlobalIllumination();
-    void RenderShadowMap(const Camera& camera, const Light& light, int shadowMapSize);
-    int CalculateOptimumShadowMapSize(const Camera& camera, Light& light);
+    void RenderShadowMap(const Light& light);
     void RenderLights(Camera& camera);
     void BlendIllumination();
     void RenderToneMapping();

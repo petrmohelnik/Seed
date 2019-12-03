@@ -30,6 +30,7 @@
     <ClCompile Include="EnvironmentalMap.cpp" />
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="Framebuffer.cpp" />
+    <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="Identifiable.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
@@ -84,6 +85,7 @@
     <ClInclude Include="EnvironmentalMap.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Framebuffer.h" />
+    <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameScript.h" />
     <ClInclude Include="Identifiable.h" />
     <ClInclude Include="imgui\imconfig.h" />
