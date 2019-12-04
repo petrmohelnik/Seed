@@ -169,10 +169,36 @@ void Light::BindLight(const Camera& camera)
 
 bool Light::IsVisible(const Camera& camera)
 {
-    Frustum lightFrustum;
-    lightFrustum.Update(dataBlock.ProjectionMatrix * dataBlock.ViewMatrix);
+    if (type == Type::Directional)
+        return true;
 
-    return true;
+    if (type == Type::Spot)
+    {
+        Frustum lightFrustum;
+        lightFrustum.Update(dataBlock.ProjectionMatrix * dataBlock.ViewMatrix);
+
+        glm::vec3 min(std::numeric_limits<float>::max());
+        glm::vec3 max(std::numeric_limits<float>::lowest());
+        for (int i = 0; i < 8; i++)
+        {
+            auto point = lightFrustum.GetPoint(i);
+            if (point.x < min.x) min.x = point.x;
+            if (point.y < min.y) min.y = point.y;
+            if (point.z < min.z) min.z = point.z;
+            if (point.x > max.x) max.x = point.x;
+            if (point.y > max.y) max.y = point.y;
+            if (point.z > max.z) max.z = point.z;
+        }
+        AABB aabb(min, max);
+
+        return aabb.TestFrustum(camera.GetFrustum());
+    }
+
+    if (type == Type::Point)
+    {
+        AABB aabb(dataBlock.Pos - dataBlock.ShadowFarPlane, dataBlock.Pos + dataBlock.ShadowFarPlane);
+        return aabb.TestFrustum(camera.GetFrustum());
+    }
 }
 
 void Light::OnInputGraphUpdate()

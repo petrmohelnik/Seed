@@ -18,7 +18,7 @@ public:
     void UpdateFrustum();
     void SetProjectionMatrix(float fieldOfView, float aspectRatio, float clipPlaneNear, float clipPlaneFar);
 
-    Frustum const& GetFrustum();
+    Frustum const& GetFrustum() const;
 
 protected:
     friend class RenderingPipeline;

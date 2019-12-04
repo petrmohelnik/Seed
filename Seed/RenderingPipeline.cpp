@@ -397,7 +397,10 @@ void RenderingPipeline::RenderLights(Camera& camera)
     {
         light->BindLight(camera);
         if (!light->IsVisible(camera))
+        {
+            Engine::GetInput().BulletText(light->GetObject()->GetName());
             continue;
+        }
 
         RenderShadowMap(*light);
         lightsIlluminationBuffer->Bind();

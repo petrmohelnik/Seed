@@ -16,6 +16,11 @@ glm::vec4 const& Frustum::GetPoint(int index) const
     return points[index];
 }
 
+bool Frustum::TestSphere(glm::vec3 center, float radius) const
+{
+    return false;
+}
+
 void Frustum::UpdatePlanes(glm::mat4 const& viewProjection)
 {
     planes[0].x = viewProjection[0][3] + viewProjection[0][0];

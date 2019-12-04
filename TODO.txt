@@ -1,12 +1,10 @@
-zda je svetlo zasahuje do camery by melo byt v camere porovnani frusta s jinym frustem (pripadne se da prevest na aabb) pro point s kouli
-frustum udelat jako class a dat mu testSphere a testFrustum?
-
----
 Depth Of Field - http://www.adriancourreges.com/blog/2018/12/02/ue4-optimized-post-effects/
 SSAO
 Bloom
 Screen Space Reflections
 AA
+
+https://github.com/gszauer/GamePhysicsCookbook
 
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf

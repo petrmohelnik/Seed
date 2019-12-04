@@ -22,7 +22,7 @@ void Camera::SetProjectionMatrix(float fieldOfView, float aspectRatio, float cli
     dataBlock.projection = glm::perspective(fieldOfView, aspectRatio, clipPlaneNear, clipPlaneFar);
 }
 
-Frustum const& Camera::GetFrustum()
+Frustum const& Camera::GetFrustum() const
 {
     return frustum;
 }
