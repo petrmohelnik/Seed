@@ -2,6 +2,7 @@
 #include "CameraObject.h"
 #include "GameScript.h"
 #include "RotateWorldScript.h"
+#include "SkyboxSwitcherScript.h"
 
 void DefaultScene(Objects& objects, FileSystem& fileSystem)
 {
@@ -25,6 +26,11 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //ground->GetComponent<Transform>()->SetScale(glm::vec3(1000));
 
 	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
+	auto skyboxSwitcher = objects.CreateObject("skyboxSwitcher")->AddComponent<SkyboxSwitcherScript>();
+	skyboxSwitcher->AddSkybox("sunrise.hdr");
+	skyboxSwitcher->AddSkybox("Space.hdr");
+	skyboxSwitcher->AddSkybox("Bunker.hdr");
+	skyboxSwitcher->AddSkybox("Protospace.hdr");
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
     //objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));

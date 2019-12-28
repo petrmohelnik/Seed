@@ -118,6 +118,7 @@
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="SimpleMesh.h" />
     <ClInclude Include="Skybox.h" />
+    <ClInclude Include="SkyboxSwitcherScript.h" />
     <ClInclude Include="stb\stb_image.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SubMesh.h" />

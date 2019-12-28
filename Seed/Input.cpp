@@ -96,6 +96,11 @@ void Input::BulletText(const std::string& text)
     ImGui::BulletText(text.c_str());
 }
 
+bool Input::Button(const std::string& text)
+{
+	return ImGui::Button(text.c_str());
+}
+
 void Input::CreateSceneGraph()
 {
 	ImGui::ShowDemoWindow();
