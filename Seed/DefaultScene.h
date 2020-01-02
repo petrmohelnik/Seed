@@ -27,10 +27,12 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 
 	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
 	auto skyboxSwitcher = objects.CreateObject("skyboxSwitcher")->AddComponent<SkyboxSwitcherScript>();
+	skyboxSwitcher->AddSkybox("Newport_Loft.hdr");
 	skyboxSwitcher->AddSkybox("sunrise.hdr");
 	skyboxSwitcher->AddSkybox("Space.hdr");
 	skyboxSwitcher->AddSkybox("Bunker.hdr");
 	skyboxSwitcher->AddSkybox("Protospace.hdr");
+	skyboxSwitcher->AddSkybox("Milkyway.hdr");
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
     //objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
 	//objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));

@@ -16,11 +16,13 @@ private:
 
 void SkyboxSwitcherScript::Update()
 {
+    input.PushWindow("Switch skybox");
 	for (const auto& path : paths)
 	{
 		if(input.Button(path.c_str()))
 			objects.SetSkybox(Engine::GetFileSystem().LoadCubeMapHDR(path));
 	}
+    input.PopWindow();
 }
 
 void SkyboxSwitcherScript::AddSkybox(std::string path)

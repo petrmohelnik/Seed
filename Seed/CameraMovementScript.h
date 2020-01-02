@@ -19,8 +19,8 @@ void CameraMovementScript::OnCreate()
 {
     flashLight = objects.CreateObject("FlashLight")->AddComponent<Light>();
     flashLight->SetColor(glm::vec3(1.0f, 1.0f, 0.9f));
-    flashLight->SetSpotLight(glm::vec3(-0.2f, 0.3f, -1.0f), 30.0f, 100.0f, 0.5f, 0.2f);
-    flashLight->GetTransform()->SetPosition(glm::vec3(0.3f, -0.5f, 0.0f));
+    flashLight->SetSpotLight(glm::vec3(-0.1f, 0.15f, -1.0f), 30.0f, 100.0f, 0.5f, 0.4f);
+    flashLight->GetTransform()->SetPosition(glm::vec3(0.1f, -0.3f, 0.0f));
     flashLight->GetTransform()->SetParent(transform->GetObject());
 }
 

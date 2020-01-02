@@ -393,6 +393,7 @@ void RenderingPipeline::RenderLights(Camera& camera)
     auto shaderLights = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationLightsSphere);
     auto shaderLightsQuad = Engine::GetShaderFactory().GetShader(ShaderFactory::Type::PBR_IlluminationLightsQuad);
 
+    Engine::GetInput().PushWindow("Culled lights");
     for (const auto& light : lights)
     {
         light->BindLight(camera);
@@ -449,6 +450,7 @@ void RenderingPipeline::RenderLights(Camera& camera)
         glDepthFunc(GL_LESS);
         glDisable(GL_STENCIL_TEST);
     }
+    Engine::GetInput().PopWindow();
     glCullFace(GL_BACK);
 
     BindSampler(TextureSlot::Shadow, 0);

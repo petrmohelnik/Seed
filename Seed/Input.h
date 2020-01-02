@@ -17,7 +17,9 @@ public:
     void SliderFloat(const std::string& name, float& value, float min, float max);
     void SliderFloatLog(const std::string& name, float& value, float min, float max, float power = 4.0f);
     void BulletText(const std::string& text);
-	bool Button(const std::string& text);
+    bool Button(const std::string& text);
+    void PushWindow(const std::string& title, ImGuiWindowFlags flags = 0);
+    void PopWindow();
 
 protected:
     friend class SDLWindow;

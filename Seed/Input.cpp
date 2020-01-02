@@ -101,12 +101,24 @@ bool Input::Button(const std::string& text)
 	return ImGui::Button(text.c_str());
 }
 
+void Input::PushWindow(const std::string& title, ImGuiWindowFlags flags)
+{
+    ImGui::Begin(title.c_str(), nullptr, flags);
+}
+
+void Input::PopWindow()
+{
+    ImGui::End();
+}
+
 void Input::CreateSceneGraph()
 {
 	ImGui::ShowDemoWindow();
 
+    PushWindow("Scene graph");
 	auto root = Engine::GetComponents().GetRoot()->GetComponent<Transform>();
 	CreateSceneGraphNode(root->GetObject());
+    PopWindow();
 }
 
 void Input::CreateSceneGraphNode(Object* object)
