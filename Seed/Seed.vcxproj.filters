@@ -24,9 +24,6 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{aa45e841-3cde-4833-b7e3-07c85391fa1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="stb">
-      <UniqueIdentifier>{4d923b89-ee64-4101-91bf-28542359fff8}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -309,9 +306,6 @@
     </ClInclude>
     <ClInclude Include="EnvironmentalMap.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stb\stb_image.h">
-      <Filter>stb</Filter>
     </ClInclude>
     <ClInclude Include="SimpleMesh.h">
       <Filter>Header Files</Filter>

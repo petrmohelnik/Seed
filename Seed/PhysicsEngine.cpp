@@ -1,6 +1,8 @@
 #include "PhysicsEngine.h"
 #include "Collider.h"
 #include "Rigidbody.h"
+#include "btBulletCollisionCommon.h"
+#include "btBulletDynamicsCommon.h"
 
 void PhysicsEngine::AddCollider(Collider* collider)
 {

@@ -57,6 +57,7 @@ private:
         alignas(4) float Range = 0.0f;
         alignas(4) float Intensity = 1.0f;
         alignas(4) float SizeUV = 0.2f;
+        alignas(4) float SpotAngle = 1.57f;
         alignas(4) float SpotAngleScale = 0.0f;
         alignas(4) float SpotAngleOffset = 1.0f;
         alignas(4) float ShadowFarPlane = 1.0f;

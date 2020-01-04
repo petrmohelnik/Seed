@@ -113,7 +113,7 @@ void Input::PopWindow()
 
 void Input::CreateSceneGraph()
 {
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowDemoWindow();
 
     PushWindow("Scene graph");
 	auto root = Engine::GetComponents().GetRoot()->GetComponent<Transform>();

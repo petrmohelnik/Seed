@@ -15,6 +15,7 @@ layout(std140, binding = 1) uniform LightBlock
 	float Range;
 	float Intensity;
     float SizeUV;
+    float SpotAngle;
 	float SpotAngleScale;
 	float SpotAngleOffset;
     float ShadowFarPlane;
@@ -136,9 +137,9 @@ float CalculateShadowSpot(vec3 worldPos, vec3 normal, vec3 lightDir, vec2 texCoo
     if(lightSpacePos.z > 1.0)
         return 0.0;
 
-    float bias = mix(0.001, 0.0001, dot(normal, lightDir));
+    float bias = mix(0.0001, 0.00001, dot(normal, lightDir)) / Light.ViewPortScale;
     float gradientNoise = PI * 2 * InterleavedGradientNoise(gl_FragCoord.xy);
-    float filterRadius = 0.01 * Light.SizeUV;
+    float filterRadius = 0.03 * Light.SizeUV / pow(Light.SpotAngle, 1.5);
 
     float shadow = 0.0;
     for(int i = 0; i < 20; i++)
@@ -159,7 +160,7 @@ float CalculateShadowPoint(vec3 worldPos, vec3 normal, vec3 lightDir)
     if(currentDepth > 1.0)
         return 0.0;
 
-    float bias = mix(0.001, 0.0001, dot(normal, lightDir));
+    float bias = mix(0.0001, 0.00001, dot(normal, lightDir));
     float gradientNoise = PI * 2 * InterleavedGradientNoise(gl_FragCoord.xy);
     float filterRadius = 0.05 * Light.SizeUV;
 

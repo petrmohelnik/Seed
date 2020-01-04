@@ -127,6 +127,7 @@ void Light::SetupShadowData(const Camera & camera)
             glm::vec3(0.0f, 1.0f, 0.0f));
 
         dataBlock.ProjectionMatrix = glm::perspective(spotOuterAngle, 1.0f, shadowNearPlane, dataBlock.ShadowFarPlane);
+        dataBlock.SpotAngle = spotOuterAngle;
     }
     else if (type == Type::Point)
     {
@@ -199,6 +200,8 @@ bool Light::IsVisible(const Camera& camera)
         AABB aabb(dataBlock.Pos - dataBlock.ShadowFarPlane, dataBlock.Pos + dataBlock.ShadowFarPlane);
         return aabb.TestFrustum(camera.GetFrustum());
     }
+
+    return false;
 }
 
 void Light::OnInputGraphUpdate()
