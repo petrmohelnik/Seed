@@ -4,6 +4,10 @@
 #include "btBulletCollisionCommon.h"
 #include "btBulletDynamicsCommon.h"
 
+void PhysicsEngine::Initialize()
+{
+}
+
 void PhysicsEngine::AddCollider(Collider* collider)
 {
     colliders.push_back(collider);
@@ -12,6 +16,20 @@ void PhysicsEngine::AddCollider(Collider* collider)
 void PhysicsEngine::AddRigidbody(Rigidbody* rigidbody)
 {
     rigidbodies.push_back(rigidbody);
+}
+
+void PhysicsEngine::RunSimulationStep()
+{
+    UpdateSimulationState();
+    Simulate();
+}
+
+void PhysicsEngine::OnCollisionUpdate()
+{
+}
+
+void PhysicsEngine::RigidBodyUpdate()
+{
 }
 
 void PhysicsEngine::CleanComponents()
@@ -24,4 +42,12 @@ void PhysicsEngine::CleanComponents()
     {
         return rigidbody->ToBeDestroyed();
     });
+}
+
+void PhysicsEngine::UpdateSimulationState()
+{
+}
+
+void PhysicsEngine::Simulate()
+{
 }

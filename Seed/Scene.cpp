@@ -18,11 +18,17 @@ void Scene::Initialize(std::string scene)
 
 void Scene::OnFixedUpdate()
 {
+    components.OnFixedUpdate();
 }
 
 void Scene::OnFrameUpdate()
 {
     components.OnFrameUpdate();
+}
+
+void Scene::SimulatePhysics()
+{
+    components.SimulatePhysics();
 }
 
 void Scene::Render()

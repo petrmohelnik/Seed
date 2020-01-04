@@ -6,6 +6,10 @@
 #include "Light.h"
 #include "Audio.h"
 #include "Collider.h"
+#include "BoxCollider.h"
+#include "CapsuleCollider.h"
+#include "MeshCollider.h"
+#include "SphereCollider.h"
 #include "Rigidbody.h"
 #include "Script.h"
 #include "Skybox.h"
@@ -44,7 +48,9 @@ protected:
 	void SetSkybox(std::unique_ptr<Skybox> skybox);
 	void RemoveSkybox();
 	
+    void OnFixedUpdate();
     void OnFrameUpdate();
+    void SimulatePhysics();
     void Render();
     void CleanComponents();
     Object* GetRoot();
@@ -55,7 +61,7 @@ private:
     Objects& objects;
 
     RenderingPipeline renderingPipeline;
-    PhysicsEngine physics;
+    PhysicsEngine physicsEngine;
     std::vector<Audio*> audios;
     std::vector<Script*> scripts;
 	std::unique_ptr<Skybox> skybox;
@@ -97,14 +103,14 @@ inline std::unique_ptr<T> Components::CreateCollider(Object* object)
 {
     static_assert(std::is_base_of<Collider, T>::value, "T must be derived from Collider");
     auto collider = std::make_unique<T>(object);
-    physics.AddCollider(collider.get());
+    physicsEngine.AddCollider(collider.get());
     return collider;
 }
 
 inline std::unique_ptr<Rigidbody> Components::CreateRigidbody(Object* object)
 {
     auto rigidbody = std::make_unique<Rigidbody>(object);
-    physics.AddRigidbody(rigidbody.get());
+    physicsEngine.AddRigidbody(rigidbody.get());
     return rigidbody;
 }
 
@@ -112,7 +118,7 @@ template<typename T>
 inline std::unique_ptr<T> Components::CreateScript(Object* object)
 {
 	static_assert(std::is_base_of<Script, T>::value, "T must be derived from Script");
-	auto script = std::make_unique<T>(object, physics);
+	auto script = std::make_unique<T>(object, physicsEngine);
     script->OnCreate();
     scripts.push_back(script.get());
 	return script;

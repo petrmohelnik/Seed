@@ -19,8 +19,11 @@ void SkyboxSwitcherScript::Update()
     input.PushWindow("Switch skybox");
 	for (const auto& path : paths)
 	{
-		if(input.Button(path.c_str()))
-			objects.SetSkybox(Engine::GetFileSystem().LoadCubeMapHDR(path));
+        if (input.Button(path.c_str()))
+        {
+            objects.RemoveSkybox();
+            objects.SetSkybox(Engine::GetFileSystem().LoadCubeMapHDR(path));
+        }
 	}
     input.PopWindow();
 }

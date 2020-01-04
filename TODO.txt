@@ -1,4 +1,28 @@
-collider muze nebo nemusi mit rigid body, ktere je na stejnem objektu nebo na nejakym z parentu
+sphere na bullets
+mesh na ragdolly a na zem
+update pred simulaci
+simulace
+precteni vysledku
+
+prirozeny pohyb hrace - ne kamera
+
+All Awake calls
+All Start Calls
+while (stepping towards variable delta time)
+All FixedUpdate functions
+Physics simulation
+OnEnter/Exit/Stay trigger functions
+OnEnter/Exit/Stay collision functions
+Rigidbody interpolation applies transform.position and rotation
+OnMouseDown/OnMouseUp etc. events
+All Update functions
+metody na poradi skriptu
+https://docs.unity3d.com/Manual/ExecutionOrder.html
+pohyby zpusobene fyzkou se aplikujou pred mouseDown a Update ale po OnCollision a OnTrigger
+fixedUpate je pouze pro fyziku, napr physcs addFOrce
+pohyb jako transform.translate se dela v update
+
+=======================================================================================================================
 
 Depth Of Field - http://www.adriancourreges.com/blog/2018/12/02/ue4-optimized-post-effects/
 SSAO
@@ -39,23 +63,6 @@ https://docs.unity3d.com/Manual/SL-SubShaderTags.html -- inspirace poradi
 
 submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?
-
-All Awake calls
-All Start Calls
-while (stepping towards variable delta time)
-All FixedUpdate functions
-Physics simulation
-OnEnter/Exit/Stay trigger functions
-OnEnter/Exit/Stay collision functions
-Rigidbody interpolation applies transform.position and rotation
-OnMouseDown/OnMouseUp etc. events
-All Update functions
-metody na poradi skriptu
-https://docs.unity3d.com/Manual/ExecutionOrder.html
-pohyby zpusobene fyzkou se aplikujou pred mouseDown a Update ale po OnCollision a OnTrigger
-skripty by si asi fakt meli ty metody registrovat, kdyz jich je takhle hodne
-fixedUpate je pouze pro fyziku, napr physcs addFOrce
-pohyb jako transform.translate se dela v update
 
 doresit clonovani pres GetMaterial a GetMesh vuci loadu a unloadu z gpu - problem pri zmene dat a destrukci se to porad sdili
 mit ty data submeshe aspol. nejak zabaleny do pointeru a zbavit se jich pres reset misto ty shrink_to_fit?

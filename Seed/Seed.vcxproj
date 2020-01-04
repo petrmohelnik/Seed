@@ -22,7 +22,9 @@
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="BasicShader.cpp" />
+    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CapsuleCollider.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Components.cpp" />
@@ -41,6 +43,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MeshCollider.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -60,6 +63,7 @@
     <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="SimpleMesh.cpp" />
     <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -74,9 +78,12 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="BasicShader.h" />
+    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="CameraObject.h" />
     <ClInclude Include="CameraMovementScript.h" />
+    <ClInclude Include="PlayerObject.h" />
+    <ClInclude Include="PlayerScript.h" />
+    <ClInclude Include="CapsuleCollider.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Components.h" />
@@ -99,6 +106,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="MeshCollider.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Objects.h" />
@@ -119,6 +127,7 @@
     <ClInclude Include="SimpleMesh.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="SkyboxSwitcherScript.h" />
+    <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SubMesh.h" />
     <ClInclude Include="Texture.h" />

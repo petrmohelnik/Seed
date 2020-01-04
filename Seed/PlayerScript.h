@@ -1,20 +1,28 @@
 #pragma once
 #include "Script.h"
 
-class CameraMovementScript : public Script
+class PlayerScript : public Script
 {
 public:
     using Script::Script;
 
+    void OnCreate() override;
     void Update() override;
 
     float RotationSensitivity = 0.5f;
     float MoveSensitivity = 10.0f;
 
     Light* flashLight;
+    Camera* camera;
 };
 
-void CameraMovementScript::Update()
+void PlayerScript::OnCreate()
+{
+    camera = objects.GetObjectByName("PlayerCamera")->GetComponent<Camera>();
+    flashLight = objects.GetObjectByName("FlashLight")->GetComponent<Light>();
+}
+
+void PlayerScript::Update()
 {
     if (input.Key(SDLK_w))
         transform->Translate(-transform->GetForwardAxis() * MoveSensitivity * time.DeltaTime(), Transform::Space::World);
@@ -27,7 +35,15 @@ void CameraMovementScript::Update()
 
     if (input.MouseButton(SDL_BUTTON_RIGHT))
     {
-        transform->RotateY(-input.MouseMovement().x * RotationSensitivity * time.DeltaTime(), Transform::Space::World);
-        transform->RotateX(-input.MouseMovement().y * RotationSensitivity * time.DeltaTime());
+        camera->GetTransform()->RotateY(-input.MouseMovement().x * RotationSensitivity * time.DeltaTime(), Transform::Space::World);
+        camera->GetTransform()->RotateX(-input.MouseMovement().y * RotationSensitivity * time.DeltaTime());
+    }
+
+    if (input.KeyDown(SDLK_f))
+    {
+        if (flashLight->GetIntensity() != 0.0)
+            flashLight->SetIntensity(0.0);
+        else
+            flashLight->SetIntensity(100.0);
     }
 }

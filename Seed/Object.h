@@ -126,7 +126,7 @@ template<class T, typename std::enable_if<std::is_base_of<Collider, T>::value>::
 inline T* Object::AddComponent()
 {
     colliders.push_back(components.CreateCollider<T>(this));
-    return colliders.back().get();
+    return dynamic_cast<T*>(colliders.back().get());
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Rigidbody, T>::value>::type*>

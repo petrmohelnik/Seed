@@ -76,7 +76,8 @@ void Engine::Work()
 		}
 		while (time.StartFixedUpdate())
 		{
-			scene.OnFixedUpdate();
+            scene.OnFixedUpdate();
+            scene.SimulatePhysics();
             time.EndFixedUpdate();
 		}
 

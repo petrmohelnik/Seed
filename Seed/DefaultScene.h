@@ -1,13 +1,13 @@
 #pragma once
-#include "CameraObject.h"
+#include "Object.h"
+#include "PlayerObject.h"
 #include "GameScript.h"
 #include "RotateWorldScript.h"
 #include "SkyboxSwitcherScript.h"
 
 void DefaultScene(Objects& objects, FileSystem& fileSystem)
 {
-    auto camera = objects.CreateObject<CameraObject>("camera");
-    camera->GetComponent<Transform>()->Translate(glm::vec3(0.0f, 1.5f, 0.0f));
+    auto player = objects.CreateObject<PlayerObject>("player");
 
 	auto light = objects.CreateObject("light");
 	light->AddComponent<Light>();
@@ -80,6 +80,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	cobblestone->GetComponent<MeshRenderer>()->SetMaterial(0, cobblestoneMaterial);
     cobblestone->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
 	cobblestone->AddComponent<RotateWorldScript>();
+    cobblestone->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
+    cobblestone->AddComponent<Rigidbody>();
 
 	auto redbricksMaterial = std::make_shared<Material>();
 	redbricksMaterial->Albedo = fileSystem.LoadTexture("redbricks/albedo.png", 24, 24);
@@ -97,6 +99,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	redbricks->GetComponent<Transform>()->TranslateX(-1.5f);
     redbricks->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
 	redbricks->AddComponent<RotateWorldScript>();
+    redbricks->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
+    redbricks->AddComponent<Rigidbody>();
 
     auto roughblockMaterial = std::make_shared<Material>();
     roughblockMaterial->Albedo = fileSystem.LoadTexture("roughblock/albedo.png", 24, 24);
@@ -114,12 +118,14 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     roughblock->GetComponent<Transform>()->TranslateX(1.5f);
     roughblock->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
     roughblock->AddComponent<RotateWorldScript>();
+    roughblock->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
+    roughblock->AddComponent<Rigidbody>();
 
     //auto camerasphere = objects.CreateObject("camerasphere");
     //camerasphere->AddComponent<MeshRenderer>()->Load("sphere.obj");
     //camerasphere->GetComponent<Transform>()->SetScale(0.2f);
     //camerasphere->GetComponent<Transform>()->TranslateZ(-1.0f);
     //camerasphere->GetComponent<Transform>()->SetParent(camera);
-    RenderingPipeline::SetMainCamera(camera->GetComponent<Camera>());
+    RenderingPipeline::SetMainCamera(objects.GetObjectByName("PlayerCamera")->GetComponent<Camera>());
     //RenderingPipeline::MainCamera()->GetObject()->AddComponent<CameraMovementScript>();
 }

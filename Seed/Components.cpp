@@ -22,6 +22,7 @@ Object* Components::GetRoot()
 void Components::Initialize()
 {
     renderingPipeline.Initialize();
+    physicsEngine.Initialize();
 }
 
 void Components::SetSkybox(std::unique_ptr<Skybox> skybox_)
@@ -36,12 +37,27 @@ void Components::RemoveSkybox()
 	renderingPipeline.SetSkybox(nullptr);
 }
 
+void Components::OnFixedUpdate()
+{
+    for (const auto& script : scripts)
+    {
+        script->FixedUpdate();
+    }
+}
+
 void Components::OnFrameUpdate()
 {
     for (const auto& script : scripts)
     {
         script->Update();
     }
+}
+
+void Components::SimulatePhysics()
+{
+    physicsEngine.RunSimulationStep();
+    physicsEngine.OnCollisionUpdate();
+    physicsEngine.RigidBodyUpdate();
 }
 
 void Components::Render()
@@ -53,7 +69,7 @@ void Components::Render()
 void Components::CleanComponents()
 {
     renderingPipeline.CleanComponents();
-    physics.CleanComponents();
+    physicsEngine.CleanComponents();
 
     std::experimental::erase_if(audios, [](const auto audio)
     {
