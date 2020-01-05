@@ -25,6 +25,7 @@ class Components
 {
 public:
 	Components();
+	~Components();
 
 protected:
     friend class Objects;

@@ -31,8 +31,10 @@ Object::Object(std::string name_)
 Object::~Object()
 {
     auto parent = transform->GetParent();
-    if(parent)
+    if (parent)
         parent->CleanChildren();
+    else if(auto root = components.GetRoot())
+        root->GetComponent<Transform>()->CleanChildren();
 }
 
 void Object::Destroy(float delay)

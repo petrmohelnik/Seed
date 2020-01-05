@@ -14,6 +14,11 @@ Components::Components()
     renderingPipeline.SetRootTransform(root->GetComponent<Transform>());
 }
 
+Components::~Components()
+{
+    root.reset(nullptr);
+}
+
 Object* Components::GetRoot()
 {
     return root.get();;
@@ -57,7 +62,7 @@ void Components::SimulatePhysics()
 {
     physicsEngine.RunSimulationStep();
     physicsEngine.OnCollisionUpdate();
-    physicsEngine.RigidBodyUpdate();
+    physicsEngine.RigidbodyUpdate();
 }
 
 void Components::Render()

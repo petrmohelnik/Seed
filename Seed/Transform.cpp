@@ -110,7 +110,6 @@ void Transform::DestroyAllChildren()
         child->GetObject()->Destroy();
         child->GetObject()->UpdateForDestruction();
     }
-    CleanChildren();
 }
 
 void Transform::CleanChildren()

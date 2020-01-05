@@ -8,7 +8,8 @@ public:
     using Collider::Collider;
 
     void SetMesh(std::shared_ptr<Mesh> mesh, int submeshIndex = 0);
-    SubMesh* GetMesh();
+    std::vector<glm::vec3> const& GetVertices();
+    std::vector<glm::uvec3> const& GetIndices();
 
 private:
     std::shared_ptr<SubMesh> mesh;

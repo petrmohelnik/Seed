@@ -1,6 +1,8 @@
-update pred simulaci
-simulace
-precteni vysledku
+zatim jsem udelal na zkousku convex hull misto trinagle meshe
+dodelat shape center - je potreba spocitat world pozici obdobne jak v transform akorat k tomu local pricist center
+pri prvnim updatu si vytvorim rigidbody
+pri zmenach ho budu uz jenom updatovat, pokud ho uz mam vytvorenej
+local global transformy pro fyziku?
 
 All Awake calls
 All Start Calls

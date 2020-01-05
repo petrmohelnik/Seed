@@ -8,7 +8,10 @@ public:
 
     void SetIsKinematic(bool isKinematic);
     bool GetIsKinematic();
+    void SetMass(float mass);
+    float GetMass();
 
 private:
     bool isKinematic = false;
+    float mass = 0.0;
 };

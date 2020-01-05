@@ -23,7 +23,7 @@ private:
     double ToSeconds(double milliseconds);
 
     double deltaTime = 0;
-    double fixedDeltaTime = 20;
+    double fixedDeltaTime = 1.0 / 60.0;
     double currentTime = 0;
     double fixedUpdateAccumulate = 0;
     double fixedUpdateStart = 0;

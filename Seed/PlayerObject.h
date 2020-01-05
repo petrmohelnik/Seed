@@ -14,7 +14,7 @@ public:
 void PlayerObject::Initialize()
 {
     AddComponent<CapsuleCollider>()->SetCapsule(glm::vec3(0.0f, 0.9f, 0.0f), 1.8f, 0.4f);
-    AddComponent<Rigidbody>();
+    AddComponent<Rigidbody>()->SetIsKinematic(true);
     
     auto camera = Engine::GetObjects().CreateObject("PlayerCamera");
     camera->AddComponent<Camera>();
