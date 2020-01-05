@@ -22,8 +22,11 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
 	light->AddComponent<GameScript>();
 
-    //auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
-    //ground->GetComponent<Transform>()->SetScale(glm::vec3(1000));
+    auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
+    ground->GetComponent<Transform>()->SetScale(glm::vec3(1000));
+    ground->GetComponent<Transform>()->TranslateY(-0.1f);
+    ground->AddComponent<MeshCollider>()->SetMesh(ground->GetComponent<MeshRenderer>()->GetSharedMesh());
+    ground->AddComponent<Rigidbody>();
 
 	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
 	auto skyboxSwitcher = objects.CreateObject("skyboxSwitcher")->AddComponent<SkyboxSwitcherScript>();
@@ -120,6 +123,14 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     roughblock->AddComponent<RotateWorldScript>();
     roughblock->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
     roughblock->AddComponent<Rigidbody>();
+
+    auto targets = objects.GetObjectsByName("TargetDummy");
+    auto targetMesh = fileSystem.LoadMesh("TargetDummy/TargetDummy.gltf");
+    for (auto& target : targets)
+    {
+        target->AddComponent<MeshCollider>()->SetMesh(targetMesh);
+        target->AddComponent<Rigidbody>();
+    }
 
     //auto camerasphere = objects.CreateObject("camerasphere");
     //camerasphere->AddComponent<MeshRenderer>()->Load("sphere.obj");

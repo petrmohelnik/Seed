@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "MeshCollider.h"
 
-void MeshCollider::SetMesh(std::shared_ptr<SubMesh> mesh_)
+void MeshCollider::SetMesh(std::shared_ptr<Mesh> mesh_, int submeshIndex)
 {
-    mesh = mesh_;
+    mesh = mesh_->subMeshes[submeshIndex];
 }
 
 SubMesh* MeshCollider::GetMesh()

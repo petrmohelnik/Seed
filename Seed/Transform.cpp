@@ -10,6 +10,9 @@ Transform::Transform(Object* object, Transform* root)
 
 Transform::~Transform()
 {
+    Destroy();
+    DestroyAllChildren();
+
     for (auto& child : children)
         child->parent = nullptr;
 }
@@ -107,6 +110,7 @@ void Transform::DestroyAllChildren()
         child->GetObject()->Destroy();
         child->GetObject()->UpdateForDestruction();
     }
+    CleanChildren();
 }
 
 void Transform::CleanChildren()

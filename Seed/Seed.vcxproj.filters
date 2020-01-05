@@ -376,6 +376,9 @@
     <ClInclude Include="CameraMovementScript.h">
       <Filter>Scripts</Filter>
     </ClInclude>
+    <ClInclude Include="BulletObject.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\Skybox.frag">

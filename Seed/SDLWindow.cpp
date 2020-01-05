@@ -96,9 +96,9 @@ void SDLWindow::PollInputs()
     ImGui::NewFrame();
 }
 
-Uint32 SDLWindow::GetTime()
+double SDLWindow::GetTime()
 {
-    return SDL_GetTicks();
+    return (SDL_GetPerformanceCounter() / (double)SDL_GetPerformanceFrequency()) * 1000;
 }
 
 void SDLWindow::Swap()

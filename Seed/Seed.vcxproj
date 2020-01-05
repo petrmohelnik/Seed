@@ -79,6 +79,7 @@
     <ClInclude Include="Audio.h" />
     <ClInclude Include="BasicShader.h" />
     <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="BulletObject.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraMovementScript.h" />
     <ClInclude Include="PlayerObject.h" />

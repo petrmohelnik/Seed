@@ -28,7 +28,7 @@ public:
     std::shared_ptr<Texture> Albedo;
     std::shared_ptr<Texture> Normal;
     std::shared_ptr<Texture> Height;
-    std::shared_ptr<Texture> Metallic;
+    std::shared_ptr<Texture> Metallic; //R - ao, G - rougness, B - metallic
     std::shared_ptr<Texture> Emission;
     std::shared_ptr<Texture> Occlusion;
 

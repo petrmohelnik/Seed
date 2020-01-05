@@ -9,11 +9,14 @@ public:
     void OnCreate() override;
     void Update() override;
 
-    float RotationSensitivity = 0.5f;
-    float MoveSensitivity = 10.0f;
+    float RotationSensitivity = 0.003f;
+    float MoveSensitivity = 5.0f;
 
+private:
     Light* flashLight;
     Camera* camera;
+
+    float verticalRotation = 0.0f;
 };
 
 void PlayerScript::OnCreate()
@@ -35,8 +38,11 @@ void PlayerScript::Update()
 
     if (input.MouseButton(SDL_BUTTON_RIGHT))
     {
-        camera->GetTransform()->RotateY(-input.MouseMovement().x * RotationSensitivity * time.DeltaTime(), Transform::Space::World);
-        camera->GetTransform()->RotateX(-input.MouseMovement().y * RotationSensitivity * time.DeltaTime());
+        transform->RotateY(-input.MouseDeltaPosition().x * RotationSensitivity, Transform::Space::World);
+
+        verticalRotation += -input.MouseDeltaPosition().y * RotationSensitivity;
+        verticalRotation = glm::clamp(verticalRotation, -0.8f, 0.8f);
+        camera->GetTransform()->SetRotation(glm::quat(glm::vec3(verticalRotation, 0.0f, 0.0f)));
     }
 
     if (input.KeyDown(SDLK_f))

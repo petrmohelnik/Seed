@@ -32,8 +32,6 @@ void FileSystem::LoadScene(const std::string& path)
 		| aiProcess_CalcTangentSpace
 		| aiProcess_FixInfacingNormals
 		| aiProcess_ImproveCacheLocality
-		| aiProcess_OptimizeMeshes
-		| aiProcess_OptimizeGraph
         | aiProcess_FindInvalidData
         | aiProcess_JoinIdenticalVertices
         | aiProcess_RemoveRedundantMaterials

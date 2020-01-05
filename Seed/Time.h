@@ -6,7 +6,7 @@ class Time
 public:
     Time(SDLWindow& window);
 
-	float DeltaTime();
+    float DeltaTime();
     float FixedDeltaTime();
 
 protected:
@@ -20,13 +20,13 @@ protected:
     void EndFixedUpdate();
 
 private:
-    float ToSeconds(Uint32 milliseconds);
+    double ToSeconds(double milliseconds);
 
-    Uint32 deltaTime = 0;
-    Uint32 fixedDeltaTime = 20;
-    Uint32 currentTime = 0;
-    Uint32 fixedUpdateAccumulate = 0;
-    Uint32 fixedUpdateStart = 0;
+    double deltaTime = 0;
+    double fixedDeltaTime = 20;
+    double currentTime = 0;
+    double fixedUpdateAccumulate = 0;
+    double fixedUpdateStart = 0;
     bool paused = false;
 
     SDLWindow& window;

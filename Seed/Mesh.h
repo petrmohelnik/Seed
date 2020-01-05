@@ -22,6 +22,7 @@ public:
 protected:
     friend class FileSystem;
     friend class MeshRenderer;
+    friend class MeshCollider;
     
 private:
     void LoadSubMesh(SubMesh* subMesh);

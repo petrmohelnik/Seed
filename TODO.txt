@@ -1,10 +1,6 @@
-sphere na bullets
-mesh na ragdolly a na zem
 update pred simulaci
 simulace
 precteni vysledku
-
-prirozeny pohyb hrace - ne kamera
 
 All Awake calls
 All Start Calls

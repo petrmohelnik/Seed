@@ -18,7 +18,7 @@ protected:
 	void CreateWindow(int width, int height);
 	void InitializeOpenGL();
 	void PollInputs();
-	Uint32 GetTime();
+	double GetTime();
 	void Swap();
     void ResetViewport();
 

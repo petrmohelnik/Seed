@@ -44,7 +44,8 @@ void Input::AddInput(SDL_Event event)
         mouseHoldDown.erase(event.button.button);
         break;
     case SDL_MOUSEMOTION:
-        mouseMovement = glm::ivec2(event.motion.xrel, event.motion.yrel);
+        mouseDeltaPosition = glm::ivec2(event.motion.xrel, event.motion.yrel);
+        mousePosition = glm::ivec2(event.motion.x, event.motion.y);
         break;
 	}
 }
@@ -53,7 +54,8 @@ void Input::ClearInputs()
 {
     keyPressedDown.clear();
     mousePressedDown.clear();
-    mouseMovement = glm::ivec2(0, 0);
+    mouseDeltaPosition = glm::ivec2(0, 0);
+    mousePosition = glm::ivec2(0, 0);
 }
 
 bool Input::Key(SDL_Keycode key)
@@ -76,9 +78,14 @@ bool Input::MouseButtonDown(Uint8 button)
     return mousePressedDown.find(button) != std::end(mousePressedDown);
 }
 
-glm::ivec2 Input::MouseMovement()
+glm::ivec2 Input::MouseDeltaPosition()
 {
-    return mouseMovement;
+    return mouseDeltaPosition;
+}
+
+glm::ivec2 Input::MousePosition()
+{
+    return mousePosition;
 }
 
 void Input::SliderFloat(const std::string& name, float& value, float min, float max)

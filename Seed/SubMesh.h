@@ -18,6 +18,7 @@ public:
 protected:
 	friend class FileSystem;
 	friend class Mesh;
+    friend class MeshCollider;
 
 private:
 	std::vector<glm::vec3> vertices;

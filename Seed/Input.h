@@ -13,7 +13,8 @@ public:
 	bool KeyDown(SDL_Keycode key);
     bool MouseButton(Uint8 button); //SDL_BUTTON_RIGHT, SDL_BUTTON_LEFT
     bool MouseButtonDown(Uint8 button); //SDL_BUTTON_RIGHT, SDL_BUTTON_LEFT
-    glm::ivec2 MouseMovement();
+    glm::ivec2 MouseDeltaPosition();
+    glm::ivec2 MousePosition();
     void SliderFloat(const std::string& name, float& value, float min, float max);
     void SliderFloatLog(const std::string& name, float& value, float min, float max, float power = 4.0f);
     void BulletText(const std::string& text);
@@ -38,7 +39,8 @@ private:
 	std::set<SDL_Keycode> keyPressedDown;
 	std::set<Uint8> mouseHoldDown;
 	std::set<Uint8> mousePressedDown;
-    glm::ivec2 mouseMovement;
+    glm::ivec2 mouseDeltaPosition;
+    glm::ivec2 mousePosition;
     Uint32 mouseState;
     bool quit = false;
 };

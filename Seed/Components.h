@@ -2,6 +2,7 @@
 #include "RenderingPipeline.h"
 #include "PhysicsEngine.h"
 #include "Renderer.h"
+#include "MeshRenderer.h"
 #include "Camera.h"
 #include "Light.h"
 #include "Audio.h"
