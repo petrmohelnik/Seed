@@ -10,27 +10,28 @@
 
 void PhysicsEngine::Initialize()
 {
+	///btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
+	overlappingPairCache = std::make_unique<btDbvtBroadphase>();
     ///collision configuration contains default setup for memory, collision setup. Advanced users can create their own configuration.
 	collisionConfiguration = std::make_unique<btSoftBodyRigidBodyCollisionConfiguration>();
 	///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
 	dispatcher = std::make_unique<btCollisionDispatcher>(collisionConfiguration.get());
-	///btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
-	overlappingPairCache = std::make_unique<btDbvtBroadphase>();
 	///the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
 	solver = std::make_unique<btSequentialImpulseConstraintSolver>();
-	dynamicsWorld = std::make_unique<btSoftRigidDynamicsWorld>(dispatcher.get(), overlappingPairCache.get(), solver.get(), collisionConfiguration.get());
+	
+    dynamicsWorld = std::make_unique<btSoftRigidDynamicsWorld>(dispatcher.get(), overlappingPairCache.get(), solver.get(), collisionConfiguration.get());
 
     dynamicsWorld->getSolverInfo().m_solverMode |= SOLVER_RANDMIZE_ORDER;
     dynamicsWorld->getSolverInfo().m_splitImpulse = true;
     dynamicsWorld->getDispatchInfo().m_enableSatConvex = true;
-	dynamicsWorld->setGravity(btVector3(0, -10, 0));
+	dynamicsWorld->setGravity(btVector3(0, -9.81, 0));
 
     auto softWorldInfo = dynamicsWorld->getWorldInfo();
     softWorldInfo.air_density = btScalar(1.2f);
     softWorldInfo.water_density = 0;
     softWorldInfo.water_offset = 0;
     softWorldInfo.water_normal = btVector3(0, 0, 0);
-    softWorldInfo.m_gravity.setValue(0, -10, 0);
+    softWorldInfo.m_gravity.setValue(0, -9.81, 0);
     softWorldInfo.m_sparsesdf.Initialize();
 }
 
@@ -183,8 +184,8 @@ void PhysicsEngine::UpdateSimulationState()
                 btDefaultMotionState* btMotionState = new btDefaultMotionState(btTransform);
 
                 btRigidBody::btRigidBodyConstructionInfo btRigidbodyInfo(mass, btMotionState, collider->btShape.get(), localInertia);
-                //rbInfo.m_friction = physicscomponent.friction;
-                //rbInfo.m_restitution = physicscomponent.restitution;
+                btRigidbodyInfo.m_friction = 0.5;
+                btRigidbodyInfo.m_restitution = 1.0; //bounciness
                 //rbInfo.m_linearDamping = physicscomponent.damping;
                 //rbInfo.m_angularDamping = physicscomponent.damping;
 
@@ -237,5 +238,5 @@ void PhysicsEngine::UpdateSimulationState()
 
 void PhysicsEngine::Simulate()
 {
-    dynamicsWorld->stepSimulation(Engine::GetTime().FixedDeltaTime(), 0, Engine::GetTime().FixedDeltaTime());
+    dynamicsWorld->stepSimulation(Engine::GetTime().FixedDeltaTime());
 }

@@ -87,4 +87,6 @@ void Engine::Work()
 		scene.Render();
 		window.Swap();
 	}
+
+    objects.DeleteAll();
 }

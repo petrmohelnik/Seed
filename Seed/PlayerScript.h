@@ -58,7 +58,7 @@ void PlayerScript::Update()
     {
         auto bullet = objects.CreateObject<BulletObject>("Bullet");
         bullet->GetComponent<Transform>()->SetPosition(glm::vec3(transform->GetPosition()));
-        bullet->GetComponent<Transform>()->TranslateY(10.0f);
-        bullet->Destroy(3.0f);
+        bullet->GetComponent<Transform>()->TranslateY(1.0f);
+        //bullet->Destroy(3.0f);
     }
 }

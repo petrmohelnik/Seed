@@ -12,7 +12,6 @@ public:
 
     using Component::Component;
     Transform(Object* object, Transform* root);
-    ~Transform();
     Transform* GetParent();
     void SetParent(Transform* parent_);
     void SetParent(Object* parent_);

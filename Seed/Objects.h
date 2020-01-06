@@ -27,6 +27,7 @@ protected:
     friend class Engine;
 
     void UpdateForDestruction();
+    void DeleteAll();
 
 private:
     Components& components;

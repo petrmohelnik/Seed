@@ -23,9 +23,10 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->AddComponent<GameScript>();
 
     auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
-    ground->GetComponent<Transform>()->SetScale(glm::vec3(1000));
+    ground->GetComponent<Transform>()->SetScale(glm::vec3(20.0f, 0.1f, 20.0f));
     ground->GetComponent<Transform>()->TranslateY(-0.1f);
-    ground->AddComponent<MeshCollider>()->SetMesh(ground->GetComponent<MeshRenderer>()->GetSharedMesh());
+    //ground->AddComponent<MeshCollider>()->SetMesh(ground->GetComponent<MeshRenderer>()->GetSharedMesh());
+    ground->AddComponent<BoxCollider>()->SetBox(glm::vec3(), glm::vec3(1.0f));
     ground->AddComponent<Rigidbody>();
 
 	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));

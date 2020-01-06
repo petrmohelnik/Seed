@@ -8,15 +8,6 @@ Transform::Transform(Object* object, Transform* root)
     parent->AddChild(this);
 }
 
-Transform::~Transform()
-{
-    Destroy();
-    DestroyAllChildren();
-
-    for (auto& child : children)
-        child->parent = nullptr;
-}
-
 Transform* Transform::GetParent()
 {
     if (IsParentRoot())

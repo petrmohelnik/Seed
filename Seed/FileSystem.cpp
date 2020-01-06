@@ -179,6 +179,7 @@ void FileSystem::LoadCamera(const aiScene* scene, Object* object)
 void FileSystem::UnloadScene()
 {
     importer.FreeScene();
+    loadedScene = "";
 }
 
 std::shared_ptr<Mesh> FileSystem::LoadMesh(const std::string& path)

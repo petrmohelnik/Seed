@@ -1,5 +1,11 @@
+kam mizi zem?
+convex flag - convec hull pro konkavni je triangle mesh
+static/kinematic/dynamic
+MotionState callbacky
+set/get transform
 zatim jsem udelal na zkousku convex hull misto trinagle meshe
 dodelat shape center - je potreba spocitat world pozici obdobne jak v transform akorat k tomu local pricist center
+	pak ji ale zase musim odecist
 pri prvnim updatu si vytvorim rigidbody
 pri zmenach ho budu uz jenom updatovat, pokud ho uz mam vytvorenej
 local global transformy pro fyziku?

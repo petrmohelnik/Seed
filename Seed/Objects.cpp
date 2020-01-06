@@ -88,3 +88,9 @@ void Objects::UpdateForDestruction()
             ++object;
     }
 }
+
+void Objects::DeleteAll()
+{
+    components.GetRoot()->GetComponent<Transform>()->DestroyAllChildren();
+    UpdateForDestruction();
+}
