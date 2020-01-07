@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SphereCollider.h"
+#include "Transform.h"
 
 void SphereCollider::SetSphere(glm::vec3 center_, float radius_)
 {
@@ -15,4 +16,13 @@ glm::vec3 SphereCollider::GetCenter()
 float SphereCollider::GetRadius()
 {
     return radius;
+}
+
+glm::vec3 SphereCollider::GetPosition()
+{
+    GetTransform()->Translate(center);
+    auto position = GetTransform()->GetPosition();
+    GetTransform()->Translate(-center);
+
+    return position;
 }

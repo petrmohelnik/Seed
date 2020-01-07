@@ -15,6 +15,8 @@ protected:
     friend class PhysicsEngine;
 
     Rigidbody* GetRigidbody();
+    virtual glm::vec3 GetPosition() = 0;
+
     btRigidBody* btRigidbody = nullptr;
     std::unique_ptr<btCollisionShape> btShape;
 };

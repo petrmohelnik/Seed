@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CapsuleCollider.h"
+#include "Transform.h"
 
 void CapsuleCollider::SetCapsule(glm::vec3 center_, float height_, float radius_)
 {
@@ -21,4 +22,13 @@ float CapsuleCollider::GetHeight()
 float CapsuleCollider::GetRadius()
 {
     return radius;
+}
+
+glm::vec3 CapsuleCollider::GetPosition()
+{
+    GetTransform()->Translate(center);
+    auto position = GetTransform()->GetPosition();
+    GetTransform()->Translate(-center);
+
+    return position;
 }

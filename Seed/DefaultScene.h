@@ -23,10 +23,10 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->AddComponent<GameScript>();
 
     auto ground = objects.CreateObjectWithMesh("ground", "plane.obj");
-    ground->GetComponent<Transform>()->SetScale(glm::vec3(20.0f, 0.1f, 20.0f));
+    ground->GetComponent<Transform>()->SetScale(glm::vec3(20.0f, 2.0f, 20.0f));
     ground->GetComponent<Transform>()->TranslateY(-0.1f);
     //ground->AddComponent<MeshCollider>()->SetMesh(ground->GetComponent<MeshRenderer>()->GetSharedMesh());
-    ground->AddComponent<BoxCollider>()->SetBox(glm::vec3(), glm::vec3(1.0f));
+    ground->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(1.0f));
     ground->AddComponent<Rigidbody>();
 
 	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
@@ -130,14 +130,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     for (auto& target : targets)
     {
         target->AddComponent<MeshCollider>()->SetMesh(targetMesh);
-        target->AddComponent<Rigidbody>();
+        target->AddComponent<Rigidbody>()->SetMass(10.0f);
     }
 
-    //auto camerasphere = objects.CreateObject("camerasphere");
-    //camerasphere->AddComponent<MeshRenderer>()->Load("sphere.obj");
-    //camerasphere->GetComponent<Transform>()->SetScale(0.2f);
-    //camerasphere->GetComponent<Transform>()->TranslateZ(-1.0f);
-    //camerasphere->GetComponent<Transform>()->SetParent(camera);
     RenderingPipeline::SetMainCamera(objects.GetObjectByName("PlayerCamera")->GetComponent<Camera>());
-    //RenderingPipeline::MainCamera()->GetObject()->AddComponent<CameraMovementScript>();
 }

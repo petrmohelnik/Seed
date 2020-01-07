@@ -98,7 +98,7 @@ void SDLWindow::PollInputs()
 
 double SDLWindow::GetTime()
 {
-    return (SDL_GetPerformanceCounter() / (double)SDL_GetPerformanceFrequency()) * 1000;
+    return (SDL_GetPerformanceCounter() / (double)SDL_GetPerformanceFrequency());
 }
 
 void SDLWindow::Swap()

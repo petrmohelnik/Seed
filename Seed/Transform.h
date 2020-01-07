@@ -24,7 +24,7 @@ public:
     void RotateY(float angle, Space space = Space::Local);
     void RotateZ(float angle, Space space = Space::Local);
     void Rotate(glm::quat quaternion, Space space = Space::Local);
-    void SetRotation(glm::quat rotation);
+    void SetRotation(glm::quat rotation, Space space = Space::Local);
     glm::vec3 GetEulerAngles();
     glm::vec3 GetLocalEulerAngles();
     glm::quat GetRotation();
@@ -58,6 +58,7 @@ protected:
 
     void DestroyAllChildren();
     void CleanChildren();
+    void DisconnectChildrenFromParent();
     void UpdateModelMatrix();
 
 private:

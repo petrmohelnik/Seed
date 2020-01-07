@@ -113,6 +113,14 @@ void Transform::CleanChildren()
     });
 }
 
+void Transform::DisconnectChildrenFromParent()
+{
+    for (auto& child : children)
+    {
+        child->parent = nullptr;
+    }
+}
+
 void Transform::AddChild(Transform* child)
 {
     children.push_back(child);
@@ -182,9 +190,16 @@ void Transform::Rotate(glm::quat quaternion, Space space)
     }
 }
 
-void Transform::SetRotation(glm::quat rotation)
+void Transform::SetRotation(glm::quat rotation, Space space)
 {
-    orientation = rotation;
+    if (space == Space::Local)
+    {
+        orientation = rotation;
+    }
+    else
+    {
+        orientation = GetWorldToLocalMatrix() * glm::toMat4(rotation);
+    }
 }
 
 glm::vec3 Transform::GetEulerAngles()
@@ -251,7 +266,10 @@ void Transform::SetPosition(glm::vec3 position_, Space space)
 
 glm::vec3 Transform::GetPosition()
 {
-    return GetLocalToWorldMatrix() * glm::vec4(position, 1.0f);
+    if (IsParentRoot())
+        return GetLocalPosition();
+
+    return GetLocalToWorldMatrix() * glm::vec4(GetLocalPosition(), 1.0f);
 }
 
 glm::vec3 Transform::GetLocalPosition()

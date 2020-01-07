@@ -18,11 +18,10 @@ public:
 protected:
     friend class Components;
 
-    void Initialize();
-
     void AddCollider(Collider* collider);
     void AddRigidbody(Rigidbody* rigidbody);
 
+    void Initialize();
     void RunSimulationStep();
     void OnCollisionUpdate();
     void RigidbodyUpdate();
@@ -30,9 +29,6 @@ protected:
     void CleanComponents();
 
 private:
-    std::unique_ptr<btCollisionShape> CreateBoxCollisionShape(BoxCollider* boxCollider);
-    std::unique_ptr<btCollisionShape> CreateCapsuleCollisionShape(CapsuleCollider* capsuleCollider);
-    std::unique_ptr<btCollisionShape> CreateSphereCollisionShape(SphereCollider* sphereCollider);
     std::unique_ptr<btCollisionShape> CreateMeshCollisionShape(MeshCollider* meshCollider);
     void UpdateSimulationState();
     void Simulate();

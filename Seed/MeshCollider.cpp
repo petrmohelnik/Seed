@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MeshCollider.h"
+#include "Transform.h"
 
 void MeshCollider::SetMesh(std::shared_ptr<Mesh> mesh_, int submeshIndex)
 {
@@ -14,4 +15,9 @@ std::vector<glm::vec3> const & MeshCollider::GetVertices()
 std::vector<glm::uvec3> const & MeshCollider::GetIndices()
 {
     return mesh->indices;
+}
+
+glm::vec3 MeshCollider::GetPosition()
+{
+    return GetTransform()->GetPosition();
 }

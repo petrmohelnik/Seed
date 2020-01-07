@@ -20,10 +20,8 @@ protected:
     void EndFixedUpdate();
 
 private:
-    double ToSeconds(double milliseconds);
-
     double deltaTime = 0;
-    double fixedDeltaTime = 1.0 / 60.0;
+    double fixedDeltaTime = 0.02;
     double currentTime = 0;
     double fixedUpdateAccumulate = 0;
     double fixedUpdateStart = 0;

@@ -52,6 +52,8 @@ bool Object::UpdateForDestruction()
     {
         transform->DestroyAllChildren();
         transform->Destroy();
+        transform->DisconnectChildrenFromParent();
+
         if (renderer)
             renderer->Destroy();
         if (camera)
