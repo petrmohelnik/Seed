@@ -9,7 +9,6 @@ class Camera;
 class Light;
 class Audio;
 class Collider;
-class Rigidbody;
 class Script;
 class FileSystem;
 class Time;
@@ -35,8 +34,6 @@ public:
     T* AddComponent();
     template <class T, typename std::enable_if<std::is_base_of<Collider, T>::value>::type* = nullptr>
     T* AddComponent();
-    template <class T, typename std::enable_if<std::is_base_of<Rigidbody, T>::value>::type* = nullptr>
-    T* AddComponent();
     template <class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type* = nullptr>
     T* AddComponent();
 
@@ -51,8 +48,6 @@ public:
     template <class T, typename std::enable_if<std::is_base_of<Audio, T>::value>::type* = nullptr>
     T* GetComponent();
     template <class T, typename std::enable_if<std::is_base_of<Collider, T>::value>::type* = nullptr>
-    T* GetComponent();
-    template <class T, typename std::enable_if<std::is_base_of<Rigidbody, T>::value>::type* = nullptr>
     T* GetComponent();
     template <class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type* = nullptr>
     T* GetComponent();
@@ -77,7 +72,6 @@ private:
     std::unique_ptr<Light> light;
     std::vector<std::unique_ptr<Audio>> audios;
     std::vector<std::unique_ptr<Collider>> colliders;
-    std::unique_ptr<Rigidbody> rigidbody;
 	std::vector<std::unique_ptr<Script>> scripts;
 
     Objects& objects;
@@ -127,15 +121,6 @@ inline T* Object::AddComponent()
 {
     colliders.push_back(components.CreateCollider<T>(this));
     return dynamic_cast<T*>(colliders.back().get());
-}
-
-template<class T, typename std::enable_if<std::is_base_of<Rigidbody, T>::value>::type*>
-inline T* Object::AddComponent()
-{
-    if (rigidbody)
-        throw std::runtime_error("Object: " + name + "already contains Rigidbody");
-    rigidbody = components.CreateRigidbody(this);
-    return rigidbody.get();
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type*>
@@ -189,12 +174,6 @@ inline T* Object::GetComponent()
             return colliderRawPointer;
     }
     return nullptr;
-}
-
-template<class T, typename std::enable_if<std::is_base_of<Rigidbody, T>::value>::type*>
-inline T* Object::GetComponent()
-{
-    return rigidbody.get();
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type*>

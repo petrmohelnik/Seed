@@ -18,7 +18,7 @@ glm::vec3 BoxCollider::GetSize()
     return size;
 }
 
-glm::vec3 BoxCollider::GetPosition()
+glm::vec3 BoxCollider::GetPosition() const
 {
     GetTransform()->Translate(center);
     auto position = GetTransform()->GetPosition();

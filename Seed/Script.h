@@ -14,8 +14,9 @@ public:
 	
 	virtual void OnCreate() {};
 	virtual void FixedUpdate() {};
-	virtual void OnTrigger() {};
-	virtual void OnCollision() {};
+	virtual void OnCollisionEnter() {};
+	virtual void OnCollisionStay() {};
+	virtual void OnCollisionExit() {};
 	virtual void Update() {};
 	virtual void OnMouseDown() {};
 	virtual void OnDestroy() {};

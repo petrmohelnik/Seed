@@ -1,19 +1,33 @@
 #include "Collider.h"
 #include "Object.h"
 #include "Transform.h"
-#include "Rigidbody.h"
 
-Rigidbody* Collider::GetRigidbody()
+void Collider::SetIsKinematic(bool isKinematic_)
 {
-    auto object = GetObject();
-    while (!object->GetComponent<Rigidbody>())
-    {
-        auto parent = object->GetComponent<Transform>()->GetParent();
-        if (!parent)
-            return nullptr;
-            
-        object = parent->GetObject();
-    }
+    isKinematic = isKinematic_;
+}
 
-    return object->GetComponent<Rigidbody>();
+bool Collider::IsKinematic() const
+{
+    return isKinematic;
+}
+
+void Collider::SetMass(float mass_)
+{
+    mass = mass_;
+}
+
+float Collider::GetMass() const
+{
+    return mass;
+}
+
+void Collider::SetIsTrigger(bool isTrigger_)
+{
+    isTrigger = isTrigger_;
+}
+
+bool Collider::IsTrigger() const
+{
+    return isTrigger;
 }

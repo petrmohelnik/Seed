@@ -17,7 +17,7 @@ std::vector<glm::uvec3> const & MeshCollider::GetIndices()
     return mesh->indices;
 }
 
-glm::vec3 MeshCollider::GetPosition()
+glm::vec3 MeshCollider::GetPosition() const
 {
     return GetTransform()->GetPosition();
 }

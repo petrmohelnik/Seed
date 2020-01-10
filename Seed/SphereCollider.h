@@ -11,7 +11,7 @@ public:
     float GetRadius();
 
 private:
-    glm::vec3 GetPosition() override;
+    glm::vec3 GetPosition() const override;
 
     glm::vec3 center;
     float radius;

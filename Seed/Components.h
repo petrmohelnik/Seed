@@ -11,7 +11,6 @@
 #include "CapsuleCollider.h"
 #include "MeshCollider.h"
 #include "SphereCollider.h"
-#include "Rigidbody.h"
 #include "Script.h"
 #include "Skybox.h"
 #include "Texture.h"
@@ -43,7 +42,6 @@ protected:
     std::unique_ptr<Audio> CreateAudio(Object* object);
     template<typename T>
     std::unique_ptr<T> CreateCollider(Object* object);
-    std::unique_ptr<Rigidbody> CreateRigidbody(Object* object);
 	template<typename T>
 	std::unique_ptr<T> CreateScript(Object* object);
 
@@ -107,13 +105,6 @@ inline std::unique_ptr<T> Components::CreateCollider(Object* object)
     auto collider = std::make_unique<T>(object);
     physicsEngine.AddCollider(collider.get());
     return collider;
-}
-
-inline std::unique_ptr<Rigidbody> Components::CreateRigidbody(Object* object)
-{
-    auto rigidbody = std::make_unique<Rigidbody>(object);
-    physicsEngine.AddRigidbody(rigidbody.get());
-    return rigidbody;
 }
 
 template<typename T>

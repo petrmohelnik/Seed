@@ -64,8 +64,6 @@ bool Object::UpdateForDestruction()
             audio->Destroy();
         for (const auto& collider : colliders)
             collider->Destroy();
-        if (rigidbody)
-            rigidbody->Destroy();
         for (const auto& script : scripts)
             script->Destroy();
 
@@ -83,8 +81,6 @@ bool Object::UpdateForDestruction()
         isSomeComponentDestroyed = audio->UpdateForDestruction() || isSomeComponentDestroyed;
     for (const auto& collider : colliders)
         isSomeComponentDestroyed = collider->UpdateForDestruction() || isSomeComponentDestroyed;
-    if (rigidbody)
-        isSomeComponentDestroyed = rigidbody->UpdateForDestruction() || isSomeComponentDestroyed;
     for (const auto& script : scripts)
         isSomeComponentDestroyed = script->UpdateForDestruction() || isSomeComponentDestroyed;
 
@@ -118,8 +114,6 @@ bool Object::DoDestruction()
     {
         return collider->ToBeDestroyed();
     });
-    if (rigidbody && rigidbody->ToBeDestroyed())
-        rigidbody.reset();
     std::experimental::erase_if(scripts, [](const std::unique_ptr<Script>& script)
     {
         return script->ToBeDestroyed();
@@ -139,8 +133,6 @@ std::vector<Component*> Object::GetAllComponents()
         components.push_back(camera.get());
     if(light.get() != nullptr)
         components.push_back(light.get());
-    if(rigidbody.get() != nullptr)
-        components.push_back(rigidbody.get());
 
     for (const auto& audio : audios)
         components.push_back(audio.get());

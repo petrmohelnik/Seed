@@ -18,7 +18,7 @@ float SphereCollider::GetRadius()
     return radius;
 }
 
-glm::vec3 SphereCollider::GetPosition()
+glm::vec3 SphereCollider::GetPosition() const
 {
     GetTransform()->Translate(center);
     auto position = GetTransform()->GetPosition();

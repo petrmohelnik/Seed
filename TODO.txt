@@ -1,19 +1,16 @@
-mit ten shape jako unique_ptr membera v collideru?
-pri prvnim updatu si vytvorim rigidbody
-pri zmenach ho budu uz jenom updatovat, pokud ho uz mam vytvorenej
+iterovat pro contacty - udelat z enumu collision class a tu plnit pointy
 
 convex flag - convec hull pro konkavni je triangle mesh nebo rozdeleni na vic convexnich - jeste zjistit jak delat konkavni
-static/kinematic/dynamic
-MotionState callbacky
-set/get transform
+player asi musi byt dynamic - nebo special controller
 zatim jsem udelal na zkousku convex hull misto trinagle meshe
+https://github.com/AndresTraks/BulletSharp/wiki/Collision-Callbacks-and-Triggers
+poresit zmeny parametru za behu
 
 All Awake calls
 All Start Calls
 while (stepping towards variable delta time)
 All FixedUpdate functions
 Physics simulation
-OnEnter/Exit/Stay trigger functions
 OnEnter/Exit/Stay collision functions
 Rigidbody interpolation applies transform.position and rotation
 OnMouseDown/OnMouseUp etc. events

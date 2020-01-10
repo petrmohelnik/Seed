@@ -12,7 +12,7 @@ public:
     std::vector<glm::uvec3> const& GetIndices();
 
 private:
-    glm::vec3 GetPosition() override;
+    glm::vec3 GetPosition() const override;
 
     std::shared_ptr<SubMesh> mesh;
 };

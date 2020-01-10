@@ -27,7 +27,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     ground->GetComponent<Transform>()->TranslateY(-0.1f);
     //ground->AddComponent<MeshCollider>()->SetMesh(ground->GetComponent<MeshRenderer>()->GetSharedMesh());
     ground->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(1.0f));
-    ground->AddComponent<Rigidbody>();
 
 	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
 	auto skyboxSwitcher = objects.CreateObject("skyboxSwitcher")->AddComponent<SkyboxSwitcherScript>();
@@ -85,7 +84,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     cobblestone->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
 	//cobblestone->AddComponent<RotateWorldScript>();
     cobblestone->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
-    cobblestone->AddComponent<Rigidbody>();
 
 	//auto redbricksMaterial = std::make_shared<Material>();
 	//redbricksMaterial->Albedo = fileSystem.LoadTexture("redbricks/albedo.png", 24, 24);
@@ -104,7 +102,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
  //   redbricks->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
 	////redbricks->AddComponent<RotateWorldScript>();
  //   redbricks->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
- //   redbricks->AddComponent<Rigidbody>();
 
     auto roughblockMaterial = std::make_shared<Material>();
     roughblockMaterial->Albedo = fileSystem.LoadTexture("roughblock/albedo.png", 24, 24);
@@ -123,14 +120,13 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     roughblock->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
     //roughblock->AddComponent<RotateWorldScript>();
     roughblock->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
-    roughblock->AddComponent<Rigidbody>();
 
     auto targets = objects.GetObjectsByName("TargetDummy");
     auto targetMesh = fileSystem.LoadMesh("TargetDummy/TargetDummy.gltf");
     for (auto& target : targets)
     {
         target->AddComponent<MeshCollider>()->SetMesh(targetMesh);
-        target->AddComponent<Rigidbody>()->SetMass(10.0f);
+        target->GetComponent<Collider>()->SetMass(10.0f);
     }
 
     RenderingPipeline::SetMainCamera(objects.GetObjectByName("PlayerCamera")->GetComponent<Camera>());

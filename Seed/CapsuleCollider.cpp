@@ -24,7 +24,7 @@ float CapsuleCollider::GetRadius()
     return radius;
 }
 
-glm::vec3 CapsuleCollider::GetPosition()
+glm::vec3 CapsuleCollider::GetPosition() const
 {
     GetTransform()->Translate(center);
     auto position = GetTransform()->GetPosition();
