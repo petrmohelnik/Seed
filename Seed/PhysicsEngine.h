@@ -9,6 +9,7 @@ class BoxCollider;
 class CapsuleCollider;
 class SphereCollider;
 class MeshCollider;
+struct ContactPoint;
 
 class PhysicsEngine
 {
@@ -17,6 +18,7 @@ public:
 
 protected:
     friend class Components;
+    friend class Collider;
 
     void AddCollider(Collider* collider);
 
@@ -27,9 +29,26 @@ protected:
 
     void CleanComponents();
 
+    static btVector3 ToBtVector3(glm::vec3 const& vec3);
+    static btQuaternion ToBtQuaternion(glm::quat const& quat);
+    static glm::vec3 ToGlmVec3(btVector3 const& vector3);
+    static glm::quat ToGlmQuat(btQuaternion const& quaternion);
+
 private:
     btCollisionShape* CreateMeshCollisionShape(MeshCollider* meshCollider);
+    btCollisionShape* CreateCollisionShape(Collider* collider);
+    btVector3 CalculateLocalInertia(Collider* collider, btCollisionShape* btShape);
+    btVector3 GetLocalScaling(Collider* collider);
+    btTransform GetBtTransform(Collider* collider);
+    void InitializeRigidbodyMaterial(Collider* collider);
+    void CreateRigidbody(Collider* collider);
+    void RefreshRigidbody(Collider* collider);
     void UpdateSimulationState();
+
+    void InsertContactPoint(Collider* thisCollider, Collider* otherCollider, ContactPoint contactPoint);
+    void AddContactManifold(btPersistentManifold* contactManifold);
+    void ProcessCollisionExit(Collider* collider);
+    void ProcessCollisionEnterAndStay(Collider* collider);
     void Simulate();
 
     std::vector<Collider*> colliders;

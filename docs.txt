@@ -34,3 +34,6 @@ https://texturehaven.com/textures/
 
 import:
 https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_lights_punctual
+
+physics:
+https://github.com/turanszkij/WickedEngine/blob/master/WickedEngine/wiPhysicsEngine_Bullet.cpp

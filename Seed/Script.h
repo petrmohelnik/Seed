@@ -29,4 +29,5 @@ protected:
     Objects& objects;
     PhysicsEngine& physics;
     Transform* transform;
+    Object* object;
 };

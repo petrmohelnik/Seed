@@ -10,6 +10,7 @@ Script::Script(Object* object, PhysicsEngine& physics)
     , time(Engine::GetTime())
     , objects(Engine::GetObjects())
     , physics(physics)
+    , object(object)
 {
     transform = object->GetComponent<Transform>();
 }

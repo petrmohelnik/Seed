@@ -22,7 +22,6 @@ struct Collision
 class Collider : public Component
 {
 public:
-
     using Component::Component;
     virtual ~Collider() = default;
 
@@ -30,12 +29,25 @@ public:
     bool IsTrigger() const;
     void SetIsKinematic(bool isKinematic);
     bool IsKinematic() const;
+    bool IsDynamic() const;
+    bool IsStatic() const;
 
     void SetMass(float mass);
     float GetMass() const;
+    void UseGravity(bool useGravity);
+    glm::vec3 GetGravity();
+    void SetBounciness(float bounciness);
+    float GetBounciness();
+    void SetFriction(float friction);
+    float GetFriction();
+    void SetLinearDamping(float linearDamping);
+    float GetLinearDamping();
+    void SetAngularDamping(float angularDamping);
+    float GetAngularDamping();
 
 protected:
     friend class PhysicsEngine;
+    friend class Transform;
 
     virtual glm::vec3 GetPosition() const = 0;
 
@@ -43,8 +55,14 @@ protected:
 
     bool isKinematic = false;
     bool isTrigger = false;
+    bool dirty = false;
     
     float mass = 0.0;
+    glm::vec3 gravity = glm::vec3(0.0f, -9.81f, 0.0f);
+    float bounciness = 0.0f;
+    float friction = 0.5f;
+    float linearDamping = 0.0f;
+    float angularDamping = 0.0f;
 
     std::unordered_map<Collider*, std::vector<ContactPoint>> contactPoints;
     std::unordered_map<Collider*, Collision> collisions;

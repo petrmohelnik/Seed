@@ -292,6 +292,16 @@ glm::vec3 Transform::GetForwardAxis()
     return glm::normalize(glm::vec3(CalculateWorldMatrix()[2]));
 }
 
+void Transform::Scale(float scale_)
+{
+    SetScale(GetLocalScale() * glm::vec3(scale_));
+}
+
+void Transform::Scale(glm::vec3 scale_)
+{
+    SetScale(GetLocalScale() * scale_);
+}
+
 void Transform::SetScale(float scale_)
 {
     SetScale(glm::vec3(scale_));
@@ -302,6 +312,9 @@ void Transform::SetScale(glm::vec3 scale_)
     scale[0][0] = scale_.x;
     scale[1][1] = scale_.y;
     scale[2][2] = scale_.z;
+
+    if (auto collider = GetObject()->GetComponent<Collider>())
+        collider->dirty = true;
 }
 
 glm::vec3 Transform::GetScale()

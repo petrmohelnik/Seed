@@ -11,8 +11,9 @@ public:
 
 void BulletObject::Initialize()
 {
-    AddComponent<SphereCollider>()->SetSphere(glm::vec3(0.0f, 0.0f, 0.0f), 0.1f);
+    AddComponent<SphereCollider>()->SetSphere(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
     GetComponent<Collider>()->SetMass(0.1f);
+    GetComponent<Collider>()->SetBounciness(0.5f);
     AddComponent<MeshRenderer>()->Load("sphere.obj");
     GetComponent<Transform>()->SetScale(0.05f);
 

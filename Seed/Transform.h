@@ -39,6 +39,8 @@ public:
     glm::vec3 GetRightAxis();
     glm::vec3 GetUpAxis();
     glm::vec3 GetForwardAxis();
+    void Scale(float scale_);
+    void Scale(glm::vec3 scale_);
     void SetScale(float scale_);
     void SetScale(glm::vec3 scale_);
     glm::vec3 GetScale();

@@ -7,22 +7,22 @@
 #include "Transform.h"
 #include "Engine.h"
 
-btVector3 ToBtVector3(glm::vec3 const& vec3)
+btVector3 PhysicsEngine::ToBtVector3(glm::vec3 const& vec3)
 {
     return btVector3(vec3.x, vec3.y, vec3.z);
 }
 
-btQuaternion ToBtQuaternion(glm::quat const& quat)
+btQuaternion PhysicsEngine::ToBtQuaternion(glm::quat const& quat)
 {
     return btQuaternion(quat.x, quat.y, quat.z, quat.w);
 }
 
-glm::vec3 ToGlmVec3(btVector3 const& vector3)
+glm::vec3 PhysicsEngine::ToGlmVec3(btVector3 const& vector3)
 {
     return glm::vec3(vector3.x(), vector3.y(), vector3.z());
 }
 
-glm::quat ToGlmQuat(btQuaternion const& quaternion)
+glm::quat PhysicsEngine::ToGlmQuat(btQuaternion const& quaternion)
 {
     return glm::quat(quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z());
 }
@@ -67,105 +67,231 @@ void PhysicsEngine::Initialize()
 
 btCollisionShape* PhysicsEngine::CreateMeshCollisionShape(MeshCollider* meshCollider)
 {
-    auto convexHull = new btConvexHullShape();
+    //auto convexHull = new btConvexHullShape();
+    //for (auto& vertex : meshCollider->GetVertices())
+    //{
+    //    convexHull->addPoint(ToBtVector3(vertex));
+    //}
+    //return convexHull;
+
+
+
+    auto triangleMesh = new btTriangleMesh();
+
+    int* btIndices = new int[meshCollider->GetIndices().size() * 3];
+    int i = 0;
+    for (auto& triangle : meshCollider->GetIndices())
+    {
+        btIndices[i++] = triangle.x;
+        btIndices[i++] = triangle.y;
+        btIndices[i++] = triangle.z;
+    }
+
+    btVector3* btVertices = new btVector3[meshCollider->GetVertices().size()];
+    i = 0;
     for (auto& vertex : meshCollider->GetVertices())
     {
-        convexHull->addPoint(ToBtVector3(vertex));
+        btVertices[i++] = ToBtVector3(vertex);
     }
-    return convexHull;
 
-    //btTriangleIndexVertexArray* indexVertexArrays = new btTriangleIndexVertexArray(
-    //    meshCollider->GetIndices().size(),
-    //    &meshCollider->GetIndices()[0].x,
-    //    sizeof(glm::uvec3),
-    //    meshCollider->GetVertices().size(),
-    //    &meshCollider->GetVertices()[0].x,
-    //    sizeof(glm::vec3)
-    //);
+    btTriangleIndexVertexArray* indexVertexArrays = new btTriangleIndexVertexArray(
+        meshCollider->GetIndices().size(),
+        &btIndices[0],
+        3 * sizeof(int),
+        meshCollider->GetVertices().size(),
+        const_cast<btScalar *>(&btVertices[0].x()),
+        sizeof(btVector3)
+    );
 
-    //bool useQuantizedAabbCompression = true;
-    //return std::make_unique<btBvhTriangleMeshShape>(indexVertexArrays, useQuantizedAabbCompression);
+    bool useQuantizedAabbCompression = true;
+    return new btBvhTriangleMeshShape(indexVertexArrays, useQuantizedAabbCompression);
+}
+
+btCollisionShape* PhysicsEngine::CreateCollisionShape(Collider* collider)
+{
+    btCollisionShape* btShape;
+    if (auto boxCollider = dynamic_cast<BoxCollider*>(collider))
+        btShape = new btBoxShape(ToBtVector3(boxCollider->GetSize()));
+    else if (auto capsuleCollider = dynamic_cast<CapsuleCollider*>(collider))
+        btShape = new btCapsuleShape(capsuleCollider->GetRadius(), capsuleCollider->GetHeight());
+    else if (auto sphereCollider = dynamic_cast<SphereCollider*>(collider))
+        btShape = new btSphereShape(sphereCollider->GetRadius());
+    else if (auto meshCollider = dynamic_cast<MeshCollider*>(collider))
+        btShape = CreateMeshCollisionShape(meshCollider);
+    else
+        throw std::runtime_error("Collider type is not supported by PhysicsEngine!");
+
+    return btShape;
+}
+
+btVector3 PhysicsEngine::CalculateLocalInertia(Collider* collider, btCollisionShape* btShape)
+{
+    btVector3 localInertia;
+    if (collider->IsDynamic())
+        btShape->calculateLocalInertia(collider->GetMass(), localInertia);
+    return localInertia;
+}
+
+btVector3 PhysicsEngine::GetLocalScaling(Collider* collider)
+{
+    return ToBtVector3(collider->GetTransform()->GetScale());
+}
+
+btTransform PhysicsEngine::GetBtTransform(Collider* collider)
+{
+    return btTransform(ToBtQuaternion(collider->GetTransform()->GetRotation()), ToBtVector3(collider->GetPosition()));
+}
+
+void PhysicsEngine::InitializeRigidbodyMaterial(Collider* collider)
+{
+    collider->btRigidbody->setRestitution(collider->GetBounciness());
+    collider->btRigidbody->setFriction(collider->GetFriction());
+    collider->btRigidbody->setGravity(ToBtVector3(collider->GetGravity()));
+    collider->btRigidbody->setDamping(collider->GetLinearDamping(), collider->GetAngularDamping());
+}
+
+void PhysicsEngine::CreateRigidbody(Collider* collider)
+{
+    auto btShape = CreateCollisionShape(collider);
+    btShape->setLocalScaling(GetLocalScaling(collider));
+    auto localInertia = CalculateLocalInertia(collider, btShape);
+
+    auto btMotionState = new btDefaultMotionState(GetBtTransform(collider));
+    collider->btRigidbody = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(collider->GetMass(), btMotionState, btShape, localInertia));
+    collider->btRigidbody->setUserPointer(reinterpret_cast<void*>(collider));
+
+    if (collider->IsKinematic())
+    {
+        collider->btRigidbody->setCollisionFlags(collider->btRigidbody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+        collider->btRigidbody->setActivationState(DISABLE_DEACTIVATION);
+    }
+    if (collider->IsTrigger())
+        collider->btRigidbody->setCollisionFlags(collider->btRigidbody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+
+    InitializeRigidbodyMaterial(collider);
+
+    dynamicsWorld->addRigidBody(collider->btRigidbody);
+    collider->dirty = false;
+}
+
+void PhysicsEngine::RefreshRigidbody(Collider* collider)
+{
+    dynamicsWorld->removeRigidBody(collider->btRigidbody);
+
+    collider->btRigidbody->getCollisionShape()->setLocalScaling(GetLocalScaling(collider));
+    btVector3 localInertia = CalculateLocalInertia(collider, collider->btRigidbody->getCollisionShape());
+    collider->btRigidbody->setMassProps(collider->GetMass(), localInertia);
+
+    dynamicsWorld->addRigidBody(collider->btRigidbody);
 }
 
 void PhysicsEngine::UpdateSimulationState()
 {
-    //inspired by https://github.com/turanszkij/WickedEngine/blob/master/WickedEngine/wiPhysicsEngine_Bullet.cpp
     for (auto collider : colliders)
     {
         if (!collider->btRigidbody)
         {
-            btCollisionShape* btShape;
-            if (auto boxCollider = dynamic_cast<BoxCollider*>(collider))
-                btShape = new btBoxShape(ToBtVector3(boxCollider->GetSize()));
-            else if (auto capsuleCollider = dynamic_cast<CapsuleCollider*>(collider))
-                btShape = new btCapsuleShape(capsuleCollider->GetRadius(), capsuleCollider->GetHeight());
-            else if (auto sphereCollider = dynamic_cast<SphereCollider*>(collider))
-                btShape = new btSphereShape(sphereCollider->GetRadius());
-            else if (auto meshCollider = dynamic_cast<MeshCollider*>(collider))
-                btShape = CreateMeshCollisionShape(meshCollider);
-            else
-                throw std::runtime_error("Collider type is not supported by PhysicsEngine!");
-
-            btShape->setLocalScaling(ToBtVector3(collider->GetTransform()->GetScale()));
-
-            btTransform btTransform;
-            btTransform.setIdentity();
-            btTransform.setOrigin(ToBtVector3(collider->GetPosition()));
-            btTransform.setRotation(ToBtQuaternion(collider->GetTransform()->GetRotation()));
-
-            auto mass = collider->GetMass();
-            bool isDynamic = mass != 0.f && !collider->IsKinematic();
-
-            btVector3 localInertia(0, 0, 0);
-            if (isDynamic)
-                btShape->calculateLocalInertia(mass, localInertia);
-            else
-                mass = 0;
-
-            ///using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-            auto btMotionState = new btDefaultMotionState(btTransform);
-
-            btRigidBody::btRigidBodyConstructionInfo btRigidbodyInfo(mass, btMotionState, btShape, localInertia);
-            btRigidbodyInfo.m_friction = 0.5;
-            btRigidbodyInfo.m_restitution = 1.0; //bounciness
-
-            collider->btRigidbody = new btRigidBody(btRigidbodyInfo);
-            collider->btRigidbody->setUserPointer(reinterpret_cast<void*>(collider));
-
-            collider->btRigidbody->setCollisionFlags(collider->btRigidbody->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
-            if (collider->IsKinematic())
-            {
-                collider->btRigidbody->setCollisionFlags(collider->btRigidbody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-                collider->btRigidbody->setActivationState(DISABLE_DEACTIVATION);
-            }
-            if(collider->IsTrigger())
-                collider->btRigidbody->setCollisionFlags(collider->btRigidbody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
-
-            dynamicsWorld->addRigidBody(collider->btRigidbody);
+            CreateRigidbody(collider);
+            collider->dirty = false;
         }
 
-        int activationState = collider->btRigidbody->getActivationState();
-        if (collider->IsKinematic())
-            activationState |= DISABLE_DEACTIVATION;
-        else
-            activationState &= ~DISABLE_DEACTIVATION;
-        collider->btRigidbody->setActivationState(activationState);
+        if (collider->dirty)
+        {
+            RefreshRigidbody(collider);
+            collider->dirty = false;
+        }
 
-        // For kinematic object, system updates physics state, else the physics updates system state
         if (collider->IsKinematic())
         {
-            auto btMotionState = collider->btRigidbody->getMotionState();
-            btTransform btTransform;
-            btTransform.setOrigin(ToBtVector3(collider->GetPosition()));
-            btTransform.setRotation(ToBtQuaternion(collider->GetTransform()->GetRotation()));
-            btMotionState->setWorldTransform(btTransform);
+            collider->btRigidbody->getMotionState()->setWorldTransform(GetBtTransform(collider));
         }
     }
 }
 
+
 void PhysicsEngine::Simulate()
 {
     dynamicsWorld->stepSimulation(Engine::GetTime().FixedDeltaTime(), 1);
+}
+
+void PhysicsEngine::InsertContactPoint(Collider* thisCollider, Collider* otherCollider, ContactPoint contactPoint)
+{
+    if (thisCollider->contactPoints.count(otherCollider) == 0)
+        thisCollider->contactPoints.insert({ otherCollider , std::vector<ContactPoint>() });
+    thisCollider->contactPoints[otherCollider].push_back(std::move(contactPoint));
+}
+
+void PhysicsEngine::AddContactManifold(btPersistentManifold* contactManifold)
+{
+    auto colliderA = reinterpret_cast<Collider*>(contactManifold->getBody0()->getUserPointer());
+    auto colliderB = reinterpret_cast<Collider*>(contactManifold->getBody1()->getUserPointer());
+
+    for (int contactNumber = 0; contactNumber < contactManifold->getNumContacts(); ++contactNumber)
+    {
+        auto btContactPoint = contactManifold->getContactPoint(contactNumber);
+
+        ContactPoint contactPointA;
+        contactPointA.Point = ToGlmVec3(btContactPoint.getPositionWorldOnA());
+        contactPointA.Normal = -ToGlmVec3(btContactPoint.m_normalWorldOnB);
+        contactPointA.ContactDistance = btContactPoint.getDistance();
+        contactPointA.Impulse = btContactPoint.getAppliedImpulse();
+
+        ContactPoint contactPointB;
+        contactPointB.Point = ToGlmVec3(btContactPoint.getPositionWorldOnB());
+        contactPointB.Normal = ToGlmVec3(btContactPoint.m_normalWorldOnB);
+        contactPointB.ContactDistance = btContactPoint.getDistance();
+        contactPointB.Impulse = btContactPoint.getAppliedImpulse();
+
+        InsertContactPoint(colliderA, colliderB, std::move(contactPointA));
+        InsertContactPoint(colliderB, colliderA, std::move(contactPointB));
+    }
+}
+
+void PhysicsEngine::ProcessCollisionExit(Collider* collider)
+{
+    for (auto collision = std::begin(collider->collisions); collision != std::end(collider->collisions);)
+    {
+        if (collider->contactPoints.count(collision->first) == 0)
+        {
+            collision->second.ContactPoints.clear();
+            for (auto const& script : collider->GetObject()->scripts)
+                script->OnCollisionExit(collision->second);
+
+            collision = collider->collisions.erase(collision);
+        }
+        else
+            ++collision;
+    }
+}
+
+void PhysicsEngine::ProcessCollisionEnterAndStay(Collider* collider)
+{
+    for (auto& contactPoints : collider->contactPoints)
+    {
+        if (collider->collisions.count(contactPoints.first) == 0)
+        {
+            auto& collision = collider->collisions.insert({ contactPoints.first, Collision{} }).first->second;
+
+            collision.ContactPoints = std::move(contactPoints.second);
+            for (auto const& contactPoint : collision.ContactPoints)
+                collision.TotalImpulse += contactPoint.Impulse;
+            collision.OtherCollider = contactPoints.first;
+
+            for (auto const& script : collider->GetObject()->scripts)
+                script->OnCollisionEnter(collision);
+        }
+        else
+        {
+            auto& collision = collider->collisions[contactPoints.first];
+
+            collision.ContactPoints = std::move(contactPoints.second);
+            for (auto const& contactPoint : collision.ContactPoints)
+                collision.TotalImpulse += contactPoint.Impulse;
+
+            for (auto const& script : collider->GetObject()->scripts)
+                script->OnCollisionStay(collision);
+        }
+    }
 }
 
 void PhysicsEngine::OnCollisionUpdate()
@@ -175,75 +301,15 @@ void PhysicsEngine::OnCollisionUpdate()
         collider->contactPoints.clear();
     }
 
-    for (int i = 0; i < dynamicsWorld->getDispatcher()->getNumManifolds(); ++i)
+    for (int manifoldNumber = 0; manifoldNumber < dynamicsWorld->getDispatcher()->getNumManifolds(); ++manifoldNumber)
     {
-        auto contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
-        auto objectA = reinterpret_cast<Collider*>(contactManifold->getBody0()->getUserPointer());
-        auto objectB = reinterpret_cast<Collider*>(contactManifold->getBody1()->getUserPointer());
-
-        for (int j = 0; j < contactManifold->getNumContacts(); ++j)
-        {
-            auto btContactPoint = contactManifold->getContactPoint(j);
-
-            ContactPoint contactPointA;
-            contactPointA.Point = ToGlmVec3(btContactPoint.getPositionWorldOnA());
-            contactPointA.Normal = -ToGlmVec3(btContactPoint.m_normalWorldOnB);
-            contactPointA.ContactDistance = btContactPoint.getDistance();
-            contactPointA.Impulse = btContactPoint.getAppliedImpulse();
-
-            ContactPoint contactPointB;
-            contactPointB.Point = ToGlmVec3(btContactPoint.getPositionWorldOnB());
-            contactPointB.Normal = ToGlmVec3(btContactPoint.m_normalWorldOnB);
-            contactPointB.ContactDistance = btContactPoint.getDistance();
-            contactPointB.Impulse = btContactPoint.getAppliedImpulse();
-
-            if (objectA->contactPoints.count(objectB) == 0)
-                objectA->contactPoints.insert({ objectB , std::vector<ContactPoint>() });
-            objectA->contactPoints[objectB].push_back(std::move(contactPointA));
-
-            if (objectB->contactPoints.count(objectA) == 0)
-                objectB->contactPoints.insert({ objectA , std::vector<ContactPoint>() });
-            objectB->contactPoints[objectA].push_back(std::move(contactPointB));
-        }
+        AddContactManifold(dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(manifoldNumber));
     }
 
     for (auto collider : colliders)
     {
-        for (auto collision = std::begin(collider->collisions); collision != std::end(collider->collisions);)
-        {
-            if (collider->contactPoints.count(collision->first) == 0)
-            {
-                collision->second.ContactPoints.clear();
-                for(auto const& script : collider->GetObject()->scripts)
-                    script->OnCollisionExit(collision->second);
-                collision = collider->collisions.erase(collision);
-            }
-            else
-                ++collision;
-        }
-
-        for (auto& contactPoints : collider->contactPoints)
-        {
-            if (collider->collisions.count(contactPoints.first) == 0)
-            {
-                auto& collision = collider->collisions.insert({ contactPoints.first, Collision{} }).first->second;
-                collision.ContactPoints = std::move(contactPoints.second);
-                for (auto const& contactPoint : collision.ContactPoints)
-                    collision.TotalImpulse += contactPoint.Impulse;
-                collision.OtherCollider = contactPoints.first;
-                for (auto const& script : collider->GetObject()->scripts)
-                    script->OnCollisionEnter(collision);
-            }
-            else
-            {
-                auto& collision = collider->collisions[contactPoints.first];
-                collision.ContactPoints = std::move(contactPoints.second);
-                for (auto const& contactPoint : collision.ContactPoints)
-                    collision.TotalImpulse += contactPoint.Impulse;
-                for (auto const& script : collider->GetObject()->scripts)
-                    script->OnCollisionStay(collision);
-            }
-        }
+        ProcessCollisionExit(collider);
+        ProcessCollisionEnterAndStay(collider);
     }
 }
 
@@ -251,25 +317,16 @@ void PhysicsEngine::RigidbodyUpdate()
 {
     for (int i = 0; i < dynamicsWorld->getCollisionObjectArray().size(); ++i)
     {
-        auto btCollisionObject = dynamicsWorld->getCollisionObjectArray()[i];
-        auto collider = reinterpret_cast<Collider*>(btCollisionObject->getUserPointer());
+        auto btRigidbody = btRigidBody::upcast(dynamicsWorld->getCollisionObjectArray()[i]);
+        auto collider = reinterpret_cast<Collider*>(btRigidbody->getUserPointer());
 
-        auto btRigidbody = btRigidBody::upcast(btCollisionObject);
-        if (btRigidbody)
+        if (!collider->IsKinematic())
         {
-            // Feedback non-kinematic objects to system
-            if (!collider->IsKinematic())
-            {
-                auto btMotionState = btRigidbody->getMotionState();
-                btTransform btTransform;
-                btMotionState->getWorldTransform(btTransform);
-                btVector3 btPosition = btTransform.getOrigin();
-                btQuaternion btRotation = btTransform.getRotation();
+            btTransform btTransform;
+            btRigidbody->getMotionState()->getWorldTransform(btTransform);
 
-                auto transform = collider->GetTransform();
-                transform->SetPosition(ToGlmVec3(btPosition), Transform::Space::World);
-                transform->SetRotation(ToGlmQuat(btRotation), Transform::Space::World);
-            }
+            collider->GetTransform()->SetPosition(ToGlmVec3(btTransform.getOrigin()), Transform::Space::World);
+            collider->GetTransform()->SetRotation(ToGlmQuat(btTransform.getRotation()), Transform::Space::World);
         }
     }
 }

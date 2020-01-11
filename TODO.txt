@@ -1,9 +1,13 @@
-poresit zmeny parametru za behu
+textboxy na physical properties
 
 convex flag - convec hull pro konkavni je triangle mesh nebo rozdeleni na vic convexnich - jeste zjistit jak delat konkavni
 zatim jsem udelal na zkousku convex hull misto trinagle meshe
+addforce
 
 player asi musi byt dynamic - nebo special controller
+
+po trefeni svetla zhasnout
+panaka nahradit rozbitym
 
 All Awake calls
 All Start Calls
