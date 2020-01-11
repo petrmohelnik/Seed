@@ -1,23 +1,16 @@
-iterovat pro contacty - udelat z enumu collision class a tu plnit pointy
+poresit zmeny parametru za behu
 
 convex flag - convec hull pro konkavni je triangle mesh nebo rozdeleni na vic convexnich - jeste zjistit jak delat konkavni
-player asi musi byt dynamic - nebo special controller
 zatim jsem udelal na zkousku convex hull misto trinagle meshe
-https://github.com/AndresTraks/BulletSharp/wiki/Collision-Callbacks-and-Triggers
-poresit zmeny parametru za behu
+
+player asi musi byt dynamic - nebo special controller
 
 All Awake calls
 All Start Calls
-while (stepping towards variable delta time)
-All FixedUpdate functions
-Physics simulation
-OnEnter/Exit/Stay collision functions
-Rigidbody interpolation applies transform.position and rotation
 OnMouseDown/OnMouseUp etc. events
-All Update functions
 metody na poradi skriptu
 https://docs.unity3d.com/Manual/ExecutionOrder.html
-pohyby zpusobene fyzkou se aplikujou pred mouseDown a Update ale po OnCollision a OnTrigger
+pohyby zpusobene fyzkou se aplikujou pred mouseDown a Update ale po OnCollision
 fixedUpate je pouze pro fyziku, napr physcs addFOrce
 pohyb jako transform.translate se dela v update
 

@@ -59,6 +59,7 @@ protected:
     friend class Objects;
     friend class Transform;
     friend class Input;
+    friend class PhysicsEngine;
 
     virtual void Initialize();
     bool UpdateForDestruction();

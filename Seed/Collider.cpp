@@ -12,16 +12,6 @@ bool Collider::IsKinematic() const
     return isKinematic;
 }
 
-void Collider::SetMass(float mass_)
-{
-    mass = mass_;
-}
-
-float Collider::GetMass() const
-{
-    return mass;
-}
-
 void Collider::SetIsTrigger(bool isTrigger_)
 {
     isTrigger = isTrigger_;
@@ -30,4 +20,14 @@ void Collider::SetIsTrigger(bool isTrigger_)
 bool Collider::IsTrigger() const
 {
     return isTrigger;
+}
+
+void Collider::SetMass(float mass_)
+{
+    mass = mass_;
+}
+
+float Collider::GetMass() const
+{
+    return mass;
 }

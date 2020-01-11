@@ -6,6 +6,8 @@ class Time;
 class Objects;
 class PhysicsEngine;
 
+struct Collision;
+
 class Script : public Component
 {
 public:
@@ -14,9 +16,9 @@ public:
 	
 	virtual void OnCreate() {};
 	virtual void FixedUpdate() {};
-	virtual void OnCollisionEnter() {};
-	virtual void OnCollisionStay() {};
-	virtual void OnCollisionExit() {};
+	virtual void OnCollisionEnter(Collision const& collision) {};
+	virtual void OnCollisionStay(Collision const& collision) {};
+	virtual void OnCollisionExit(Collision const& collision) {};
 	virtual void Update() {};
 	virtual void OnMouseDown() {};
 	virtual void OnDestroy() {};

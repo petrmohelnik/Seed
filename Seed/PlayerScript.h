@@ -8,6 +8,9 @@ public:
     using Script::Script;
 
     void OnCreate() override;
+    void OnCollisionEnter(Collision const& collision) override;
+    void OnCollisionStay(Collision const& collision) override;
+    void OnCollisionExit(Collision const& collision) override;
     void Update() override;
 
     float RotationSensitivity = 0.003f;
@@ -24,6 +27,20 @@ void PlayerScript::OnCreate()
 {
     camera = objects.GetObjectByName("PlayerCamera")->GetComponent<Camera>();
     flashLight = objects.GetObjectByName("FlashLight")->GetComponent<Light>();
+}
+
+inline void PlayerScript::OnCollisionEnter(Collision const& collision)
+{
+    std::cout << "Enter: " + std::to_string(collision.ContactPoints[0].ContactDistance) << std::endl;
+}
+
+inline void PlayerScript::OnCollisionStay(Collision const& collision)
+{
+}
+
+inline void PlayerScript::OnCollisionExit(Collision const& collision)
+{
+    std::cout << "Exit: " + std::to_string(collision.TotalImpulse) << std::endl;
 }
 
 void PlayerScript::Update()

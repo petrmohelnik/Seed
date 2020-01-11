@@ -184,55 +184,64 @@ void PhysicsEngine::OnCollisionUpdate()
         for (int j = 0; j < contactManifold->getNumContacts(); ++j)
         {
             auto btContactPoint = contactManifold->getContactPoint(j);
-            //if (btContactPoint.getDistance() <= 0.0f)
-            {
-                Collider::ContactPoint contactPointA;
-                contactPointA.Point = ToGlmVec3(btContactPoint.getPositionWorldOnA());
-                contactPointA.Normal = -ToGlmVec3(btContactPoint.m_normalWorldOnB);
-                contactPointA.ContactDistance = btContactPoint.getDistance();
-                contactPointA.OtherCollider = objectB;
 
-                Collider::ContactPoint contactPointB;
-                contactPointB.Point = ToGlmVec3(btContactPoint.getPositionWorldOnB());
-                contactPointB.Normal = ToGlmVec3(btContactPoint.m_normalWorldOnB);
-                contactPointB.ContactDistance = btContactPoint.getDistance();
-                contactPointB.OtherCollider = objectA;
+            ContactPoint contactPointA;
+            contactPointA.Point = ToGlmVec3(btContactPoint.getPositionWorldOnA());
+            contactPointA.Normal = -ToGlmVec3(btContactPoint.m_normalWorldOnB);
+            contactPointA.ContactDistance = btContactPoint.getDistance();
+            contactPointA.Impulse = btContactPoint.getAppliedImpulse();
 
-                if (objectA->contactPoints.count(objectB) == 0)
-                    objectA->contactPoints.insert({ objectB , std::vector<Collider::ContactPoint>() });
-                objectA->contactPoints[objectB].push_back(std::move(contactPointA));
+            ContactPoint contactPointB;
+            contactPointB.Point = ToGlmVec3(btContactPoint.getPositionWorldOnB());
+            contactPointB.Normal = ToGlmVec3(btContactPoint.m_normalWorldOnB);
+            contactPointB.ContactDistance = btContactPoint.getDistance();
+            contactPointB.Impulse = btContactPoint.getAppliedImpulse();
 
-                if (objectB->contactPoints.count(objectA) == 0)
-                    objectB->contactPoints.insert({ objectA , std::vector<Collider::ContactPoint>() });
-                objectB->contactPoints[objectA].push_back(std::move(contactPointB));
-            }
+            if (objectA->contactPoints.count(objectB) == 0)
+                objectA->contactPoints.insert({ objectB , std::vector<ContactPoint>() });
+            objectA->contactPoints[objectB].push_back(std::move(contactPointA));
+
+            if (objectB->contactPoints.count(objectA) == 0)
+                objectB->contactPoints.insert({ objectA , std::vector<ContactPoint>() });
+            objectB->contactPoints[objectA].push_back(std::move(contactPointB));
         }
     }
 
     for (auto collider : colliders)
     {
-        for (auto onCollisionState = std::begin(collider->onCollisionStates); onCollisionState != std::end(collider->onCollisionStates);)
+        for (auto collision = std::begin(collider->collisions); collision != std::end(collider->collisions);)
         {
-            if (collider->contactPoints.count(onCollisionState->first) == 0)
+            if (collider->contactPoints.count(collision->first) == 0)
             {
-                collider->GetObject()->GetComponent<Script>(); //onexit
-                onCollisionState = collider->onCollisionStates.erase(onCollisionState);
+                collision->second.ContactPoints.clear();
+                for(auto const& script : collider->GetObject()->scripts)
+                    script->OnCollisionExit(collision->second);
+                collision = collider->collisions.erase(collision);
             }
             else
-                ++onCollisionState;
+                ++collision;
         }
 
-        for (auto const& contactPoints : collider->contactPoints)
+        for (auto& contactPoints : collider->contactPoints)
         {
-            if (collider->onCollisionStates.count(contactPoints.first) == 0)
+            if (collider->collisions.count(contactPoints.first) == 0)
             {
-                collider->GetObject()->GetComponent<Script>(); //onenter
-                collider->onCollisionStates.insert({ contactPoints.first, Collider::OnCollisionState::Enter });
+                auto& collision = collider->collisions.insert({ contactPoints.first, Collision{} }).first->second;
+                collision.ContactPoints = std::move(contactPoints.second);
+                for (auto const& contactPoint : collision.ContactPoints)
+                    collision.TotalImpulse += contactPoint.Impulse;
+                collision.OtherCollider = contactPoints.first;
+                for (auto const& script : collider->GetObject()->scripts)
+                    script->OnCollisionEnter(collision);
             }
             else
             {
-                collider->GetObject()->GetComponent<Script>(); //onstay
-                collider->onCollisionStates[contactPoints.first] = Collider::OnCollisionState::Stay;
+                auto& collision = collider->collisions[contactPoints.first];
+                collision.ContactPoints = std::move(contactPoints.second);
+                for (auto const& contactPoint : collision.ContactPoints)
+                    collision.TotalImpulse += contactPoint.Impulse;
+                for (auto const& script : collider->GetObject()->scripts)
+                    script->OnCollisionStay(collision);
             }
         }
     }

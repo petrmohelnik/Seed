@@ -2,24 +2,26 @@
 #include "Component.h"
 
 class btRigidBody;
+class Collider;
+
+struct ContactPoint
+{
+    glm::vec3 Point;
+    glm::vec3 Normal;
+    float ContactDistance;
+    float Impulse;
+};
+
+struct Collision
+{
+    std::vector<ContactPoint> ContactPoints;
+    float TotalImpulse;
+    Collider* OtherCollider;
+};
 
 class Collider : public Component
 {
 public:
-    struct ContactPoint
-    {
-        glm::vec3 Point;
-        glm::vec3 Normal;
-        float ContactDistance;
-        Collider* OtherCollider;
-    };
-
-    enum class OnCollisionState
-    {
-        Enter,
-        Stay,
-        Exit
-    };
 
     using Component::Component;
     virtual ~Collider() = default;
@@ -45,5 +47,5 @@ protected:
     float mass = 0.0;
 
     std::unordered_map<Collider*, std::vector<ContactPoint>> contactPoints;
-    std::unordered_map<Collider*, OnCollisionState> onCollisionStates;
+    std::unordered_map<Collider*, Collision> collisions;
 };
