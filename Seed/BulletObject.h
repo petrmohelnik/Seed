@@ -19,7 +19,7 @@ void BulletObject::Initialize()
 
     auto bulletMaterial = std::make_shared<Material>();
     bulletMaterial->SetMetallicWorkflow();
-    bulletMaterial->Albedo->SetColor(glm::vec3(1.0f, 0.8f, 0.0f));
+    bulletMaterial->Albedo->SetColor(glm::vec3(0.8f, 0.67f, 0.45f));
     bulletMaterial->Metallic->SetColor(glm::vec3(1.0f, 0.4f, 1.0f));
     GetComponent<MeshRenderer>()->SetMaterial(0, bulletMaterial);
 }

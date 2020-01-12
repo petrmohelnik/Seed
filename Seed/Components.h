@@ -11,6 +11,7 @@
 #include "CapsuleCollider.h"
 #include "MeshCollider.h"
 #include "SphereCollider.h"
+#include "CharacterController.h"
 #include "Script.h"
 #include "Skybox.h"
 #include "Texture.h"

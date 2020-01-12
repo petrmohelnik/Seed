@@ -42,6 +42,17 @@ bool Collider::IsStatic() const
     return mass == 0.0 && !IsKinematic();;
 }
 
+void Collider::SetMargin(float margin_)
+{
+    margin = margin_;
+    dirty = true;
+}
+
+float Collider::GetMargin()
+{
+    return margin;
+}
+
 void Collider::SetIsTrigger(bool isTrigger_)
 {
     isTrigger = isTrigger_;

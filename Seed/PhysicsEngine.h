@@ -1,13 +1,6 @@
 #pragma once
-#include "btBulletCollisionCommon.h"
-#include "btBulletDynamicsCommon.h"
-#include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
-#include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
 
 class Collider;
-class BoxCollider;
-class CapsuleCollider;
-class SphereCollider;
 class MeshCollider;
 struct ContactPoint;
 
@@ -19,6 +12,7 @@ public:
 protected:
     friend class Components;
     friend class Collider;
+    friend class DynamicCharacterController;
 
     void AddCollider(Collider* collider);
 
@@ -35,6 +29,8 @@ protected:
     static glm::quat ToGlmQuat(btQuaternion const& quaternion);
 
 private:
+    btCollisionShape* CreateConvexHullShape(MeshCollider* meshCollider);
+    btCollisionShape* CreateTriangleMeshShape(MeshCollider* meshCollider);
     btCollisionShape* CreateMeshCollisionShape(MeshCollider* meshCollider);
     btCollisionShape* CreateCollisionShape(Collider* collider);
     btVector3 CalculateLocalInertia(Collider* collider, btCollisionShape* btShape);

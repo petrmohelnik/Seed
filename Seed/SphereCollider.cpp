@@ -26,3 +26,13 @@ glm::vec3 SphereCollider::GetPosition() const
 
     return position;
 }
+
+void SphereCollider::SetPosition(glm::vec3 position)
+{
+    auto worldPosition = GetTransform()->GetPosition();
+    GetTransform()->Translate(center);
+    auto worldPositionWithOffset = GetTransform()->GetPosition();
+    GetTransform()->Translate(-center);
+
+    GetTransform()->SetPosition(position - (worldPositionWithOffset - worldPosition), Transform::Space::World);
+}

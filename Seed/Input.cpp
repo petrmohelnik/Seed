@@ -30,14 +30,16 @@ void Input::AddInput(SDL_Event event)
     case SDL_QUIT:
         quit = true;
 	case SDL_KEYDOWN:
-        keyPressedDown.insert(event.key.keysym.sym);
+        if(!Key(event.key.keysym.sym))
+            keyPressedDown.insert(event.key.keysym.sym);
         keyHoldDown.insert(event.key.keysym.sym);
 		break;
     case SDL_KEYUP:
         keyHoldDown.erase(event.key.keysym.sym);
         break;
     case SDL_MOUSEBUTTONDOWN:
-        mousePressedDown.insert(event.button.button);
+        if (!MouseButton(event.button.button))
+            mousePressedDown.insert(event.button.button);
         mouseHoldDown.insert(event.button.button);
         break;
     case SDL_MOUSEBUTTONUP:

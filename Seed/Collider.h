@@ -31,6 +31,8 @@ public:
     bool IsKinematic() const;
     bool IsDynamic() const;
     bool IsStatic() const;
+    void SetMargin(float margin);
+    float GetMargin();
 
     void SetMass(float mass);
     float GetMass() const;
@@ -50,12 +52,15 @@ protected:
     friend class Transform;
 
     virtual glm::vec3 GetPosition() const = 0;
+    virtual void SetPosition(glm::vec3 position) = 0;
 
     btRigidBody* btRigidbody = nullptr;
+    btSoftRigidDynamicsWorld* btDynamicsWorld = nullptr;
 
     bool isKinematic = false;
     bool isTrigger = false;
-    bool dirty = false;
+    bool dirty = true;
+    float margin = 0.04f;
     
     float mass = 0.0;
     glm::vec3 gravity = glm::vec3(0.0f, -9.81f, 0.0f);

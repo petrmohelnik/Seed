@@ -1,13 +1,11 @@
-textboxy na physical properties
-
-convex flag - convec hull pro konkavni je triangle mesh nebo rozdeleni na vic convexnich - jeste zjistit jak delat konkavni
-zatim jsem udelal na zkousku convex hull misto trinagle meshe
-addforce
-
 player asi musi byt dynamic - nebo special controller
+
+addforce
+textboxy na physical properties
 
 po trefeni svetla zhasnout
 panaka nahradit rozbitym
+skusit udelat jednoduchy bounding mesh sceny
 
 All Awake calls
 All Start Calls

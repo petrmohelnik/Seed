@@ -23,9 +23,11 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	light->AddComponent<GameScript>();
 
     auto ground = objects.CreateObject("ground");
-    ground->GetComponent<Transform>()->SetScale(glm::vec3(10.0f, 1.0f, 10.0f));
-    ground->GetComponent<Transform>()->TranslateY(1.0f);
+    ground->GetComponent<Transform>()->SetScale(glm::vec3(8.0f, 2.0f, 10.0f));
+    ground->GetComponent<Transform>()->TranslateY(2.0f);
     ground->AddComponent<MeshCollider>()->SetMesh(fileSystem.LoadMesh("cube.dae"));
+    //ground->GetComponent<Collider>()->SetMargin(1.0f);
+    ground->GetComponent<MeshCollider>()->SetConcave();
     //ground->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(1.0f));
 
 	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
@@ -85,23 +87,23 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	//cobblestone->AddComponent<RotateWorldScript>();
     cobblestone->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
 
-	//auto redbricksMaterial = std::make_shared<Material>();
-	//redbricksMaterial->Albedo = fileSystem.LoadTexture("redbricks/albedo.png", 24, 24);
-	//redbricksMaterial->Normal = fileSystem.LoadTexture("redbricks/normal.png", 24, 24);
-	//redbricksMaterial->Height = fileSystem.LoadTexture("redbricks/height.png", 8, 8);
-	//redbricksMaterial->Metallic = fileSystem.LoadTexture("redbricks/ao.png", 8, 8);
-	//redbricksMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("redbricks/roughness.png", 8, 8), 0);
-	//redbricksMaterial->Metallic->AddChannel(0.0);
- //   redbricksMaterial->Metallic->SetIsRGBOrder();
-	//redbricksMaterial->SetParallaxStrength(0.1f);
+	auto redbricksMaterial = std::make_shared<Material>();
+	redbricksMaterial->Albedo = fileSystem.LoadTexture("redbricks/albedo.png", 24, 24);
+	redbricksMaterial->Normal = fileSystem.LoadTexture("redbricks/normal.png", 24, 24);
+	redbricksMaterial->Height = fileSystem.LoadTexture("redbricks/height.png", 8, 8);
+	redbricksMaterial->Metallic = fileSystem.LoadTexture("redbricks/ao.png", 8, 8);
+	redbricksMaterial->Metallic->AddChannelFromTexture(fileSystem.LoadTexture("redbricks/roughness.png", 8, 8), 0);
+	redbricksMaterial->Metallic->AddChannel(0.0);
+    redbricksMaterial->Metallic->SetIsRGBOrder();
+	redbricksMaterial->SetParallaxStrength(0.1f);
 
-	//auto redbricks = objects.CreateObject("redbricks");
-	//redbricks->AddComponent<MeshRenderer>()->Load("cube.dae");
-	//redbricks->GetComponent<MeshRenderer>()->SetMaterial(0, redbricksMaterial);
-	//redbricks->GetComponent<Transform>()->TranslateX(-1.5f);
- //   redbricks->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
-	////redbricks->AddComponent<RotateWorldScript>();
- //   redbricks->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
+	auto redbricks = objects.CreateObject("redbricks");
+	redbricks->AddComponent<MeshRenderer>()->Load("cube.dae");
+	redbricks->GetComponent<MeshRenderer>()->SetMaterial(0, redbricksMaterial);
+	redbricks->GetComponent<Transform>()->TranslateX(-1.5f);
+    redbricks->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
+	//redbricks->AddComponent<RotateWorldScript>();
+    redbricks->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
 
     auto roughblockMaterial = std::make_shared<Material>();
     roughblockMaterial->Albedo = fileSystem.LoadTexture("roughblock/albedo.png", 24, 24);
@@ -126,7 +128,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     for (auto& target : targets)
     {
         target->AddComponent<MeshCollider>()->SetMesh(targetMesh);
-        target->GetComponent<Collider>()->SetMass(10.0f);
+        target->GetComponent<Collider>()->SetMass(30.0f);
     }
 
     RenderingPipeline::SetMainCamera(objects.GetObjectByName("PlayerCamera")->GetComponent<Camera>());

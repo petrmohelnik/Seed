@@ -25,9 +25,11 @@
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CapsuleCollider.cpp" />
+    <ClCompile Include="CharacterController.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Components.cpp" />
+    <ClCompile Include="DynamicCharacterController.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EnvironmentalMap.cpp" />
     <ClCompile Include="FileSystem.cpp" />
@@ -81,6 +83,8 @@
     <ClInclude Include="BulletObject.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraMovementScript.h" />
+    <ClInclude Include="CharacterController.h" />
+    <ClInclude Include="DynamicCharacterController.h" />
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="PlayerScript.h" />
     <ClInclude Include="CapsuleCollider.h" />

@@ -17,7 +17,22 @@ std::vector<glm::uvec3> const & MeshCollider::GetIndices()
     return mesh->indices;
 }
 
+void MeshCollider::SetConcave()
+{
+    convex = false;
+}
+
+bool MeshCollider::IsConvex() const
+{
+    return convex;
+}
+
 glm::vec3 MeshCollider::GetPosition() const
 {
     return GetTransform()->GetPosition();
+}
+
+void MeshCollider::SetPosition(glm::vec3 position)
+{
+    GetTransform()->SetPosition(position, Transform::Space::World);
 }

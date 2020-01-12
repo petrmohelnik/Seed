@@ -12,6 +12,7 @@ public:
 
 private:
     glm::vec3 GetPosition() const override;
+    void SetPosition(glm::vec3 position) override;
 
     glm::vec3 center;
     glm::vec3 size;

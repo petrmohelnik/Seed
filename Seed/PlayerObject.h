@@ -13,9 +13,9 @@ public:
 
 void PlayerObject::Initialize()
 {
-    AddComponent<CapsuleCollider>()->SetCapsule(glm::vec3(0.0f, 0.9f, 0.0f), 1.8f, 0.4f);
-    GetComponent<Collider>()->SetIsKinematic(true);
-    
+    AddComponent<CharacterController>()->SetCapsule(glm::vec3(0.0f, 0.9f, 0.0f), 1.8f, 0.3f);
+    GetComponent<Collider>()->SetMass(80.0f);
+        
     auto camera = Engine::GetObjects().CreateObject("PlayerCamera");
     camera->AddComponent<Camera>();
     camera->GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 1.7f, 0.0f));

@@ -32,3 +32,13 @@ glm::vec3 CapsuleCollider::GetPosition() const
 
     return position;
 }
+
+void CapsuleCollider::SetPosition(glm::vec3 position)
+{
+    auto worldPosition = GetTransform()->GetPosition();
+    GetTransform()->Translate(center);
+    auto worldPositionWithOffset = GetTransform()->GetPosition();
+    GetTransform()->Translate(-center);
+
+    GetTransform()->SetPosition(position - (worldPositionWithOffset - worldPosition), Transform::Space::World);
+}

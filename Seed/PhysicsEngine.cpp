@@ -4,6 +4,7 @@
 #include "CapsuleCollider.h"
 #include "MeshCollider.h"
 #include "SphereCollider.h"
+#include "CharacterController.h"
 #include "Transform.h"
 #include "Engine.h"
 
@@ -55,6 +56,7 @@ void PhysicsEngine::Initialize()
     dynamicsWorld->getSolverInfo().m_splitImpulse = true;
     dynamicsWorld->getDispatchInfo().m_enableSatConvex = true;
     dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+    dynamicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
     auto softWorldInfo = dynamicsWorld->getWorldInfo();
     softWorldInfo.air_density = btScalar(1.2f);
@@ -65,22 +67,23 @@ void PhysicsEngine::Initialize()
     softWorldInfo.m_sparsesdf.Initialize();
 }
 
-btCollisionShape* PhysicsEngine::CreateMeshCollisionShape(MeshCollider* meshCollider)
+btCollisionShape* PhysicsEngine::CreateConvexHullShape(MeshCollider * meshCollider)
 {
-    //auto convexHull = new btConvexHullShape();
-    //for (auto& vertex : meshCollider->GetVertices())
-    //{
-    //    convexHull->addPoint(ToBtVector3(vertex));
-    //}
-    //return convexHull;
+    auto convexHull = new btConvexHullShape();
 
+    for (auto& vertex : meshCollider->GetVertices())
+        convexHull->addPoint(ToBtVector3(vertex));
 
+    return convexHull;
+}
 
+btCollisionShape* PhysicsEngine::CreateTriangleMeshShape(MeshCollider * meshCollider)
+{
     auto triangleMesh = new btTriangleMesh();
 
     int* btIndices = new int[meshCollider->GetIndices().size() * 3];
     int i = 0;
-    for (auto& triangle : meshCollider->GetIndices())
+    for (auto const& triangle : meshCollider->GetIndices())
     {
         btIndices[i++] = triangle.x;
         btIndices[i++] = triangle.y;
@@ -89,22 +92,29 @@ btCollisionShape* PhysicsEngine::CreateMeshCollisionShape(MeshCollider* meshColl
 
     btVector3* btVertices = new btVector3[meshCollider->GetVertices().size()];
     i = 0;
-    for (auto& vertex : meshCollider->GetVertices())
+    for (auto const& vertex : meshCollider->GetVertices())
     {
         btVertices[i++] = ToBtVector3(vertex);
     }
 
     btTriangleIndexVertexArray* indexVertexArrays = new btTriangleIndexVertexArray(
-        meshCollider->GetIndices().size(),
+        static_cast<int>(meshCollider->GetIndices().size()),
         &btIndices[0],
         3 * sizeof(int),
-        meshCollider->GetVertices().size(),
-        const_cast<btScalar *>(&btVertices[0].x()),
+        static_cast<int>(meshCollider->GetVertices().size()),
+        const_cast<btScalar*>(&btVertices[0].x()),
         sizeof(btVector3)
     );
 
-    bool useQuantizedAabbCompression = true;
-    return new btBvhTriangleMeshShape(indexVertexArrays, useQuantizedAabbCompression);
+    return new btBvhTriangleMeshShape(indexVertexArrays, true);
+}
+
+btCollisionShape* PhysicsEngine::CreateMeshCollisionShape(MeshCollider* meshCollider)
+{
+    if (meshCollider->IsConvex())
+        return CreateConvexHullShape(meshCollider);
+    else
+        return CreateTriangleMeshShape(meshCollider);
 }
 
 btCollisionShape* PhysicsEngine::CreateCollisionShape(Collider* collider)
@@ -113,7 +123,7 @@ btCollisionShape* PhysicsEngine::CreateCollisionShape(Collider* collider)
     if (auto boxCollider = dynamic_cast<BoxCollider*>(collider))
         btShape = new btBoxShape(ToBtVector3(boxCollider->GetSize()));
     else if (auto capsuleCollider = dynamic_cast<CapsuleCollider*>(collider))
-        btShape = new btCapsuleShape(capsuleCollider->GetRadius(), capsuleCollider->GetHeight());
+        btShape = new btCapsuleShape(capsuleCollider->GetRadius(), capsuleCollider->GetHeight() - capsuleCollider->GetRadius() * 2.0);
     else if (auto sphereCollider = dynamic_cast<SphereCollider*>(collider))
         btShape = new btSphereShape(sphereCollider->GetRadius());
     else if (auto meshCollider = dynamic_cast<MeshCollider*>(collider))
@@ -171,13 +181,14 @@ void PhysicsEngine::CreateRigidbody(Collider* collider)
     InitializeRigidbodyMaterial(collider);
 
     dynamicsWorld->addRigidBody(collider->btRigidbody);
-    collider->dirty = false;
+    collider->btDynamicsWorld = dynamicsWorld.get();
 }
 
 void PhysicsEngine::RefreshRigidbody(Collider* collider)
 {
     dynamicsWorld->removeRigidBody(collider->btRigidbody);
 
+    collider->btRigidbody->getCollisionShape()->setMargin(collider->GetMargin());
     collider->btRigidbody->getCollisionShape()->setLocalScaling(GetLocalScaling(collider));
     btVector3 localInertia = CalculateLocalInertia(collider, collider->btRigidbody->getCollisionShape());
     collider->btRigidbody->setMassProps(collider->GetMass(), localInertia);
@@ -192,7 +203,11 @@ void PhysicsEngine::UpdateSimulationState()
         if (!collider->btRigidbody)
         {
             CreateRigidbody(collider);
-            collider->dirty = false;
+
+            if (auto characterController = dynamic_cast<CharacterController*>(collider))
+                characterController->InitializePhysics();
+            else
+                collider->dirty = false;
         }
 
         if (collider->dirty)
@@ -211,7 +226,7 @@ void PhysicsEngine::UpdateSimulationState()
 
 void PhysicsEngine::Simulate()
 {
-    dynamicsWorld->stepSimulation(Engine::GetTime().FixedDeltaTime(), 1);
+    dynamicsWorld->stepSimulation(Engine::GetTime().FixedDeltaTime());
 }
 
 void PhysicsEngine::InsertContactPoint(Collider* thisCollider, Collider* otherCollider, ContactPoint contactPoint)
@@ -225,6 +240,8 @@ void PhysicsEngine::AddContactManifold(btPersistentManifold* contactManifold)
 {
     auto colliderA = reinterpret_cast<Collider*>(contactManifold->getBody0()->getUserPointer());
     auto colliderB = reinterpret_cast<Collider*>(contactManifold->getBody1()->getUserPointer());
+    if (!colliderA || !colliderB)
+        return;
 
     for (int contactNumber = 0; contactNumber < contactManifold->getNumContacts(); ++contactNumber)
     {
@@ -299,6 +316,8 @@ void PhysicsEngine::OnCollisionUpdate()
     for (auto& collider : colliders)
     {
         collider->contactPoints.clear();
+        if (auto characterController = dynamic_cast<CharacterController*>(collider))
+            characterController->PhysicsUpdate();
     }
 
     for (int manifoldNumber = 0; manifoldNumber < dynamicsWorld->getDispatcher()->getNumManifolds(); ++manifoldNumber)
@@ -317,16 +336,18 @@ void PhysicsEngine::RigidbodyUpdate()
 {
     for (int i = 0; i < dynamicsWorld->getCollisionObjectArray().size(); ++i)
     {
-        auto btRigidbody = btRigidBody::upcast(dynamicsWorld->getCollisionObjectArray()[i]);
-        auto collider = reinterpret_cast<Collider*>(btRigidbody->getUserPointer());
-
-        if (!collider->IsKinematic())
+        if (auto btRigidbody = btRigidBody::upcast(dynamicsWorld->getCollisionObjectArray()[i]))
         {
-            btTransform btTransform;
-            btRigidbody->getMotionState()->getWorldTransform(btTransform);
+            auto collider = reinterpret_cast<Collider*>(btRigidbody->getUserPointer());
 
-            collider->GetTransform()->SetPosition(ToGlmVec3(btTransform.getOrigin()), Transform::Space::World);
-            collider->GetTransform()->SetRotation(ToGlmQuat(btTransform.getRotation()), Transform::Space::World);
+            if (!collider->IsKinematic())
+            {
+                btTransform btTransform;
+                btRigidbody->getMotionState()->getWorldTransform(btTransform);
+
+                collider->SetPosition(ToGlmVec3(btTransform.getOrigin()));
+                collider->GetTransform()->SetRotation(ToGlmQuat(btTransform.getRotation()), Transform::Space::World);
+            }
         }
     }
 }

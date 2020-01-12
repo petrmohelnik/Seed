@@ -14,11 +14,12 @@ public:
     void Update() override;
 
     float RotationSensitivity = 0.003f;
-    float MoveSensitivity = 5.0f;
+    float MoveSensitivity = 30.0f;
 
 private:
     Light* flashLight;
     Camera* camera;
+    CharacterController* characterController;
 
     float verticalRotation = 0.0f;
 };
@@ -27,6 +28,7 @@ void PlayerScript::OnCreate()
 {
     camera = objects.GetObjectByName("PlayerCamera")->GetComponent<Camera>();
     flashLight = objects.GetObjectByName("FlashLight")->GetComponent<Light>();
+    characterController = object->GetComponent<CharacterController>();
 }
 
 inline void PlayerScript::OnCollisionEnter(Collision const& collision)
@@ -45,14 +47,21 @@ inline void PlayerScript::OnCollisionExit(Collision const& collision)
 
 void PlayerScript::Update()
 {
+    glm::vec3 moveDirection(0.0f);
+
     if (input.Key(SDLK_w))
-        transform->Translate(-transform->GetForwardAxis() * MoveSensitivity * time.DeltaTime(), Transform::Space::World);
+        moveDirection += -transform->GetForwardAxis() * MoveSensitivity * time.DeltaTime();
     if (input.Key(SDLK_s))
-        transform->Translate(transform->GetForwardAxis() * MoveSensitivity * time.DeltaTime(), Transform::Space::World);
+        moveDirection += transform->GetForwardAxis() * MoveSensitivity * time.DeltaTime();
     if (input.Key(SDLK_d))
-        transform->Translate(transform->GetRightAxis() * MoveSensitivity * time.DeltaTime(), Transform::Space::World);
+        moveDirection += transform->GetRightAxis() * MoveSensitivity * time.DeltaTime();
     if (input.Key(SDLK_a))
-        transform->Translate(-transform->GetRightAxis() * MoveSensitivity * time.DeltaTime(), Transform::Space::World);
+        moveDirection += -transform->GetRightAxis() * MoveSensitivity * time.DeltaTime();
+
+    characterController->Move(glm::vec2(moveDirection.x, moveDirection.z));
+    
+    if (input.KeyDown(SDLK_SPACE))
+        characterController->Jump();
 
     if (input.MouseButton(SDL_BUTTON_RIGHT))
     {
