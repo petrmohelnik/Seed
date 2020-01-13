@@ -37,3 +37,4 @@ https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_ligh
 
 physics:
 https://github.com/turanszkij/WickedEngine/blob/master/WickedEngine/wiPhysicsEngine_Bullet.cpp
+https://github.com/222464/EvolvedVirtualCreaturesRepo/blob/master/VirtualCreatures/Volumetric_SDL/Source/SceneObjects/Physics/DynamicCharacterController.cpp

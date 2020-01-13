@@ -4,7 +4,7 @@
 #include "CapsuleCollider.h"
 #include "MeshCollider.h"
 #include "SphereCollider.h"
-#include "CharacterController.h"
+#include "PhysicsObject.h"
 #include "Transform.h"
 #include "Engine.h"
 
@@ -204,8 +204,8 @@ void PhysicsEngine::UpdateSimulationState()
         {
             CreateRigidbody(collider);
 
-            if (auto characterController = dynamic_cast<CharacterController*>(collider))
-                characterController->InitializePhysics();
+            if (auto physicsObject = dynamic_cast<PhysicsObject*>(collider))
+                physicsObject->InitializePhysics();
             else
                 collider->dirty = false;
         }
@@ -220,13 +220,18 @@ void PhysicsEngine::UpdateSimulationState()
         {
             collider->btRigidbody->getMotionState()->setWorldTransform(GetBtTransform(collider));
         }
+
+        if (auto physicsObject = dynamic_cast<PhysicsObject*>(collider))
+        {
+            physicsObject->BeforeSimulationUpdate();
+        }
     }
 }
 
 
 void PhysicsEngine::Simulate()
 {
-    dynamicsWorld->stepSimulation(Engine::GetTime().FixedDeltaTime());
+    dynamicsWorld->stepSimulation(Engine::GetTime().FixedDeltaTime(), 0);
 }
 
 void PhysicsEngine::InsertContactPoint(Collider* thisCollider, Collider* otherCollider, ContactPoint contactPoint)
@@ -316,8 +321,8 @@ void PhysicsEngine::OnCollisionUpdate()
     for (auto& collider : colliders)
     {
         collider->contactPoints.clear();
-        if (auto characterController = dynamic_cast<CharacterController*>(collider))
-            characterController->PhysicsUpdate();
+        if (auto physicsObject = dynamic_cast<PhysicsObject*>(collider))
+            physicsObject->AfterSimulationUpdate();
     }
 
     for (int manifoldNumber = 0; manifoldNumber < dynamicsWorld->getDispatcher()->getNumManifolds(); ++manifoldNumber)

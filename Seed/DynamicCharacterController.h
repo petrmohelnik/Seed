@@ -3,11 +3,12 @@
 class DynamicCharacterController
 {
 public:
-    DynamicCharacterController(btSoftRigidDynamicsWorld* pPhysicsWorld, btRigidBody* pRigidBody, float stepHeight);
+    DynamicCharacterController(btSoftRigidDynamicsWorld* pPhysicsWorld, btRigidBody* pRigidBody);
     ~DynamicCharacterController();
 
     void Move(glm::vec2 dir);
     void Jump();
+    void SetRotation(glm::quat rotation);
     
     void Update();
 
@@ -16,9 +17,10 @@ public:
 
 private:
     void ParseGhostContacts();
-
+    void UpdatePosition();
     void UpdateVelocity();
 
+    float GetBottomYOffset();
     float GetBottomRoundedRegionYOffset();
 
     btSoftRigidDynamicsWorld* m_pDynamicsWorld = nullptr;
@@ -32,10 +34,13 @@ private:
 
     btVector3 m_previousPosition;
 
+    bool m_touching = false;
     bool m_onGround = false;
     bool m_hittingWall = false;
+    bool m_canJump = true;
+    bool m_jumped = false;
 
-    float m_stepHeight;
+    float m_stepHeight = 0.1f;
     float m_deceleration = 10.0f;
     float m_jumpImpulse = 200.0f;
 };

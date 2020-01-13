@@ -2,8 +2,31 @@
 #include "PhysicsEngine.h"
 #include "Engine.h"
 
-DynamicCharacterController::DynamicCharacterController(btSoftRigidDynamicsWorld* pPhysicsWorld, btRigidBody* pRigidBody, float stepHeight)
-    : m_pDynamicsWorld(pPhysicsWorld), m_pRigidBody(pRigidBody), m_stepHeight(stepHeight)
+class IgnoreBodyAndGhostCast :
+    public btCollisionWorld::ClosestRayResultCallback
+{
+private:
+    btRigidBody* m_pBody;
+    btPairCachingGhostObject* m_pGhostObject;
+
+public:
+    IgnoreBodyAndGhostCast(btRigidBody* pBody, btPairCachingGhostObject* pGhostObject)
+        : btCollisionWorld::ClosestRayResultCallback(btVector3(0.0, 0.0, 0.0), btVector3(0.0, 0.0, 0.0)),
+        m_pBody(pBody), m_pGhostObject(pGhostObject)
+    {
+    }
+
+    btScalar addSingleResult(btCollisionWorld::LocalRayResult& rayResult, bool normalInWorldSpace)
+    {
+        if (rayResult.m_collisionObject == m_pBody || rayResult.m_collisionObject == m_pGhostObject)
+            return 1.0f;
+
+        return ClosestRayResultCallback::addSingleResult(rayResult, normalInWorldSpace);
+    }
+};
+
+DynamicCharacterController::DynamicCharacterController(btSoftRigidDynamicsWorld* pPhysicsWorld, btRigidBody* pRigidBody)
+    : m_pDynamicsWorld(pPhysicsWorld), m_pRigidBody(pRigidBody)
 {
     // Keep upright
     m_pRigidBody->setAngularFactor(0.0f);
@@ -36,25 +59,36 @@ void DynamicCharacterController::Move(glm::vec2 dir)
 
 void DynamicCharacterController::Jump()
 {
-    if (m_onGround)
+    if (m_onGround && m_canJump)
     {
         m_pRigidBody->applyCentralImpulse(btVector3(0.0f, m_jumpImpulse, 0.0f));
+        m_pRigidBody->setGravity(btVector3(0.0f, -9.81f, 0.0f));
+        m_jumped = true;
+        m_canJump = false;
     }
+}
+
+void DynamicCharacterController::SetRotation(glm::quat rotation)
+{
+    m_pRigidBody->getWorldTransform().setRotation(PhysicsEngine::ToBtQuaternion(rotation));
 }
 
 void DynamicCharacterController::Update()
 {
-    // Synch ghost with actually object
-    m_pGhostObject->setWorldTransform(m_pRigidBody->getWorldTransform());
-
-    // Update transform
-    m_pRigidBody->getMotionState()->getWorldTransform(m_motionTransform);
+    m_motionTransform = m_pRigidBody->getWorldTransform();
+    m_pGhostObject->setWorldTransform(m_motionTransform);
 
     m_onGround = false;
+    m_touching = false;
 
     ParseGhostContacts();
-
+    UpdatePosition();
     UpdateVelocity();
+
+    if (!m_onGround)
+        m_canJump = true;
+    if (m_onGround && m_canJump)
+        m_jumped = false;
 }
 
 void DynamicCharacterController::ParseGhostContacts()
@@ -94,14 +128,14 @@ void DynamicCharacterController::ParseGhostContacts()
             {
                 const btManifoldPoint &point = pManifold->getContactPoint(p);
 
-                //if (point.getDistance() <= 0.0f)
+                if (point.getDistance() <= 0.001f)
                 {
                     const btVector3 &ptB = point.getPositionWorldOnB();
 
                     // If point is in rounded bottom region of capsule shape, it is on the ground
                     if (ptB.getY() < (m_motionTransform.getOrigin().getY() - GetBottomRoundedRegionYOffset()))
                     {
-                        m_onGround = true;
+                        m_touching = true;
                     }
                     else
                     {
@@ -115,9 +149,70 @@ void DynamicCharacterController::ParseGhostContacts()
     }
 }
 
+void DynamicCharacterController::UpdatePosition()
+{
+    // Ray cast, ignore rigid body
+    IgnoreBodyAndGhostCast rayCallBack_bottom(m_pRigidBody, m_pGhostObject);
+    auto bottomYOffset = GetBottomYOffset();
+
+    m_pDynamicsWorld->rayTest(m_pRigidBody->getWorldTransform().getOrigin(), m_pRigidBody->getWorldTransform().getOrigin() - btVector3(0.0f, bottomYOffset + m_stepHeight, 0.0f), rayCallBack_bottom);
+
+    // Bump up if hit
+    if (rayCallBack_bottom.hasHit())
+    {
+        //float previousY = m_pRigidBody->getWorldTransform().getOrigin().getY();
+
+        //m_pRigidBody->getWorldTransform().getOrigin().setY(previousY + (bottomYOffset + m_stepHeight) * (1.0f - rayCallBack_bottom.m_closestHitFraction));
+
+        //btVector3 vel(m_pRigidBody->getLinearVelocity());
+
+        //vel.setY(0.0f);
+
+        //m_pRigidBody->setLinearVelocity(vel);
+
+        m_onGround = true;
+    }
+
+    float testOffset = 0.07f;
+
+    // Ray cast, ignore rigid body
+    IgnoreBodyAndGhostCast rayCallBack_top(m_pRigidBody, m_pGhostObject);
+
+    m_pDynamicsWorld->rayTest(m_pRigidBody->getWorldTransform().getOrigin(), m_pRigidBody->getWorldTransform().getOrigin() + btVector3(0.0f, bottomYOffset + testOffset, 0.0f), rayCallBack_top);
+
+    // Bump up if hit
+    //if (rayCallBack_top.hasHit())
+    //{
+    //    m_pRigidBody->getWorldTransform().setOrigin(m_previousPosition);
+
+    //    btVector3 vel(m_pRigidBody->getLinearVelocity());
+
+    //    vel.setY(0.0f);
+
+    //    m_pRigidBody->setLinearVelocity(vel);
+    //}
+
+    m_previousPosition = m_pRigidBody->getWorldTransform().getOrigin();
+}
+
 void DynamicCharacterController::UpdateVelocity()
 {
     m_manualVelocity.y = m_pRigidBody->getLinearVelocity().getY();
+    if ((!m_onGround) && !m_jumped)
+    {
+        m_manualVelocity.y = glm::clamp(m_manualVelocity.y, std::numeric_limits<float>::lowest(), 0.0f);
+    }
+
+    if ((m_onGround) && !m_jumped)
+    {
+        m_manualVelocity.y = 0.0f;
+        m_pRigidBody->setGravity(btVector3(0.0f, 0.0f, 0.0f));
+    }
+    else
+    {
+        m_pRigidBody->setGravity(btVector3(0.0f, -9.81f, 0.0f));
+    }
+
     m_pRigidBody->setLinearVelocity(PhysicsEngine::ToBtVector3(m_manualVelocity));
 
     // Decelerate
@@ -138,6 +233,14 @@ void DynamicCharacterController::UpdateVelocity()
         // Do not adjust rigid body velocity manually (so bodies can still be pushed by character)
         return;
     }
+}
+
+float DynamicCharacterController::GetBottomYOffset()
+{
+    auto capsuleRadius = reinterpret_cast<btCapsuleShape*>(m_pRigidBody->getCollisionShape())->getRadius();
+    auto capsuleHalfHeight = reinterpret_cast<btCapsuleShape*>(m_pRigidBody->getCollisionShape())->getHalfHeight();
+
+    return capsuleHalfHeight + capsuleRadius;
 }
 
 float DynamicCharacterController::GetBottomRoundedRegionYOffset()

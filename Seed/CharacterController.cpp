@@ -38,10 +38,15 @@ bool CharacterController::IsGrounded() const
 
 void CharacterController::InitializePhysics()
 {
-    dynamicCharacterController = std::make_unique<DynamicCharacterController>(btDynamicsWorld, btRigidbody, 0.0f);
+    dynamicCharacterController = std::make_unique<DynamicCharacterController>(btDynamicsWorld, btRigidbody);
 }
 
-void CharacterController::PhysicsUpdate()
+void CharacterController::BeforeSimulationUpdate()
+{
+    dynamicCharacterController->SetRotation(GetTransform()->GetRotation());
+}
+
+void CharacterController::AfterSimulationUpdate()
 {
     dynamicCharacterController->Update();
 }

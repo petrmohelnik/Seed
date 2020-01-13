@@ -1,4 +1,7 @@
-player asi musi byt dynamic - nebo special controller
+proc kdyz omezuju velcoity ze shora porad muzu vylezt na prudke kopce
+fixnout skok pri drzeni mezerniku
+kdyz jsem ve vzduchu asi bych se nemel hybat
+ten kinematickej box nexoliduje s dynamic koulema?
 
 addforce
 textboxy na physical properties
@@ -6,6 +9,7 @@ textboxy na physical properties
 po trefeni svetla zhasnout
 panaka nahradit rozbitym
 skusit udelat jednoduchy bounding mesh sceny
+bullety jako svetla
 
 All Awake calls
 All Start Calls

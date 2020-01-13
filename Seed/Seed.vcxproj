@@ -85,6 +85,7 @@
     <ClInclude Include="CameraMovementScript.h" />
     <ClInclude Include="CharacterController.h" />
     <ClInclude Include="DynamicCharacterController.h" />
+    <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="PlayerScript.h" />
     <ClInclude Include="CapsuleCollider.h" />

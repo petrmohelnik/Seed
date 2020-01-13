@@ -8,6 +8,7 @@ public:
     using Script::Script;
 
     void OnCreate() override;
+    void FixedUpdate() override;
     void OnCollisionEnter(Collision const& collision) override;
     void OnCollisionStay(Collision const& collision) override;
     void OnCollisionExit(Collision const& collision) override;
@@ -31,6 +32,27 @@ void PlayerScript::OnCreate()
     characterController = object->GetComponent<CharacterController>();
 }
 
+inline void PlayerScript::FixedUpdate()
+{
+    glm::vec3 moveDirection(0.0f);
+
+    if (input.Key(SDLK_w))
+        moveDirection += -transform->GetForwardAxis() * MoveSensitivity * time.FixedDeltaTime();
+    if (input.Key(SDLK_s))
+        moveDirection += transform->GetForwardAxis() * MoveSensitivity * time.FixedDeltaTime();
+    if (input.Key(SDLK_d))
+        moveDirection += transform->GetRightAxis() * MoveSensitivity * time.FixedDeltaTime();
+    if (input.Key(SDLK_a))
+        moveDirection += -transform->GetRightAxis() * MoveSensitivity * time.FixedDeltaTime();
+
+    characterController->Move(glm::vec2(moveDirection.x, moveDirection.z));
+
+    if (input.Key(SDLK_SPACE))
+    {
+        characterController->Jump();
+    }
+}
+
 inline void PlayerScript::OnCollisionEnter(Collision const& collision)
 {
     std::cout << "Enter: " + std::to_string(collision.ContactPoints[0].ContactDistance) << std::endl;
@@ -47,28 +69,12 @@ inline void PlayerScript::OnCollisionExit(Collision const& collision)
 
 void PlayerScript::Update()
 {
-    glm::vec3 moveDirection(0.0f);
-
-    if (input.Key(SDLK_w))
-        moveDirection += -transform->GetForwardAxis() * MoveSensitivity * time.DeltaTime();
-    if (input.Key(SDLK_s))
-        moveDirection += transform->GetForwardAxis() * MoveSensitivity * time.DeltaTime();
-    if (input.Key(SDLK_d))
-        moveDirection += transform->GetRightAxis() * MoveSensitivity * time.DeltaTime();
-    if (input.Key(SDLK_a))
-        moveDirection += -transform->GetRightAxis() * MoveSensitivity * time.DeltaTime();
-
-    characterController->Move(glm::vec2(moveDirection.x, moveDirection.z));
-    
-    if (input.KeyDown(SDLK_SPACE))
-        characterController->Jump();
-
     if (input.MouseButton(SDL_BUTTON_RIGHT))
     {
         transform->RotateY(-input.MouseDeltaPosition().x * RotationSensitivity, Transform::Space::World);
 
         verticalRotation += -input.MouseDeltaPosition().y * RotationSensitivity;
-        verticalRotation = glm::clamp(verticalRotation, -0.8f, 0.8f);
+        verticalRotation = glm::clamp(verticalRotation, -0.9f, 0.9f);
         camera->GetTransform()->SetRotation(glm::quat(glm::vec3(verticalRotation, 0.0f, 0.0f)));
     }
 
