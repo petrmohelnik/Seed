@@ -44,9 +44,10 @@ void CharacterController::InitializePhysics()
 void CharacterController::BeforeSimulationUpdate()
 {
     dynamicCharacterController->SetRotation(GetTransform()->GetRotation());
+    dynamicCharacterController->BeforeSimulationUpdate();
 }
 
 void CharacterController::AfterSimulationUpdate()
 {
-    dynamicCharacterController->Update();
+    dynamicCharacterController->AfterSimulationUpdate();
 }

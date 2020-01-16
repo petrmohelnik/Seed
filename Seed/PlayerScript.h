@@ -15,7 +15,7 @@ public:
     void Update() override;
 
     float RotationSensitivity = 0.003f;
-    float MoveSensitivity = 30.0f;
+    float MoveSensitivity = 1.0f;
 
 private:
     Light* flashLight;
@@ -55,7 +55,6 @@ inline void PlayerScript::FixedUpdate()
 
 inline void PlayerScript::OnCollisionEnter(Collision const& collision)
 {
-    std::cout << "Enter: " + std::to_string(collision.ContactPoints[0].ContactDistance) << std::endl;
 }
 
 inline void PlayerScript::OnCollisionStay(Collision const& collision)
@@ -64,7 +63,6 @@ inline void PlayerScript::OnCollisionStay(Collision const& collision)
 
 inline void PlayerScript::OnCollisionExit(Collision const& collision)
 {
-    std::cout << "Exit: " + std::to_string(collision.TotalImpulse) << std::endl;
 }
 
 void PlayerScript::Update()

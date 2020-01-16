@@ -123,7 +123,7 @@ btCollisionShape* PhysicsEngine::CreateCollisionShape(Collider* collider)
     if (auto boxCollider = dynamic_cast<BoxCollider*>(collider))
         btShape = new btBoxShape(ToBtVector3(boxCollider->GetSize()));
     else if (auto capsuleCollider = dynamic_cast<CapsuleCollider*>(collider))
-        btShape = new btCapsuleShape(capsuleCollider->GetRadius(), capsuleCollider->GetHeight() - capsuleCollider->GetRadius() * 2.0);
+        btShape = new btCapsuleShape(capsuleCollider->GetRadius(), capsuleCollider->GetHeight() - capsuleCollider->GetRadius() * 2.0f);
     else if (auto sphereCollider = dynamic_cast<SphereCollider*>(collider))
         btShape = new btSphereShape(sphereCollider->GetRadius());
     else if (auto meshCollider = dynamic_cast<MeshCollider*>(collider))
@@ -136,7 +136,7 @@ btCollisionShape* PhysicsEngine::CreateCollisionShape(Collider* collider)
 
 btVector3 PhysicsEngine::CalculateLocalInertia(Collider* collider, btCollisionShape* btShape)
 {
-    btVector3 localInertia;
+    btVector3 localInertia(0.0f, 0.0f, 0.0f);
     if (collider->IsDynamic())
         btShape->calculateLocalInertia(collider->GetMass(), localInertia);
     return localInertia;

@@ -3,44 +3,45 @@
 class DynamicCharacterController
 {
 public:
-    DynamicCharacterController(btSoftRigidDynamicsWorld* pPhysicsWorld, btRigidBody* pRigidBody);
+    DynamicCharacterController(btSoftRigidDynamicsWorld* physicsWorld, btRigidBody* rigidBody);
     ~DynamicCharacterController();
 
-    void Move(glm::vec2 dir);
+    void Move(glm::vec2 direction);
     void Jump();
     void SetRotation(glm::quat rotation);
     
-    void Update();
+    void BeforeSimulationUpdate();
+    void AfterSimulationUpdate();
 
     glm::vec3 GetVelocity() const;
     bool IsOnGround() const;
 
 private:
-    void ParseGhostContacts();
-    void UpdatePosition();
-    void UpdateVelocity();
-
+    std::pair<bool, float> RayTestGroundOffset(btVector3 const& position);
     float GetBottomYOffset();
     float GetBottomRoundedRegionYOffset();
 
-    btSoftRigidDynamicsWorld* m_pDynamicsWorld = nullptr;
-    btRigidBody* m_pRigidBody = nullptr;
-    btPairCachingGhostObject* m_pGhostObject = nullptr;
+    void ParseGhostContacts();
+    void UpdateVelocity();
 
-    btTransform m_motionTransform;
+    btSoftRigidDynamicsWorld* btDynamicsWorld = nullptr;
+    btRigidBody* btRigidbody = nullptr;
+    btPairCachingGhostObject* btGhostObject = nullptr;
 
-    glm::vec3 m_manualVelocity = glm::vec3(0.0f);
-    std::vector<glm::vec3> m_surfaceHitNormals;
+    glm::vec3 manualVelocity = glm::vec3(0.0f);
+    std::vector<glm::vec3> surfaceHitNormals;
 
-    btVector3 m_previousPosition;
+    bool onGround = false;
+    bool touching = false;
+    bool canJump = true;
+    bool jumped = false;
 
-    bool m_touching = false;
-    bool m_onGround = false;
-    bool m_hittingWall = false;
-    bool m_canJump = true;
-    bool m_jumped = false;
-
-    float m_stepHeight = 0.1f;
-    float m_deceleration = 10.0f;
-    float m_jumpImpulse = 200.0f;
+    float stepHeight = 0.08f;
+    float deceleration = 10.0f;
+    float jumpImpulse = 200.0f;
+    float directionMultiplier = 30.0f;
+    
+    glm::vec2 movementDirection = glm::vec2(0.0f);
+    bool jumpRequested = false;
+    float jumpDelay = 0.0f;
 };
