@@ -1,5 +1,6 @@
 addforce
 textboxy na physical properties
+nastavitelny vlastnosti u playerscript - bullets
 
 po trefeni svetla zhasnout
 panaka nahradit rozbitym
@@ -11,9 +12,7 @@ All Start Calls
 OnMouseDown/OnMouseUp etc. events
 metody na poradi skriptu
 https://docs.unity3d.com/Manual/ExecutionOrder.html
-pohyby zpusobene fyzkou se aplikujou pred mouseDown a Update ale po OnCollision
-fixedUpate je pouze pro fyziku, napr physcs addFOrce
-pohyb jako transform.translate se dela v update
+pohyby zpusobene fyzikou se aplikujou pred mouseDown a Update ale po OnCollision
 
 =======================================================================================================================
 
@@ -22,8 +21,6 @@ SSAO
 Bloom
 Screen Space Reflections
 AA
-
-https://github.com/gszauer/GamePhysicsCookbook
 
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf
@@ -51,6 +48,8 @@ sun podle frostbite
 
 http://antongerdelan.net/opengl/raycasting.html
 
+softbody physics bullet
+
 v render queue se budou radit objekty prioritne podle vrstvy materialu, potom podle programu
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html -- inspirace poradi
 
@@ -59,8 +58,6 @@ shader bude drzet lokace?
 
 doresit clonovani pres GetMaterial a GetMesh vuci loadu a unloadu z gpu - problem pri zmene dat a destrukci se to porad sdili
 mit ty data submeshe aspol. nejak zabaleny do pointeru a zbavit se jich pres reset misto ty shrink_to_fit?
-
-https://learn.unity.com/tutorial/physics-best-practices#5c7f8528edbc2a002053b5b4
 
 textura nebo mesh by si meli drzet path, aby pri loadu na gpu, kdyz maji smazany data si ho mohly naloadovat,
 ale uz na primo, zadny sdileni pres file system
@@ -78,9 +75,6 @@ https://stackoverflow.com/a/27895283
 https://www.haroldserrano.com/blog/books-i-used-to-develop-a-game-engine
 http://www.gameenginegems.net/geg1.php
 https://prideout.net/
-https://en.wikipedia.org/wiki/Collision_detection
-https://gamedev.stackexchange.com/questions/26501/how-does-a-collision-engine-work/26506#26506
-http://mmmovania.blogspot.com/2011/04/physx-basics-tutorial-simple-bouncing.html
 http://alextardif.com/Particles.html
 http://alextardif.com/eden.html
 https://github.com/NVIDIAGameWorks/WaveWorks

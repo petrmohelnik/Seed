@@ -1,6 +1,7 @@
 #include "Collider.h"
 #include "Object.h"
 #include "Transform.h"
+#include "Engine.h"
 
 void Collider::SetIsKinematic(bool isKinematic_)
 {
@@ -143,4 +144,13 @@ void Collider::SetAngularDamping(float angularDamping_)
 float Collider::GetAngularDamping()
 {
     return angularDamping;
+}
+
+void Collider::OnInputGraphUpdate()
+{
+	Engine::GetInput().InputFloat("mass", mass, [this] { SetMass(mass); });
+	Engine::GetInput().InputFloat("bounciness", bounciness, [this] { SetBounciness(bounciness); });
+	Engine::GetInput().InputFloat("friction", friction, [this] { SetFriction(friction); });
+	Engine::GetInput().InputFloat("linearDamping", linearDamping, [this] { SetLinearDamping(linearDamping); });
+	Engine::GetInput().InputFloat("angularDamping", angularDamping, [this] { SetAngularDamping(angularDamping); });
 }
