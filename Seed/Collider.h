@@ -53,6 +53,7 @@ protected:
 
     virtual glm::vec3 GetPosition() const = 0;
     virtual void SetPosition(glm::vec3 position) = 0;
+	void OnInputGraphUpdate() override;
 
     btRigidBody* btRigidbody = nullptr;
     btSoftRigidDynamicsWorld* btDynamicsWorld = nullptr;
@@ -61,9 +62,9 @@ protected:
     bool isTrigger = false;
     bool dirty = true;
     float margin = 0.04f;
+    glm::vec3 gravity = glm::vec3(0.0f, -9.81f, 0.0f);
     
     float mass = 0.0;
-    glm::vec3 gravity = glm::vec3(0.0f, -9.81f, 0.0f);
     float bounciness = 0.0f;
     float friction = 0.5f;
     float linearDamping = 0.0f;

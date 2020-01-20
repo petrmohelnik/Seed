@@ -39,3 +39,4 @@ physics:
 https://github.com/turanszkij/WickedEngine/blob/master/WickedEngine/wiPhysicsEngine_Bullet.cpp
 https://github.com/222464/EvolvedVirtualCreaturesRepo/blob/master/VirtualCreatures/Volumetric_SDL/Source/SceneObjects/Physics/DynamicCharacterController.cpp
 https://gamedev.stackexchange.com/questions/26501/how-does-a-collision-engine-work/26506#26506
+https://github.com/gszauer/GamePhysicsCookbook

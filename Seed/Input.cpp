@@ -120,6 +120,12 @@ void Input::PopWindow()
     ImGui::End();
 }
 
+void Input::InputFloat(const std::string& name, float& value, const std::function<void()>& onEnterPressed)
+{
+	if(ImGui::InputFloat(std::string(name + ": ").c_str(), &value, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		onEnterPressed();
+}
+
 void Input::CreateSceneGraph()
 {
 	//ImGui::ShowDemoWindow();

@@ -21,6 +21,7 @@ public:
     bool Button(const std::string& text);
     void PushWindow(const std::string& title, ImGuiWindowFlags flags = 0);
     void PopWindow();
+	void InputFloat(const std::string& name, float& value, const std::function<void()>& onEnterPressed);
 
 protected:
     friend class SDLWindow;
