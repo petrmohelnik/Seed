@@ -13,7 +13,6 @@ public:
     void BeforeSimulationUpdate();
     void AfterSimulationUpdate();
 
-    glm::vec3 GetVelocity() const;
     bool IsOnGround() const;
 
 private:

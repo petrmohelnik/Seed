@@ -26,7 +26,7 @@ float CapsuleCollider::GetRadius()
 
 glm::vec3 CapsuleCollider::GetPosition() const
 {
-	return GetTransform()->GetLocalToWorldMatrix() * (glm::vec4(GetTransform()->GetLocalPosition() + center, 1.0f));
+	return GetTransform()->GetLocalToWorldMatrix() * glm::vec4(GetTransform()->GetLocalPosition() + center, 1.0f);
 }
 
 void CapsuleCollider::SetPosition(glm::vec3 position)

@@ -20,14 +20,6 @@ void CharacterController::Jump()
         dynamicCharacterController->Jump();
 }
 
-glm::vec3 CharacterController::GetVelocity() const
-{
-    if (dynamicCharacterController)
-        return dynamicCharacterController->GetVelocity();
-    else
-        return glm::vec3(0.0f);
-}
-
 bool CharacterController::IsGrounded() const
 {
     if (dynamicCharacterController)

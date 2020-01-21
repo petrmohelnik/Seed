@@ -235,17 +235,12 @@ void DynamicCharacterController::UpdateVelocity()
         manualVelocity.z -= manualVelocity.z * deceleration * Engine::GetTime().FixedDeltaTime();
     }
 
-    //for (size_t i = 0, size = surfaceHitNormals.size(); i < size; i++)
-    //{
-    //    // Cancel velocity across normal
-    //    glm::vec3 velInNormalDir = glm::proj(manualVelocity, surfaceHitNormals[i]);
-    //    manualVelocity -= velInNormalDir * 1.05f;
-    //}
-}
-
-glm::vec3 DynamicCharacterController::GetVelocity() const
-{
-    return PhysicsEngine::ToGlmVec3(btRigidbody->getLinearVelocity());
+    for (size_t i = 0, size = surfaceHitNormals.size(); i < size; i++)
+    {
+        // Cancel velocity across normal
+        glm::vec3 velInNormalDir = glm::proj(manualVelocity, surfaceHitNormals[i]);
+        manualVelocity -= velInNormalDir * 1.05f;
+    }
 }
 
 bool DynamicCharacterController::IsOnGround() const

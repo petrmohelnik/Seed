@@ -10,7 +10,6 @@ public:
 
     void Move(glm::vec2 direction);
     void Jump();
-    glm::vec3 GetVelocity() const;
     bool IsGrounded() const;
 
 protected:

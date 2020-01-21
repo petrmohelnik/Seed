@@ -100,7 +100,10 @@ void PlayerScript::Update()
     {
         auto bullet = objects.CreateObject<BulletObject>("Bullet");
 		bullet->SetPhysicsMaterial(bulletMass, bulletBounciness, bulletFriction, bulletLinearDamping, bulletAngularDamping);
-        bullet->GetComponent<Transform>()->SetPosition(glm::vec3(camera->GetTransform()->GetPosition()));
+
+        auto initialPosition = camera->GetTransform()->GetPosition() - camera->GetTransform()->GetForwardAxis() * 0.5f;
+        bullet->GetComponent<Transform>()->SetPosition(initialPosition);
+        bullet->GetComponent<Collider>()->AddForce(-camera->GetTransform()->GetForwardAxis() * 100.0f, Collider::ForceType::Impulse);
         bullet->Destroy(15.0f);
     }
 }

@@ -20,7 +20,7 @@ float SphereCollider::GetRadius()
 
 glm::vec3 SphereCollider::GetPosition() const
 {
-	return GetTransform()->GetLocalToWorldMatrix() * (glm::vec4(GetTransform()->GetLocalPosition() + center, 1.0f));
+	return GetTransform()->GetLocalToWorldMatrix() * glm::vec4(GetTransform()->GetLocalPosition() + center, 1.0f);
 }
 
 void SphereCollider::SetPosition(glm::vec3 position)

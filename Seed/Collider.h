@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "Transform.h"
 
 class btRigidBody;
 class Collider;
@@ -25,6 +26,14 @@ public:
     using Component::Component;
     virtual ~Collider() = default;
 
+    enum class ForceType
+    {
+        Force,
+        Impulse,
+        Acceleration,
+        VelocityChange
+    };
+
     void SetIsTrigger(bool isTrigger);
     bool IsTrigger() const;
     void SetIsKinematic(bool isKinematic);
@@ -33,6 +42,7 @@ public:
     bool IsStatic() const;
     void SetMargin(float margin);
     float GetMargin();
+    bool IsSleeping();
 
     void SetMass(float mass);
     float GetMass() const;
@@ -46,6 +56,13 @@ public:
     float GetLinearDamping();
     void SetAngularDamping(float angularDamping);
     float GetAngularDamping();
+
+    void AddForce(glm::vec3 force, ForceType forceType);
+    void AddTorque(glm::vec3 torque, ForceType forceType);
+    void AddForceAtPosition(glm::vec3 force, ForceType forceType, glm::vec3 position, Transform::Space space = Transform::Space::World);
+    void SetVelocity(glm::vec3 velocity);
+    glm::vec3 GetVelocity();
+    glm::vec3 GetVelocityInPoint(glm::vec3 point, Transform::Space space = Transform::Space::World);
 
 protected:
     friend class PhysicsEngine;
