@@ -2,24 +2,21 @@
 #include "MeshCollider.h"
 #include "Transform.h"
 
-void MeshCollider::SetMesh(std::shared_ptr<Mesh> mesh_, int submeshIndex)
+MeshCollider::MeshCollider(Object* object, std::shared_ptr<Mesh> mesh, bool convex, int submeshIndex)
+    : Collider(object)
+    , convex(convex)
+    , mesh(mesh->subMeshes[submeshIndex])
 {
-    mesh = mesh_->subMeshes[submeshIndex];
 }
 
-std::vector<glm::vec3> const & MeshCollider::GetVertices()
+std::vector<glm::vec3> const& MeshCollider::GetVertices()
 {
     return mesh->vertices;
 }
 
-std::vector<glm::uvec3> const & MeshCollider::GetIndices()
+std::vector<glm::uvec3> const& MeshCollider::GetIndices()
 {
     return mesh->indices;
-}
-
-void MeshCollider::SetConcave()
-{
-    convex = false;
 }
 
 bool MeshCollider::IsConvex() const

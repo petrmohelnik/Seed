@@ -2,10 +2,11 @@
 #include "SphereCollider.h"
 #include "Transform.h"
 
-void SphereCollider::SetSphere(glm::vec3 center_, float radius_)
+SphereCollider::SphereCollider(Object* object, glm::vec3 center, float radius)
+    : Collider(object)
+    , center(center)
+    , radius(radius)
 {
-    center = center_;
-    radius = radius_;
 }
 
 glm::vec3 SphereCollider::GetCenter()

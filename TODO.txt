@@ -1,9 +1,6 @@
-textboxy na physical properties
-mel bych byt schopen vytvorit vse jak v unity
-
-AddForce nejde kvuli pozdni initializaci
-
-proc je forward axis -?
+mit vice collideru nemuzu mit v objektu, ty collidery by musely byt compound v bulletu
+    collider->btRigidbody->setCcdMotionThreshold(1.0f);
+    collider->btRigidbody->setCcdSweptSphereRadius(0.2f);
 
 po trefeni svetla zhasnout
 panaka nahradit rozbitym
@@ -11,11 +8,12 @@ zkusit udelat jednoduchy bounding mesh sceny
 https://blenderartists.org/t/creating-a-simple-collision-mesh/546298
 napr. pokud ma node dite s nazvem collider tak se pouzije jako collisionmesh
 metadata na weight?
-ty drobny objekty udelat dynamicky - treba je prirazovat ke colliderum podle jmena
+ty drobny objekty sceny udelat dynamicky - treba je prirazovat ke colliderum podle jmena
 bullety jako svetla
 na kliknuti treba zapnout svetlo v objektu nebo dat silu na pozici
 udelat z cervenho svetla hopik
 chytat veci a prenaset
+cim dele drzim tlacitko tim vetsi sila
 
 All Awake calls
 All Start Calls
@@ -23,7 +21,7 @@ OnMouseDown/OnMouseUp etc. events
 metody na poradi skriptu
 https://docs.unity3d.com/Manual/ExecutionOrder.html
 pohyby zpusobene fyzkou se aplikujou pred mouseDown a Update ale po OnCollision
-fixedUpate je pouze pro fyziku, napr physcs addFOrce
+fixedUpate je pouze pro fyziku, napr physics addForce
 pohyb jako transform.translate se dela v update
 
 =======================================================================================================================

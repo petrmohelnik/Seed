@@ -2,7 +2,8 @@
 #include "CharacterController.h"
 #include "Transform.h"
 
-CharacterController::CharacterController(Object* object) : CapsuleCollider(object)
+CharacterController::CharacterController(Object* object, glm::vec3 center, float height, float radius) 
+    : CapsuleCollider(object, center, height, radius)
 {
     friction = 0.0;
     mass = 80.0f;

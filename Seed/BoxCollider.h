@@ -4,9 +4,8 @@
 class BoxCollider : public Collider
 {
 public:
-    using Collider::Collider;
+    BoxCollider(Object* object, glm::vec3 center, glm::vec3 size);
 
-    void SetBox(glm::vec3 center, glm::vec3 size);
     glm::vec3 GetCenter();
     glm::vec3 GetSize();
 

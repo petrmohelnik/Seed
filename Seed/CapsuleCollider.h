@@ -4,9 +4,8 @@
 class CapsuleCollider : public Collider
 {
 public:
-    using Collider::Collider;
+    CapsuleCollider(Object* object, glm::vec3 center, float height, float radius);
 
-    void SetCapsule(glm::vec3 center, float height, float radius);
     glm::vec3 GetCenter();
     float GetHeight();
     float GetRadius();

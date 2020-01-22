@@ -43,9 +43,9 @@ inline void PlayerScript::FixedUpdate()
     glm::vec3 moveDirection(0.0f);
 
     if (input.Key(SDLK_w))
-        moveDirection += -transform->GetForwardAxis() * MoveSensitivity * time.FixedDeltaTime();
-    if (input.Key(SDLK_s))
         moveDirection += transform->GetForwardAxis() * MoveSensitivity * time.FixedDeltaTime();
+    if (input.Key(SDLK_s))
+        moveDirection += -transform->GetForwardAxis() * MoveSensitivity * time.FixedDeltaTime();
     if (input.Key(SDLK_d))
         moveDirection += transform->GetRightAxis() * MoveSensitivity * time.FixedDeltaTime();
     if (input.Key(SDLK_a))
@@ -101,9 +101,11 @@ void PlayerScript::Update()
         auto bullet = objects.CreateObject<BulletObject>("Bullet");
 		bullet->SetPhysicsMaterial(bulletMass, bulletBounciness, bulletFriction, bulletLinearDamping, bulletAngularDamping);
 
-        auto initialPosition = camera->GetTransform()->GetPosition() - camera->GetTransform()->GetForwardAxis() * 0.5f;
+        auto initialPosition = camera->GetTransform()->GetPosition() + camera->GetTransform()->GetForwardAxis() * 0.2f;
         bullet->GetComponent<Transform>()->SetPosition(initialPosition);
-        bullet->GetComponent<Collider>()->AddForce(-camera->GetTransform()->GetForwardAxis() * 100.0f, Collider::ForceType::Impulse);
+        bullet->GetComponent<Transform>()->TranslateY(-0.1f);
+        bullet->GetComponent<Collider>()->InitializeRigidbody();
+        bullet->GetComponent<Collider>()->AddForce(camera->GetTransform()->GetForwardAxis() * 1.0f, Collider::ForceType::Impulse);
         bullet->Destroy(15.0f);
     }
 }

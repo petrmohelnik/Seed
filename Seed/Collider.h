@@ -43,6 +43,7 @@ public:
     void SetMargin(float margin);
     float GetMargin();
     bool IsSleeping();
+    void InitializeRigidbody();
 
     void SetMass(float mass);
     float GetMass() const;
@@ -74,6 +75,7 @@ protected:
 
     btRigidBody* btRigidbody = nullptr;
     btSoftRigidDynamicsWorld* btDynamicsWorld = nullptr;
+    std::function<void(Collider*)> createRigidbody;
 
     bool isKinematic = false;
     bool isTrigger = false;

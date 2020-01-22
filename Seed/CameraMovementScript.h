@@ -17,9 +17,9 @@ public:
 void CameraMovementScript::Update()
 {
     if (input.Key(SDLK_w))
-        transform->Translate(-transform->GetForwardAxis() * MoveSensitivity * time.DeltaTime(), Transform::Space::World);
-    if (input.Key(SDLK_s))
         transform->Translate(transform->GetForwardAxis() * MoveSensitivity * time.DeltaTime(), Transform::Space::World);
+    if (input.Key(SDLK_s))
+        transform->Translate(-transform->GetForwardAxis() * MoveSensitivity * time.DeltaTime(), Transform::Space::World);
     if (input.Key(SDLK_d))
         transform->Translate(transform->GetRightAxis() * MoveSensitivity * time.DeltaTime(), Transform::Space::World);
     if (input.Key(SDLK_a))

@@ -289,7 +289,7 @@ glm::vec3 Transform::GetUpAxis()
 
 glm::vec3 Transform::GetForwardAxis()
 {
-    return glm::normalize(glm::vec3(CalculateWorldMatrix()[2]));
+    return -glm::normalize(glm::vec3(CalculateWorldMatrix()[2]));
 }
 
 void Transform::Scale(float scale_)

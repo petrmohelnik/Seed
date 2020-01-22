@@ -13,7 +13,7 @@ public:
 
 void PlayerObject::Initialize()
 {
-    AddComponent<CharacterController>()->SetCapsule(glm::vec3(0.0f, 0.9f, 0.0f), 1.8f, 0.4f);
+    AddComponent<CharacterController>(glm::vec3(0.0f, 0.9f, 0.0f), 1.8f, 0.2f);
         
     auto camera = Engine::GetObjects().CreateObject("PlayerCamera");
     camera->AddComponent<Camera>();

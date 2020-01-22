@@ -32,8 +32,8 @@ public:
     T* AddComponent();
     template <class T, typename std::enable_if<std::is_base_of<Audio, T>::value>::type* = nullptr>
     T* AddComponent();
-    template <class T, typename std::enable_if<std::is_base_of<Collider, T>::value>::type* = nullptr>
-    T* AddComponent();
+    template <class T, typename ...Args, typename std::enable_if<std::is_base_of<Collider, T>::value>::type* = nullptr>
+    T* AddComponent(Args&& ...arguments);
     template <class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type* = nullptr>
     T* AddComponent();
 
@@ -117,10 +117,10 @@ inline T* Object::AddComponent()
     return audios.back().get();
 }
 
-template<class T, typename std::enable_if<std::is_base_of<Collider, T>::value>::type*>
-inline T* Object::AddComponent()
+template<class T, typename ...Args, typename std::enable_if<std::is_base_of<Collider, T>::value>::type*>
+inline T* Object::AddComponent(Args&& ...arguments)
 {
-    colliders.push_back(components.CreateCollider<T>(this));
+    colliders.push_back(components.CreateCollider<T>(this, std::forward<Args>(arguments)...));
     return dynamic_cast<T*>(colliders.back().get());
 }
 

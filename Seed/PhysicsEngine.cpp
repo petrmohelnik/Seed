@@ -30,6 +30,7 @@ glm::quat PhysicsEngine::ToGlmQuat(btQuaternion const& quaternion)
 
 void PhysicsEngine::AddCollider(Collider* collider)
 {
+    collider->createRigidbody = [this](Collider* collider) { CreateRigidbody(collider); };
     colliders.push_back(collider);
 }
 
@@ -182,6 +183,11 @@ void PhysicsEngine::CreateRigidbody(Collider* collider)
 
     dynamicsWorld->addRigidBody(collider->btRigidbody);
     collider->btDynamicsWorld = dynamicsWorld.get();
+
+    if (auto physicsObject = dynamic_cast<PhysicsObject*>(collider))
+        physicsObject->InitializePhysics();
+    else
+        collider->dirty = false;
 }
 
 void PhysicsEngine::RefreshRigidbody(Collider* collider)
@@ -203,11 +209,6 @@ void PhysicsEngine::UpdateSimulationState()
         if (!collider->btRigidbody)
         {
             CreateRigidbody(collider);
-
-            if (auto physicsObject = dynamic_cast<PhysicsObject*>(collider))
-                physicsObject->InitializePhysics();
-            else
-                collider->dirty = false;
         }
 
         if (collider->dirty)
@@ -227,7 +228,6 @@ void PhysicsEngine::UpdateSimulationState()
         }
     }
 }
-
 
 void PhysicsEngine::Simulate()
 {

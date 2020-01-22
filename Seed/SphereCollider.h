@@ -4,9 +4,8 @@
 class SphereCollider : public Collider
 {
 public:
-    using Collider::Collider;
+    SphereCollider(Object* object, glm::vec3 center, float radius);
 
-    void SetSphere(glm::vec3 center, float radius);
     glm::vec3 GetCenter();
     float GetRadius();
 

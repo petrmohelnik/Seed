@@ -2,10 +2,11 @@
 #include "BoxCollider.h"
 #include "Transform.h"
 
-void BoxCollider::SetBox(glm::vec3 center_, glm::vec3 size_)
+BoxCollider::BoxCollider(Object* object, glm::vec3 center, glm::vec3 size) 
+    : Collider(object)
+    , center(center)
+    , size(size)
 {
-    center = center_;
-    size = size_;
 }
 
 glm::vec3 BoxCollider::GetCenter()

@@ -72,6 +72,7 @@ void DynamicCharacterController::BeforeSimulationUpdate()
         jumped = true;
         canJump = false;
         jumpDelay = 0.2f;
+        jumpManualVelocity = glm::vec2(0.0f);
     }
 
     manualVelocity.y = btRigidbody->getLinearVelocity().getY();
@@ -102,21 +103,22 @@ void DynamicCharacterController::BeforeSimulationUpdate()
             manualVelocity.y = glm::clamp(manualVelocity.y, std::numeric_limits<float>::lowest(), 0.0f);
             btRigidbody->setGravity(btVector3(0.0f, 0.0f, 0.0f));
         }
+
+        manualVelocity.x += movementDirection.x;
+        manualVelocity.z += movementDirection.y;
+        btRigidbody->setLinearVelocity(PhysicsEngine::ToBtVector3(manualVelocity));
     }
     else
     {
-        movementDirection.x = 0.0;
-        movementDirection.y = 0.0;
+        movementDirection *= 0.2f;
+        jumpManualVelocity += movementDirection;
+        btRigidbody->setLinearVelocity(btVector3(manualVelocity.x + jumpManualVelocity.x, manualVelocity.y, manualVelocity.z + jumpManualVelocity.y));
     }
+
     if(jumped || !onGround)
     {
         btRigidbody->setGravity(btVector3(0.0f, -9.81f, 0.0f));
     }
-
-    manualVelocity.x += movementDirection.x;
-    manualVelocity.z += movementDirection.y;
-
-    btRigidbody->setLinearVelocity(PhysicsEngine::ToBtVector3(manualVelocity));
 }
 
 void DynamicCharacterController::AfterSimulationUpdate()
@@ -165,7 +167,7 @@ float DynamicCharacterController::GetBottomYOffset()
 
 float DynamicCharacterController::GetBottomRoundedRegionYOffset()
 {
-    return reinterpret_cast<btCapsuleShape*>(btRigidbody->getCollisionShape())->getHalfHeight();
+    return reinterpret_cast<btCapsuleShape*>(btRigidbody->getCollisionShape())->getHalfHeight() + 0.04f;
 }
 
 void DynamicCharacterController::ParseGhostContacts()
@@ -202,7 +204,7 @@ void DynamicCharacterController::ParseGhostContacts()
             {
                 const btManifoldPoint &point = pManifold->getContactPoint(p);
 
-                if (point.getDistance() <= 0.04f)
+                //if (point.getDistance() <= 0.04f)
                 {
                     const btVector3 &ptB = point.getPositionWorldOnB();
 
@@ -233,6 +235,11 @@ void DynamicCharacterController::UpdateVelocity()
     {
         manualVelocity.x -= manualVelocity.x * deceleration * Engine::GetTime().FixedDeltaTime();
         manualVelocity.z -= manualVelocity.z * deceleration * Engine::GetTime().FixedDeltaTime();
+    }
+    else
+    {
+        jumpManualVelocity.x -= jumpManualVelocity.x * deceleration * Engine::GetTime().FixedDeltaTime();
+        jumpManualVelocity.y -= jumpManualVelocity.y * deceleration * Engine::GetTime().FixedDeltaTime();
     }
 
     for (size_t i = 0, size = surfaceHitNormals.size(); i < size; i++)

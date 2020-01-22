@@ -28,6 +28,7 @@ private:
     btPairCachingGhostObject* btGhostObject = nullptr;
 
     glm::vec3 manualVelocity = glm::vec3(0.0f);
+    glm::vec2 jumpManualVelocity = glm::vec2(0.0f);
     std::vector<glm::vec3> surfaceHitNormals;
 
     bool onGround = false;
@@ -37,7 +38,7 @@ private:
 
     float stepHeight = 0.08f;
     float deceleration = 10.0f;
-    float jumpImpulse = 200.0f;
+    float jumpImpulse = 250.0f;
     float directionMultiplier = 30.0f;
     
     glm::vec2 movementDirection = glm::vec2(0.0f);

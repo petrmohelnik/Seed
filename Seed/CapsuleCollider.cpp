@@ -2,11 +2,12 @@
 #include "CapsuleCollider.h"
 #include "Transform.h"
 
-void CapsuleCollider::SetCapsule(glm::vec3 center_, float height_, float radius_)
+CapsuleCollider::CapsuleCollider(Object* object, glm::vec3 center, float height, float radius) 
+    : Collider(object)
+    , center(center)
+    , height(height)
+    , radius(radius)
 {
-    center = center_;
-    height = height_;
-    radius = radius_;
 }
 
 glm::vec3 CapsuleCollider::GetCenter()

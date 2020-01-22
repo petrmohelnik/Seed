@@ -25,9 +25,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto ground = objects.CreateObject("ground");
     ground->GetComponent<Transform>()->SetScale(glm::vec3(8.0f, 2.0f, 10.0f));
     ground->GetComponent<Transform>()->TranslateY(2.0f);
-    ground->AddComponent<MeshCollider>()->SetMesh(fileSystem.LoadMesh("cube.dae"));
+    ground->AddComponent<MeshCollider>(fileSystem.LoadMesh("cube.dae"), false);
     //ground->GetComponent<Collider>()->SetMargin(1.0f);
-    ground->GetComponent<MeshCollider>()->SetConcave();
     //ground->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(1.0f));
 
 	objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
@@ -86,7 +85,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     cobblestone->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
     cobblestone->GetComponent<Transform>()->RotateX(1.0f);
 	//cobblestone->AddComponent<RotateWorldScript>();
-    cobblestone->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
+    cobblestone->AddComponent<BoxCollider>(glm::vec3(0.0f), glm::vec3(1.0f));
 
 	auto redbricksMaterial = std::make_shared<Material>();
 	redbricksMaterial->Albedo = fileSystem.LoadTexture("redbricks/albedo.png", 24, 24);
@@ -104,7 +103,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 	redbricks->GetComponent<Transform>()->TranslateX(-1.5f);
     redbricks->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
 	redbricks->AddComponent<RotateWorldScript>();
-    redbricks->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
+    redbricks->AddComponent<BoxCollider>(glm::vec3(0.0f), glm::vec3(1.0f));
     redbricks->GetComponent<Collider>()->SetIsKinematic(true);
 
     auto roughblockMaterial = std::make_shared<Material>();
@@ -120,17 +119,17 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto roughblock = objects.CreateObject("roughblock");
     roughblock->AddComponent<MeshRenderer>()->Load("cube.dae");
     roughblock->GetComponent<MeshRenderer>()->SetMaterial(0, roughblockMaterial);
-    roughblock->GetComponent<Transform>()->TranslateX(1.5f);
+    roughblock->GetComponent<Transform>()->TranslateZ(1.5f);
     roughblock->GetComponent<Transform>()->RotateX(0.5f);
     roughblock->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
     //roughblock->AddComponent<RotateWorldScript>();
-    roughblock->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f), glm::vec3(1.0f));
+    roughblock->AddComponent<BoxCollider>(glm::vec3(0.0f), glm::vec3(1.0f));
 
     auto targets = objects.GetObjectsByName("TargetDummy");
     auto targetMesh = fileSystem.LoadMesh("TargetDummy/TargetDummy.gltf");
     for (auto& target : targets)
     {
-        target->AddComponent<MeshCollider>()->SetMesh(targetMesh);
+        target->AddComponent<MeshCollider>(targetMesh, true);
         target->GetComponent<Collider>()->SetMass(30.0f);
     }
 

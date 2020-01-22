@@ -41,8 +41,8 @@ protected:
     std::unique_ptr<Camera> CreateCamera(Object* object);
     std::unique_ptr<Light> CreateLight(Object* object);
     std::unique_ptr<Audio> CreateAudio(Object* object);
-    template<typename T>
-    std::unique_ptr<T> CreateCollider(Object* object);
+    template<typename T, typename ...Args>
+    std::unique_ptr<T> CreateCollider(Object* object, Args&& ...arguments);
 	template<typename T>
 	std::unique_ptr<T> CreateScript(Object* object);
 
@@ -99,11 +99,11 @@ inline std::unique_ptr<Audio> Components::CreateAudio(Object* object)
     return audio;
 }
 
-template<typename T>
-inline std::unique_ptr<T> Components::CreateCollider(Object* object)
+template<typename T, typename ...Args>
+inline std::unique_ptr<T> Components::CreateCollider(Object* object, Args&& ...arguments)
 {
     static_assert(std::is_base_of<Collider, T>::value, "T must be derived from Collider");
-    auto collider = std::make_unique<T>(object);
+    auto collider = std::make_unique<T>(object, std::forward<Args>(arguments)...);
     physicsEngine.AddCollider(collider.get());
     return collider;
 }
