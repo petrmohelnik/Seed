@@ -6,24 +6,24 @@
 
 /* Use nvidia graphics card */
 extern "C" {
-	_declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
+    _declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
 }
 
 int main(int argc, char** argv)
 {
-	Engine engine;
+    Engine engine;
 
-	try 
-	{
-		engine.CreateWindow();
-	    engine.Work();
-	}
-	catch (const std::exception& exception)
-	{
-		std::cout << exception.what();
-		std::cin.get();
-		return -1;
-	}
+    try 
+    {
+        engine.CreateWindow();
+        engine.Work();
+    }
+    catch (const std::exception& exception)
+    {
+        std::cout << exception.what();
+        std::cin.get();
+        return -1;
+    }
 
-	return 0;
+    return 0;
 }

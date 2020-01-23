@@ -41,10 +41,10 @@ private:
     static glm::vec3 ToGlmVec3(const aiVector3D& aiVector);
 
     std::unordered_map<std::string, std::weak_ptr<Mesh>> loadedMeshes;
-	std::unordered_map<std::string, std::vector<std::weak_ptr<Material>>> loadedMaterials;
+    std::unordered_map<std::string, std::vector<std::weak_ptr<Material>>> loadedMaterials;
     std::unordered_map<std::string, std::weak_ptr<Texture>> loadedTextures;
     
-	Assimp::Importer importer;
+    Assimp::Importer importer;
 
     std::string parentFolder = "assets/";
     std::string loadedScene;

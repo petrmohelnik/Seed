@@ -14,10 +14,10 @@ TextureCubeMap::TextureCubeMap()
 
 TextureCubeMap::TextureCubeMap(glm::vec4 color)
 {
-	for (int i = 0; i < 6; i++)
-	{
-		faces.emplace_back(std::make_shared<Texture>(color));
-	}
+    for (int i = 0; i < 6; i++)
+    {
+        faces.emplace_back(std::make_shared<Texture>(color));
+    }
 }
 
 TextureCubeMap::~TextureCubeMap()

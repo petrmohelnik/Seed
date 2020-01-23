@@ -12,7 +12,7 @@ void Mesh::Load()
 {
     for (auto& subMesh : subMeshes)
     {
-		subMesh->Load();
+        subMesh->Load();
     }
 }
 

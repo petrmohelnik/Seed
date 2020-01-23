@@ -16,7 +16,7 @@ public:
     using Component::Component;
 
     void SetType(Type type_);
-	void SetColor(glm::vec3 color);
+    void SetColor(glm::vec3 color);
     void SetRange(float range);
     void SetIntensity(float intensity);
     float GetIntensity();
@@ -70,7 +70,7 @@ private:
     void CalculateOptimumViewPortScale(const Camera& camera);
     void SetupShadowData(const Camera& camera);
 
-	LightBlock dataBlock;
+    LightBlock dataBlock;
     Type type = Type::Point;
     float spotOuterAngle = 1.57f;
     float spotBlend = 0.1f;

@@ -8,12 +8,12 @@ layout(location = 0) out vec4 gl_FragColor;
 
 vec3 ToneMapping(vec3 color)
 {
-	return color / (color + vec3(1.0));
+    return color / (color + vec3(1.0));
 }
 
 vec3 GammaCorrection(vec3 color)
 {
-	return pow(color, vec3(1.0/2.2));
+    return pow(color, vec3(1.0/2.2));
 }
 
 const mat3 ACESInputMat =
@@ -44,9 +44,9 @@ vec3 ACESFitted(vec3 color)
 
 void main()
 { 
-	vec3 color = texture(texScene, fPos).xyz;
-	color = ACESFitted(color);
-	color = GammaCorrection(color);
+    vec3 color = texture(texScene, fPos).xyz;
+    color = ACESFitted(color);
+    color = GammaCorrection(color);
 
     gl_FragColor = vec4(color, 1.0);
 }

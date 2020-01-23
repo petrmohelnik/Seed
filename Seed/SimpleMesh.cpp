@@ -9,8 +9,8 @@ SimpleMesh::SimpleMesh(Shape shape)
         data = GenerateQuadData();
     else if(shape == Shape::Cube)
         data = GenerateCubeData();
-	else if(shape == Shape::BoundingSphere)
-		data = GenerateBoundingSphereData();
+    else if(shape == Shape::BoundingSphere)
+        data = GenerateBoundingSphereData();
 
     glGenBuffers(2, &vbo[0]);
     glGenVertexArrays(1, &vao);
@@ -99,49 +99,49 @@ SimpleMesh::MeshData SimpleMesh::GenerateCubeData()
 
 SimpleMesh::MeshData SimpleMesh::GenerateBoundingSphereData()
 {
-	MeshData data;
+    MeshData data;
 
-	data.vertices =
-	{
-		glm::vec3(0.000000, -1.260000, 0.000000),
-		glm::vec3(0.911736, -0.563491, 0.662407),
-		glm::vec3(-0.348245, -0.563491, 1.071806),
-		glm::vec3(-1.126975, -0.563491, 0.000000),
-		glm::vec3(-0.348245, -0.563491, -1.071806),
-		glm::vec3(0.911736, -0.563491, -0.662407),
-		glm::vec3(0.348245, 0.563491, 1.071806),
-		glm::vec3(-0.911736, 0.563491, 0.662407),
-		glm::vec3(-0.911736, 0.563491, -0.662407),
-		glm::vec3(0.348245, 0.563491, -1.071806),
-		glm::vec3(1.126975, 0.563491, 0.000000),
-		glm::vec3(0.000000, 1.260000, 0.000000)
-	};
+    data.vertices =
+    {
+        glm::vec3(0.000000, -1.260000, 0.000000),
+        glm::vec3(0.911736, -0.563491, 0.662407),
+        glm::vec3(-0.348245, -0.563491, 1.071806),
+        glm::vec3(-1.126975, -0.563491, 0.000000),
+        glm::vec3(-0.348245, -0.563491, -1.071806),
+        glm::vec3(0.911736, -0.563491, -0.662407),
+        glm::vec3(0.348245, 0.563491, 1.071806),
+        glm::vec3(-0.911736, 0.563491, 0.662407),
+        glm::vec3(-0.911736, 0.563491, -0.662407),
+        glm::vec3(0.348245, 0.563491, -1.071806),
+        glm::vec3(1.126975, 0.563491, 0.000000),
+        glm::vec3(0.000000, 1.260000, 0.000000)
+    };
 
-	data.indices =
-	{
-		glm::uvec3(0, 1, 2),
-		glm::uvec3(1, 0, 5),
-		glm::uvec3(0, 2, 3),
-		glm::uvec3(0, 3, 4),
-		glm::uvec3(0, 4, 5),
-		glm::uvec3(1, 5, 10),
-		glm::uvec3(2, 1, 6),
-		glm::uvec3(3, 2, 7),
-		glm::uvec3(4, 3, 8),
-		glm::uvec3(5, 4, 9),
-		glm::uvec3(1, 10, 6),
-		glm::uvec3(2, 6, 7),
-		glm::uvec3(3, 7, 8),
-		glm::uvec3(4, 8, 9),
-		glm::uvec3(5, 9, 10),
-		glm::uvec3(6, 10, 11),
-		glm::uvec3(7, 6, 11),
-		glm::uvec3(8, 7, 11),
-		glm::uvec3(9, 8, 11),
-		glm::uvec3(10, 9, 11)
-	};
+    data.indices =
+    {
+        glm::uvec3(0, 1, 2),
+        glm::uvec3(1, 0, 5),
+        glm::uvec3(0, 2, 3),
+        glm::uvec3(0, 3, 4),
+        glm::uvec3(0, 4, 5),
+        glm::uvec3(1, 5, 10),
+        glm::uvec3(2, 1, 6),
+        glm::uvec3(3, 2, 7),
+        glm::uvec3(4, 3, 8),
+        glm::uvec3(5, 4, 9),
+        glm::uvec3(1, 10, 6),
+        glm::uvec3(2, 6, 7),
+        glm::uvec3(3, 7, 8),
+        glm::uvec3(4, 8, 9),
+        glm::uvec3(5, 9, 10),
+        glm::uvec3(6, 10, 11),
+        glm::uvec3(7, 6, 11),
+        glm::uvec3(8, 7, 11),
+        glm::uvec3(9, 8, 11),
+        glm::uvec3(10, 9, 11)
+    };
 
-	return data;
+    return data;
 }
 
 

@@ -6,11 +6,11 @@ class Component;
 class Input
 {
 public:
-	bool IsGameRunning();
-	bool Pause();
-	bool Resume();
-	bool Key(SDL_Keycode key);
-	bool KeyDown(SDL_Keycode key);
+    bool IsGameRunning();
+    bool PauseRequest();
+    bool ResumeRequest();
+    bool Key(SDL_Keycode key);
+    bool KeyDown(SDL_Keycode key);
     bool MouseButton(Uint8 button); //SDL_BUTTON_RIGHT, SDL_BUTTON_LEFT
     bool MouseButtonDown(Uint8 button); //SDL_BUTTON_RIGHT, SDL_BUTTON_LEFT
     glm::ivec2 MouseDeltaPosition();
@@ -21,28 +21,29 @@ public:
     bool Button(const std::string& text);
     void PushWindow(const std::string& title, ImGuiWindowFlags flags = 0);
     void PopWindow();
-	void InputFloat(const std::string& name, float& value, const std::function<void()>& onEnterPressed);
+    void InputFloat(const std::string& name, float& value, const std::function<void()>& onEnterPressed);
 
 protected:
     friend class SDLWindow;
-	friend class Engine;
+    friend class Engine;
 
     void InitializeState();
-	void AddInput(SDL_Event event);
-	void ClearInputs();
-	void CreateSceneGraph();
+    void AddInput(SDL_Event event);
+    void ClearInputs();
+    void CreateSceneGraph();
 
 private:
-	void CreateSceneGraphNode(Object* object);
+    void CreateSceneGraphNode(Object* object);
     std::string GetFullNameHash(Component* component, const std::string& name); //use to indenitfy imgui object when on the same position
 
-	std::set<SDL_Keycode> keyHoldDown;
-	std::set<SDL_Keycode> keyPressedDown;
-	std::set<Uint8> mouseHoldDown;
-	std::set<Uint8> mousePressedDown;
+    std::set<SDL_Keycode> keyHoldDown;
+    std::set<SDL_Keycode> keyPressedDown;
+    std::set<Uint8> mouseHoldDown;
+    std::set<Uint8> mousePressedDown;
     glm::ivec2 mouseDeltaPosition;
     glm::ivec2 mousePosition;
     Uint32 mouseState;
     bool quit = false;
+    bool paused = false;
 };
 

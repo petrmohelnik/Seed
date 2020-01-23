@@ -4,14 +4,14 @@ layout(std140, binding = 1) uniform LightBlock
 {
     mat4 ViewMatrix;
     mat4 ProjectionMatrix;
-	vec3 Pos;
-	vec3 Color;
-	vec3 Orientation;
-	float Range;
-	float Intensity;
+    vec3 Pos;
+    vec3 Color;
+    vec3 Orientation;
+    float Range;
+    float Intensity;
     float SizeUV;
-	float SpotAngleScale;
-	float SpotAngleOffset;
+    float SpotAngleScale;
+    float SpotAngleOffset;
     float ShadowFarPlane;
     uint Type;
 } Light;

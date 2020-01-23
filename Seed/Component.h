@@ -8,7 +8,7 @@ class Component : public Identifiable
 {
 public:
     Component(Object* object);
-	virtual ~Component() = default;
+    virtual ~Component() = default;
 
     Object* GetObject() const;
     Transform* GetTransform() const;

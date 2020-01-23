@@ -8,5 +8,5 @@ layout(location = 0) out vec4 gl_FragColor;
 
 void main()
 {
-	gl_FragColor = texture(texEnvironmental, fTexCoords);
+    gl_FragColor = texture(texEnvironmental, fTexCoords);
 }

@@ -238,7 +238,7 @@ void RenderingPipeline::CleanComponents()
 
 void RenderingPipeline::SetSkybox(Skybox* skybox_)
 {
-	skybox = skybox_;
+    skybox = skybox_;
 }
 
 void RenderingPipeline::RenderCamera(Camera& camera)

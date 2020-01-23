@@ -9,9 +9,9 @@ layout(location = 0) out vec4 gl_FragColor;
 const vec2 invAtan = vec2(0.1591, 0.3183);
 
 void main()
-{		
+{        
     vec3 direction = normalize(fPos);
-	vec2 uv = vec2(atan(direction.z, direction.x), asin(direction.y));
+    vec2 uv = vec2(atan(direction.z, direction.x), asin(direction.y));
     uv *= invAtan;
     uv += 0.5;
     

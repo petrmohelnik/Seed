@@ -32,14 +32,26 @@ void Components::Initialize()
 
 void Components::SetSkybox(std::unique_ptr<Skybox> skybox_)
 {
-	skybox = std::move(skybox_);
-	renderingPipeline.SetSkybox(skybox.get());
+    skybox = std::move(skybox_);
+    renderingPipeline.SetSkybox(skybox.get());
 }
 
 void Components::RemoveSkybox()
 {
-	skybox.reset();
-	renderingPipeline.SetSkybox(nullptr);
+    skybox.reset();
+    renderingPipeline.SetSkybox(nullptr);
+}
+
+void Components::OnCreateUpdate()
+{
+    for (const auto& script : scripts)
+    {
+        if (!script->initialized)
+        {
+            script->OnCreate();
+            script->initialized = true;
+        }
+    }
 }
 
 void Components::OnFixedUpdate()
@@ -52,6 +64,8 @@ void Components::OnFixedUpdate()
 
 void Components::OnFrameUpdate()
 {
+    physicsEngine.OnMouseUpdate();
+
     for (const auto& script : scripts)
     {
         script->Update();

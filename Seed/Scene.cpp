@@ -16,6 +16,11 @@ void Scene::Initialize(std::string scene)
     sceneDefinition.InitializeScene(scene);
 }
 
+void Scene::OnCreateUpdate()
+{
+    components.OnCreateUpdate();
+}
+
 void Scene::OnFixedUpdate()
 {
     components.OnFixedUpdate();

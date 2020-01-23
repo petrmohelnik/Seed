@@ -20,7 +20,7 @@ public:
     void SetIsRGBOrder();
     void SetAlphaColor(float alpha);
     void AddChannel(float value);
-	void AddChannelFromTexture(std::shared_ptr<Texture> textureFrom, int channelFrom);
+    void AddChannelFromTexture(std::shared_ptr<Texture> textureFrom, int channelFrom);
 
 protected:
     friend class FileSystem;
@@ -39,13 +39,13 @@ protected:
 
 private:
     void AllocateTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, const void* pixels = nullptr);
-	GLuint GetInternalFormat();
-	GLuint GetFormat();
+    GLuint GetInternalFormat();
+    GLuint GetFormat();
 
     std::vector<Uint8> data;
     int width;
     int height;
-	int bytesPerPixel;
+    int bytesPerPixel;
 
     bool deleteAfterLoad = true;
     bool isSRGB = false;

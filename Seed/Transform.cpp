@@ -44,9 +44,9 @@ void Transform::DecomposeMatrix(glm::mat4 matrix, glm::vec3& decomposedTranslati
     if (!std::isfinite(matrix[0][0]))
         throw std::runtime_error("matrix to be decomposed is undefined!");
 
-	glm::vec3 scale, skew;
-	glm::vec4 dummyPerspective;
-	glm::decompose(matrix, scale, decomposedOrientation, decomposedTranslation, skew, dummyPerspective);
+    glm::vec3 scale, skew;
+    glm::vec4 dummyPerspective;
+    glm::decompose(matrix, scale, decomposedOrientation, decomposedTranslation, skew, dummyPerspective);
     
     auto shearX = glm::mat4(1.0f);
     auto shearY = glm::mat4(1.0f);
@@ -59,10 +59,10 @@ void Transform::DecomposeMatrix(glm::mat4 matrix, glm::vec3& decomposedTranslati
 
 void Transform::TransformInWorldAndDecompose(glm::mat4 worldTransformation, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation, glm::mat4& decomposedScale)
 {
-	auto localToWorldMatrix = GetLocalToWorldMatrix();
-	auto worldTransformationLocalMatrix = glm::inverse(localToWorldMatrix) * worldTransformation * localToWorldMatrix * CalculateLocalMatrix();
+    auto localToWorldMatrix = GetLocalToWorldMatrix();
+    auto worldTransformationLocalMatrix = glm::inverse(localToWorldMatrix) * worldTransformation * localToWorldMatrix * CalculateLocalMatrix();
 
-	DecomposeMatrix(worldTransformationLocalMatrix, decomposedTranslation, decomposedOrientation, decomposedScale);
+    DecomposeMatrix(worldTransformationLocalMatrix, decomposedTranslation, decomposedOrientation, decomposedScale);
 }
 
 void Transform::SetParent(Transform* parent_)
@@ -83,15 +83,15 @@ void Transform::SetParent(Object* parent_)
 
 int Transform::GetChildCount()
 {
-	return static_cast<int>(children.size());
+    return static_cast<int>(children.size());
 }
 
 Transform* Transform::GetChild(int index)
 {
-	if (index > children.size())
-		throw std::runtime_error("Index for children is out of bounds");
+    if (index > children.size())
+        throw std::runtime_error("Index for children is out of bounds");
 
-	return children[index];
+    return children[index];
 }
 
 void Transform::DestroyAllChildren()
@@ -133,12 +133,12 @@ glm::mat4 Transform::GetModelMatrix()
 
 glm::mat4 Transform::GetLocalToWorldMatrix()
 {
-	return parent->CalculateWorldMatrix();
+    return parent->CalculateWorldMatrix();
 }
 
 glm::mat4 Transform::GetWorldToLocalMatrix()
 {
-	return glm::inverse(GetLocalToWorldMatrix());
+    return glm::inverse(GetLocalToWorldMatrix());
 }
 
 void Transform::UpdateModelMatrix()

@@ -10,9 +10,9 @@ class Objects
 public:
     Objects();
 
-	template<typename T = Object>
-	T* CreateObject(const std::string& name);
-	Object* CreateObjectWithMesh(const std::string& name, const std::string& meshFilePath, glm::vec3 position = glm::vec3(0.0f));
+    template<typename T = Object>
+    T* CreateObject(const std::string& name);
+    Object* CreateObjectWithMesh(const std::string& name, const std::string& meshFilePath, glm::vec3 position = glm::vec3(0.0f));
     void CreateObjectsFromScene(const std::string& path) const;
     Object* GetObjectByName(const std::string& name);
     std::vector<Object*> GetObjectsByName(const std::string& name);
@@ -21,7 +21,7 @@ public:
     std::vector<T*> GetObjects();
 
     void SetSkybox(std::unique_ptr<TextureCubeMap> cubeMap);
-	void RemoveSkybox();
+    void RemoveSkybox();
 
 protected:
     friend class Engine;
@@ -39,12 +39,12 @@ private:
 template<typename T>
 T* Objects::CreateObject(const std::string& name)
 {
-	static_assert(std::is_base_of<Object, T>::value, "T must be derived from Object");
-	auto object = std::make_unique<T>(name);
+    static_assert(std::is_base_of<Object, T>::value, "T must be derived from Object");
+    auto object = std::make_unique<T>(name);
     auto objectRawPtr = object.get();
     objects.insert({ name, std::move(object) });
     objectRawPtr->Initialize();
-	return objectRawPtr;
+    return objectRawPtr;
 }
 
 template<typename T>

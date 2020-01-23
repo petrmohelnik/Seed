@@ -25,7 +25,7 @@ protected:
     friend class Light;
 
 private:
-	CameraBlock dataBlock;
+    CameraBlock dataBlock;
 
     Frustum frustum;
 };

@@ -15,8 +15,8 @@ public:
     Transform* GetParent();
     void SetParent(Transform* parent_);
     void SetParent(Object* parent_);
-	int GetChildCount();
-	Transform* GetChild(int index);
+    int GetChildCount();
+    Transform* GetChild(int index);
 
     void RotateAngle(float angle, glm::vec3 axis, Space space = Space::Local);
     void Rotate(glm::vec3 angles, Space space = Space::Local);
@@ -50,8 +50,8 @@ public:
     void RotateAround(float angle, glm::vec3 worldAxis, glm::vec3 worldPoint = glm::vec3(0.0f, 0.0f, 0.0f));
 
     glm::mat4 GetModelMatrix();
-	glm::mat4 GetLocalToWorldMatrix();
-	glm::mat4 GetWorldToLocalMatrix();
+    glm::mat4 GetLocalToWorldMatrix();
+    glm::mat4 GetWorldToLocalMatrix();
 
 protected:
     friend class Object;
@@ -69,8 +69,8 @@ private:
     void MakeRoot();
     glm::mat4 CalculateLocalMatrix();
     glm::mat4 CalculateWorldMatrix();
-	void DecomposeMatrix(glm::mat4 matrix, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation, glm::mat4& decomposedScale);
-	void TransformInWorldAndDecompose(glm::mat4 worldTransformation, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation, glm::mat4& decomposedScale);
+    void DecomposeMatrix(glm::mat4 matrix, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation, glm::mat4& decomposedScale);
+    void TransformInWorldAndDecompose(glm::mat4 worldTransformation, glm::vec3& decomposedTranslation, glm::quat& decomposedOrientation, glm::mat4& decomposedScale);
 
     bool isRoot = false;
 

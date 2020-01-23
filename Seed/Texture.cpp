@@ -10,7 +10,7 @@ Texture::Texture()
 
 Texture::Texture(glm::vec4 color)
 {
-	SetColor(color);
+    SetColor(color);
 }
 
 Texture::~Texture()
@@ -33,26 +33,26 @@ void Texture::Load()
 
 GLuint Texture::GetInternalFormat()
 {
-	if (bytesPerPixel == 1)
-		return GL_R8;
-	if (bytesPerPixel == 2)
-		return GL_R16;
-	if (bytesPerPixel == 3)
-		return isSRGB ? GL_SRGB8 : GL_RGB8;
+    if (bytesPerPixel == 1)
+        return GL_R8;
+    if (bytesPerPixel == 2)
+        return GL_R16;
+    if (bytesPerPixel == 3)
+        return isSRGB ? GL_SRGB8 : GL_RGB8;
 
-	return isSRGB ? GL_SRGB8_ALPHA8 : GL_RGBA8;
+    return isSRGB ? GL_SRGB8_ALPHA8 : GL_RGBA8;
 }
 
 GLuint Texture::GetFormat()
 {
-	if (bytesPerPixel == 1)
-		return GL_RED;
-	if (bytesPerPixel == 2)
-		return GL_RED;
+    if (bytesPerPixel == 1)
+        return GL_RED;
+    if (bytesPerPixel == 2)
+        return GL_RED;
     if (bytesPerPixel == 3)
         return isRGB ? GL_RGB : GL_BGR;
 
-	return isRGB ? GL_RGBA : GL_BGRA;
+    return isRGB ? GL_RGBA : GL_BGRA;
 }
 
 void Texture::Unload()
@@ -75,34 +75,34 @@ void Texture::SetColor(glm::vec4 color)
     data = std::vector<Uint8>{ static_cast<Uint8>(color.b * 255), static_cast<Uint8>(color.g * 255), static_cast<Uint8>(color.r * 255), static_cast<Uint8>(color.a * 255) };
     width = 1;
     height = 1;
-	bytesPerPixel = 4;
+    bytesPerPixel = 4;
     Unload();
 }
 
 void Texture::SetColor(glm::vec3 color)
 {
-	data = std::vector<Uint8>{ static_cast<Uint8>(color.b * 255), static_cast<Uint8>(color.g * 255), static_cast<Uint8>(color.r * 255) };
-	width = 1;
-	height = 1;
-	bytesPerPixel = 3;
+    data = std::vector<Uint8>{ static_cast<Uint8>(color.b * 255), static_cast<Uint8>(color.g * 255), static_cast<Uint8>(color.r * 255) };
+    width = 1;
+    height = 1;
+    bytesPerPixel = 3;
     Unload();
 }
 
 void Texture::SetColor(glm::vec2 color)
 {
-	data = std::vector<Uint8>{ static_cast<Uint8>(color.x * 255), static_cast<Uint8>(color.y * 255) };
-	width = 1;
-	height = 1;
-	bytesPerPixel = 2;
+    data = std::vector<Uint8>{ static_cast<Uint8>(color.x * 255), static_cast<Uint8>(color.y * 255) };
+    width = 1;
+    height = 1;
+    bytesPerPixel = 2;
     Unload();
 }
 
 void Texture::SetColor(float color)
 {
-	data = std::vector<Uint8>{ static_cast<Uint8>(color * 255) };
-	width = 1;
-	height = 1;
-	bytesPerPixel = 1;
+    data = std::vector<Uint8>{ static_cast<Uint8>(color * 255) };
+    width = 1;
+    height = 1;
+    bytesPerPixel = 1;
     Unload();
 }
 
@@ -147,30 +147,30 @@ void Texture::AddChannel(float value)
 
 void Texture::AddChannelFromTexture(std::shared_ptr<Texture> textureFrom, int channelFrom)
 {
-	if (bytesPerPixel == 4)
-		throw std::runtime_error("cannot add channel, texture already has 4");
-	if (textureFrom->bytesPerPixel < channelFrom)
-		throw std::runtime_error("source texture does not have enough channels");
-	if(width != textureFrom->width || height != textureFrom->height)
-		throw std::runtime_error("source texture does not have same size as destination");
+    if (bytesPerPixel == 4)
+        throw std::runtime_error("cannot add channel, texture already has 4");
+    if (textureFrom->bytesPerPixel < channelFrom)
+        throw std::runtime_error("source texture does not have enough channels");
+    if(width != textureFrom->width || height != textureFrom->height)
+        throw std::runtime_error("source texture does not have same size as destination");
 
-	std::vector<Uint8> newData;
-	newData.resize(data.size() / bytesPerPixel * (bytesPerPixel + 1));
+    std::vector<Uint8> newData;
+    newData.resize(data.size() / bytesPerPixel * (bytesPerPixel + 1));
 
-	for (int i = 0, j = 0, k = 0; i < data.size(); i++, j++)
-	{
-		newData[j] = data[i];
-		if ((i + 1) % bytesPerPixel == 0)
-		{
-			j++;
-			newData[j] = textureFrom->data[k * textureFrom->bytesPerPixel + channelFrom];
-			k++;
-		}
-	}
+    for (int i = 0, j = 0, k = 0; i < data.size(); i++, j++)
+    {
+        newData[j] = data[i];
+        if ((i + 1) % bytesPerPixel == 0)
+        {
+            j++;
+            newData[j] = textureFrom->data[k * textureFrom->bytesPerPixel + channelFrom];
+            k++;
+        }
+    }
 
-	data = std::move(newData);
-	bytesPerPixel++;
-	Unload();
+    data = std::move(newData);
+    bytesPerPixel++;
+    Unload();
 }
 
 void Texture::GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width, int height, GLuint format, GLuint type, bool generateMipMaps, const void* pixels)

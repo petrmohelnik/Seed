@@ -57,6 +57,9 @@ public:
     float GetLinearDamping();
     void SetAngularDamping(float angularDamping);
     float GetAngularDamping();
+    void SetContinuousCollisionDetection(float distanceThreshold, float boundingSphereRadius);
+    float GetCcdDistanceThreshold();
+    float GetCcdBoundingSphereRadius();
 
     void AddForce(glm::vec3 force, ForceType forceType);
     void AddTorque(glm::vec3 torque, ForceType forceType);
@@ -71,7 +74,7 @@ protected:
 
     virtual glm::vec3 GetPosition() const = 0;
     virtual void SetPosition(glm::vec3 position) = 0;
-	void OnInputGraphUpdate() override;
+    void OnInputGraphUpdate() override;
 
     btRigidBody* btRigidbody = nullptr;
     btSoftRigidDynamicsWorld* btDynamicsWorld = nullptr;
@@ -88,7 +91,11 @@ protected:
     float friction = 0.5f;
     float linearDamping = 0.0f;
     float angularDamping = 0.0f;
+    float ccdDistanceThreshold = 0.0f;
+    float ccdBoundingSphereRadius = 0.0f;
 
     std::unordered_map<Collider*, std::vector<ContactPoint>> contactPoints;
     std::unordered_map<Collider*, Collision> collisions;
+    bool mouseOver = false;
+    bool mousePressed = false;
 };

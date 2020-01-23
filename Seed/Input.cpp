@@ -5,17 +5,27 @@
 
 bool Input::IsGameRunning()
 {
-	return !quit;
+    return !quit;
 }
 
-bool Input::Pause()
+bool Input::PauseRequest()
 {
-	return false;
+    if (!paused)
+    {
+        paused = KeyDown(SDLK_LSHIFT);
+        return paused;
+    }
+    return false;
 }
 
-bool Input::Resume()
+bool Input::ResumeRequest()
 {
-	return false;
+    if (paused)
+    {
+        paused = !KeyDown(SDLK_LSHIFT);
+        return !paused;
+    }
+    return false;
 }
 
 void Input::InitializeState()
@@ -25,15 +35,15 @@ void Input::InitializeState()
 
 void Input::AddInput(SDL_Event event)
 {
-	switch (event.type)
-	{
+    switch (event.type)
+    {
     case SDL_QUIT:
         quit = true;
-	case SDL_KEYDOWN:
+    case SDL_KEYDOWN:
         if(!Key(event.key.keysym.sym))
             keyPressedDown.insert(event.key.keysym.sym);
         keyHoldDown.insert(event.key.keysym.sym);
-		break;
+        break;
     case SDL_KEYUP:
         keyHoldDown.erase(event.key.keysym.sym);
         break;
@@ -49,7 +59,7 @@ void Input::AddInput(SDL_Event event)
         mouseDeltaPosition = glm::ivec2(event.motion.xrel, event.motion.yrel);
         mousePosition = glm::ivec2(event.motion.x, event.motion.y);
         break;
-	}
+    }
 }
 
 void Input::ClearInputs()
@@ -67,7 +77,7 @@ bool Input::Key(SDL_Keycode key)
 
 bool Input::KeyDown(SDL_Keycode key)
 {
-	return keyPressedDown.find(key) != std::end(keyPressedDown);
+    return keyPressedDown.find(key) != std::end(keyPressedDown);
 }
 
 bool Input::MouseButton(Uint8 button)
@@ -107,7 +117,7 @@ void Input::BulletText(const std::string& text)
 
 bool Input::Button(const std::string& text)
 {
-	return ImGui::Button(text.c_str());
+    return ImGui::Button(text.c_str());
 }
 
 void Input::PushWindow(const std::string& title, ImGuiWindowFlags flags)
@@ -122,23 +132,23 @@ void Input::PopWindow()
 
 void Input::InputFloat(const std::string& name, float& value, const std::function<void()>& onEnterPressed)
 {
-	if(ImGui::InputFloat(std::string(name + ": ").c_str(), &value, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
-		onEnterPressed();
+    if(ImGui::InputFloat(std::string(name + ": ").c_str(), &value, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+        onEnterPressed();
 }
 
 void Input::CreateSceneGraph()
 {
-	//ImGui::ShowDemoWindow();
+    //ImGui::ShowDemoWindow();
 
     PushWindow("Scene graph");
-	auto root = Engine::GetComponents().GetRoot()->GetComponent<Transform>();
-	CreateSceneGraphNode(root->GetObject());
+    auto root = Engine::GetComponents().GetRoot()->GetComponent<Transform>();
+    CreateSceneGraphNode(root->GetObject());
     PopWindow();
 }
 
 void Input::CreateSceneGraphNode(Object* object)
 {
-	auto transform = object->GetComponent<Transform>();
+    auto transform = object->GetComponent<Transform>();
     if (object->GetComponent<Transform>()->GetChildCount() == 0)
     {
         if (ImGui::TreeNode(object->GetName().c_str()))
@@ -149,12 +159,12 @@ void Input::CreateSceneGraphNode(Object* object)
         }
         return;
     }
-	if (ImGui::TreeNode(object->GetName().c_str()))
-	{
-		for (int index = 0; index < transform->GetChildCount(); index++)
-			CreateSceneGraphNode(transform->GetChild(index)->GetObject());
-		ImGui::TreePop();
-	}
+    if (ImGui::TreeNode(object->GetName().c_str()))
+    {
+        for (int index = 0; index < transform->GetChildCount(); index++)
+            CreateSceneGraphNode(transform->GetChild(index)->GetObject());
+        ImGui::TreePop();
+    }
 }
 
 std::string Input::GetFullNameHash(Component* component, const std::string& name)

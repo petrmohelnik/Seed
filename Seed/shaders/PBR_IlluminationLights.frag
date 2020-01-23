@@ -9,15 +9,15 @@ layout(std140, binding = 1) uniform LightBlock
 {
     mat4 ViewMatrix;
     mat4 ProjectionMatrix;
-	vec3 Pos;
-	vec3 Color;
-	vec3 Orientation;
-	float Range;
-	float Intensity;
+    vec3 Pos;
+    vec3 Color;
+    vec3 Orientation;
+    float Range;
+    float Intensity;
     float SizeUV;
     float SpotAngle;
-	float SpotAngleScale;
-	float SpotAngleOffset;
+    float SpotAngleScale;
+    float SpotAngleOffset;
     float ShadowFarPlane;
     float ViewPortScale;
     uint Type;
@@ -41,7 +41,7 @@ const float PI = 3.14159265359;
 
 vec3 FresnelSchlick(vec3 F0, float HdotV)
 {
-	return F0 + (1.0 - F0) * pow(1.0 - HdotV, 5.0);
+    return F0 + (1.0 - F0) * pow(1.0 - HdotV, 5.0);
 }
 
 vec3 CalculateRadiance(vec3 lightDir, vec3 worldPos)
@@ -49,14 +49,14 @@ vec3 CalculateRadiance(vec3 lightDir, vec3 worldPos)
     if(bool(Light.Type & DirectionalLight))
         return Light.Color * Light.Intensity;
 
-	float dist = length(Light.Pos - worldPos);
-	float normalizedDist = Light.Range == 0.0 ? 0.0 : dist / Light.Range;
-	float attenuation = pow(clamp(1.0 - pow(normalizedDist, 4), 0.0, 1.0), 2) / max(dist * dist, 0.01 * 0.01);
+    float dist = length(Light.Pos - worldPos);
+    float normalizedDist = Light.Range == 0.0 ? 0.0 : dist / Light.Range;
+    float attenuation = pow(clamp(1.0 - pow(normalizedDist, 4), 0.0, 1.0), 2) / max(dist * dist, 0.01 * 0.01);
 
     if(bool(Light.Type & SpotLight))
     {
-	    float centerAngle = dot(lightDir, normalize(-Light.Orientation));
-	    float angleAttenuation = clamp(Light.SpotAngleOffset + centerAngle * Light.SpotAngleScale, 0.0, 1.0);
+        float centerAngle = dot(lightDir, normalize(-Light.Orientation));
+        float angleAttenuation = clamp(Light.SpotAngleOffset + centerAngle * Light.SpotAngleScale, 0.0, 1.0);
         angleAttenuation *= angleAttenuation;
         attenuation *= angleAttenuation;
     }
@@ -64,7 +64,7 @@ vec3 CalculateRadiance(vec3 lightDir, vec3 worldPos)
     if(attenuation <= 0.0)
         discard;
 
-	return Light.Color * Light.Intensity * attenuation;
+    return Light.Color * Light.Intensity * attenuation;
 }
 
 float DistributionGGX(float NdotH, float roughness)
@@ -72,10 +72,10 @@ float DistributionGGX(float NdotH, float roughness)
     float a = roughness * roughness;
     float a2 = a * a;
     float NdotH2 = NdotH * NdotH;
-	
+    
     float denominator = (NdotH2 * (a2 - 1.0) + 1.0);
     denominator = PI * denominator * denominator;
-	
+    
     return a2 / denominator;
 }
 
@@ -85,7 +85,7 @@ float GeometrySchlickGGX(float NdotV, float roughness)
     float k = (r * r) / 8.0;
 
     float denominator = NdotV * (1.0 - k) + k;
-	
+    
     return NdotV / denominator;
 }
 
@@ -93,18 +93,18 @@ float GeometrySmith(float NdotV, float NdotL, float roughness)
 {
     float ggx1 = GeometrySchlickGGX(NdotL, roughness);
     float ggx2 = GeometrySchlickGGX(NdotV, roughness);
-	
+    
     return ggx1 * ggx2;
 }
 
 vec3 CookTorranceLobe(float NdotV, float NdotL, float NdotH, float roughness, vec3 kS)
 {
-	float NDF = DistributionGGX(NdotH, roughness);
-	float G = GeometrySmith(NdotV, NdotL, roughness);
+    float NDF = DistributionGGX(NdotH, roughness);
+    float G = GeometrySmith(NdotV, NdotL, roughness);
 
-	vec3 numerator = NDF * G * kS;
-	float denominator = 4.0 * NdotV * NdotL;
-	return numerator / max(denominator, 0.0001);
+    vec3 numerator = NDF * G * kS;
+    float denominator = 4.0 * NdotV * NdotL;
+    return numerator / max(denominator, 0.0001);
 }
 
 vec2 VogelDiskCoords(int index, int count, float phi)
@@ -197,32 +197,32 @@ void main()
     vec2 texCoords = gl_FragCoord.xy / screenSize;
 
     vec3 worldPos = CalculateWorldPosition(texCoords);
-	vec3 lightDir = bool(Light.Type & DirectionalLight) ? normalize(Light.Orientation) : normalize(Light.Pos - worldPos);
-	vec3 radiance = CalculateRadiance(lightDir, worldPos);
+    vec3 lightDir = bool(Light.Type & DirectionalLight) ? normalize(Light.Orientation) : normalize(Light.Pos - worldPos);
+    vec3 radiance = CalculateRadiance(lightDir, worldPos);
 
-	vec4 colorTexture = texture(texColor, texCoords);
-	vec4 normalTexture = texture(texNormal, texCoords);
-	vec4 metallicTexture = texture(texMetallic, texCoords);
+    vec4 colorTexture = texture(texColor, texCoords);
+    vec4 normalTexture = texture(texNormal, texCoords);
+    vec4 metallicTexture = texture(texMetallic, texCoords);
 
-	vec3 albedo = colorTexture.xyz;
+    vec3 albedo = colorTexture.xyz;
     bool isSpecularWorkflow = normalTexture.w != -1.0;
-	float roughness = isSpecularWorkflow ? metallicTexture.w : metallicTexture.y;
-	float metallic = isSpecularWorkflow ? 0.0 : metallicTexture.z;
-	vec3 normal = normalize(normalTexture.xyz);
+    float roughness = isSpecularWorkflow ? metallicTexture.w : metallicTexture.y;
+    float metallic = isSpecularWorkflow ? 0.0 : metallicTexture.z;
+    vec3 normal = normalize(normalTexture.xyz);
 
-	vec3 viewDir = normalize(fViewPos - worldPos);
-	vec3 halfVector = normalize(lightDir + viewDir);
-	float NdotV = max(dot(normal, viewDir), 0.0);
-	float NdotL = max(dot(normal, lightDir), 0.0);
-	float NdotH = max(dot(normal, halfVector), 0.0);
-	float HdotV = max(dot(halfVector, viewDir), 0.0);
+    vec3 viewDir = normalize(fViewPos - worldPos);
+    vec3 halfVector = normalize(lightDir + viewDir);
+    float NdotV = max(dot(normal, viewDir), 0.0);
+    float NdotL = max(dot(normal, lightDir), 0.0);
+    float NdotH = max(dot(normal, halfVector), 0.0);
+    float HdotV = max(dot(halfVector, viewDir), 0.0);
 
-	vec3 F0 = isSpecularWorkflow ? metallicTexture.xyz : mix(vec3(0.04), albedo, metallic);
-	vec3 kS = FresnelSchlick(F0, HdotV);
-	vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
-	
-	vec3 diffuseColor = kD * albedo / PI * radiance * NdotL;
-	vec3 specularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
+    vec3 F0 = isSpecularWorkflow ? metallicTexture.xyz : mix(vec3(0.04), albedo, metallic);
+    vec3 kS = FresnelSchlick(F0, HdotV);
+    vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
+    
+    vec3 diffuseColor = kD * albedo / PI * radiance * NdotL;
+    vec3 specularColor = CookTorranceLobe(NdotV, NdotL, NdotH, roughness, kS) * radiance * NdotL;
 
     float shadow = 0.0f;
     if(bool(Light.Type & IsShadowCasterLight))

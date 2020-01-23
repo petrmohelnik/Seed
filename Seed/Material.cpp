@@ -4,7 +4,7 @@
 Material::Material()
 {
     Albedo = std::make_shared<Texture>(glm::vec4(1.0f));
-	Albedo->SetIsSRGB();
+    Albedo->SetIsSRGB();
     Metallic = std::make_shared<Texture>(glm::vec4(1.0f));
     Normal = std::make_shared<Texture>(glm::vec4(0.5f, 0.5f, 1.0f, 0.0f));
     Emission = std::make_shared<Texture>(glm::vec4(0.0f));
@@ -61,7 +61,7 @@ ShaderFactory::Type Material::GetShader()
 
 void Material::SetSpecularWorkflow()
 {
-	dataBlock.SpecularWorkflow = true;
+    dataBlock.SpecularWorkflow = true;
 }
 
 void Material::SetMetallicWorkflow()
@@ -76,5 +76,5 @@ void Material::UseOcclusionMap()
 
 void Material::SetParallaxStrength(float strength)
 {
-	dataBlock.ParallaxStrength = strength;
+    dataBlock.ParallaxStrength = strength;
 }

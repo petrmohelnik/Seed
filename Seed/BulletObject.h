@@ -15,8 +15,11 @@ void BulletObject::Initialize()
     AddComponent<SphereCollider>(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
     GetComponent<Collider>()->SetMass(0.1f);
     GetComponent<Collider>()->SetBounciness(0.5f);
+    GetComponent<Collider>()->SetContinuousCollisionDetection(0.5f, 0.1f);
     AddComponent<MeshRenderer>()->Load("sphere.obj");
     GetComponent<Transform>()->SetScale(0.05f);
+    AddComponent<Light>()->SetPointLight(0.5f, 10.0f);
+    GetComponent<Light>()->SetShadowNearPlaneDistance(0.05f);
 
     auto bulletMaterial = std::make_shared<Material>();
     bulletMaterial->SetMetallicWorkflow();
@@ -27,10 +30,10 @@ void BulletObject::Initialize()
 
 void BulletObject::SetPhysicsMaterial(float mass, float bounciness, float friction, float linearDamping, float angularDamping)
 {
-	auto collider = GetComponent<Collider>();
-	collider->SetMass(mass);
-	collider->SetBounciness(bounciness);
-	collider->SetFriction(friction);
-	collider->SetLinearDamping(linearDamping);
-	collider->SetAngularDamping(angularDamping);
+    auto collider = GetComponent<Collider>();
+    collider->SetMass(mass);
+    collider->SetBounciness(bounciness);
+    collider->SetFriction(friction);
+    collider->SetLinearDamping(linearDamping);
+    collider->SetAngularDamping(angularDamping);
 }

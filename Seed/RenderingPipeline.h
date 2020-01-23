@@ -57,7 +57,7 @@ public:
     static Camera* MainCamera();
     void CleanComponents();
 
-	void SetSkybox(Skybox* skybox);
+    void SetSkybox(Skybox* skybox);
 
 private:
     void IntializeTextures(int width, int height);

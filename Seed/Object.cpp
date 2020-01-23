@@ -24,7 +24,7 @@ Object::Object(std::string name_)
     , fileSystem(Engine::GetFileSystem())
     , time(Engine::GetTime())
 {
-	transform = std::make_unique<Transform>(this, components.GetRoot()->GetComponent<Transform>());
+    transform = std::make_unique<Transform>(this, components.GetRoot()->GetComponent<Transform>());
     name = std::move(name_);
 }
 
@@ -62,10 +62,13 @@ bool Object::UpdateForDestruction()
             light->Destroy();
         for (const auto& audio : audios)
             audio->Destroy();
-        for (const auto& collider : colliders)
+        if (collider)
             collider->Destroy();
         for (const auto& script : scripts)
+        {
+            script->OnDestroy();
             script->Destroy();
+        }
 
         return true;
     }
@@ -79,7 +82,7 @@ bool Object::UpdateForDestruction()
         isSomeComponentDestroyed = light->UpdateForDestruction() || isSomeComponentDestroyed;
     for (const auto& audio : audios)
         isSomeComponentDestroyed = audio->UpdateForDestruction() || isSomeComponentDestroyed;
-    for (const auto& collider : colliders)
+    if (collider)
         isSomeComponentDestroyed = collider->UpdateForDestruction() || isSomeComponentDestroyed;
     for (const auto& script : scripts)
         isSomeComponentDestroyed = script->UpdateForDestruction() || isSomeComponentDestroyed;
@@ -110,10 +113,8 @@ bool Object::DoDestruction()
     {
         return audio->ToBeDestroyed();
     });
-    std::experimental::erase_if(colliders, [](const std::unique_ptr<Collider>& collider)
-    {
-        return collider->ToBeDestroyed();
-    });
+    if (collider && collider->ToBeDestroyed())
+        collider.reset();
     std::experimental::erase_if(scripts, [](const std::unique_ptr<Script>& script)
     {
         return script->ToBeDestroyed();
@@ -136,7 +137,7 @@ std::vector<Component*> Object::GetAllComponents()
 
     for (const auto& audio : audios)
         components.push_back(audio.get());
-    for (const auto& collider : colliders)
+    if (collider.get() != nullptr)
         components.push_back(collider.get());
     for (const auto& script : scripts)
         components.push_back(script.get());

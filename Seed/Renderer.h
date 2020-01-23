@@ -11,12 +11,12 @@ class Renderer : public Component
 {
 public:
     Renderer(Object* object);
-	virtual ~Renderer() = default;
+    virtual ~Renderer() = default;
 
     virtual AABB GetAABB(int index) = 0;
     virtual void AddToRenderQueueDeferred(RenderQueue& queue) = 0;
     virtual void AddToRenderQueueForward(RenderQueue& queue) = 0;
-	virtual void Render(int index) = 0;
+    virtual void Render(int index) = 0;
     virtual void Render(int index, ShaderFactory::Type shaderType) = 0;
     void SetCastShadow(bool castShadow);
     bool GetCastShadow();

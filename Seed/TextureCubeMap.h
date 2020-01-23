@@ -10,7 +10,7 @@ class TextureCubeMap
 {
 public:
     TextureCubeMap();
-	TextureCubeMap(glm::vec4 color);
+    TextureCubeMap(glm::vec4 color);
     ~TextureCubeMap();
     TextureCubeMap(TextureCubeMap&& m) = default;
     TextureCubeMap(const TextureCubeMap& m) = default;

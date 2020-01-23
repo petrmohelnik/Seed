@@ -2,9 +2,9 @@
 
 layout(std140, binding = 3) uniform MaterialBlock
 {
-	bool SpecularWorkflow;
-	bool UseOcclusionMap;
-	float ParallaxStrength;
+    bool SpecularWorkflow;
+    bool UseOcclusionMap;
+    float ParallaxStrength;
 } Material;
 
 layout(binding = 0) uniform sampler2D texAlbedo;
@@ -27,72 +27,72 @@ layout (location = 3) out vec3 gIllumination;
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 {
     float currentHeight = 1.0;
-	vec2 currentTexCoords = texCoords;
-	float currentTextureHeight = texture(texHeight, currentTexCoords).r;
-	if(currentTextureHeight == 1.0)
-		return texCoords;
+    vec2 currentTexCoords = texCoords;
+    float currentTextureHeight = texture(texHeight, currentTexCoords).r;
+    if(currentTextureHeight == 1.0)
+        return texCoords;
 
-	viewDir.y = -viewDir.y;
+    viewDir.y = -viewDir.y;
 
     const float minSteps = 32.0;
-	const float maxSteps = 8.0;
-	float numSteps = mix(maxSteps, minSteps, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));  
+    const float maxSteps = 8.0;
+    float numSteps = mix(maxSteps, minSteps, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));  
     
     float deltaHeight = 1.0 / numSteps;
     
     vec2 P = viewDir.xy / (viewDir.z + 0.42) * Material.ParallaxStrength; 
     vec2 deltaTexCoords = P / numSteps;
   
-	for(int i = 0; i < numSteps && currentHeight > currentTextureHeight; i++)
-	{
-		currentTexCoords -= deltaTexCoords;
-		currentHeight -= deltaHeight;
-		currentTextureHeight = texture(texHeight, currentTexCoords).r;
-	}
+    for(int i = 0; i < numSteps && currentHeight > currentTextureHeight; i++)
+    {
+        currentTexCoords -= deltaTexCoords;
+        currentHeight -= deltaHeight;
+        currentTextureHeight = texture(texHeight, currentTexCoords).r;
+    }
 
-	for(int i = 0; i < numSteps / 4; i++)
-	{
-		deltaTexCoords *= 0.5;
-		deltaHeight *= 0.5; 
+    for(int i = 0; i < numSteps / 4; i++)
+    {
+        deltaTexCoords *= 0.5;
+        deltaHeight *= 0.5; 
 
-		if(currentHeight < currentTextureHeight)
-		{
-			currentTexCoords += deltaTexCoords;
-			currentHeight += deltaHeight;  
-		}
-		else
-		{
-			currentTexCoords -= deltaTexCoords;
-			currentHeight -= deltaHeight;
-		}
-		currentTextureHeight = texture(texHeight, currentTexCoords).r;
-	}
+        if(currentHeight < currentTextureHeight)
+        {
+            currentTexCoords += deltaTexCoords;
+            currentHeight += deltaHeight;  
+        }
+        else
+        {
+            currentTexCoords -= deltaTexCoords;
+            currentHeight -= deltaHeight;
+        }
+        currentTextureHeight = texture(texHeight, currentTexCoords).r;
+    }
 
-	return currentTexCoords;
+    return currentTexCoords;
 }
 
 void main()
 {
-	vec3 viewDir = normalize(fViewPos - fPos);
-	vec2 texCoords = ParallaxMapping(fTexCoords, viewDir);
+    vec3 viewDir = normalize(fViewPos - fPos);
+    vec2 texCoords = ParallaxMapping(fTexCoords, viewDir);
 
-	vec4 albedoTexture = texture(texAlbedo, texCoords);
-	vec3 normalTexture = texture(texNormal, texCoords).xyz;
-	vec4 metallicTexture = texture(texMetallic, texCoords);
-	vec3 emissionTexture = texture(texEmission, texCoords).xyz;
-	float occlusionTexture = texture(texOcclusion, texCoords).x;
+    vec4 albedoTexture = texture(texAlbedo, texCoords);
+    vec3 normalTexture = texture(texNormal, texCoords).xyz;
+    vec4 metallicTexture = texture(texMetallic, texCoords);
+    vec3 emissionTexture = texture(texEmission, texCoords).xyz;
+    float occlusionTexture = texture(texOcclusion, texCoords).x;
 
-	float ambientOclussion = (Material.SpecularWorkflow || Material.UseOcclusionMap) ? occlusionTexture : metallicTexture.x;
-	float roughness = Material.SpecularWorkflow ? 1.0 - metallicTexture.w : metallicTexture.y;
-	float metallic = Material.SpecularWorkflow ? 0.0 : metallicTexture.z;
-	vec3 normal = normalize(normalTexture * 2.0 - 1.0); normal.y = -normal.y;
+    float ambientOclussion = (Material.SpecularWorkflow || Material.UseOcclusionMap) ? occlusionTexture : metallicTexture.x;
+    float roughness = Material.SpecularWorkflow ? 1.0 - metallicTexture.w : metallicTexture.y;
+    float metallic = Material.SpecularWorkflow ? 0.0 : metallicTexture.z;
+    vec3 normal = normalize(normalTexture * 2.0 - 1.0); normal.y = -normal.y;
     normal = normalize(fTBN * normal);
 
-	float alpha = albedoTexture.w;
-	if(alpha < 0.1)
+    float alpha = albedoTexture.w;
+    if(alpha < 0.1)
         discard;
 
-	gColor = albedoTexture;
+    gColor = albedoTexture;
     if(Material.SpecularWorkflow)
     {
         gNormal = vec4(normal, ambientOclussion);

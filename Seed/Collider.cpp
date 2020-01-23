@@ -157,6 +157,28 @@ float Collider::GetAngularDamping()
     return angularDamping;
 }
 
+void Collider::SetContinuousCollisionDetection(float distanceThreshold, float boundingSphereRadius)
+{
+    ccdDistanceThreshold = distanceThreshold;
+    ccdBoundingSphereRadius = boundingSphereRadius;
+    if (btRigidbody)
+    {
+        btRigidbody->setCcdMotionThreshold(ccdDistanceThreshold);
+        btRigidbody->setCcdSweptSphereRadius(ccdBoundingSphereRadius);
+    }
+    dirty = true;
+}
+
+float Collider::GetCcdDistanceThreshold()
+{
+    return ccdDistanceThreshold;
+}
+
+float Collider::GetCcdBoundingSphereRadius()
+{
+    return ccdBoundingSphereRadius;
+}
+
 void Collider::AddForce(glm::vec3 force, ForceType forceType)
 {
     if (!btRigidbody)
@@ -241,9 +263,9 @@ glm::vec3 Collider::GetVelocityInPoint(glm::vec3 point, Transform::Space space)
 
 void Collider::OnInputGraphUpdate()
 {
-	Engine::GetInput().InputFloat("mass", mass, [this] { SetMass(mass); });
-	Engine::GetInput().InputFloat("bounciness", bounciness, [this] { SetBounciness(bounciness); });
-	Engine::GetInput().InputFloat("friction", friction, [this] { SetFriction(friction); });
-	Engine::GetInput().InputFloat("linearDamping", linearDamping, [this] { SetLinearDamping(linearDamping); });
-	Engine::GetInput().InputFloat("angularDamping", angularDamping, [this] { SetAngularDamping(angularDamping); });
+    Engine::GetInput().InputFloat("mass", mass, [this] { SetMass(mass); });
+    Engine::GetInput().InputFloat("bounciness", bounciness, [this] { SetBounciness(bounciness); });
+    Engine::GetInput().InputFloat("friction", friction, [this] { SetFriction(friction); });
+    Engine::GetInput().InputFloat("linearDamping", linearDamping, [this] { SetLinearDamping(linearDamping); });
+    Engine::GetInput().InputFloat("angularDamping", angularDamping, [this] { SetAngularDamping(angularDamping); });
 }

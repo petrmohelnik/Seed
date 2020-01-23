@@ -16,8 +16,8 @@ class Time;
 class Object : public Identifiable
 {
 public:
-	Object();
-	Object(std::string name_);
+    Object();
+    Object(std::string name_);
     virtual ~Object();
     Object(Object&& m) = delete;
     Object(const Object& m) = delete;
@@ -67,13 +67,13 @@ protected:
     std::vector<Component*> GetAllComponents();
 
 private:
-	std::unique_ptr<Transform> transform;
-	std::unique_ptr<Renderer> renderer;
+    std::unique_ptr<Transform> transform;
+    std::unique_ptr<Renderer> renderer;
     std::unique_ptr<Camera> camera;
     std::unique_ptr<Light> light;
     std::vector<std::unique_ptr<Audio>> audios;
-    std::vector<std::unique_ptr<Collider>> colliders;
-	std::vector<std::unique_ptr<Script>> scripts;
+    std::unique_ptr<Collider> collider;
+    std::vector<std::unique_ptr<Script>> scripts;
 
     Objects& objects;
     Components& components;
@@ -120,8 +120,10 @@ inline T* Object::AddComponent()
 template<class T, typename ...Args, typename std::enable_if<std::is_base_of<Collider, T>::value>::type*>
 inline T* Object::AddComponent(Args&& ...arguments)
 {
-    colliders.push_back(components.CreateCollider<T>(this, std::forward<Args>(arguments)...));
-    return dynamic_cast<T*>(colliders.back().get());
+    if (collider)
+        throw std::runtime_error("Object: " + name + "already contains Collider");
+    collider = components.CreateCollider<T>(this, std::forward<Args>(arguments)...);
+    return dynamic_cast<T*>(collider.get());
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type*>
@@ -169,12 +171,7 @@ inline T* Object::GetComponent()
 template<class T, typename std::enable_if<std::is_base_of<Collider, T>::value>::type*>
 inline T* Object::GetComponent()
 {
-    for (const auto& collider : colliders)
-    {
-        if (auto colliderRawPointer = dynamic_cast<T*>(collider.get()))
-            return colliderRawPointer;
-    }
-    return nullptr;
+    return dynamic_cast<T*>(collider.get());
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type*>

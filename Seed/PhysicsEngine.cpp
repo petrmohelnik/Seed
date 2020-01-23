@@ -159,6 +159,8 @@ void PhysicsEngine::InitializeRigidbodyMaterial(Collider* collider)
     collider->btRigidbody->setFriction(collider->GetFriction());
     collider->btRigidbody->setGravity(ToBtVector3(collider->GetGravity()));
     collider->btRigidbody->setDamping(collider->GetLinearDamping(), collider->GetAngularDamping());
+    collider->btRigidbody->setCcdMotionThreshold(collider->GetCcdDistanceThreshold());
+    collider->btRigidbody->setCcdSweptSphereRadius(collider->GetCcdBoundingSphereRadius());
 }
 
 void PhysicsEngine::CreateRigidbody(Collider* collider)
@@ -355,6 +357,10 @@ void PhysicsEngine::RigidbodyUpdate()
             }
         }
     }
+}
+
+void PhysicsEngine::OnMouseUpdate()
+{
 }
 
 void PhysicsEngine::CleanComponents()

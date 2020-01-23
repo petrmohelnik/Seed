@@ -51,8 +51,8 @@ SDLWindow& Engine::GetWindow()
 
 void Engine::CreateWindow()
 {
-	window.CreateWindow(1600, 900);
-	window.InitializeOpenGL();
+    window.CreateWindow(1600, 900);
+    window.InitializeOpenGL();
 }
 
 void Engine::Work()
@@ -61,32 +61,30 @@ void Engine::Work()
     scene.Initialize("Default");
     time.InitializeTime();
 
-	while (input.IsGameRunning() && !input.Key(SDLK_ESCAPE))
-	{
-		window.PollInputs();
-		time.UpdateTime();
+    while (input.IsGameRunning() && !input.Key(SDLK_ESCAPE))
+    {
+        window.PollInputs();
+        time.UpdateTime();
 
-		if (input.Pause())
-		{
+        if (input.PauseRequest())
             time.PauseTime();
-		}
-		if (input.Resume())
-		{
+        else if (input.ResumeRequest())
             time.UnpauseTime();
-		}
-		while (time.StartFixedUpdate())
-		{
+
+        scene.OnCreateUpdate();
+        while (time.StartFixedUpdate())
+        {
             scene.OnFixedUpdate();
             scene.SimulatePhysics();
             time.EndFixedUpdate();
-		}
+        }
 
-		input.CreateSceneGraph();
-		scene.OnFrameUpdate();
+        input.CreateSceneGraph();
+        scene.OnFrameUpdate();
         objects.UpdateForDestruction();
-		scene.Render();
-		window.Swap();
-	}
+        scene.Render();
+        window.Swap();
+    }
 
     objects.DeleteAll();
 }

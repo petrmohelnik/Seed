@@ -11,10 +11,11 @@ public:
 
     void Initialize(std::string scene);
 
-	void OnFixedUpdate();
-	void OnFrameUpdate();
+    void OnCreateUpdate();
+    void OnFixedUpdate();
+    void OnFrameUpdate();
     void SimulatePhysics();
-	void Render();
+    void Render();
 
 private:
     SceneDefinition& sceneDefinition;

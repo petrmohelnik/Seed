@@ -4,15 +4,15 @@
 class RotateWorldScript : public Script
 {
 public:
-	using Script::Script;
+    using Script::Script;
 
-	void Update() override;
+    void Update() override;
 };
 
 void RotateWorldScript::Update()
 {
-	if (input.MouseButton(SDL_BUTTON_MIDDLE))
-		transform->Rotate(glm::vec3(input.MouseDeltaPosition().y * 0.01f, input.MouseDeltaPosition().x * 0.01f, 0.0f), Transform::Space::World);
+    if (input.MouseButton(SDL_BUTTON_MIDDLE))
+        transform->Rotate(glm::vec3(input.MouseDeltaPosition().y * 0.01f, input.MouseDeltaPosition().x * 0.01f, 0.0f), Transform::Space::World);
     if (input.KeyDown(SDLK_x))
     {
         transform->LookAt(glm::vec3(0.0f, 0.0f, 0.0f));

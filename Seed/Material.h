@@ -20,10 +20,10 @@ public:
 
     void SetShader(ShaderFactory::Type shader);
     ShaderFactory::Type GetShader();
-	void SetSpecularWorkflow();
-	void SetMetallicWorkflow();
+    void SetSpecularWorkflow();
+    void SetMetallicWorkflow();
     void UseOcclusionMap();
-	void SetParallaxStrength(float strength);
+    void SetParallaxStrength(float strength);
 
     std::shared_ptr<Texture> Albedo;
     std::shared_ptr<Texture> Normal;
@@ -40,7 +40,7 @@ private:
     {
         alignas(4) Uint32 SpecularWorkflow = false;
         alignas(4) Uint32 UseOcclusionMap = false;
-		alignas(4) float ParallaxStrength = 0.05f;
+        alignas(4) float ParallaxStrength = 0.05f;
     };
 
     MaterialBlock dataBlock;

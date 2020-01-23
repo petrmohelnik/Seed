@@ -10,10 +10,10 @@ public:
     float FixedDeltaTime();
 
 protected:
-	friend class Engine;
+    friend class Engine;
 
     void InitializeTime();
-	void UpdateTime();
+    void UpdateTime();
     void PauseTime();
     void UnpauseTime();
     bool StartFixedUpdate();

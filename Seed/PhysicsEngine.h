@@ -20,6 +20,7 @@ protected:
     void RunSimulationStep();
     void OnCollisionUpdate();
     void RigidbodyUpdate();
+    void OnMouseUpdate();
 
     void CleanComponents();
 

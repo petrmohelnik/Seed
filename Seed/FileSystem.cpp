@@ -26,12 +26,12 @@ void FileSystem::LoadScene(const std::string& path)
         return;
 
     auto scene = importer.ReadFile(parentFolder + path
-		, aiProcess_GenSmoothNormals
-		| aiProcess_SortByPType
-		| aiProcess_Triangulate
-		| aiProcess_CalcTangentSpace
-		| aiProcess_FixInfacingNormals
-		| aiProcess_ImproveCacheLocality
+        , aiProcess_GenSmoothNormals
+        | aiProcess_SortByPType
+        | aiProcess_Triangulate
+        | aiProcess_CalcTangentSpace
+        | aiProcess_FixInfacingNormals
+        | aiProcess_ImproveCacheLocality
         | aiProcess_FindInvalidData
         | aiProcess_JoinIdenticalVertices
         | aiProcess_RemoveRedundantMaterials
@@ -321,18 +321,18 @@ std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterials(const std::stri
 
 std::unique_ptr<TextureCubeMap> FileSystem::LoadCubeMap(const std::string& path, const std::string& format)
 {
-	std::string prefixPath = (*(path.end() - 1) == '/' || *(path.end() - 1) == '\\' ? path : path + '_');
+    std::string prefixPath = (*(path.end() - 1) == '/' || *(path.end() - 1) == '\\' ? path : path + '_');
 
-	auto cubeMap = std::make_unique<TextureCubeMap>();
+    auto cubeMap = std::make_unique<TextureCubeMap>();
 
     cubeMap->faces[0] = LoadTexture(prefixPath + "right." + format, 24, 24, true); cubeMap->faces[0]->SetIsSRGB();
-	cubeMap->faces[1] = LoadTexture(prefixPath + "left." + format, 24, 24, true); cubeMap->faces[1]->SetIsSRGB();
-	cubeMap->faces[2] = LoadTexture(prefixPath + "top." + format, 24, 24, true); cubeMap->faces[2]->SetIsSRGB();
-	cubeMap->faces[3] = LoadTexture(prefixPath + "bottom." + format, 24, 24, true); cubeMap->faces[3]->SetIsSRGB();
-	cubeMap->faces[4] = LoadTexture(prefixPath + "front." + format, 24, 24, true); cubeMap->faces[4]->SetIsSRGB();
-	cubeMap->faces[5] = LoadTexture(prefixPath + "back." + format, 24, 24, true); cubeMap->faces[5]->SetIsSRGB();
+    cubeMap->faces[1] = LoadTexture(prefixPath + "left." + format, 24, 24, true); cubeMap->faces[1]->SetIsSRGB();
+    cubeMap->faces[2] = LoadTexture(prefixPath + "top." + format, 24, 24, true); cubeMap->faces[2]->SetIsSRGB();
+    cubeMap->faces[3] = LoadTexture(prefixPath + "bottom." + format, 24, 24, true); cubeMap->faces[3]->SetIsSRGB();
+    cubeMap->faces[4] = LoadTexture(prefixPath + "front." + format, 24, 24, true); cubeMap->faces[4]->SetIsSRGB();
+    cubeMap->faces[5] = LoadTexture(prefixPath + "back." + format, 24, 24, true); cubeMap->faces[5]->SetIsSRGB();
 
-	return cubeMap;
+    return cubeMap;
 }
 
 std::unique_ptr<TextureCubeMap> FileSystem::LoadCubeMapHDR(const std::string& path)
@@ -380,7 +380,7 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
     }
 
     if(!LoadMaterialTexture(assimpMaterial, aiTextureType_NORMALS, material.Normal, folder, 24, 24))
-		material.Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
+        material.Normal->SetColor(glm::vec3(0.5f, 0.5f, 1.0f));
     
     if (LoadMaterialTexture(assimpMaterial, aiTextureType_SPECULAR, material.Metallic, folder, 24, 32))
     {
@@ -411,8 +411,8 @@ Material FileSystem::LoadMaterialData(aiMaterial* assimpMaterial, const std::str
 
     if(!LoadMaterialTexture(assimpMaterial, aiTextureType_HEIGHT, material.Height, folder, 8, 8))
         material.Height->SetColor(1.0f);
-	else
-		material.dataBlock.ParallaxStrength = GetMaterialFloat(assimpMaterial, AI_MATKEY_BUMPSCALING, 0.05f);
+    else
+        material.dataBlock.ParallaxStrength = GetMaterialFloat(assimpMaterial, AI_MATKEY_BUMPSCALING, 0.05f);
 
     if (LoadMaterialTexture(assimpMaterial, aiTextureType_LIGHTMAP, material.Occlusion, folder, 8, 8))
         material.UseOcclusionMap();
@@ -441,8 +441,8 @@ bool FileSystem::LoadMaterialTexture(aiMaterial* assimpMaterial, aiTextureType t
 void FileSystem::LoadMaterialColor(aiMaterial* assimpMaterial, const char* pKey, unsigned int type, unsigned int index, std::shared_ptr<Texture>& textureData, aiColor4D defaultColor)
 {
     aiColor4D color;
-	if (aiGetMaterialColor(assimpMaterial, pKey, type, index, &color) != AI_SUCCESS)
-		color = defaultColor;
+    if (aiGetMaterialColor(assimpMaterial, pKey, type, index, &color) != AI_SUCCESS)
+        color = defaultColor;
      
     textureData->SetColor(glm::vec4(color.r, color.g, color.b, color.a));
 }

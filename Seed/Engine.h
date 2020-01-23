@@ -12,10 +12,10 @@
 class Engine
 {
 public:
-	Engine();
+    Engine();
 
-	void CreateWindow();
-	void Work();
+    void CreateWindow();
+    void Work();
 
     static Time& GetTime();
     static Input& GetInput();
@@ -26,14 +26,14 @@ public:
     static SDLWindow& GetWindow();
 
 private:
-	Scene scene;
+    Scene scene;
     SceneDefinition sceneDefinition;
 
-	static SDLWindow window;
-	static Input input;
-	static Time time;
-	static Objects objects;
-	static Components components;
+    static SDLWindow window;
+    static Input input;
+    static Time time;
+    static Objects objects;
+    static Components components;
     static FileSystem fileSystem;
     static ShaderFactory shaderFactory;
 };

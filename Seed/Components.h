@@ -24,31 +24,32 @@ class Objects;
 class Components
 {
 public:
-	Components();
-	~Components();
+    Components();
+    ~Components();
 
 protected:
     friend class Objects;
     friend class Object;
     friend class Scene;
     friend class Engine;
-	friend class Input;
+    friend class Input;
 
     void Initialize();
 
     template<typename T>
-	std::unique_ptr<T> CreateRenderer(Object* object);
+    std::unique_ptr<T> CreateRenderer(Object* object);
     std::unique_ptr<Camera> CreateCamera(Object* object);
     std::unique_ptr<Light> CreateLight(Object* object);
     std::unique_ptr<Audio> CreateAudio(Object* object);
     template<typename T, typename ...Args>
     std::unique_ptr<T> CreateCollider(Object* object, Args&& ...arguments);
-	template<typename T>
-	std::unique_ptr<T> CreateScript(Object* object);
+    template<typename T>
+    std::unique_ptr<T> CreateScript(Object* object);
 
-	void SetSkybox(std::unique_ptr<Skybox> skybox);
-	void RemoveSkybox();
-	
+    void SetSkybox(std::unique_ptr<Skybox> skybox);
+    void RemoveSkybox();
+    
+    void OnCreateUpdate();
     void OnFixedUpdate();
     void OnFrameUpdate();
     void SimulatePhysics();
@@ -65,17 +66,17 @@ private:
     PhysicsEngine physicsEngine;
     std::vector<Audio*> audios;
     std::vector<Script*> scripts;
-	std::unique_ptr<Skybox> skybox;
+    std::unique_ptr<Skybox> skybox;
     std::unique_ptr<Object> root;
 };
 
 template<typename T>
 inline std::unique_ptr<T> Components::CreateRenderer(Object* object)
 {
-	static_assert(std::is_base_of<Renderer, T>::value, "T must be derived from Renderer");
-	auto renderer =  std::make_unique<T>(object);
+    static_assert(std::is_base_of<Renderer, T>::value, "T must be derived from Renderer");
+    auto renderer =  std::make_unique<T>(object);
     renderingPipeline.AddRenderer(renderer.get());
-	return renderer;
+    return renderer;
 }
 
 inline std::unique_ptr<Camera> Components::CreateCamera(Object* object)
@@ -111,9 +112,8 @@ inline std::unique_ptr<T> Components::CreateCollider(Object* object, Args&& ...a
 template<typename T>
 inline std::unique_ptr<T> Components::CreateScript(Object* object)
 {
-	static_assert(std::is_base_of<Script, T>::value, "T must be derived from Script");
-	auto script = std::make_unique<T>(object, physicsEngine);
-    script->OnCreate();
+    static_assert(std::is_base_of<Script, T>::value, "T must be derived from Script");
+    auto script = std::make_unique<T>(object, physicsEngine);
     scripts.push_back(script.get());
-	return script;
+    return script;
 }

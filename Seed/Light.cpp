@@ -11,7 +11,7 @@ void Light::SetType(Type type_)
 
 void Light::SetColor(glm::vec3 color)
 {
-	dataBlock.Color = color;
+    dataBlock.Color = color;
 }
 
 void Light::SetRange(float range)
@@ -156,7 +156,7 @@ void Light::BindLight(const Camera& camera)
     RenderingPipeline::BindLightUniform();
 
     SetLightTypeToDataBlock();
-	dataBlock.Pos = GetTransform()->GetPosition();
+    dataBlock.Pos = GetTransform()->GetPosition();
     dataBlock.Orientation = glm::normalize(glm::mat3(glm::inverse(glm::transpose(GetTransform()->GetModelMatrix()))) * glm::vec3(0.0f, 0.0f, -1.0f));
 
     dataBlock.ViewMatrix == glm::mat4(1.0f);

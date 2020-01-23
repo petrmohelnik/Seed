@@ -13,10 +13,10 @@ Objects::Objects()
 
 Object* Objects::CreateObjectWithMesh(const std::string& name, const std::string& meshFilePath, glm::vec3 position)
 {
-	auto object = CreateObject(name);
-	object->AddComponent<MeshRenderer>()->Load(meshFilePath);
-	object->GetComponent<Transform>()->Translate(position);
-	return object;
+    auto object = CreateObject(name);
+    object->AddComponent<MeshRenderer>()->Load(meshFilePath);
+    object->GetComponent<Transform>()->Translate(position);
+    return object;
 }
 
 void Objects::CreateObjectsFromScene(const std::string& path) const
@@ -58,12 +58,12 @@ std::vector<Object*> Objects::GetObjectsByTag(const std::string& tag)
 
 void Objects::SetSkybox(std::unique_ptr<TextureCubeMap> cubeMap)
 {
-	components.SetSkybox(std::make_unique<Skybox>(std::move(cubeMap)));
+    components.SetSkybox(std::make_unique<Skybox>(std::move(cubeMap)));
 }
 
 void Objects::RemoveSkybox()
 {
-	components.RemoveSkybox();
+    components.RemoveSkybox();
 }
 
 void Objects::UpdateForDestruction()

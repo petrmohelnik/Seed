@@ -21,13 +21,13 @@ glm::vec3 BoxCollider::GetSize()
 
 glm::vec3 BoxCollider::GetPosition() const
 {
-	return GetTransform()->GetLocalToWorldMatrix() * glm::vec4(GetTransform()->GetLocalPosition() + center, 1.0f);
+    return GetTransform()->GetLocalToWorldMatrix() * glm::vec4(GetTransform()->GetLocalPosition() + center, 1.0f);
 }
 
 void BoxCollider::SetPosition(glm::vec3 position)
 {
-	auto worldPosition = GetTransform()->GetPosition();
-	auto worldPositionWithOffset = GetPosition();
+    auto worldPosition = GetTransform()->GetPosition();
+    auto worldPositionWithOffset = GetPosition();
 
-	GetTransform()->SetPosition(position - (worldPositionWithOffset - worldPosition), Transform::Space::World);
+    GetTransform()->SetPosition(position - (worldPositionWithOffset - worldPosition), Transform::Space::World);
 }

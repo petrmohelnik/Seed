@@ -9,7 +9,7 @@ public:
     {
         Quad,
         Cube,
-		BoundingSphere
+        BoundingSphere
     };
 
     SimpleMesh(Shape shape);

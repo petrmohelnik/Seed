@@ -24,11 +24,11 @@ private:
 
     float verticalRotation = 0.0f;
 
-	float bulletMass = 0.1f;
-	float bulletBounciness = 0.5f;
-	float bulletFriction = 0.0f;
-	float bulletLinearDamping = 0.0f;
-	float bulletAngularDamping = 0.0f;
+    float bulletMass = 0.1f;
+    float bulletBounciness = 0.5f;
+    float bulletFriction = 0.0f;
+    float bulletLinearDamping = 0.0f;
+    float bulletAngularDamping = 0.0f;
 };
 
 void PlayerScript::OnCreate()
@@ -90,16 +90,16 @@ void PlayerScript::Update()
             flashLight->SetIntensity(100.0);
     }
 
-	input.SliderFloat("bulletMass", bulletMass, 0.0f, 10.0f);
-	input.SliderFloat("bulletBounciness", bulletBounciness, 0.0f, 1.0f);
-	input.SliderFloat("bulletFriction", bulletFriction, 0.0f, 1.0f);
-	input.SliderFloat("bulletLinearDamping", bulletLinearDamping, 0.0f, 1.0f);
-	input.SliderFloat("bulletAngularDamping", bulletAngularDamping, 0.0f, 1.0f);
+    input.SliderFloat("bulletMass", bulletMass, 0.0f, 10.0f);
+    input.SliderFloat("bulletBounciness", bulletBounciness, 0.0f, 1.0f);
+    input.SliderFloat("bulletFriction", bulletFriction, 0.0f, 1.0f);
+    input.SliderFloat("bulletLinearDamping", bulletLinearDamping, 0.0f, 1.0f);
+    input.SliderFloat("bulletAngularDamping", bulletAngularDamping, 0.0f, 1.0f);
 
     if (input.MouseButtonDown(SDL_BUTTON_LEFT))
     {
         auto bullet = objects.CreateObject<BulletObject>("Bullet");
-		bullet->SetPhysicsMaterial(bulletMass, bulletBounciness, bulletFriction, bulletLinearDamping, bulletAngularDamping);
+        bullet->SetPhysicsMaterial(bulletMass, bulletBounciness, bulletFriction, bulletLinearDamping, bulletAngularDamping);
 
         auto initialPosition = camera->GetTransform()->GetPosition() + camera->GetTransform()->GetForwardAxis() * 0.2f;
         bullet->GetComponent<Transform>()->SetPosition(initialPosition);
