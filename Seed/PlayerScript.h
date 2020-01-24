@@ -23,6 +23,7 @@ private:
     CharacterController* characterController;
 
     float verticalRotation = 0.0f;
+    float bulletForce = 0.0f;
 
     float bulletMass = 0.1f;
     float bulletBounciness = 0.5f;
@@ -96,7 +97,12 @@ void PlayerScript::Update()
     input.SliderFloat("bulletLinearDamping", bulletLinearDamping, 0.0f, 1.0f);
     input.SliderFloat("bulletAngularDamping", bulletAngularDamping, 0.0f, 1.0f);
 
-    if (input.MouseButtonDown(SDL_BUTTON_LEFT))
+
+    if (input.MouseButton(SDL_BUTTON_LEFT))
+    {
+        bulletForce += 5.0f * time.DeltaTime();
+    }
+    else if (bulletForce != 0.0f)
     {
         auto bullet = objects.CreateObject<BulletObject>("Bullet");
         bullet->SetPhysicsMaterial(bulletMass, bulletBounciness, bulletFriction, bulletLinearDamping, bulletAngularDamping);
@@ -105,7 +111,8 @@ void PlayerScript::Update()
         bullet->GetComponent<Transform>()->SetPosition(initialPosition);
         bullet->GetComponent<Transform>()->TranslateY(-0.1f);
         bullet->GetComponent<Collider>()->InitializeRigidbody();
-        bullet->GetComponent<Collider>()->AddForce(camera->GetTransform()->GetForwardAxis() * 1.0f, Collider::ForceType::Impulse);
+        bullet->GetComponent<Collider>()->AddForce(camera->GetTransform()->GetForwardAxis() * bulletForce, Collider::ForceType::Impulse);
         bullet->Destroy(15.0f);
+        bulletForce = 0.0f;
     }
 }

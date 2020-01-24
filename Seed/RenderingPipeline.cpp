@@ -26,6 +26,8 @@ void RenderingPipeline::SetRootTransform(Transform* root)
 
 void RenderingPipeline::Initialize()
 {
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
     auto windowSize = Engine::GetWindow().GetWindowSize();
     auto width = windowSize.x;
     auto height = windowSize.y;
@@ -35,8 +37,6 @@ void RenderingPipeline::Initialize()
 
     quad = std::make_unique<SimpleMesh>(SimpleMesh::Shape::Quad);
     boundingSphere = std::make_unique<SimpleMesh>(SimpleMesh::Shape::BoundingSphere);
-
-    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
     glGenBuffers(1, &cameraUniform);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, cameraUniform);

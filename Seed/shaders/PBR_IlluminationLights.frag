@@ -162,13 +162,13 @@ float CalculateShadowPoint(vec3 worldPos, vec3 normal, vec3 lightDir)
 
     float bias = mix(0.0001, 0.00001, dot(normal, lightDir));
     float gradientNoise = PI * 2 * InterleavedGradientNoise(gl_FragCoord.xy);
-    float filterRadius = 0.05 * Light.SizeUV;
+    float filterRadius = 0.03 * Light.SizeUV;
 
     float shadow = 0.0;
     for(int i = 0; i < 20; i++)
     {
         vec3 sampleCoords = VogelSphereCoords(i, 20, gradientNoise) * filterRadius;
-        shadow += 1.0 - texture(texCubeShadowLerp, vec4(vecToLight + sampleCoords, currentDepth + bias)).r;
+        shadow += 1.0 - texture(texCubeShadowLerp, vec4(normalize(vecToLight) + sampleCoords, currentDepth + bias)).r;
     }
     shadow /= 20.0f;
 

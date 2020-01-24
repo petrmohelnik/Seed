@@ -5,11 +5,8 @@ https://blenderartists.org/t/creating-a-simple-collision-mesh/546298
 napr. pokud ma node dite s nazvem collider tak se pouzije jako collisionmesh
 metadata na weight?
 ty drobny objekty sceny udelat dynamicky - treba je prirazovat ke colliderum podle jmena
-bullety jako svetla
 na kliknuti treba zapnout svetlo v objektu nebo dat silu na pozici, nebo pritahovat objekt k sobe
-udelat z cervenho svetla hopik
 chytat veci a prenaset
-cim dele drzim tlacitko tim vetsi sila
 
 https://github.com/KhronosGroup/glTF-Blender-IO/pull/820
 https://github.com/KhronosGroup/glTF-Blender-IO/pull/812

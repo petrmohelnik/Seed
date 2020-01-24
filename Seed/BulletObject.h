@@ -18,7 +18,7 @@ void BulletObject::Initialize()
     GetComponent<Collider>()->SetContinuousCollisionDetection(0.5f, 0.1f);
     AddComponent<MeshRenderer>()->Load("sphere.obj");
     GetComponent<Transform>()->SetScale(0.05f);
-    AddComponent<Light>()->SetPointLight(0.5f, 10.0f);
+    AddComponent<Light>()->SetPointLight(0.5f, 0.5f);
     GetComponent<Light>()->SetShadowNearPlaneDistance(0.05f);
 
     auto bulletMaterial = std::make_shared<Material>();

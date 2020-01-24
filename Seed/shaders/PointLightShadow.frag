@@ -10,9 +10,11 @@ layout(std140, binding = 1) uniform LightBlock
     float Range;
     float Intensity;
     float SizeUV;
+    float SpotAngle;
     float SpotAngleScale;
     float SpotAngleOffset;
     float ShadowFarPlane;
+    float ViewPortScale;
     uint Type;
 } Light;
 

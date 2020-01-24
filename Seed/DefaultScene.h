@@ -20,16 +20,17 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //light->GetComponent<Transform>()->LookAt(glm::vec3(0.0f));
     light->AddComponent<MeshRenderer>()->Load("sphere.obj");
     light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-    light->AddComponent<GameScript>();
+    light->AddComponent<SphereCollider>(glm::vec3(0.0f), 1.0f);
+    light->GetComponent<Collider>()->SetBounciness(1.0f);
+    light->GetComponent<Collider>()->SetMass(0.1f);
 
     auto ground = objects.CreateObject("ground");
     ground->GetComponent<Transform>()->SetScale(glm::vec3(8.0f, 2.0f, 10.0f));
     ground->GetComponent<Transform>()->TranslateY(2.0f);
     ground->AddComponent<MeshCollider>(fileSystem.LoadMesh("cube.dae"), false);
-    //ground->GetComponent<Collider>()->SetMargin(1.0f);
-    //ground->AddComponent<BoxCollider>()->SetBox(glm::vec3(0.0f, -2.0f, 0.0f), glm::vec3(1.0f));
+    ground->GetComponent<Collider>()->SetBounciness(1.0f);
 
-    objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
+    objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
     auto skyboxSwitcher = objects.CreateObject("skyboxSwitcher")->AddComponent<SkyboxSwitcherScript>();
     skyboxSwitcher->AddSkybox("Newport_Loft.hdr");
     skyboxSwitcher->AddSkybox("sunrise.hdr");
