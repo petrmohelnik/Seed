@@ -96,6 +96,4 @@ protected:
 
     std::unordered_map<Collider*, std::vector<ContactPoint>> contactPoints;
     std::unordered_map<Collider*, Collision> collisions;
-    bool mouseOver = false;
-    bool mousePressed = false;
 };

@@ -1,9 +1,9 @@
 #pragma once
 #include "Object.h"
 #include "PlayerObject.h"
-#include "GameScript.h"
 #include "RotateWorldScript.h"
 #include "SkyboxSwitcherScript.h"
+#include "LightScript.h"
 
 void DefaultScene(Objects& objects, FileSystem& fileSystem)
 {
@@ -12,17 +12,16 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto light = objects.CreateObject("light");
     light->AddComponent<Light>();
     light->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-    light->GetComponent<Light>()->SetSpotLight(glm::vec3(0.0f, -1.0f, -0.4f), 0.0f, 100.0f, 2.4f, 0.2f);
+    light->GetComponent<Light>()->SetPointLight(100.0f, 10.0f);
     light->GetComponent<Light>()->SetShadowNearPlaneDistance(0.2f);
     light->GetComponent<Light>()->SetShadowFarPlaneDistance(30.0f);
     light->GetComponent<Transform>()->Translate(glm::vec3(-2.0, 2.0, 5.0), Transform::Space::World);
     light->GetComponent<Transform>()->SetScale(0.2f);
-    //light->GetComponent<Transform>()->LookAt(glm::vec3(0.0f));
     light->AddComponent<MeshRenderer>()->Load("sphere.obj");
     light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
     light->AddComponent<SphereCollider>(glm::vec3(0.0f), 1.0f);
     light->GetComponent<Collider>()->SetBounciness(1.0f);
-    light->GetComponent<Collider>()->SetMass(0.1f);
+    light->GetComponent<Collider>()->SetMass(1.0f);
 
     auto ground = objects.CreateObject("ground");
     ground->GetComponent<Transform>()->SetScale(glm::vec3(8.0f, 2.0f, 10.0f));
@@ -45,27 +44,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     //objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
     //objects.SetSkybox(std::make_unique<TextureCubeMap>(glm::vec4(0.4f, 0.4f, 0.7f, 1.0f)));
 
- //   for (int i = 0; i < 5; i++)
- //   {
- //       float xPos = (i % 5) * 2 - 14.0f;
- //       float yPos = (i / 5) * 2;
- //       auto sphere = objects.CreateObjectWithMesh("sphere", "sphere.obj", glm::vec3(xPos, yPos, 1.0f));
-    //    sphere->GetComponent<MeshRenderer>()->GetMaterial()->SetSpecularWorkflow();
- //       sphere->GetComponent<MeshRenderer>()->GetMaterial()->Metallic->SetColor(
-    //        glm::vec4(0.2f, 0.2f, 0.2f, i * (1.0f / 4.5f)));
- //       sphere->GetComponent<MeshRenderer>()->GetMaterial()->Albedo->SetColor(glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
- //   }
-    //for (int i = 0; i < 15; i++)
-    //{
-    //    float xPos = (i % 5) * 2 - 14.0f;
-    //    float yPos = (i / 5) * 2 + 2;
-    //    auto sphere = objects.CreateObjectWithMesh("sphere", "sphere.obj", glm::vec3(xPos, yPos, 1.0f));
-    //    sphere->GetComponent<MeshRenderer>()->GetMaterial()->SetMetallicWorkflow();
-    //    sphere->GetComponent<MeshRenderer>()->GetMaterial()->Metallic->SetColor(
-    //        glm::vec3(1.0f, ((14 - i) / 5) * 0.4 + 0.1, (i % 5) * (1.0f / 4.5f)));
-    //    sphere->GetComponent<MeshRenderer>()->GetMaterial()->Albedo->SetColor(glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
-    //}
-    
     objects.CreateObjectsFromScene("scene/scene.gltf");
 
     auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));
@@ -132,6 +110,18 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     {
         target->AddComponent<MeshCollider>(targetMesh, true);
         target->GetComponent<Collider>()->SetMass(30.0f);
+    }
+
+    for (auto& light : objects.GetComponents<Light>())
+    {
+        if (light->GetName() == "FlashLight")
+            continue;
+        if (!light->GetObject()->GetComponent<Collider>())
+        {
+            light->GetObject()->AddComponent<SphereCollider>(glm::vec3(0.0f), 0.3f / glm::length(light->GetTransform()->GetScale()));
+            light->GetObject()->GetComponent<Collider>()->SetIsTrigger(true);
+        }
+        light->GetObject()->AddComponent<LightScript>();
     }
 
     RenderingPipeline::SetMainCamera(objects.GetObjectByName("PlayerCamera")->GetComponent<Camera>());

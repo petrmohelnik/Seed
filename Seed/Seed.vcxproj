@@ -85,6 +85,7 @@
     <ClInclude Include="CameraMovementScript.h" />
     <ClInclude Include="CharacterController.h" />
     <ClInclude Include="DynamicCharacterController.h" />
+    <ClInclude Include="LightScript.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="PlayerScript.h" />
@@ -98,7 +99,6 @@
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="Frustum.h" />
-    <ClInclude Include="GameScript.h" />
     <ClInclude Include="Identifiable.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -238,6 +238,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>StdAfx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>lib\assimp-vc141-mtd.lib;lib\SDL2.lib;lib\SDL2main.lib;lib\SDL2test.lib;lib\glew32.lib;lib\glew32s.lib;lib\FreeImage.lib;lib\BulletCollision_Debug.lib;lib\BulletDynamics_Debug.lib;lib\BulletInverseDynamics_Debug.lib;lib\BulletSoftBody_Debug.lib;lib\LinearMath_Debug.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -268,6 +269,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>StdAfx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

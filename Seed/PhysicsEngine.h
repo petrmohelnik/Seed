@@ -2,6 +2,7 @@
 
 class Collider;
 class MeshCollider;
+class Script;
 struct ContactPoint;
 
 class PhysicsEngine
@@ -46,9 +47,14 @@ private:
     void AddContactManifold(btPersistentManifold* contactManifold);
     void ProcessCollisionExit(Collider* collider);
     void ProcessCollisionEnterAndStay(Collider* collider);
+    Collider* ClosestColliderUnderMouse();
     void Simulate();
 
+    void CallScriptCallbackOnCollider(Collider* collider, std::function<void(Script*)> scriptCallback);
+
     std::vector<Collider*> colliders;
+    Collider* previousColliderUnderMouse = nullptr;
+    bool mouseDown = false;
 
     std::unique_ptr<btCollisionConfiguration> collisionConfiguration;
     std::unique_ptr<btCollisionDispatcher> dispatcher;

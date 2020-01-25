@@ -52,6 +52,9 @@ public:
     template <class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type* = nullptr>
     T* GetComponent();
 
+    template <class T>
+    std::vector<T*> GetComponents();
+
     void Destroy(float delay = 0);
 
 protected:
@@ -183,4 +186,34 @@ inline T* Object::GetComponent()
             return scriptRawPointer;
     }
     return nullptr;
+}
+
+template<class T>
+inline std::vector<T*> Object::GetComponents()
+{
+    std::vector<T*> components;
+
+    if constexpr (std::is_base_of<Script, T>::value)
+    {
+        for (const auto& script : scripts)
+        {
+            if (auto scriptRawPointer = dynamic_cast<T*>(script.get()))
+                components.push_back(scriptRawPointer);
+        }
+    }
+    else if constexpr (std::is_base_of<Audio, T>::value)
+    {
+        for (const auto& audio : audios)
+        {
+            if (auto audioRawPointer = dynamic_cast<T*>(audio.get()))
+                components.push_back(audioRawPointer);
+        }
+    }
+    else
+    {
+        if (auto rawPointer = GetComponent<T>())
+            components.push_back(rawPointer);
+    }
+
+    return components;
 }

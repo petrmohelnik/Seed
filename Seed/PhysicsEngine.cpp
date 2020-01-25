@@ -278,8 +278,7 @@ void PhysicsEngine::ProcessCollisionExit(Collider* collider)
         if (collider->contactPoints.count(collision->first) == 0)
         {
             collision->second.ContactPoints.clear();
-            for (auto const& script : collider->GetObject()->scripts)
-                script->OnCollisionExit(collision->second);
+            CallScriptCallbackOnCollider(collider, [&collision](auto script) { script->OnCollisionExit(collision->second); });
 
             collision = collider->collisions.erase(collision);
         }
@@ -301,8 +300,7 @@ void PhysicsEngine::ProcessCollisionEnterAndStay(Collider* collider)
                 collision.TotalImpulse += contactPoint.Impulse;
             collision.OtherCollider = contactPoints.first;
 
-            for (auto const& script : collider->GetObject()->scripts)
-                script->OnCollisionEnter(collision);
+            CallScriptCallbackOnCollider(collider, [&collision](auto script) { script->OnCollisionEnter(collision); });
         }
         else
         {
@@ -312,8 +310,7 @@ void PhysicsEngine::ProcessCollisionEnterAndStay(Collider* collider)
             for (auto const& contactPoint : collision.ContactPoints)
                 collision.TotalImpulse += contactPoint.Impulse;
 
-            for (auto const& script : collider->GetObject()->scripts)
-                script->OnCollisionStay(collision);
+            CallScriptCallbackOnCollider(collider, [&collision](auto script) { script->OnCollisionStay(collision); });
         }
     }
 }
@@ -359,8 +356,68 @@ void PhysicsEngine::RigidbodyUpdate()
     }
 }
 
+Collider* PhysicsEngine::ClosestColliderUnderMouse()
+{
+    auto windowSize = Engine::GetWindow().GetWindowSize();
+    auto mousePosition = Engine::GetInput().MousePosition();
+    mousePosition.y = windowSize.y - 1.0f - mousePosition.y;
+
+    auto fromPosition = ToBtVector3(glm::unProject(glm::vec3(mousePosition, 0.0f),
+        RenderingPipeline::MainCamera()->dataBlock.view, RenderingPipeline::MainCamera()->dataBlock.projection, glm::vec4(0.0f, 0.0f, windowSize)));
+    auto toPosition = ToBtVector3(glm::unProject(glm::vec3(mousePosition, 1.0f),
+        RenderingPipeline::MainCamera()->dataBlock.view, RenderingPipeline::MainCamera()->dataBlock.projection, glm::vec4(0.0f, 0.0f, windowSize)));
+
+    btCollisionWorld::ClosestRayResultCallback closestResultCallback(fromPosition, toPosition);
+    dynamicsWorld->rayTest(fromPosition, toPosition, closestResultCallback);
+    if (closestResultCallback.hasHit())
+    {
+        return reinterpret_cast<Collider*>(closestResultCallback.m_collisionObject->getUserPointer());
+    }
+
+    return nullptr;
+}
+
 void PhysicsEngine::OnMouseUpdate()
 {
+    auto currentColliderUnderMouse = ClosestColliderUnderMouse();
+
+    if (currentColliderUnderMouse)
+    {
+        if (Engine::GetInput().MouseButtonDown(SDL_BUTTON_LEFT))
+        {
+            CallScriptCallbackOnCollider(currentColliderUnderMouse, [](auto script) { script->OnMouseDown(); });
+            mouseDown = true;
+        }
+        if (Engine::GetInput().MouseButton(SDL_BUTTON_LEFT))
+        {
+            CallScriptCallbackOnCollider(currentColliderUnderMouse, [](auto script) { script->OnMouseDrag(); });
+        }
+        else if (mouseDown)
+        {
+            CallScriptCallbackOnCollider(currentColliderUnderMouse, [](auto script) { script->OnMouseUp(); });
+            mouseDown = false;
+        }
+
+        if (currentColliderUnderMouse != previousColliderUnderMouse)
+        {
+            CallScriptCallbackOnCollider(currentColliderUnderMouse, [](auto script) { script->OnMouseEnter(); });
+        }
+
+        CallScriptCallbackOnCollider(currentColliderUnderMouse, [](auto script) { script->OnMouseOver(); });
+    }
+    if (previousColliderUnderMouse && previousColliderUnderMouse != currentColliderUnderMouse)
+    {
+        CallScriptCallbackOnCollider(previousColliderUnderMouse, [](auto script) { script->OnMouseExit(); });
+    }
+
+    previousColliderUnderMouse = currentColliderUnderMouse;
+}
+
+
+void PhysicsEngine::CallScriptCallbackOnCollider(Collider* collider, std::function<void(Script*)> scriptCallback)
+{
+    for (auto const& script : collider->GetObject()->scripts)
+        scriptCallback(script.get());
 }
 
 void PhysicsEngine::CleanComponents()
@@ -377,6 +434,8 @@ void PhysicsEngine::CleanComponents()
 
             delete collider->btRigidbody;
         }
+        if (collider->ToBeDestroyed() && collider == previousColliderUnderMouse)
+            previousColliderUnderMouse = nullptr;
         return collider->ToBeDestroyed();
     });
 }

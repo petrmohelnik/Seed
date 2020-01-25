@@ -1,6 +1,7 @@
 #pragma once
 
 class Object;
+class Component;
 class Components;
 class FileSystem;
 class TextureCubeMap;
@@ -19,6 +20,8 @@ public:
     std::vector<Object*> GetObjectsByTag(const std::string& tag);
     template<typename T>
     std::vector<T*> GetObjects();
+    template<typename T>
+    std::vector<T*> GetComponents();
 
     void SetSkybox(std::unique_ptr<TextureCubeMap> cubeMap);
     void RemoveSkybox();
@@ -51,12 +54,26 @@ template<typename T>
 std::vector<T*> Objects::GetObjects()
 {
     static_assert(std::is_base_of<Object, T>::value, "T must be derived from Object");
+
     std::vector<T*> result;
-    T* rawptr = nullptr;
     for (const auto& object : objects)
     {
-        if ((rawptr = dynamic_cast<T*>(object.second.get())) != nullptr)
+        if (auto rawptr = dynamic_cast<T*>(object.second.get()))
             result.push_back(rawptr);
     }
     return result;
+}
+
+template<typename T>
+std::vector<T*> Objects::GetComponents()
+{
+    static_assert(std::is_base_of<Component, T>::value, "T must be derived from Component");
+
+    std::vector<T*> allComponents;
+    for (const auto& object : objects)
+    {
+        auto components = object.second.get()->GetComponents<T>();
+        std::move(std::begin(components), std::end(components), std::back_inserter(allComponents));
+    }
+    return allComponents;
 }

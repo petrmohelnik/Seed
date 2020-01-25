@@ -22,6 +22,7 @@ public:
 
 protected:
     friend class RenderingPipeline;
+    friend class PhysicsEngine;
     friend class Light;
 
 private:

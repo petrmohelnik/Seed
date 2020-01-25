@@ -67,7 +67,6 @@ void Input::ClearInputs()
     keyPressedDown.clear();
     mousePressedDown.clear();
     mouseDeltaPosition = glm::ivec2(0, 0);
-    mousePosition = glm::ivec2(0, 0);
 }
 
 bool Input::Key(SDL_Keycode key)

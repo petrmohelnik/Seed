@@ -37,6 +37,8 @@ void PlayerScript::OnCreate()
     camera = objects.GetObjectByName("PlayerCamera")->GetComponent<Camera>();
     flashLight = objects.GetObjectByName("FlashLight")->GetComponent<Light>();
     characterController = object->GetComponent<CharacterController>();
+
+    auto scripts = object->GetComponents<Script>();
 }
 
 inline void PlayerScript::FixedUpdate()

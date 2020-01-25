@@ -258,7 +258,7 @@ glm::vec3 Collider::GetVelocityInPoint(glm::vec3 point, Transform::Space space)
         worldPosition = point;
     auto relativePosition = PhysicsEngine::ToBtVector3(worldPosition) - btRigidbody->getCenterOfMassPosition();
 
-    btRigidbody->getVelocityInLocalPoint(relativePosition);
+    return PhysicsEngine::ToGlmVec3(btRigidbody->getVelocityInLocalPoint(relativePosition));
 }
 
 void Collider::OnInputGraphUpdate()
