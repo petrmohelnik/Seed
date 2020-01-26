@@ -1,7 +1,6 @@
 #pragma once
 #include "Object.h"
 #include "PlayerObject.h"
-#include "RotateWorldScript.h"
 #include "SkyboxSwitcherScript.h"
 #include "LightScript.h"
 
@@ -18,7 +17,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     light->GetComponent<Transform>()->Translate(glm::vec3(-2.0, 2.0, 5.0), Transform::Space::World);
     light->GetComponent<Transform>()->SetScale(0.2f);
     light->AddComponent<MeshRenderer>()->Load("sphere.obj");
-    light->GetComponent<MeshRenderer>()->GetSharedMaterial()->Emission->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+    light->GetComponent<MeshRenderer>()->GetMaterial()->Emission->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
     light->AddComponent<SphereCollider>(glm::vec3(0.0f), 1.0f);
     light->GetComponent<Collider>()->SetBounciness(1.0f);
     light->GetComponent<Collider>()->SetMass(1.0f);
@@ -29,7 +28,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     ground->AddComponent<MeshCollider>(fileSystem.LoadMesh("cube.dae"), false);
     ground->GetComponent<Collider>()->SetBounciness(1.0f);
 
-    objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
+    objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
     auto skyboxSwitcher = objects.CreateObject("skyboxSwitcher")->AddComponent<SkyboxSwitcherScript>();
     skyboxSwitcher->AddSkybox("Newport_Loft.hdr");
     skyboxSwitcher->AddSkybox("sunrise.hdr");
@@ -37,12 +36,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     skyboxSwitcher->AddSkybox("Bunker.hdr");
     skyboxSwitcher->AddSkybox("Protospace.hdr");
     skyboxSwitcher->AddSkybox("Milkyway.hdr");
-    //objects.SetSkybox(fileSystem.LoadCubeMapHDR("sunrise.hdr"));
-    //objects.SetSkybox(fileSystem.LoadCubeMapHDR("Space.hdr"));
-    //objects.SetSkybox(fileSystem.LoadCubeMapHDR("Bunker.hdr"));
-    //objects.SetSkybox(fileSystem.LoadCubeMapHDR("Protospace.hdr"));
-    //objects.SetSkybox(fileSystem.LoadCubeMap("skybox/", "jpg"));
-    //objects.SetSkybox(std::make_unique<TextureCubeMap>(glm::vec4(0.4f, 0.4f, 0.7f, 1.0f)));
 
     objects.CreateObjectsFromScene("scene/scene.gltf");
 
@@ -62,9 +55,9 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     cobblestone->AddComponent<MeshRenderer>()->Load("cube.dae");
     cobblestone->GetComponent<MeshRenderer>()->SetMaterial(0, cobblestoneMaterial);
     cobblestone->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
-    cobblestone->GetComponent<Transform>()->RotateX(1.0f);
-    //cobblestone->AddComponent<RotateWorldScript>();
+    cobblestone->GetComponent<Transform>()->Translate(glm::vec3(3.0f, 0.5f, 7.0f));
     cobblestone->AddComponent<BoxCollider>(glm::vec3(0.0f), glm::vec3(1.0f));
+    cobblestone->GetComponent<BoxCollider>()->SetMass(100.0f);
 
     auto redbricksMaterial = std::make_shared<Material>();
     redbricksMaterial->Albedo = fileSystem.LoadTexture("redbricks/albedo.png", 24, 24);
@@ -79,11 +72,10 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto redbricks = objects.CreateObject("redbricks");
     redbricks->AddComponent<MeshRenderer>()->Load("cube.dae");
     redbricks->GetComponent<MeshRenderer>()->SetMaterial(0, redbricksMaterial);
-    redbricks->GetComponent<Transform>()->TranslateX(-1.5f);
+    redbricks->GetComponent<Transform>()->Translate(glm::vec3(1.9f, 0.5f, 7.0f));
     redbricks->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
-    redbricks->AddComponent<RotateWorldScript>();
     redbricks->AddComponent<BoxCollider>(glm::vec3(0.0f), glm::vec3(1.0f));
-    redbricks->GetComponent<Collider>()->SetIsKinematic(true);
+    redbricks->GetComponent<BoxCollider>()->SetMass(100.0f);
 
     auto roughblockMaterial = std::make_shared<Material>();
     roughblockMaterial->Albedo = fileSystem.LoadTexture("roughblock/albedo.png", 24, 24);
@@ -98,11 +90,10 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto roughblock = objects.CreateObject("roughblock");
     roughblock->AddComponent<MeshRenderer>()->Load("cube.dae");
     roughblock->GetComponent<MeshRenderer>()->SetMaterial(0, roughblockMaterial);
-    roughblock->GetComponent<Transform>()->TranslateZ(1.5f);
-    roughblock->GetComponent<Transform>()->RotateX(0.5f);
+    roughblock->GetComponent<Transform>()->Translate(glm::vec3(2.5f, 1.6f, 7.0f));
     roughblock->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
-    //roughblock->AddComponent<RotateWorldScript>();
     roughblock->AddComponent<BoxCollider>(glm::vec3(0.0f), glm::vec3(1.0f));
+    roughblock->GetComponent<BoxCollider>()->SetMass(100.0f);
 
     auto targets = objects.GetObjectsByName("TargetDummy");
     auto targetMesh = fileSystem.LoadMesh("TargetDummy/TargetDummy.gltf");
@@ -114,7 +105,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 
     for (auto& light : objects.GetComponents<Light>())
     {
-        if (light->GetName() == "FlashLight")
+        if (light->GetObject()->GetName() == "FlashLight")
             continue;
         if (!light->GetObject()->GetComponent<Collider>())
         {
@@ -122,6 +113,35 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
             light->GetObject()->GetComponent<Collider>()->SetIsTrigger(true);
         }
         light->GetObject()->AddComponent<LightScript>();
+    }
+
+    for (int i = 0; i < 5; i++)
+    {
+        float xPos = (i % 5) * 0.4f - 3.0f;
+        float yPos = (i / 5) * 0.4f + 0.4f;
+        auto sphere = objects.CreateObjectWithMesh("sphere", "sphere_flat.obj", glm::vec3(xPos, yPos, 1.0f));
+        sphere->GetComponent<MeshRenderer>()->SetMaterial(0, sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Clone());
+        sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->SetSpecularWorkflow();
+        sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Metallic->SetColor(
+            glm::vec4(0.2f, 0.2f, 0.2f, i * 0.25f));
+        sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Albedo->SetColor(glm::vec4(1.0f));
+        sphere->GetComponent<Transform>()->SetScale(0.2f);
+        sphere->AddComponent<SphereCollider>(glm::vec3(0.0f), 1.0f);
+        sphere->GetComponent<Collider>()->SetMass(1.0f);
+    }
+    for (int i = 0; i < 15; i++)
+    {
+        float xPos = (i % 5) * 0.4f - 3.0f;
+        float yPos = (i / 5) * 0.4f + 0.8f;
+        auto sphere = objects.CreateObjectWithMesh("sphere", "sphere.obj", glm::vec3(xPos, yPos, 1.0f));
+        sphere->GetComponent<MeshRenderer>()->SetMaterial(0, sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Clone());
+        sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->SetMetallicWorkflow();
+        sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Metallic->SetColor(
+            glm::vec3(1.0f, ((14 - i) / 5) * 0.5, (i % 5) * 0.25f));
+        sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Albedo->SetColor(glm::vec4(1.0f));
+        sphere->GetComponent<Transform>()->SetScale(0.2f);
+        sphere->AddComponent<SphereCollider>(glm::vec3(0.0f), 1.0f);
+        sphere->GetComponent<Collider>()->SetMass(1.0f);
     }
 
     RenderingPipeline::SetMainCamera(objects.GetObjectByName("PlayerCamera")->GetComponent<Camera>());

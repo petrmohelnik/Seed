@@ -10,6 +10,28 @@ SubMesh::~SubMesh()
     Unload();
 }
 
+std::shared_ptr<SubMesh> SubMesh::Clone()
+{
+    auto clonedSubMesh = std::make_shared<SubMesh>();
+
+    clonedSubMesh->vertices = vertices;
+    clonedSubMesh->normals = normals;
+    clonedSubMesh->tangents = tangents;
+    clonedSubMesh->bitangents = bitangents;
+    clonedSubMesh->texCoords = texCoords;
+    clonedSubMesh->indices = indices;
+    clonedSubMesh->indicesCount = indicesCount;
+    clonedSubMesh->indices = indices;
+    clonedSubMesh->aabb = aabb;
+    clonedSubMesh->deleteAfterLoad = deleteAfterLoad;
+
+   /* GLuint vao = 0;
+    GLuint vbo[6];*/
+    throw std::runtime_error("Need to implement copy of vao/vbo to clonedSubMesh - cloned mesh cannot share gpu data");
+
+    return clonedSubMesh;
+}
+
 void SubMesh::Load()
 {
     if (vao != 0)

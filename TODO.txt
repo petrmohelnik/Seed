@@ -1,20 +1,14 @@
-kdy se ma updatovat model amtrix vuci tem updatum pred renderem?
-
-na kliknuti treba zapnout svetlo v objektu nebo dat silu na pozici, nebo pritahovat objekt k sobe, strelit na pozici kulku
-chytat veci a prenaset
-
-panaka nahradit rozbitym
 lepsi model na bullet
+
+-
+panaka nahradit rozbitym
 
 zkusit udelat jednoduchy bounding mesh sceny
 https://blenderartists.org/t/creating-a-simple-collision-mesh/546298
 napr. pokud ma node dite s nazvem collider tak se pouzije jako collisionmesh
 metadata na weight?
 zhecknou po exportu range - nacitat je taky z metadat?
-ty drobny objekty sceny udelat dynamicky - treba je prirazovat ke colliderum podle jmena
-
-https://github.com/KhronosGroup/glTF-Blender-IO/pull/820
-https://github.com/KhronosGroup/glTF-Blender-IO/pull/812
+ty drobny objekty nebudou staticky, ale dynamicky - treba je prirazovat ke colliderum podle jmena
 
 https://www.thoughtspike.com/friction-coefficients-for-bullet-physics/
 =======================================================================================================================
@@ -58,9 +52,6 @@ https://docs.unity3d.com/Manual/SL-SubShaderTags.html -- inspirace poradi
 
 submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?
-
-doresit clonovani pres GetMaterial a GetMesh vuci loadu a unloadu z gpu - problem pri zmene dat a destrukci se to porad sdili
-mit ty data submeshe aspol. nejak zabaleny do pointeru a zbavit se jich pres reset misto ty shrink_to_fit?
 
 https://learn.unity.com/tutorial/physics-best-practices#5c7f8528edbc2a002053b5b4
 

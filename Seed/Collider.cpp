@@ -56,7 +56,7 @@ float Collider::GetMargin()
 
 bool Collider::IsSleeping()
 {
-    return btRigidbody && (btRigidbody->getActivationState() & ISLAND_SLEEPING) != 0;
+    return btRigidbody && btRigidbody->isActive();
 }
 
 void Collider::InitializeRigidbody()
@@ -184,6 +184,8 @@ void Collider::AddForce(glm::vec3 force, ForceType forceType)
     if (!btRigidbody)
         throw std::runtime_error("Cannot apply force, rigidbody is not initialized");
 
+    btRigidbody->activate();
+
     if (forceType == ForceType::Force)
         btRigidbody->applyCentralForce(PhysicsEngine::ToBtVector3(force));
     else if (forceType == ForceType::Impulse)
@@ -199,6 +201,8 @@ void Collider::AddTorque(glm::vec3 torque, ForceType forceType)
     if (!btRigidbody)
         throw std::runtime_error("Cannot apply torque, rigidbody is not initialized");
 
+    btRigidbody->activate();
+
     if (forceType == ForceType::Force)
         btRigidbody->applyTorque(PhysicsEngine::ToBtVector3(torque));
     else if (forceType == ForceType::Impulse)
@@ -213,6 +217,8 @@ void Collider::AddForceAtPosition(glm::vec3 force, ForceType forceType, glm::vec
 {
     if (!btRigidbody)
         throw std::runtime_error("Cannot apply force, rigidbody is not initialized");
+
+    btRigidbody->activate();
 
     glm::vec3 worldPosition;
     if (space == Transform::Space::Local)
@@ -235,7 +241,10 @@ void Collider::AddForceAtPosition(glm::vec3 force, ForceType forceType, glm::vec
 void Collider::SetVelocity(glm::vec3 velocity)
 {
     if (btRigidbody)
+    {
+        btRigidbody->activate();
         btRigidbody->setLinearVelocity(PhysicsEngine::ToBtVector3(velocity));
+    }
 }
 
 glm::vec3 Collider::GetVelocity()

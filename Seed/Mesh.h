@@ -6,10 +6,11 @@ class Mesh
 public:
     Mesh();
     ~Mesh();
-    Mesh(Mesh&& m) = default;
-    Mesh(const Mesh& m) = default;
-    Mesh& operator=(const Mesh& m) = default;
-    Mesh& operator=(Mesh&& m) = default;
+    Mesh(Mesh&&) = default;
+    Mesh(const Mesh&) = delete;
+    Mesh& operator=(Mesh&&) = default;
+    Mesh& operator=(const Mesh&) = delete;
+    std::shared_ptr<Mesh> Clone();
 
     void Load();
     void Unload();
@@ -25,7 +26,5 @@ protected:
     friend class MeshCollider;
     
 private:
-    void LoadSubMesh(SubMesh* subMesh);
-
     std::vector<std::shared_ptr<SubMesh>> subMeshes;
 };

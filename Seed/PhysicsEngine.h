@@ -8,12 +8,21 @@ struct ContactPoint;
 class PhysicsEngine
 {
 public:
-    void Raycast() {};
+    struct RaycastHit
+    {
+        Collider* Collider;
+        glm::vec3 Point;
+        glm::vec3 Normal;
+    };
+
+    bool Raycast(glm::vec3 fromPosition, glm::vec3 direction, RaycastHit& hitInfo, float maxDistance = 1000.0f);
+    bool Raycast(glm::vec3 fromPosition, glm::vec3 direction, float maxDistance = 1000.0f);
 
 protected:
     friend class Components;
     friend class Collider;
     friend class DynamicCharacterController;
+    friend class Camera;
 
     void AddCollider(Collider* collider);
 

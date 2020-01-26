@@ -15,6 +15,8 @@
 import bpy
 from math import pi
 
+from ..com.gltf2_blender_extras import set_extras
+
 
 class BlenderLight():
     """Blender Light."""
@@ -42,13 +44,12 @@ class BlenderLight():
             obj.data.use_custom_distance = True
             obj.data.cutoff_distance = pylight['range']
 
-        if bpy.app.version < (2, 80, 0):
-            bpy.data.scenes[gltf.blender_scene].objects.link(obj)
+        if gltf.blender_active_collection is not None:
+            bpy.data.collections[gltf.blender_active_collection].objects.link(obj)
         else:
-            if gltf.blender_active_collection is not None:
-                bpy.data.collections[gltf.blender_active_collection].objects.link(obj)
-            else:
-                bpy.data.scenes[gltf.blender_scene].collection.objects.link(obj)
+            bpy.data.scenes[gltf.blender_scene].collection.objects.link(obj)
+
+        set_extras(obj.data, pylight.get('extras'))
 
         return obj
 
@@ -59,10 +60,7 @@ class BlenderLight():
         if 'name' not in pylight.keys():
             pylight['name'] = "Sun"
 
-        if bpy.app.version < (2, 80, 0):
-            sun = bpy.data.lamps.new(name=pylight['name'], type="SUN")
-        else:
-            sun = bpy.data.lights.new(name=pylight['name'], type="SUN")
+        sun = bpy.data.lights.new(name=pylight['name'], type="SUN")
         obj = bpy.data.objects.new(pylight['name'], sun)
         return obj
 
@@ -73,10 +71,7 @@ class BlenderLight():
         if 'name' not in pylight.keys():
             pylight['name'] = "Point"
 
-        if bpy.app.version < (2, 80, 0):
-            point = bpy.data.lamps.new(name=pylight['name'], type="POINT")
-        else:
-            point = bpy.data.lights.new(name=pylight['name'], type="POINT")
+        point = bpy.data.lights.new(name=pylight['name'], type="POINT")
         obj = bpy.data.objects.new(pylight['name'], point)
         return obj
 
@@ -87,10 +82,7 @@ class BlenderLight():
         if 'name' not in pylight.keys():
             pylight['name'] = "Spot"
 
-        if bpy.app.version < (2, 80, 0):
-            spot = bpy.data.lamps.new(name=pylight['name'], type="SPOT")
-        else:
-            spot = bpy.data.lights.new(name=pylight['name'], type="SPOT")
+        spot = bpy.data.lights.new(name=pylight['name'], type="SPOT")
         obj = bpy.data.objects.new(pylight['name'], spot)
 
         # Angles
@@ -105,3 +97,4 @@ class BlenderLight():
             spot.spot_blend = 1.0
 
         return obj
+

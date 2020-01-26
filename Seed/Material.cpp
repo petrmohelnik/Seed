@@ -78,3 +78,19 @@ void Material::SetParallaxStrength(float strength)
 {
     dataBlock.ParallaxStrength = strength;
 }
+
+std::shared_ptr<Material> Material::Clone()
+{
+    auto clonedMaterial = std::make_shared<Material>();
+
+    clonedMaterial->Albedo = Albedo->Clone();
+    clonedMaterial->Normal = Normal->Clone();
+    clonedMaterial->Height = Height->Clone();
+    clonedMaterial->Metallic = Metallic->Clone();
+    clonedMaterial->Emission = Emission->Clone();
+    clonedMaterial->Occlusion = Occlusion->Clone();
+    clonedMaterial->dataBlock = dataBlock;
+    clonedMaterial->shader = shader;
+
+    return clonedMaterial;
+}

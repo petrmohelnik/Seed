@@ -8,10 +8,11 @@ class Material
 public:
     Material();
     ~Material();
-    Material(Material&& m) = default;
-    Material(const Material& m) = default;
-    Material& operator=(const Material& m) = default;
-    Material& operator=(Material&& m) = default;
+    Material(Material&&) = default;
+    Material(const Material&) = delete;
+    Material& operator=(Material&&) = default;
+    Material& operator=(const Material&) = delete;
+    std::shared_ptr<Material> Clone();
 
     void Load();
     void Unload();
@@ -28,9 +29,11 @@ public:
     std::shared_ptr<Texture> Albedo;
     std::shared_ptr<Texture> Normal;
     std::shared_ptr<Texture> Height;
-    std::shared_ptr<Texture> Metallic; //R - ao, G - rougness, B - metallic
+    //R - ao, G - rougness, B - metallic !Note: when setting channels directly in RGB, use SetIsRGBOrder, default is BGR!
+    //For speculaR workflow: RGB - specular color, W - rougness
+    std::shared_ptr<Texture> Metallic;
     std::shared_ptr<Texture> Emission;
-    std::shared_ptr<Texture> Occlusion;
+    std::shared_ptr<Texture> Occlusion; //by specular workflow used by deault
 
 protected:
     friend class FileSystem;

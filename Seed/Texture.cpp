@@ -18,6 +18,29 @@ Texture::~Texture()
     Unload();
 }
 
+std::shared_ptr<Texture> Texture::Clone()
+{
+    auto clonedTexture = std::make_shared<Texture>();
+
+    clonedTexture->data = data;
+    clonedTexture->width = width;
+    clonedTexture->height = height;
+    clonedTexture->bytesPerPixel = bytesPerPixel;
+    clonedTexture->deleteAfterLoad = deleteAfterLoad;
+    clonedTexture->isSRGB = isSRGB;
+    clonedTexture->isRGB = isRGB;
+
+    if (texture != 0)
+    {
+        clonedTexture->GenerateTexture(GL_REPEAT, GetInternalFormat(), width, height, GetFormat(), GL_UNSIGNED_BYTE, true, nullptr);
+        glCopyImageSubData(texture, GL_TEXTURE_2D, 0, 0, 0, 0,
+            clonedTexture->texture, GL_TEXTURE_2D, 0, 0, 0, 0,
+            width, height, 1);
+    }
+
+    return clonedTexture;
+}
+
 void Texture::Load()
 {
     if (texture != 0)

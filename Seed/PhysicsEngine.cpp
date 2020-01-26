@@ -28,6 +28,30 @@ glm::quat PhysicsEngine::ToGlmQuat(btQuaternion const& quaternion)
     return glm::quat(quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z());
 }
 
+bool PhysicsEngine::Raycast(glm::vec3 fromPosition, glm::vec3 direction, RaycastHit& hitInfo, float maxDistance)
+{
+    auto btFromPosition = ToBtVector3(fromPosition);
+    auto btToPosition = ToBtVector3(glm::normalize(direction) * maxDistance);
+
+    btCollisionWorld::ClosestRayResultCallback closestResultCallback(btFromPosition, btToPosition);
+    dynamicsWorld->rayTest(btFromPosition, btToPosition, closestResultCallback);
+    if (closestResultCallback.hasHit())
+    {
+        hitInfo.Collider = reinterpret_cast<Collider*>(closestResultCallback.m_collisionObject->getUserPointer());
+        hitInfo.Point = ToGlmVec3(closestResultCallback.m_hitPointWorld);
+        hitInfo.Normal = ToGlmVec3(closestResultCallback.m_hitNormalWorld);
+        return true;
+    }
+
+    return false;
+}
+
+bool PhysicsEngine::Raycast(glm::vec3 fromPosition, glm::vec3 direction, float maxDistance)
+{
+    RaycastHit dummyInfo;
+    return Raycast(fromPosition, direction, dummyInfo, maxDistance);
+}
+
 void PhysicsEngine::AddCollider(Collider* collider)
 {
     collider->createRigidbody = [this](Collider* collider) { CreateRigidbody(collider); };
@@ -358,14 +382,9 @@ void PhysicsEngine::RigidbodyUpdate()
 
 Collider* PhysicsEngine::ClosestColliderUnderMouse()
 {
-    auto windowSize = Engine::GetWindow().GetWindowSize();
-    auto mousePosition = Engine::GetInput().MousePosition();
-    mousePosition.y = windowSize.y - 1.0f - mousePosition.y;
-
-    auto fromPosition = ToBtVector3(glm::unProject(glm::vec3(mousePosition, 0.0f),
-        RenderingPipeline::MainCamera()->dataBlock.view, RenderingPipeline::MainCamera()->dataBlock.projection, glm::vec4(0.0f, 0.0f, windowSize)));
-    auto toPosition = ToBtVector3(glm::unProject(glm::vec3(mousePosition, 1.0f),
-        RenderingPipeline::MainCamera()->dataBlock.view, RenderingPipeline::MainCamera()->dataBlock.projection, glm::vec4(0.0f, 0.0f, windowSize)));
+    auto mainCamera = RenderingPipeline::MainCamera();
+    auto fromPosition = ToBtVector3(mainCamera->ScreenPositionToWorld(glm::vec3(Engine::GetInput().MousePosition(), mainCamera->GetNearPlane())));
+    auto toPosition = ToBtVector3(mainCamera->ScreenPositionToWorld(glm::vec3(Engine::GetInput().MousePosition(), mainCamera->GetFarPlane())));
 
     btCollisionWorld::ClosestRayResultCallback closestResultCallback(fromPosition, toPosition);
     dynamicsWorld->rayTest(fromPosition, toPosition, closestResultCallback);

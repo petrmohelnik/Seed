@@ -73,7 +73,6 @@ void SDLWindow::InitializeOpenGL()
     ImGui::CreateContext();
     imguiIO = &ImGui::GetIO();
     ImGui::StyleColorsDark();
-    //ImGui::StyleColorsClassic();
 
     ImGui_ImplSDL2_InitForOpenGL(window, context);
     ImGui_ImplOpenGL3_Init("#version 410");
@@ -88,6 +87,10 @@ void SDLWindow::PollInputs()
     while (SDL_PollEvent(&event))
     {
         ImGui_ImplSDL2_ProcessEvent(&event);
+        if(imguiIO->WantCaptureKeyboard && (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) ||
+           imguiIO->WantCaptureMouse && (event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP))
+            continue;
+
         input.AddInput(event);
     }
 

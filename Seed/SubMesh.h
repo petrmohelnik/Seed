@@ -6,6 +6,11 @@ class SubMesh
 public:
     SubMesh();
     ~SubMesh();
+    SubMesh(SubMesh&&) = default;
+    SubMesh(const SubMesh&) = delete;
+    SubMesh& operator=(SubMesh&&) = default;
+    SubMesh& operator=(const SubMesh&) = delete;
+    std::shared_ptr<SubMesh> Clone();
 
     void Load();
     void Unload();

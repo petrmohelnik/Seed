@@ -7,10 +7,11 @@ public:
     Texture();
     Texture(glm::vec4 color);
     ~Texture();
-    Texture(Texture&& m) = default;
-    Texture(const Texture& m) = default;
-    Texture& operator=(const Texture& m) = default;
-    Texture& operator=(Texture&& m) = default;
+    Texture(Texture&&) = default;
+    Texture(const Texture&) = delete;
+    Texture& operator=(Texture&&) = default;
+    Texture& operator=(const Texture&) = delete;
+    std::shared_ptr<Texture> Clone();
 
     void SetColor(glm::vec4 color);
     void SetColor(glm::vec3 color);
