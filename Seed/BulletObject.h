@@ -12,20 +12,22 @@ public:
 
 void BulletObject::Initialize()
 {
-    AddComponent<SphereCollider>(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
-    GetComponent<Collider>()->SetMass(0.1f);
+    AddComponent<MeshRenderer>()->Load("rocket/rocket.gltf", false);
+    AddComponent<MeshCollider>(GetComponent<MeshRenderer>()->GetSharedMesh(), false);
+    GetComponent<Collider>()->SetMass(1.0f);
     GetComponent<Collider>()->SetBounciness(0.0f);
-    GetComponent<Collider>()->SetContinuousCollisionDetection(0.5f, 0.1f);
-    AddComponent<MeshRenderer>()->Load("sphere.obj");
+    //GetComponent<Collider>()->SetContinuousCollisionDetection(0.5f, 0.1f);
     GetComponent<Transform>()->SetScale(0.05f);
+    GetComponent<Transform>()->RotateX(3.14f);
     AddComponent<Light>()->SetPointLight(0.5f, 0.5f);
     GetComponent<Light>()->SetShadowNearPlaneDistance(0.05f);
+    GetComponent<Light>()->SetColor(glm::vec3(0.9f, 0.35f, 0.15f));
 
-    auto bulletMaterial = std::make_shared<Material>();
-    bulletMaterial->SetMetallicWorkflow();
-    bulletMaterial->Albedo->SetColor(glm::vec3(0.8f, 0.67f, 0.45f));
-    bulletMaterial->Metallic->SetColor(glm::vec3(1.0f, 0.4f, 1.0f));
-    GetComponent<MeshRenderer>()->SetMaterial(0, bulletMaterial);
+    //auto bulletMaterial = std::make_shared<Material>();
+    //bulletMaterial->SetMetallicWorkflow();
+    //bulletMaterial->Albedo->SetColor(glm::vec3(0.8f, 0.67f, 0.45f));
+    //bulletMaterial->Metallic->SetColor(glm::vec3(1.0f, 0.4f, 1.0f));
+    //GetComponent<MeshRenderer>()->SetMaterial(0, bulletMaterial);
 }
 
 void BulletObject::SetPhysicsMaterial(float mass, float bounciness, float friction, float linearDamping, float angularDamping)

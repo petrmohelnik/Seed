@@ -35,7 +35,7 @@ void FileSystem::LoadScene(const std::string& path)
         | aiProcess_FindInvalidData
         | aiProcess_JoinIdenticalVertices
         | aiProcess_RemoveRedundantMaterials
-        | aiProcess_ValidateDataStructure
+        //| aiProcess_ValidateDataStructure
         | aiProcess_GenBoundingBoxes
     );
 
@@ -182,7 +182,7 @@ void FileSystem::UnloadScene()
     loadedScene = "";
 }
 
-std::shared_ptr<Mesh> FileSystem::LoadMesh(const std::string& path)
+std::shared_ptr<Mesh> FileSystem::LoadMesh(const std::string& path, bool deleteAfterLoad)
 {
     auto const result = loadedMeshes.find(path);
     if (result != loadedMeshes.end() && !result->second.expired())
@@ -195,6 +195,9 @@ std::shared_ptr<Mesh> FileSystem::LoadMesh(const std::string& path)
 
     auto mesh = LoadMeshData(scene->mMeshes, scene->mNumMeshes);
     loadedMeshes.insert_or_assign(path, mesh);
+
+    for (auto& subMesh : mesh->subMeshes)
+        subMesh->deleteAfterLoad = deleteAfterLoad;
 
     return mesh;
 }

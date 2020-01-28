@@ -19,7 +19,7 @@ public:
     std::shared_ptr<Material> GetSharedMaterial();
     std::vector<std::shared_ptr<Material>> GetMaterials();
     std::vector<std::shared_ptr<Material>> GetSharedMaterials();
-    void Load(const std::string& path);
+    void Load(const std::string& path, bool deleteAfterLoad = true);
 
 protected:
     friend class RenderingPipeline;

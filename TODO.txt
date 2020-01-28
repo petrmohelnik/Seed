@@ -1,11 +1,17 @@
-lepsi model na bullet
+umoznit sdilet ty trianglecollidery - mit btShape vazany na mesh, tkery ho bude drzet, ale nebude do nej pristupovat,
+	pracovat s nim bude collider. Kdyz neni null tak ho pouziju jako shared shape, dam mu local scale a vlastni rigidbody,
+	idealne bude taky reagovat na delete after load. Delelte btShapu v destruktoru - problem odstarneni s btDynamicsWorld -
+	z world se odstranuje rigidbody ne shape
+	shared_ptr v collideru na btShape, weak_ptr v meshi
 
--
-panaka nahradit rozbitym
+ten deleate after load je ted naprd jak to sdilim i s tou fyzikou
+proc se pri tom exporu neaplikujou ty transformy do meshe?
+posunout center of mass doprostred a potom umerne tomu posunout objekt ve scene: bullet, panak,
+	rozbity panak musi byt nacteny stylem load scene, kde kazdy ma center of mass v origin a k tomu transform
 
 zkusit udelat jednoduchy bounding mesh sceny
 https://blenderartists.org/t/creating-a-simple-collision-mesh/546298
-napr. pokud ma node dite s nazvem collider tak se pouzije jako collisionmesh
+napr. pokud ma node dite s nazvem collider tak se pouzije jako collisionmesh, vice deti tvori compound mesh
 metadata na weight?
 zhecknou po exportu range - nacitat je taky z metadat?
 ty drobny objekty nebudou staticky, ale dynamicky - treba je prirazovat ke colliderum podle jmena
@@ -18,6 +24,8 @@ SSAO
 Bloom
 Screen Space Reflections
 AA
+
+odkomentovat aiProcess_ValidateDataStructure az prejdu na novejsi gltf exporter
 
 https://github.com/gszauer/GamePhysicsCookbook
 

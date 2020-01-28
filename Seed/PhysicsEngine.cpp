@@ -92,52 +92,92 @@ void PhysicsEngine::Initialize()
     softWorldInfo.m_sparsesdf.Initialize();
 }
 
-btCollisionShape* PhysicsEngine::CreateConvexHullShape(MeshCollider * meshCollider)
+btTriangleIndexVertexArray* PhysicsEngine::CreateTriangleArray(MeshCollider* meshCollider, int submeshIndex)
 {
-    auto convexHull = new btConvexHullShape();
-
-    for (auto& vertex : meshCollider->GetVertices())
-        convexHull->addPoint(ToBtVector3(vertex));
-
-    return convexHull;
-}
-
-btCollisionShape* PhysicsEngine::CreateTriangleMeshShape(MeshCollider * meshCollider)
-{
-    auto triangleMesh = new btTriangleMesh();
-
-    int* btIndices = new int[meshCollider->GetIndices().size() * 3];
+    auto btIndices = new int[meshCollider->GetIndices(submeshIndex).size() * 3];
     int i = 0;
-    for (auto const& triangle : meshCollider->GetIndices())
+    for (auto const& triangle : meshCollider->GetIndices(submeshIndex))
     {
         btIndices[i++] = triangle.x;
         btIndices[i++] = triangle.y;
         btIndices[i++] = triangle.z;
     }
 
-    btVector3* btVertices = new btVector3[meshCollider->GetVertices().size()];
+    auto btVertices = new btVector3[meshCollider->GetVertices(submeshIndex).size()];
     i = 0;
-    for (auto const& vertex : meshCollider->GetVertices())
+    for (auto const& vertex : meshCollider->GetVertices(submeshIndex))
     {
         btVertices[i++] = ToBtVector3(vertex);
     }
 
-    btTriangleIndexVertexArray* indexVertexArrays = new btTriangleIndexVertexArray(
-        static_cast<int>(meshCollider->GetIndices().size()),
+    auto indexVertexArrays = new btTriangleIndexVertexArray(
+        static_cast<int>(meshCollider->GetIndices(submeshIndex).size()),
         &btIndices[0],
         3 * sizeof(int),
-        static_cast<int>(meshCollider->GetVertices().size()),
+        static_cast<int>(meshCollider->GetVertices(submeshIndex).size()),
         const_cast<btScalar*>(&btVertices[0].x()),
         sizeof(btVector3)
     );
 
-    return new btBvhTriangleMeshShape(indexVertexArrays, true);
+    return indexVertexArrays;
+}
+
+btCollisionShape* PhysicsEngine::CreateGImpactShape(MeshCollider* meshCollider)
+{
+    auto gImpactCompoundShape = new btGImpactCompoundShape();
+
+    for (int submeshIndex = 0; submeshIndex < meshCollider->NumberOfSubmeshes(); submeshIndex++)
+    {
+        auto triangleVertexArray = CreateTriangleArray(meshCollider, submeshIndex);
+        auto gImpactMeshShape = new btGImpactMeshShape(triangleVertexArray);
+        auto identityTransform = btTransform(ToBtQuaternion(glm::angleAxis(0.0f, glm::vec3(0.0, 0.0, 1.0))), ToBtVector3(glm::vec3(0.0f)));
+        gImpactCompoundShape->addChildShape(identityTransform, gImpactMeshShape);
+    }
+
+    gImpactCompoundShape->updateBound();
+    return gImpactCompoundShape;
+}
+
+btCollisionShape* PhysicsEngine::CreateConvexHullShape(MeshCollider* meshCollider)
+{
+    auto compoundShape = new btCompoundShape();
+
+    for (int submeshIndex = 0; submeshIndex < meshCollider->NumberOfSubmeshes(); submeshIndex++)
+    {
+        auto convexHullShape = new btConvexHullShape();
+        for (auto& vertex : meshCollider->GetVertices(submeshIndex))
+            convexHullShape->addPoint(ToBtVector3(vertex));
+        auto identityTransform = btTransform(ToBtQuaternion(glm::angleAxis(0.0f, glm::vec3(0.0, 0.0, 1.0))), ToBtVector3(glm::vec3(0.0f)));
+        compoundShape->addChildShape(identityTransform, convexHullShape);
+    }
+
+    return compoundShape;
+}
+
+btCollisionShape* PhysicsEngine::CreateTriangleMeshShape(MeshCollider* meshCollider)
+{
+    auto compoundShape = new btCompoundShape();
+
+    for (int submeshIndex = 0; submeshIndex < meshCollider->NumberOfSubmeshes(); submeshIndex++)
+    {
+        auto triangleVertexArray = CreateTriangleArray(meshCollider, submeshIndex);
+        auto triangleMeshShape = new btBvhTriangleMeshShape(triangleVertexArray, true);
+        auto identityTransform = btTransform(ToBtQuaternion(glm::angleAxis(0.0f, glm::vec3(0.0, 0.0, 1.0))), ToBtVector3(glm::vec3(0.0f)));
+        compoundShape->addChildShape(identityTransform, triangleMeshShape);
+    }
+
+    return compoundShape;
 }
 
 btCollisionShape* PhysicsEngine::CreateMeshCollisionShape(MeshCollider* meshCollider)
 {
-    if (meshCollider->IsConvex())
-        return CreateConvexHullShape(meshCollider);
+    if (meshCollider->GetMass() != 0.0f)
+    {
+        if (meshCollider->IsConvex())
+            return CreateConvexHullShape(meshCollider);
+        else
+            return CreateGImpactShape(meshCollider);
+    }
     else
         return CreateTriangleMeshShape(meshCollider);
 }
@@ -220,10 +260,13 @@ void PhysicsEngine::RefreshRigidbody(Collider* collider)
 {
     dynamicsWorld->removeRigidBody(collider->btRigidbody);
 
-    collider->btRigidbody->getCollisionShape()->setMargin(collider->GetMargin());
-    collider->btRigidbody->getCollisionShape()->setLocalScaling(GetLocalScaling(collider));
-    btVector3 localInertia = CalculateLocalInertia(collider, collider->btRigidbody->getCollisionShape());
+    auto collisionShape = collider->btRigidbody->getCollisionShape();
+    collisionShape->setMargin(collider->GetMargin());
+    collisionShape->setLocalScaling(GetLocalScaling(collider));
+    btVector3 localInertia = CalculateLocalInertia(collider, collisionShape);
     collider->btRigidbody->setMassProps(collider->GetMass(), localInertia);
+    if(collisionShape->getShapeType() == CONST_GIMPACT_COMPOUND_SHAPE)
+        static_cast<btGImpactCompoundShape*>(collisionShape)->updateBound();
 
     dynamicsWorld->addRigidBody(collider->btRigidbody);
 }
@@ -445,8 +488,26 @@ void PhysicsEngine::CleanComponents()
     {
         if (collider->ToBeDestroyed() && collider->btRigidbody)
         {
-            if (collider->btRigidbody->getCollisionShape())
+            if (auto shape = collider->btRigidbody->getCollisionShape())
+            {
+                if (shape->getShapeType() == CONST_GIMPACT_COMPOUND_SHAPE)
+                {
+                    auto gImpactCompoundShape = static_cast<btGImpactCompoundShape*>(shape);
+                    for(int i = 0; i < gImpactCompoundShape->getNumChildShapes(); i++)
+                        delete gImpactCompoundShape->getChildShape(i);
+                }
+                else if(shape->getShapeType() == COMPOUND_SHAPE_PROXYTYPE)
+                {
+                    auto compoundShape = static_cast<btCompoundShape*>(shape);
+                    for (int i = 0; i < compoundShape->getNumChildShapes(); i++)
+                        delete compoundShape->getChildShape(i);
+                }
+                else
+                    delete collider->btRigidbody->getCollisionShape();
+            }
+            else
                 delete collider->btRigidbody->getCollisionShape();
+
             if (collider->btRigidbody->getMotionState())
                 delete collider->btRigidbody->getMotionState();
             dynamicsWorld->removeCollisionObject(collider->btRigidbody);

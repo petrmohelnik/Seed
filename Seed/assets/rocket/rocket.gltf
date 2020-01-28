@@ -1,0 +1,189 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.1.41",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                4
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "Anti_Air_System_Rocket.001_0"
+        },
+        {
+            "children" : [
+                0
+            ],
+            "name" : "Anti_Air_System_Rocket.001"
+        },
+        {
+            "children" : [
+                1
+            ],
+            "name" : "Root"
+        },
+        {
+            "children" : [
+                2
+            ],
+            "name" : "RootNode (model correction matrix)"
+        },
+        {
+            "children" : [
+                3
+            ],
+            "name" : "RootNode (gltf orientation matrix)",
+            "rotation" : [
+                0.7071068286895752,
+                0,
+                0,
+                0.7071067094802856
+            ],
+            "scale" : [
+                0.010000004433095455,
+                0.010000008158385754,
+                0.010000008158385754
+            ]
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "emissiveFactor" : [
+                0,
+                0,
+                0
+            ],
+            "name" : "UVMap.001",
+            "normalTexture" : {
+                "index" : 0,
+                "texCoord" : 0
+            },
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 1,
+                    "texCoord" : 0
+                },
+                "metallicRoughnessTexture" : {
+                    "index" : 2,
+                    "texCoord" : 0
+                }
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Anti_Air_System_Rocket.001_0.001",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "source" : 0
+        },
+        {
+            "source" : 1
+        },
+        {
+            "source" : 2
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/png",
+            "name" : "UVMap_normal_png",
+            "uri" : "UVMap_normal_png.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "UVMap_baseColor_png",
+            "uri" : "UVMap_baseColor_png.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "UVMap_metallicRoughness_png",
+            "uri" : "UVMap_metallicRoughness_png.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 644,
+            "max" : [
+                0.9814260601997375,
+                0.9744481444358826,
+                -0.03502121567726135
+            ],
+            "min" : [
+                -0.9764790534973145,
+                -0.9831001162528992,
+                -16.483957290649414
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 644,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 644,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 2640,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 7728,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 7728,
+            "byteOffset" : 7728
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 5152,
+            "byteOffset" : 15456
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 5280,
+            "byteOffset" : 20608
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 25888,
+            "uri" : "rocket.bin"
+        }
+    ]
+}

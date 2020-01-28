@@ -25,9 +25,9 @@ private:
     float verticalRotation = 0.0f;
     float bulletForce = 0.0f;
 
-    float bulletMass = 0.1f;
-    float bulletBounciness = 0.5f;
-    float bulletFriction = 0.0f;
+    float bulletMass = 1.0f;
+    float bulletBounciness = 0.0f;
+    float bulletFriction = 0.5f;
     float bulletLinearDamping = 0.0f;
     float bulletAngularDamping = 0.0f;
 };

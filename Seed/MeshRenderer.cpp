@@ -116,9 +116,9 @@ std::vector<std::shared_ptr<Material>> MeshRenderer::GetSharedMaterials()
     return materials;
 }
 
-void MeshRenderer::Load(const std::string& path)
+void MeshRenderer::Load(const std::string& path, bool deleteAfterLoad)
 {
-    SetMesh(Engine::GetFileSystem().LoadMesh(path));
+    SetMesh(Engine::GetFileSystem().LoadMesh(path, deleteAfterLoad));
     SetMaterials(Engine::GetFileSystem().LoadMaterials(path));
     Engine::GetFileSystem().UnloadScene();
 }

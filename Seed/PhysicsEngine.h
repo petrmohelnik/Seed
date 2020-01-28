@@ -40,6 +40,8 @@ protected:
     static glm::quat ToGlmQuat(btQuaternion const& quaternion);
 
 private:
+    btTriangleIndexVertexArray* CreateTriangleArray(MeshCollider* meshCollider, int submeshIndex);
+    btCollisionShape* CreateGImpactShape(MeshCollider* meshCollider);
     btCollisionShape* CreateConvexHullShape(MeshCollider* meshCollider);
     btCollisionShape* CreateTriangleMeshShape(MeshCollider* meshCollider);
     btCollisionShape* CreateMeshCollisionShape(MeshCollider* meshCollider);
