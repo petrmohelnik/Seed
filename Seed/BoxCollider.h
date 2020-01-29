@@ -5,6 +5,7 @@ class BoxCollider : public Collider
 {
 public:
     BoxCollider(Object* object, glm::vec3 center, glm::vec3 size);
+    Type GetType() override;
 
     glm::vec3 GetCenter();
     glm::vec3 GetSize();

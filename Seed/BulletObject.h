@@ -14,6 +14,7 @@ void BulletObject::Initialize()
 {
     AddComponent<MeshRenderer>()->Load("rocket/rocket.gltf", false);
     AddComponent<MeshCollider>(GetComponent<MeshRenderer>()->GetSharedMesh(), false);
+    //GetComponent<MeshRenderer>()->GetSharedMesh()->DeleteDataAfterColliderLoad(true);
     GetComponent<Collider>()->SetMass(1.0f);
     GetComponent<Collider>()->SetBounciness(0.0f);
     //GetComponent<Collider>()->SetContinuousCollisionDetection(0.5f, 0.1f);

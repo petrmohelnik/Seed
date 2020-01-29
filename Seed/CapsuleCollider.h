@@ -5,6 +5,7 @@ class CapsuleCollider : public Collider
 {
 public:
     CapsuleCollider(Object* object, glm::vec3 center, float height, float radius);
+    Type GetType() override;
 
     glm::vec3 GetCenter();
     float GetHeight();

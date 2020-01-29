@@ -1,6 +1,8 @@
 #pragma once
 #include "SubMesh.h"
 
+class btCollisionShape;
+
 class Mesh
 {
 public:
@@ -12,19 +14,26 @@ public:
     Mesh& operator=(const Mesh&) = delete;
     std::shared_ptr<Mesh> Clone();
 
-    void Load();
-    void Unload();
-
-    void BindSubMesh(int index);
-
     int NumberOfSubmeshes();
-    int SubmeshIndicesCount(int index);
+    void DeleteDataAfterColliderLoad(bool deleteAfterLoad);
 
 protected:
     friend class FileSystem;
     friend class MeshRenderer;
     friend class MeshCollider;
+    friend class PhysicsEngine;
+
+    void Load();
+    void Unload();
+    void DeleteData();
+
+    void BindSubMesh(int index);
     
+    int SubmeshIndicesCount(int index);
+
 private:
     std::vector<std::shared_ptr<SubMesh>> subMeshes;
+
+    std::weak_ptr<btCollisionShape> btCollisionShape;
+    bool deleteAfterColliderLoad = false;
 };

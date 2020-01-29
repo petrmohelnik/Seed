@@ -74,12 +74,7 @@ void SubMesh::Load()
 
     if (deleteAfterLoad)
     {
-        vertices.clear(); vertices.shrink_to_fit();
-        normals.clear(); normals.shrink_to_fit();
-        tangents.clear(); tangents.shrink_to_fit();
-        bitangents.clear(); bitangents.shrink_to_fit();
-        texCoords.clear(); texCoords.shrink_to_fit();
-        indices.clear(); indices.shrink_to_fit();
+        DeleteData();
     }
 }
 
@@ -104,4 +99,14 @@ int SubMesh::GetIndicesCount()
 const AABB& SubMesh::GetAABB()
 {
     return aabb;
+}
+
+void SubMesh::DeleteData()
+{
+    vertices.clear(); vertices.shrink_to_fit();
+    normals.clear(); normals.shrink_to_fit();
+    tangents.clear(); tangents.shrink_to_fit();
+    bitangents.clear(); bitangents.shrink_to_fit();
+    texCoords.clear(); texCoords.shrink_to_fit();
+    indices.clear(); indices.shrink_to_fit();
 }

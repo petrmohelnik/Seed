@@ -35,6 +35,14 @@ void Mesh::Unload()
     }
 }
 
+void Mesh::DeleteData()
+{
+    for (auto& subMesh : subMeshes)
+    {
+        subMesh->DeleteData();
+    }
+}
+
 void Mesh::BindSubMesh(int index)
 {
     subMeshes[index]->Bind();
@@ -43,6 +51,11 @@ void Mesh::BindSubMesh(int index)
 int Mesh::NumberOfSubmeshes()
 {
     return static_cast<int>(subMeshes.size());
+}
+
+void Mesh::DeleteDataAfterColliderLoad(bool deleteAfterLoad)
+{
+    deleteAfterColliderLoad = deleteAfterLoad;
 }
 
 int Mesh::SubmeshIndicesCount(int index)

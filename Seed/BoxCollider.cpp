@@ -9,6 +9,11 @@ BoxCollider::BoxCollider(Object* object, glm::vec3 center, glm::vec3 size)
 {
 }
 
+Collider::Type BoxCollider::GetType()
+{
+    return Type::Box;
+}
+
 glm::vec3 BoxCollider::GetCenter()
 {
     return center;

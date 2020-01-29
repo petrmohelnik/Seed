@@ -10,6 +10,11 @@ CapsuleCollider::CapsuleCollider(Object* object, glm::vec3 center, float height,
 {
 }
 
+Collider::Type CapsuleCollider::GetType()
+{
+    return Type::Capsule;
+}
+
 glm::vec3 CapsuleCollider::GetCenter()
 {
     return center;

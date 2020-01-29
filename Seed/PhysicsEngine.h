@@ -41,9 +41,10 @@ protected:
 
 private:
     btTriangleIndexVertexArray* CreateTriangleArray(MeshCollider* meshCollider, int submeshIndex);
-    btCollisionShape* CreateGImpactShape(MeshCollider* meshCollider);
-    btCollisionShape* CreateConvexHullShape(MeshCollider* meshCollider);
-    btCollisionShape* CreateTriangleMeshShape(MeshCollider* meshCollider);
+    btCollisionShape* CreateGImpactShape(MeshCollider* meshCollider, int submeshIndex);
+    btCollisionShape* CreateConvexHullShape(MeshCollider* meshCollider, int submeshIndex);
+    btCollisionShape* CreateTriangleMeshShape(MeshCollider* meshCollider, int submeshIndex);
+    btCollisionShape* CreateMeshCollisionSubShape(MeshCollider* meshCollider, int submeshIndex);
     btCollisionShape* CreateMeshCollisionShape(MeshCollider* meshCollider);
     btCollisionShape* CreateCollisionShape(Collider* collider);
     btVector3 CalculateLocalInertia(Collider* collider, btCollisionShape* btShape);

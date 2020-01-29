@@ -25,7 +25,9 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto ground = objects.CreateObject("ground");
     ground->GetComponent<Transform>()->SetScale(glm::vec3(8.0f, 2.0f, 10.0f));
     ground->GetComponent<Transform>()->TranslateY(2.0f);
-    ground->AddComponent<MeshCollider>(fileSystem.LoadMesh("cube.dae", false), false);
+    auto cubeMesh = fileSystem.LoadMesh("cube.dae", false);
+    cubeMesh->DeleteDataAfterColliderLoad(true);
+    ground->AddComponent<MeshCollider>(cubeMesh, false);
     ground->GetComponent<Collider>()->SetBounciness(1.0f);
 
     objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));

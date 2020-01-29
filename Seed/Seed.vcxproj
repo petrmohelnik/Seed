@@ -240,7 +240,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>lib\assimp-vc141-mtd.lib;lib\SDL2.lib;lib\SDL2main.lib;lib\SDL2test.lib;lib\glew32.lib;lib\glew32s.lib;lib\FreeImage.lib;lib\BulletCollision_Debug.lib;lib\BulletDynamics_Debug.lib;lib\BulletInverseDynamics_Debug.lib;lib\BulletSoftBody_Debug.lib;lib\LinearMath_Debug.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lib\assimp-vc141-mt.lib;lib\SDL2.lib;lib\SDL2main.lib;lib\SDL2test.lib;lib\glew32.lib;lib\glew32s.lib;lib\FreeImage.lib;lib\BulletCollision_Debug.lib;lib\BulletDynamics_Debug.lib;lib\BulletInverseDynamics_Debug.lib;lib\BulletSoftBody_Debug.lib;lib\LinearMath_Debug.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

@@ -2,7 +2,6 @@
 #include "Component.h"
 #include "Transform.h"
 
-class btRigidBody;
 class Collider;
 
 struct ContactPoint
@@ -26,6 +25,15 @@ public:
     using Component::Component;
     virtual ~Collider() = default;
 
+    enum class Type
+    {
+        Box,
+        Capsule,
+        Sphere,
+        Mesh,
+        CompoundMesh
+    };
+
     enum class ForceType
     {
         Force,
@@ -33,6 +41,8 @@ public:
         Acceleration,
         VelocityChange
     };
+
+    virtual Type GetType() = 0;
 
     void SetIsTrigger(bool isTrigger);
     bool IsTrigger() const;

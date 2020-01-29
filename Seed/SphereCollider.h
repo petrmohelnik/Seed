@@ -5,6 +5,7 @@ class SphereCollider : public Collider
 {
 public:
     SphereCollider(Object* object, glm::vec3 center, float radius);
+    Type GetType() override;
 
     glm::vec3 GetCenter();
     float GetRadius();

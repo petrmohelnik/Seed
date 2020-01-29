@@ -9,6 +9,11 @@ SphereCollider::SphereCollider(Object* object, glm::vec3 center, float radius)
 {
 }
 
+Collider::Type SphereCollider::GetType()
+{
+    return Type::Sphere;
+}
+
 glm::vec3 SphereCollider::GetCenter()
 {
     return center;

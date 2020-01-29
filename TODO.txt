@@ -1,10 +1,5 @@
-umoznit sdilet ty trianglecollidery - mit btShape vazany na mesh, tkery ho bude drzet, ale nebude do nej pristupovat,
-	pracovat s nim bude collider. Kdyz neni null tak ho pouziju jako shared shape, dam mu local scale a vlastni rigidbody,
-	idealne bude taky reagovat na delete after load. Delelte btShapu v destruktoru - problem odstarneni s btDynamicsWorld -
-	z world se odstranuje rigidbody ne shape
-	shared_ptr v collideru na btShape, weak_ptr v meshi
+enable/disable bullet a vytvorit si placeholder a potom muzu i volat DeleteDataAfterColliderLoad
 
-ten deleate after load je ted naprd jak to sdilim i s tou fyzikou
 proc se pri tom exporu neaplikujou ty transformy do meshe?
 posunout center of mass doprostred a potom umerne tomu posunout objekt ve scene: bullet, panak,
 	rozbity panak musi byt nacteny stylem load scene, kde kazdy ma center of mass v origin a k tomu transform
