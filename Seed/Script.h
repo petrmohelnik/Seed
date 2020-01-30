@@ -31,6 +31,8 @@ protected:
     virtual void OnMouseDrag() {};
     virtual void OnMouseUp() {};
     virtual void Update() {};
+    virtual void OnEnable() {};
+    virtual void OnDisable() {};
     virtual void OnDestroy() {};
 
     Input& input;

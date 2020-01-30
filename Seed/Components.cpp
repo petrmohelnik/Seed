@@ -58,7 +58,8 @@ void Components::OnFixedUpdate()
 {
     for (const auto& script : scripts)
     {
-        script->FixedUpdate();
+        if(script->GetObject()->IsSelfActive())
+            script->FixedUpdate();
     }
 }
 
@@ -68,7 +69,8 @@ void Components::OnFrameUpdate()
 
     for (const auto& script : scripts)
     {
-        script->Update();
+        if (script->GetObject()->IsSelfActive())
+            script->Update();
     }
 }
 
@@ -79,10 +81,31 @@ void Components::SimulatePhysics()
     physicsEngine.RigidbodyUpdate();
 }
 
+void Components::ActivationUpdate()
+{
+    root->UpdateActivationInChildren();
+}
+
 void Components::Render()
 {
     root->GetComponent<Transform>()->UpdateModelMatrix();
     renderingPipeline.Render();
+}
+
+void Components::AddComponentsOfObject(Object* object)
+{
+    if (auto renderer = object->GetComponent<Renderer>())
+        renderingPipeline.AddRenderer(renderer);
+    if (auto camera = object->GetComponent<Camera>())
+        renderingPipeline.AddCamera(camera);
+    if (auto light = object->GetComponent<Light>())
+        renderingPipeline.AddLight(light);
+    for (auto audio : object->GetComponents<Audio>())
+        audios.push_back(audio);
+    if (auto collider = object->GetComponent<Collider>())
+        physicsEngine.AddCollider(collider);
+    for (auto script : object->GetComponents<Script>())
+        scripts.push_back(script);
 }
 
 void Components::CleanComponents()
@@ -92,10 +115,10 @@ void Components::CleanComponents()
 
     std::experimental::erase_if(audios, [](const auto audio)
     {
-        return audio->ToBeDestroyed();
+        return audio->ToBeDestroyed() || !audio->GetObject()->IsActive();
     });
     std::experimental::erase_if(scripts, [] (const auto script)
     {
-        return script->ToBeDestroyed();
+        return script->ToBeDestroyed() || !script->GetObject()->IsActive();
     });
 }

@@ -64,14 +64,15 @@ void Engine::Work()
     while (input.IsGameRunning() && !input.Key(SDLK_ESCAPE))
     {
         window.PollInputs();
-        time.UpdateTime();
 
+        time.UpdateTime();
         if (input.PauseRequest())
             time.PauseTime();
         else if (input.ResumeRequest())
             time.UnpauseTime();
 
         scene.OnCreateUpdate();
+
         while (time.StartFixedUpdate())
         {
             scene.OnFixedUpdate();
@@ -81,7 +82,10 @@ void Engine::Work()
 
         input.CreateSceneGraph();
         scene.OnFrameUpdate();
+
+        scene.ActivationUpdate();
         objects.UpdateForDestruction();
+
         scene.Render();
         window.Swap();
     }

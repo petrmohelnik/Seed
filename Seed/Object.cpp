@@ -39,6 +39,21 @@ void Object::Destroy(float delay)
     registeredForDestruction = true;
 }
 
+void Object::SetActive(bool active)
+{
+    selfActive = active;
+}
+
+bool Object::IsActive()
+{
+    return isActive;
+}
+
+bool Object::IsSelfActive()
+{
+    return selfActive;
+}
+
 void Object::Initialize()
 {
 }
@@ -87,7 +102,7 @@ bool Object::UpdateForDestruction()
     for (const auto& script : scripts)
         isSomeComponentDestroyed = script->UpdateForDestruction() || isSomeComponentDestroyed;
 
-    return isSomeComponentDestroyed;
+    return isSomeComponentDestroyed || (isActiveDirty && !isActive);
 }
 
 bool Object::DoDestruction()
@@ -143,4 +158,35 @@ std::vector<Component*> Object::GetAllComponents()
         components.push_back(script.get());
 
     return components;
+}
+
+void Object::UpdateActivationInChildren()
+{
+    for (int childIndex = 0; childIndex < transform->GetChildCount(); childIndex++)
+    {
+        auto childObject = transform->GetChild(childIndex)->GetObject();
+
+        if (!childObject->isActive && childObject->selfActive && isActive)
+        {
+            childObject->isActive = true;
+            childObject->isActiveDirty = true;
+
+            for (auto const& script : childObject->scripts)
+                script->OnEnable();
+
+            components.AddComponentsOfObject(childObject);
+        }
+        else if (childObject->isActive && (!childObject->selfActive || !isActive))
+        {
+            childObject->isActive = false;
+            childObject->isActiveDirty = true;
+
+            for (auto const& script : childObject->scripts)
+                script->OnDisable();
+        }
+        else
+            childObject->isActiveDirty = false;
+
+        childObject->UpdateActivationInChildren();
+    }
 }

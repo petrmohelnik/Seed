@@ -36,6 +36,11 @@ void Scene::SimulatePhysics()
     components.SimulatePhysics();
 }
 
+void Scene::ActivationUpdate()
+{
+    components.ActivationUpdate();
+}
+
 void Scene::Render()
 {
     components.Render();

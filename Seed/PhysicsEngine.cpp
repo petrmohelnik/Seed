@@ -262,7 +262,6 @@ void PhysicsEngine::CreateRigidbody(Collider* collider)
 
     InitializeRigidbodyMaterial(collider);
 
-    dynamicsWorld->addRigidBody(collider->btRigidbody);
     collider->btDynamicsWorld = dynamicsWorld.get();
 
     if (auto physicsObject = dynamic_cast<PhysicsObject*>(collider))
@@ -290,9 +289,16 @@ void PhysicsEngine::UpdateSimulationState()
 {
     for (auto collider : colliders)
     {
+        if (!collider->GetObject()->IsSelfActive())
+            continue;
+
         if (!collider->btRigidbody)
         {
             CreateRigidbody(collider);
+        }
+        else if (!collider->btRigidbody->isInWorld())
+        {
+            dynamicsWorld->addRigidBody(collider->btRigidbody);
         }
 
         if (collider->dirty)
@@ -441,6 +447,9 @@ void PhysicsEngine::RigidbodyUpdate()
 Collider* PhysicsEngine::ClosestColliderUnderMouse()
 {
     auto mainCamera = RenderingPipeline::MainCamera();
+    if (!mainCamera)
+        return nullptr;
+
     auto fromPosition = ToBtVector3(mainCamera->ScreenPositionToWorld(glm::vec3(Engine::GetInput().MousePosition(), mainCamera->GetNearPlane())));
     auto toPosition = ToBtVector3(mainCamera->ScreenPositionToWorld(glm::vec3(Engine::GetInput().MousePosition(), mainCamera->GetFarPlane())));
 
@@ -514,6 +523,10 @@ void PhysicsEngine::CleanComponents()
         }
         if (collider->ToBeDestroyed() && collider == previousColliderUnderMouse)
             previousColliderUnderMouse = nullptr;
-        return collider->ToBeDestroyed();
+
+        if(!collider->GetObject()->IsActive() && collider->btRigidbody)
+            dynamicsWorld->removeCollisionObject(collider->btRigidbody);
+
+        return collider->ToBeDestroyed() || !collider->GetObject()->IsActive();
     });
 }

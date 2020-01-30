@@ -57,8 +57,13 @@ public:
 
     void Destroy(float delay = 0);
 
+    void SetActive(bool active);
+    bool IsActive();
+    bool IsSelfActive();
+
 protected:
     friend class Component;
+    friend class Components;
     friend class Objects;
     friend class Transform;
     friend class Input;
@@ -68,6 +73,9 @@ protected:
     bool UpdateForDestruction();
     bool DoDestruction();
     std::vector<Component*> GetAllComponents();
+    void UpdateActivationInChildren();
+
+    Objects& objects;
 
 private:
     std::unique_ptr<Transform> transform;
@@ -78,12 +86,15 @@ private:
     std::unique_ptr<Collider> collider;
     std::vector<std::unique_ptr<Script>> scripts;
 
-    Objects& objects;
     Components& components;
     FileSystem& fileSystem;
     Time& time;
     float timeToDestruction = std::numeric_limits<float>::max();
     bool registeredForDestruction = false;
+
+    bool isActive = true;
+    bool selfActive = true;
+    bool isActiveDirty = false;
 };
 
 template<class T, typename std::enable_if<std::is_base_of<Renderer, T>::value>::type*>

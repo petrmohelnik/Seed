@@ -1,14 +1,11 @@
-enable/disable bullet a vytvorit si placeholder a potom muzu i volat DeleteDataAfterColliderLoad
-
-proc se pri tom exporu neaplikujou ty transformy do meshe?
-posunout center of mass doprostred a potom umerne tomu posunout objekt ve scene: bullet, panak,
-	rozbity panak musi byt nacteny stylem load scene, kde kazdy ma center of mass v origin a k tomu transform
+kdyz dam pozici i pro meshcollider pomuze mi to s tim posunem bullet?
+rozbity panak musi byt nacteny stylem load scene, kde kazdy ma center of mass v origin a k tomu transform
 
 zkusit udelat jednoduchy bounding mesh sceny
 https://blenderartists.org/t/creating-a-simple-collision-mesh/546298
 napr. pokud ma node dite s nazvem collider tak se pouzije jako collisionmesh, vice deti tvori compound mesh
 metadata na weight?
-zhecknou po exportu range - nacitat je taky z metadat?
+zhecknout po exportu range - nacitat je taky z metadat?
 ty drobny objekty nebudou staticky, ale dynamicky - treba je prirazovat ke colliderum podle jmena
 
 https://www.thoughtspike.com/friction-coefficients-for-bullet-physics/

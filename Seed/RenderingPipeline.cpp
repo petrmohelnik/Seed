@@ -204,7 +204,8 @@ void RenderingPipeline::Render()
 {
     //for (const auto camera : cameras)
     {
-        RenderCamera(*mainCamera);
+        if(auto camera = MainCamera())
+            RenderCamera(*camera);
     }
 }
 
@@ -215,22 +216,25 @@ void RenderingPipeline::SetMainCamera(Camera* camera)
 
 Camera* RenderingPipeline::MainCamera()
 {
-    return mainCamera;
+    if (mainCamera->GetObject()->IsActive())
+        return mainCamera;
+    else
+        return nullptr;
 }
 
 void RenderingPipeline::CleanComponents()
 {
     std::experimental::erase_if(renderers, [](const auto renderer)
     {
-        return renderer->ToBeDestroyed();
+        return renderer->ToBeDestroyed() || !renderer->GetObject()->IsActive();
     });
     std::experimental::erase_if(lights, [](const auto light)
     {
-        return light->ToBeDestroyed();
+        return light->ToBeDestroyed() || !light->GetObject()->IsActive();
     });
     std::experimental::erase_if(cameras, [](const auto camera)
     {
-        return camera->ToBeDestroyed();
+        return camera->ToBeDestroyed() || !camera->GetObject()->IsActive();
     });
     if (mainCamera && mainCamera->ToBeDestroyed())
         mainCamera = nullptr;
@@ -243,6 +247,9 @@ void RenderingPipeline::SetSkybox(Skybox* skybox_)
 
 void RenderingPipeline::RenderCamera(Camera& camera)
 {
+    if (!camera.GetObject()->IsActive())
+        return;
+
     camera.BindCamera();
     camera.UpdateFrustum();
     RenderQueue deferredQueue(&camera);

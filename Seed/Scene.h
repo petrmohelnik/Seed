@@ -15,6 +15,7 @@ public:
     void OnFixedUpdate();
     void OnFrameUpdate();
     void SimulatePhysics();
+    void ActivationUpdate();
     void Render();
 
 private:

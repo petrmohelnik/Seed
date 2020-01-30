@@ -53,7 +53,9 @@ protected:
     void OnFixedUpdate();
     void OnFrameUpdate();
     void SimulatePhysics();
+    void ActivationUpdate();
     void Render();
+    void AddComponentsOfObject(Object* object);
     void CleanComponents();
     Object* GetRoot();
 

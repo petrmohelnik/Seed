@@ -21,11 +21,12 @@ private:
     Light* flashLight;
     Camera* camera;
     CharacterController* characterController;
+    BulletObject* bulletDataHolder;
 
     float verticalRotation = 0.0f;
     float bulletForce = 0.0f;
 
-    float bulletMass = 1.0f;
+    float bulletMass = 10.0f;
     float bulletBounciness = 0.0f;
     float bulletFriction = 0.5f;
     float bulletLinearDamping = 0.0f;
@@ -39,6 +40,10 @@ void PlayerScript::OnCreate()
     characterController = object->GetComponent<CharacterController>();
 
     auto scripts = object->GetComponents<Script>();
+
+    bulletDataHolder = objects.CreateObject<BulletObject>("Bullet");
+    bulletDataHolder->GetBody()->GetComponent<Collider>()->InitializeRigidbody();
+    bulletDataHolder->SetActive(false);
 }
 
 inline void PlayerScript::FixedUpdate()
@@ -63,18 +68,19 @@ inline void PlayerScript::FixedUpdate()
 
     if (input.MouseButton(SDL_BUTTON_LEFT))
     {
-        bulletForce += 10.0f * time.DeltaTime();
+        bulletForce += 200.0f * time.FixedDeltaTime();
     }
     else if (bulletForce != 0.0f)
     {
         auto bullet = objects.CreateObject<BulletObject>("Bullet");
         bullet->SetPhysicsMaterial(bulletMass, bulletBounciness, bulletFriction, bulletLinearDamping, bulletAngularDamping);
 
-        auto initialPosition = camera->GetTransform()->GetPosition() + camera->GetTransform()->GetForwardAxis() * 0.2f;
+        auto initialPosition = camera->GetTransform()->GetPosition() + camera->GetTransform()->GetForwardAxis() * 0.25f;
         bullet->GetComponent<Transform>()->SetPosition(initialPosition);
         bullet->GetComponent<Transform>()->TranslateY(-0.1f);
-        bullet->GetComponent<Collider>()->InitializeRigidbody();
-        bullet->GetComponent<Collider>()->AddForce(camera->GetTransform()->GetForwardAxis() * bulletForce, Collider::ForceType::Impulse);
+        bullet->GetComponent<Transform>()->SetRotation(camera->GetTransform()->GetRotation(), Transform::Space::World);
+        bullet->GetBody()->GetComponent<Collider>()->InitializeRigidbody();
+        bullet->GetBody()->GetComponent<Collider>()->AddForce(camera->GetTransform()->GetForwardAxis() * bulletForce, Collider::ForceType::Impulse);
         bullet->Destroy(15.0f);
         bulletForce = 0.0f;
     }
