@@ -22,7 +22,8 @@ public:
 private:
     int width, height;
 
-    GLuint fbo;
-    GLuint depthRbo, stencilRbo = 0;
+    GLuint fbo = 0;
+	GLuint depthRbo = 0;
+	GLuint stencilRbo = 0;
 };
 

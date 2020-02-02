@@ -30,19 +30,18 @@ protected:
 
     void Bind();
 
-    void DefineTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, bool generateMipMaps = false, const void* pixels = nullptr);
+    void DefineTexture(GLuint internalFormat, int width, int height, bool generateMipMaps = false, std::vector<const void*> pixels = std::vector<const void*>(6, nullptr), GLuint format = 0, GLuint type = 0);
     void GenerateTexture(bool generateMipMaps = false);
-    static std::vector<glm::mat4> GenerateCameraViewsForCube(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f));
+    static std::vector<glm::mat4> GenerateCameraViewsForCube(glm::vec3 position = glm::vec3(0.0f));
     void RenderIntoHDRCubeMapFromTexture(int width, ShaderFactory::Type shaderType, RenderingPipeline::TextureSlot textureSourceSlot, GLuint textureSourceType, GLuint textureSource,
-        bool generateMipMaps = false, GLuint mipLevelUniformLocation = 0, int mipLevels = 0);
+        bool generateMipMaps = false, int mipLevels = 0);
     void ConvertFromHDRToSRGB();
 
 private:
     void DefineTexture();
-    void AllocateTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, const void* pixels = nullptr);
-    GLuint GenerateEquirectangularTexture(float* data, int width, int height);
+    void AllocateTexture(GLuint internalFormat, int mipMapLevels, int width, int height, GLuint format, GLuint type, std::vector<const void*> pixels = std::vector<const void*>(6, nullptr));
     void RenderViewsIntoCubeMap(Shader* shader, const Framebuffer& framebuffer);
-    void RenderViewsIntoCubeMapWithMipMaps(Shader* shader, Framebuffer& framebuffer, GLuint mipLevelUniformLocation, int mipLevels, int width);
+    void RenderViewsIntoCubeMapWithMipMaps(Shader* shader, Framebuffer& framebuffer, int mipLevels, int width);
 
     std::vector<std::shared_ptr<Texture>> faces; //right, left, top, bottom, front, back
 

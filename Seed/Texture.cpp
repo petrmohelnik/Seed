@@ -32,10 +32,11 @@ std::shared_ptr<Texture> Texture::Clone()
 
     if (texture != 0)
     {
-        clonedTexture->GenerateTexture(GL_REPEAT, GetInternalFormat(), width, height, GetFormat(), GL_UNSIGNED_BYTE, true, nullptr);
+        clonedTexture->GenerateTexture(GL_REPEAT, GetInternalFormat(), width, height, true);
         glCopyImageSubData(texture, GL_TEXTURE_2D, 0, 0, 0, 0,
             clonedTexture->texture, GL_TEXTURE_2D, 0, 0, 0, 0,
             width, height, 1);
+        glGenerateMipmap(GL_TEXTURE_2D);
     }
 
     return clonedTexture;
@@ -46,7 +47,7 @@ void Texture::Load()
     if (texture != 0)
         return;
 
-    GenerateTexture(GL_REPEAT, GetInternalFormat(), width, height, GetFormat(), GL_UNSIGNED_BYTE, true, &data[0]);
+    GenerateTexture(GL_REPEAT, GetInternalFormat(), width, height, true, &data[0], GetFormat(), GL_UNSIGNED_BYTE);
 
     if (deleteAfterLoad)
     {
@@ -196,7 +197,7 @@ void Texture::AddChannelFromTexture(std::shared_ptr<Texture> textureFrom, int ch
     Unload();
 }
 
-void Texture::GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width, int height, GLuint format, GLuint type, bool generateMipMaps, const void* pixels)
+void Texture::GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width, int height, bool generateMipMaps, const void* pixels, GLuint format, GLuint type)
 {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -206,23 +207,27 @@ void Texture::GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapParam);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapParam);
 
-    AllocateTexture(internalFormat, width, height, format, type, pixels);
-
-    if(generateMipMaps)
-        glGenerateMipmap(GL_TEXTURE_2D);
+	auto mipMapLevels = generateMipMaps ? static_cast<int>(std::floor(std::log2(std::max(width, height)))) + 1 : 1;
+    AllocateTexture(internalFormat, mipMapLevels, width, height, format, type, pixels);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::AllocateTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, const void* pixels)
+void Texture::AllocateTexture(GLuint internalFormat, int mipMapLevels, int width, int height, GLuint format, GLuint type, const void* pixels)
 {
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, pixels);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexStorage2D(GL_TEXTURE_2D, mipMapLevels, internalFormat, width, height);
+    if (pixels)
+    {
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, type, pixels);
+        if (mipMapLevels > 1)
+            glGenerateMipmap(GL_TEXTURE_2D);
+    }
 }
 
 void Texture::RenderIntoHDRTexture(int width, int height, ShaderFactory::Type shaderType, GLuint format)
 {
-    GenerateTexture(GL_CLAMP_TO_EDGE, GL_RG16F, width, height, format, GL_FLOAT);
+    GenerateTexture(GL_CLAMP_TO_EDGE, GL_RG16F, width, height);
 
     SimpleMesh quad(SimpleMesh::Shape::Quad);
 

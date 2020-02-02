@@ -54,35 +54,35 @@ void RenderingPipeline::Initialize()
 void RenderingPipeline::IntializeTextures(int width, int height)
 {
     gbuffer.colorTexture = std::make_unique<Texture>();
-    gbuffer.colorTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA8, width, height, GL_RGBA, GL_UNSIGNED_BYTE, false);
+    gbuffer.colorTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA8, width, height);
     gbuffer.normalTexture = std::make_unique<Texture>();
-    gbuffer.normalTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA16F, width, height, GL_RGBA, GL_FLOAT, false);
+    gbuffer.normalTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA16F, width, height);
     gbuffer.metallicTexture = std::make_unique<Texture>();
-    gbuffer.metallicTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA8, width, height, GL_RGBA, GL_UNSIGNED_BYTE, false);
+    gbuffer.metallicTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGBA8, width, height);
     gbuffer.depthStencilTexture = std::make_unique<Texture>();
-    gbuffer.depthStencilTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_DEPTH_STENCIL, width, height, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, false);
+    gbuffer.depthStencilTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_DEPTH24_STENCIL8, width, height);
 
     shadowMap.texture2D = std::make_unique<Texture>();
-    shadowMap.texture2D->GenerateTexture(GL_CLAMP_TO_BORDER, GL_DEPTH_COMPONENT, MaxSpotLightShadowMapSize, MaxSpotLightShadowMapSize, GL_DEPTH_COMPONENT, GL_FLOAT, false);
+    shadowMap.texture2D->GenerateTexture(GL_CLAMP_TO_BORDER, GL_DEPTH_COMPONENT32F, MaxSpotLightShadowMapSize, MaxSpotLightShadowMapSize);
     glGenSamplers(2, &shadowMap.sampler2DShadow[0]);
     SetShadowSamplerParameters(shadowMap.sampler2DShadow[0]);
     SetShadowSamplerParameters(shadowMap.sampler2DShadow[1], GL_COMPARE_REF_TO_TEXTURE);
 
     shadowMap.textureCube = std::make_unique<TextureCubeMap>();
     shadowMap.textureCube->GenerateTexture();
-    shadowMap.textureCube->DefineTexture(GL_DEPTH_COMPONENT, MaxPointLightShadowMapSize, MaxPointLightShadowMapSize, GL_DEPTH_COMPONENT, GL_FLOAT);
+    shadowMap.textureCube->DefineTexture(GL_DEPTH_COMPONENT32F, MaxPointLightShadowMapSize, MaxPointLightShadowMapSize);
     glGenSamplers(2, &shadowMap.samplerCubeShadow[0]);
     SetShadowSamplerParameters(shadowMap.samplerCubeShadow[0]);
     SetShadowSamplerParameters(shadowMap.samplerCubeShadow[1], GL_COMPARE_REF_TO_TEXTURE);
 
     lightsIlluminationTexture = std::make_unique<Texture>();
-    lightsIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height, GL_RGB, GL_FLOAT, false);
+    lightsIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height);
 
     globalIlluminationTexture = std::make_unique<Texture>();
-    globalIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height, GL_RGB, GL_FLOAT, false);
+    globalIlluminationTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height);
 
     tonemappingTexture = std::make_unique<Texture>();
-    tonemappingTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB8, width, height, GL_RGB, GL_UNSIGNED_BYTE, false);
+    tonemappingTexture->GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB8, width, height);
 }
 
 void RenderingPipeline::IntializeBuffers(int width, int height)

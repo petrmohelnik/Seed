@@ -35,11 +35,11 @@ protected:
 
     void Bind();
 
-    void GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width, int height, GLuint format, GLuint type, bool generateMipMaps = false, const void* pixels = nullptr);
+    void GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width, int height, bool generateMipMaps = false, const void* pixels = nullptr, GLuint format = 0, GLuint type = 0);
     void RenderIntoHDRTexture(int width, int height, ShaderFactory::Type shaderType, GLuint format);
 
 private:
-    void AllocateTexture(GLuint internalFormat, int width, int height, GLuint format, GLuint type, const void* pixels = nullptr);
+    void AllocateTexture(GLuint internalFormat, int mipMapLevels, int width, int height, GLuint format, GLuint type, const void* pixels = nullptr);
     GLuint GetInternalFormat();
     GLuint GetFormat();
 

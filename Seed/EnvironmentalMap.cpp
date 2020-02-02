@@ -14,11 +14,8 @@ void EnvironmentalMap::Load(TextureCubeMap* environment)
 {
     irradiance->RenderIntoHDRCubeMapFromTexture(32, ShaderFactory::Type::PrecalculateIrradiance, RenderingPipeline::TextureSlot::Environmental, GL_TEXTURE_CUBE_MAP, environment->texture);
 
-    glBindTexture(GL_TEXTURE_CUBE_MAP, environment->texture);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
     environmentalMap->RenderIntoHDRCubeMapFromTexture(512, ShaderFactory::Type::PrecalculateEnvironmentMap, RenderingPipeline::TextureSlot::Environmental, GL_TEXTURE_CUBE_MAP, environment->texture,
-        true, 0, 5);
+        true, 5);
 
     BRDFIntegrationMap->RenderIntoHDRTexture(1024, 1024, ShaderFactory::Type::PrecalculateBRDFIntegrationMap, GL_RG);
 }
