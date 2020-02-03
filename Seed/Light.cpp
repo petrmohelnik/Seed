@@ -206,7 +206,7 @@ bool Light::IsVisible(const Camera& camera)
 
 void Light::OnInputGraphUpdate()
 {
-    ImGui::BulletText("Light");
+    Engine::GetInput().BulletText("Light");
     Engine::GetInput().SliderFloatLog("Range", dataBlock.Range, 0.0, 100);
     Engine::GetInput().SliderFloatLog("Intensity", dataBlock.Intensity, 0.0, 100);
     Engine::GetInput().SliderFloat("SizeUV", dataBlock.SizeUV, 0.0, 1.0);

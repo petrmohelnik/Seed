@@ -88,7 +88,6 @@ void Engine::Work()
 
         scene.Render();
         window.Swap();
-        assert(glGetError() == GL_NO_ERROR);
     }
 
     objects.DeleteAll();

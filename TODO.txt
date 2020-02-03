@@ -1,4 +1,4 @@
-kdyz dam pozici i pro meshcollider pomuze mi to s tim posunem bullet?
+GetFullNameHash do inputu v imgui? kvuli spheram napr.
 rozbity panak musi byt nacteny stylem load scene, kde kazdy ma center of mass v origin a k tomu transform
 
 zkusit udelat jednoduchy bounding mesh sceny
@@ -57,8 +57,6 @@ https://learn.unity.com/tutorial/physics-best-practices#5c7f8528edbc2a002053b5b4
 
 textura nebo mesh by si meli drzet path, aby pri loadu na gpu, kdyz maji smazany data si ho mohly naloadovat,
 ale uz na primo, zadny sdileni pres file system
-
-assert(glGetError() == GL_NO_ERROR);
 
 !!!!!!!
 https://unity3d.com/learn/tutorials/temas/performance-optimization/optimizing-graphics-rendering-unity-games

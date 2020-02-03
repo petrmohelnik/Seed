@@ -1,7 +1,7 @@
 #pragma once
 
 class Object;
-class Component;
+class Identifiable;
 
 class Input
 {
@@ -23,6 +23,8 @@ public:
     void PopWindow();
     void InputFloat(const std::string& name, float& value, const std::function<void()>& onEnterPressed);
 
+    static std::string GetFullNameHash(Identifiable* object, const std::string& name); //use to indenitfy imgui object when on the same position
+
 protected:
     friend class SDLWindow;
     friend class Engine;
@@ -34,7 +36,6 @@ protected:
 
 private:
     void CreateSceneGraphNode(Object* object);
-    std::string GetFullNameHash(Component* component, const std::string& name); //use to indenitfy imgui object when on the same position
 
     std::set<SDL_Keycode> keyHoldDown;
     std::set<SDL_Keycode> keyPressedDown;

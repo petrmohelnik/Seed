@@ -15,7 +15,7 @@ void EnvironmentalMap::Load(TextureCubeMap* environment)
     irradiance->RenderIntoHDRCubeMapFromTexture(32, ShaderFactory::Type::PrecalculateIrradiance, RenderingPipeline::TextureSlot::Environmental, GL_TEXTURE_CUBE_MAP, environment->texture);
 
     environmentalMap->RenderIntoHDRCubeMapFromTexture(512, ShaderFactory::Type::PrecalculateEnvironmentMap, RenderingPipeline::TextureSlot::Environmental, GL_TEXTURE_CUBE_MAP, environment->texture,
-        true, 5);
+        true, true, 5);
 
     BRDFIntegrationMap->RenderIntoHDRTexture(1024, 1024, ShaderFactory::Type::PrecalculateBRDFIntegrationMap, GL_RG);
 }

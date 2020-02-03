@@ -75,12 +75,14 @@ inline void PlayerScript::FixedUpdate()
         auto bullet = objects.CreateObject<BulletObject>("Bullet");
         bullet->SetPhysicsMaterial(bulletMass, bulletBounciness, bulletFriction, bulletLinearDamping, bulletAngularDamping);
 
-        auto initialPosition = camera->GetTransform()->GetPosition() + camera->GetTransform()->GetForwardAxis() * 0.25f;
+
+        bullet->GetComponent<Transform>()->SetRotation(camera->GetTransform()->GetRotation(), Transform::Space::World);
+        bullet->GetComponent<Transform>()->RotateX(0.05f);
+        auto initialPosition = camera->GetTransform()->GetPosition() + bullet->GetComponent<Transform>()->GetForwardAxis() * 0.25f;
         bullet->GetComponent<Transform>()->SetPosition(initialPosition);
         bullet->GetComponent<Transform>()->TranslateY(-0.1f);
-        bullet->GetComponent<Transform>()->SetRotation(camera->GetTransform()->GetRotation(), Transform::Space::World);
         bullet->GetBody()->GetComponent<Collider>()->InitializeRigidbody();
-        bullet->GetBody()->GetComponent<Collider>()->AddForce(camera->GetTransform()->GetForwardAxis() * bulletForce, Collider::ForceType::Impulse);
+        bullet->GetBody()->GetComponent<Collider>()->AddForce(bullet->GetComponent<Transform>()->GetForwardAxis() * bulletForce, Collider::ForceType::Impulse);
         bullet->Destroy(15.0f);
         bulletForce = 0.0f;
     }
@@ -141,9 +143,11 @@ void PlayerScript::Update()
             flashLight->SetIntensity(100.0);
     }
 
+    input.PushWindow("Bullet attributes");
     input.SliderFloat("bulletMass", bulletMass, 0.0f, 10.0f);
     input.SliderFloat("bulletBounciness", bulletBounciness, 0.0f, 1.0f);
     input.SliderFloat("bulletFriction", bulletFriction, 0.0f, 1.0f);
     input.SliderFloat("bulletLinearDamping", bulletLinearDamping, 0.0f, 1.0f);
     input.SliderFloat("bulletAngularDamping", bulletAngularDamping, 0.0f, 1.0f);
+    input.PopWindow();
 }

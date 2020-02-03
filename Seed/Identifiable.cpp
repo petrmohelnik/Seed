@@ -1,8 +1,15 @@
 #include "Identifiable.h"
 
+long Identifiable::uniqueIdGenerator = 0;
+
+Identifiable::Identifiable()
+{
+    uniqueId = uniqueIdGenerator++;
+}
+
 void Identifiable::SetName(std::string name_)
 {
-    name = std::move(name);
+    name = std::move(name_);
 }
 
 std::string Identifiable::GetName()
@@ -18,4 +25,9 @@ void Identifiable::AddTag(std::string tag)
 bool Identifiable::ContainsTag(const std::string& tag)
 {
     return tags.count(name) != 0;
+}
+
+long Identifiable::GetUniqueId()
+{
+    return uniqueId;
 }

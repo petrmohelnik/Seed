@@ -13,7 +13,7 @@ public:
 
 void BulletObject::Initialize()
 {
-    auto bulletBody = objects.CreateObject("BulletBody");
+    auto bulletBody = objects.CreateObject("Bullet");
     bulletBody->AddComponent<MeshRenderer>()->Load("rocket/rocket.gltf", false);
     bulletBody->AddComponent<MeshCollider>(bulletBody->GetComponent<MeshRenderer>()->GetSharedMesh(), true);
     bulletBody->GetComponent<MeshRenderer>()->GetSharedMesh()->DeleteDataAfterColliderLoad(true);
@@ -24,7 +24,7 @@ void BulletObject::Initialize()
     bulletBody->GetComponent<Transform>()->SetParent(this);
     auto bulletLight = objects.CreateObject("BulletLight");
     bulletLight->AddComponent<Light>()->SetPointLight(0.3f, 0.3f);
-    bulletLight->GetComponent<Light>()->SetShadowNearPlaneDistance(0.05f);
+    bulletLight->GetComponent<Light>()->SetShadowNearPlaneDistance(0.06f);
     bulletLight->GetComponent<Light>()->SetColor(glm::vec3(0.9f, 0.35f, 0.15f));
     bulletLight->GetComponent<Transform>()->TranslateZ(0.33f);
     bulletLight->GetComponent<Transform>()->SetParent(bulletBody);

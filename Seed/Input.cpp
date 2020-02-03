@@ -1,6 +1,7 @@
 #include "Input.h"
 #include "Object.h"
 #include "Component.h"
+#include "Identifiable.h"
 #include "Engine.h"
 
 bool Input::IsGameRunning()
@@ -150,7 +151,7 @@ void Input::CreateSceneGraphNode(Object* object)
     auto transform = object->GetComponent<Transform>();
     if (object->GetComponent<Transform>()->GetChildCount() == 0)
     {
-        if (ImGui::TreeNode(object->GetName().c_str()))
+        if (ImGui::TreeNode(GetFullNameHash(object, object->GetName()).c_str()))
         {
             for (const auto& component : object->GetAllComponents())
                 component->OnInputGraphUpdate();
@@ -158,7 +159,7 @@ void Input::CreateSceneGraphNode(Object* object)
         }
         return;
     }
-    if (ImGui::TreeNode(object->GetName().c_str()))
+    if (ImGui::TreeNode(GetFullNameHash(object, object->GetName()).c_str()))
     {
         for (int index = 0; index < transform->GetChildCount(); index++)
             CreateSceneGraphNode(transform->GetChild(index)->GetObject());
@@ -166,7 +167,7 @@ void Input::CreateSceneGraphNode(Object* object)
     }
 }
 
-std::string Input::GetFullNameHash(Component* component, const std::string& name)
+std::string Input::GetFullNameHash(Identifiable* object, const std::string& name)
 {
-    return name + "##" + component->GetObject()->GetName() + "_" + component->GetName();
+    return name + "##" + std::to_string(object->GetUniqueId());
 }

@@ -44,7 +44,7 @@ void TextureCubeMap::LoadFromEquirectangular(float* data, int width, int height)
 	Texture equirectangularTexture;
 	equirectangularTexture.GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height, false, data, GL_RGB, GL_FLOAT);
     
-    RenderIntoHDRCubeMapFromTexture(2048, ShaderFactory::Type::EquirectangularToCubemap, RenderingPipeline::TextureSlot::Environmental, GL_TEXTURE_2D, equirectangularTexture.texture, true);
+    RenderIntoHDRCubeMapFromTexture(2048, ShaderFactory::Type::EquirectangularToCubemap, RenderingPipeline::TextureSlot::Environmental, GL_TEXTURE_2D, equirectangularTexture.texture, true, false);
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
@@ -126,7 +126,7 @@ std::vector<glm::mat4> TextureCubeMap::GenerateCameraViewsForCube(glm::vec3 posi
 }
 
 void TextureCubeMap::RenderIntoHDRCubeMapFromTexture(int width, ShaderFactory::Type shaderType, RenderingPipeline::TextureSlot textureSourceSlot, GLuint textureSourceType, GLuint textureSource,
-    bool generateMipMaps, int mipLevels)
+    bool generateMipMaps, bool renderMipMaps, int renderMipLevels)
 {
     GenerateTexture(generateMipMaps);
     DefineTexture(GL_RGB16F, width, width, generateMipMaps);
@@ -140,8 +140,8 @@ void TextureCubeMap::RenderIntoHDRCubeMapFromTexture(int width, ShaderFactory::T
     glBindTexture(textureSourceType, textureSource);
 
     framebuffer.Bind();
-    if(generateMipMaps)
-        RenderViewsIntoCubeMapWithMipMaps(shader, framebuffer, mipLevels, width);
+    if(renderMipMaps)
+        RenderViewsIntoCubeMapWithMipMaps(shader, framebuffer, renderMipLevels, width);
     else
         RenderViewsIntoCubeMap(shader, framebuffer);
     framebuffer.Unbind();
