@@ -30,6 +30,11 @@ float CapsuleCollider::GetRadius()
     return radius;
 }
 
+CapsuleCollider* CapsuleCollider::Clone()
+{
+    return new CapsuleCollider(*this);
+}
+
 glm::vec3 CapsuleCollider::GetPosition() const
 {
     return GetTransform()->GetLocalToWorldMatrix() * glm::vec4(GetTransform()->GetLocalPosition() + center, 1.0f);

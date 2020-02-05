@@ -52,21 +52,21 @@ const aiScene* FileSystem::GetScene(const std::string& path)
     return importer.GetScene();
 }
 
-std::vector<Object*> FileSystem::LoadObjects(const std::string& path)
+Object* FileSystem::LoadObjects(const std::string& path, const std::string& rootName, bool deleteMeshAfterLoad)
 {
     auto const scene = GetScene(path);
-    std::vector<Object*> objects;
 
     auto const materials = LoadMaterialsData(scene->mMaterials, scene->mNumMaterials, path);
-    auto const mesh = LoadMeshData(scene->mMeshes, scene->mNumMeshes);
-    LoadNode(scene, scene->mRootNode, nullptr, objects, mesh->subMeshes, materials);
+    auto const mesh = LoadMeshData(scene->mMeshes, scene->mNumMeshes, deleteMeshAfterLoad);
+    auto rootObject = LoadNode(scene, scene->mRootNode, nullptr, mesh->subMeshes, materials);
+    rootObject->SetName(rootName);
 
     UnloadScene();
 
-    return objects;
+    return rootObject;
 }
 
-void FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent, std::vector<Object*>& objects, 
+Object* FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent,
     const std::vector<std::shared_ptr<SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials)
 {
     auto object = Engine::GetObjects().CreateObject<Object>(node->mName.C_Str());
@@ -83,11 +83,12 @@ void FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent, st
     LoadLight(scene, node, object);
     LoadCamera(scene, object);
 
-    objects.push_back(object);
     for(unsigned int childIndex = 0; childIndex < node->mNumChildren; childIndex++)
     {
-        LoadNode(scene, node->mChildren[childIndex], object, objects, subMeshes, materials);
+        LoadNode(scene, node->mChildren[childIndex], object, subMeshes, materials);
     }
+
+    return object;
 }
 
 void FileSystem::LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials)
@@ -193,16 +194,13 @@ std::shared_ptr<Mesh> FileSystem::LoadMesh(const std::string& path, bool deleteA
     if(scene->mNumMeshes == 0)
         throw std::runtime_error("File: " + path + " does not contain any meshes");
 
-    auto mesh = LoadMeshData(scene->mMeshes, scene->mNumMeshes);
+    auto mesh = LoadMeshData(scene->mMeshes, scene->mNumMeshes, deleteAfterLoad);
     loadedMeshes.insert_or_assign(path, mesh);
-
-    for (auto& subMesh : mesh->subMeshes)
-        subMesh->deleteAfterLoad = deleteAfterLoad;
 
     return mesh;
 }
 
-std::shared_ptr<Mesh> FileSystem::LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes)
+std::shared_ptr<Mesh> FileSystem::LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes, bool deleteAfterLoad)
 {
     auto mesh = std::make_shared<Mesh>();
     mesh->subMeshes.reserve(numMeshes);
@@ -210,6 +208,7 @@ std::shared_ptr<Mesh> FileSystem::LoadMeshData(aiMesh** assimpMeshes, unsigned i
     for (unsigned int index = 0; index < numMeshes; index++)
     {
         mesh->subMeshes.push_back(LoadSubMeshData(assimpMeshes[index]));
+        mesh->subMeshes.back()->deleteAfterLoad = deleteAfterLoad;
     }
 
     return mesh;
@@ -360,7 +359,7 @@ std::vector<std::shared_ptr<Material>> FileSystem::LoadMaterialsData(aiMaterial*
     auto folderEnd = path.find_last_of("\\/");
     std::string folder;
     if (folderEnd != std::string::npos)
-        folder = path.substr(0, path.find_last_of("\\/") + 1);
+        folder = path.substr(0, folderEnd + 1);
 
     auto materials = std::vector<std::shared_ptr<Material>>();
 

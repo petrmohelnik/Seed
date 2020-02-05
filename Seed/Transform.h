@@ -13,6 +13,8 @@ public:
     using Component::Component;
     Transform(Object* object, Transform* root);
     Transform* GetParent();
+    void Clone(Transform* transform);
+    void Clone(Object* object);
     void SetParent(Transform* parent_);
     void SetParent(Object* parent_);
     int GetChildCount();
@@ -64,6 +66,7 @@ protected:
     void UpdateModelMatrix();
 
 private:
+    Transform* Clone() override;
     void AddChild(Transform* child);
     bool IsParentRoot() const;
     void MakeRoot();

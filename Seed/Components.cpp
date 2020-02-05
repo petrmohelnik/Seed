@@ -1,7 +1,6 @@
 #include "Components.h"
 #include "Input.h"
 #include "Time.h"
-#include "Object.h"
 #include "Engine.h"
 
 Components::Components() 
@@ -44,8 +43,9 @@ void Components::RemoveSkybox()
 
 void Components::OnCreateUpdate()
 {
-    for (const auto& script : scripts)
+    for (int i = 0; i < scripts.size(); i++)
     {
+        auto script = scripts[i];
         if (!script->initialized)
         {
             script->OnCreate();
@@ -56,8 +56,9 @@ void Components::OnCreateUpdate()
 
 void Components::OnFixedUpdate()
 {
-    for (const auto& script : scripts)
+    for (int i = 0; i < scripts.size(); i++)
     {
+        auto script = scripts[i];
         if(script->GetObject()->IsSelfActive())
             script->FixedUpdate();
     }
@@ -67,8 +68,9 @@ void Components::OnFrameUpdate()
 {
     physicsEngine.OnMouseUpdate();
 
-    for (const auto& script : scripts)
+    for (int i = 0; i < scripts.size(); i++)
     {
+        auto script = scripts[i];
         if (script->GetObject()->IsSelfActive())
             script->Update();
     }

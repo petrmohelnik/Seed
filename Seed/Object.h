@@ -1,6 +1,5 @@
 #pragma once
 #include "Components.h"
-#include "Objects.h"
 #include "Identifiable.h"
 
 class Transform;
@@ -12,6 +11,7 @@ class Collider;
 class Script;
 class FileSystem;
 class Time;
+class Objects;
 
 class Object : public Identifiable
 {
@@ -36,6 +36,8 @@ public:
     T* AddComponent(Args&& ...arguments);
     template <class T, typename std::enable_if<std::is_base_of<Script, T>::value>::type* = nullptr>
     T* AddComponent();
+    template <typename T>
+    T* AddComponent(T* componentSource);
 
     template <class T, typename std::enable_if<std::is_base_of<Transform, T>::value>::type* = nullptr>
     T* GetComponent();
@@ -54,6 +56,7 @@ public:
 
     template <class T>
     std::vector<T*> GetComponents();
+    std::vector<Object*> GetAllChildren();
 
     void Destroy(float delay = 0);
 
@@ -74,6 +77,9 @@ protected:
     bool DoDestruction();
     std::vector<Component*> GetAllComponents();
     void UpdateActivationInChildren();
+    void GetAllChildren(std::vector<Object*>& children);
+    template <class T>
+    std::unique_ptr<T> Clone();
 
     Objects& objects;
 
@@ -145,6 +151,85 @@ inline T* Object::AddComponent()
 {
     scripts.push_back(components.CreateScript<T>(this));
     return dynamic_cast<T*>(scripts.back().get());
+}
+
+template<class T>
+inline std::unique_ptr<T> Object::Clone()
+{
+    auto object = std::make_unique<T>(GetName());
+
+    object->transform->Clone(transform.get());
+    if (renderer)
+        object->AddComponent(renderer.get());
+    if (camera)
+        object->AddComponent(camera.get());
+    if (light)
+        object->AddComponent(light.get());
+    for (const auto& audio : audios)
+        object->AddComponent(audio.get());
+    if (collider)
+        object->AddComponent(collider.get());
+    for (const auto& script : scripts)
+        object->AddComponent(script.get());
+
+    object->selfActive = selfActive;
+    object->isActiveDirty = isActiveDirty;
+
+    return object;
+}
+
+template<typename T>
+inline T* Object::AddComponent(T* componentSource)
+{
+    static_assert(std::is_base_of<Component, T>::value, "T must be derived from Component");
+
+    T* clonedComponent = nullptr;
+    if constexpr (std::is_base_of<Renderer, T>::value)
+    {
+        if (renderer)
+            throw std::runtime_error("Object: " + name + "already contains Renderer");
+        renderer = components.CloneRenderer<T>(componentSource);
+        clonedComponent = dynamic_cast<T*>(renderer.get());
+    }
+    else if constexpr (std::is_base_of<Camera, T>::value)
+    {
+        if (camera)
+            throw std::runtime_error("Object: " + name + "already contains Camera");
+        camera = components.CloneCamera(componentSource);
+        clonedComponent = camera.get();
+    }
+    else if constexpr (std::is_base_of<Light, T>::value)
+    {
+        if (light)
+            throw std::runtime_error("Object: " + name + "already contains Light");
+        light = components.CloneLight(componentSource);
+        clonedComponent = light.get();
+    }
+    else if constexpr (std::is_base_of<Audio, T>::value)
+    {
+        audios.push_back(components.CloneAudio(componentSource));
+        clonedComponent = audios.back().get();
+    }
+    else if constexpr (std::is_base_of<Collider, T>::value)
+    {
+        if (collider)
+            throw std::runtime_error("Object: " + name + "already contains Collider");
+        collider = components.CloneCollider<T>(componentSource);
+        clonedComponent = dynamic_cast<T*>(collider.get());
+    }
+    else if constexpr (std::is_base_of<Script, T>::value)
+    {
+        scripts.push_back(components.CloneScript<T>(componentSource));
+        clonedComponent = dynamic_cast<T*>(scripts.back().get());
+        clonedComponent->transform = GetComponent<Transform>();
+    }
+    else
+    {
+        static_assert("component type does not support cloning");
+    }
+
+    clonedComponent->object = this;
+    return clonedComponent;
 }
 
 template<class T, typename std::enable_if<std::is_base_of<Transform, T>::value>::type*>

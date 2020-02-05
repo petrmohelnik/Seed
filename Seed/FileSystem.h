@@ -9,7 +9,7 @@ public:
     FileSystem();
 
     std::string LoadTextFile(const std::string& path);
-    std::vector<Object*> LoadObjects(const std::string& path);
+    Object* LoadObjects(const std::string& path, const std::string& rootName, bool deleteMeshAfterLoad = true);
     std::shared_ptr<Mesh> LoadMesh(const std::string& path, bool deleteAfterLoad = true);
     std::vector<std::shared_ptr<Material>> LoadMaterials(const std::string& path);
     std::unique_ptr<TextureCubeMap> LoadCubeMap(const std::string& path, const std::string& format);
@@ -24,12 +24,12 @@ protected:
 private:
     void LoadScene(const std::string& path);
     const aiScene* GetScene(const std::string& path);
-    void LoadNode(const aiScene* scene, aiNode* node, Object* parent, std::vector<Object*>& objects, 
+    Object* LoadNode(const aiScene* scene, aiNode* node, Object* parent, 
         const std::vector<std::shared_ptr<SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials);
     void LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials);
     void LoadLight(const aiScene* scene, aiNode* node, Object* object);
     void LoadCamera(const aiScene* scene, Object* object);
-    std::shared_ptr<Mesh> LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes);
+    std::shared_ptr<Mesh> LoadMeshData(aiMesh** assimpMeshes, unsigned int numMeshes, bool deleteAfterLoad = true);
     std::shared_ptr<SubMesh> LoadSubMeshData(aiMesh* assimpMesh);
     std::vector<std::shared_ptr<Material>> LoadMaterialsData(aiMaterial** assimpMaterials, unsigned int numMaterials, const std::string& path);
     Material LoadMaterialData(aiMaterial* assimpMaterial, const std::string& folder);

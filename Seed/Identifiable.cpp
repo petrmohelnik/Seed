@@ -7,6 +7,12 @@ Identifiable::Identifiable()
     uniqueId = uniqueIdGenerator++;
 }
 
+Identifiable::Identifiable(const Identifiable& identifiable)
+    : name(identifiable.name)
+{
+    uniqueId = uniqueIdGenerator++;
+}
+
 void Identifiable::SetName(std::string name_)
 {
     name = std::move(name_);

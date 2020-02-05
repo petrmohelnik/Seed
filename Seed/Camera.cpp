@@ -9,6 +9,11 @@ Camera::Camera(Object* object) : Component(object)
     SetProjectionMatrix(fieldOfView, windowSize.x / static_cast<float>(windowSize.y), nearPlane, farPlane);
 }
 
+Camera* Camera::Clone()
+{
+    return new Camera(*this);
+}
+
 void Camera::BindCamera()
 {
     RenderingPipeline::BindCameraUniform();

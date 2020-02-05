@@ -4,6 +4,8 @@
 
 class PlayerScript : public Script
 {
+private:
+    inline PlayerScript* Clone() { return new PlayerScript(*this); }
 public:
     using Script::Script;
 
@@ -96,7 +98,7 @@ inline void PlayerScript::FixedUpdate()
         auto rayDirection = glm::normalize(toPos - fromPos);
         if (physics.Raycast(fromPos, rayDirection, hit, camera->GetFarPlane() - camera->GetNearPlane()))
         {
-            hit.Collider->AddForceAtPosition(rayDirection * 100.0f, Collider::ForceType::Force, hit.Point);
+            hit.Collider->AddForceAtPosition(rayDirection * 10.0f, Collider::ForceType::Acceleration, hit.Point);
         }
     }
 
@@ -107,7 +109,7 @@ inline void PlayerScript::FixedUpdate()
         auto cameraPosition = camera->GetTransform()->GetPosition();
         if (physics.Raycast(cameraPosition, rayDirection, hit))
         {
-            hit.Collider->AddForce((cameraPosition - hit.Point) * 1.0f, Collider::ForceType::Acceleration);
+            hit.Collider->AddForce((cameraPosition - hit.Point) * 5.0f, Collider::ForceType::Acceleration);
         }
     }
 }
@@ -144,10 +146,10 @@ void PlayerScript::Update()
     }
 
     input.PushWindow("Bullet attributes");
-    input.SliderFloat("bulletMass", bulletMass, 0.0f, 10.0f);
-    input.SliderFloat("bulletBounciness", bulletBounciness, 0.0f, 1.0f);
-    input.SliderFloat("bulletFriction", bulletFriction, 0.0f, 1.0f);
-    input.SliderFloat("bulletLinearDamping", bulletLinearDamping, 0.0f, 1.0f);
-    input.SliderFloat("bulletAngularDamping", bulletAngularDamping, 0.0f, 1.0f);
+    input.SliderFloat("Mass", bulletMass, 0.0f, 10.0f);
+    input.SliderFloat("Bounciness", bulletBounciness, 0.0f, 1.0f);
+    input.SliderFloat("Friction", bulletFriction, 0.0f, 1.0f);
+    input.SliderFloat("LinearDamping", bulletLinearDamping, 0.0f, 1.0f);
+    input.SliderFloat("AngularDamping", bulletAngularDamping, 0.0f, 1.0f);
     input.PopWindow();
 }

@@ -11,7 +11,7 @@ public:
     Texture(const Texture&) = delete;
     Texture& operator=(Texture&&) = default;
     Texture& operator=(const Texture&) = delete;
-    std::shared_ptr<Texture> Clone();
+    std::shared_ptr<Texture> Copy();
 
     void SetColor(glm::vec4 color);
     void SetColor(glm::vec3 color);

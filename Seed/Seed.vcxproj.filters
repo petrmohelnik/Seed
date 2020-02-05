@@ -385,6 +385,9 @@
     <ClInclude Include="LightScript.h">
       <Filter>Scripts</Filter>
     </ClInclude>
+    <ClInclude Include="TargetScript.h">
+      <Filter>Scripts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\Skybox.frag">

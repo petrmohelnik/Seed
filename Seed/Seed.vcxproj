@@ -133,6 +133,7 @@
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SubMesh.h" />
+    <ClInclude Include="TargetScript.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureCubeMap.h" />
     <ClInclude Include="Time.h" />

@@ -8,13 +8,13 @@ Mesh::~Mesh()
 {
 }
 
-std::shared_ptr<Mesh> Mesh::Clone()
+std::shared_ptr<Mesh> Mesh::Copy()
 {
     auto clonedMesh = std::make_shared<Mesh>();
 
     clonedMesh->subMeshes.reserve(subMeshes.size());
     for (auto& subMesh : subMeshes)
-        clonedMesh->subMeshes.push_back(subMesh->Clone());
+        clonedMesh->subMeshes.push_back(subMesh->Copy());
     
     return clonedMesh;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-class Object;
+#include "Object.h"
 class Component;
 class Components;
 class FileSystem;
@@ -13,10 +13,13 @@ public:
 
     template<typename T = Object>
     T* CreateObject(const std::string& name);
+    template<typename T>
+    T* CloneObject(T* object);
     Object* CreateObjectWithMesh(const std::string& name, const std::string& meshFilePath, glm::vec3 position = glm::vec3(0.0f), bool deleteAfterLoad = true);
-    void CreateObjectsFromScene(const std::string& path) const;
+    Object* CreateObjectsFromScene(const std::string& path) const;
     Object* GetObjectByName(const std::string& name);
     std::vector<Object*> GetObjectsByName(const std::string& name);
+    std::vector<Object*> GetObjectsByName(std::function<bool(std::string const& name)> comparisonFunction);
     std::vector<Object*> GetObjectsByTag(const std::string& tag);
     template<typename T>
     std::vector<T*> GetObjects();
@@ -48,6 +51,26 @@ T* Objects::CreateObject(const std::string& name)
     objects.insert({ name, std::move(object) });
     objectRawPtr->Initialize();
     return objectRawPtr;
+}
+
+template<typename T>
+T* Objects::CloneObject(T* object)
+{
+    static_assert(std::is_base_of<Object, T>::value, "T must be derived from Object");
+    std::unique_ptr<Object> clonedObject = std::move(object->Clone<T>());
+    auto clonedObjectRawPtr = clonedObject.get();
+    objects.insert({ clonedObject->GetName(), std::move(clonedObject) });
+    clonedObjectRawPtr->Initialize();
+
+    auto transform = object->GetComponent<Transform>();
+    for (int childIndex = 0; childIndex < transform->GetChildCount(); childIndex++)
+    {
+        auto child = transform->GetChild(childIndex)->GetObject();
+        auto clonedChild = CloneObject(child);
+        clonedChild->GetComponent<Transform>()->SetParent(clonedObjectRawPtr);
+    }
+
+    return clonedObjectRawPtr;
 }
 
 template<typename T>

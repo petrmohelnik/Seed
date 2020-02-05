@@ -84,6 +84,11 @@ void Light::SetIsShadowCaster(bool castShadows)
     isShadowCaster = castShadows;
 }
 
+Light* Light::Clone()
+{
+    return new Light(*this);
+}
+
 void Light::SetSpotAngleToDataBlock()
 {
     float outerAngle = spotOuterAngle * 0.5f;

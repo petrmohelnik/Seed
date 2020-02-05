@@ -11,6 +11,7 @@ public:
     float GetRadius();
 
 private:
+    SphereCollider* Clone() override;
     glm::vec3 GetPosition() const override;
     void SetPosition(glm::vec3 position) override;
 

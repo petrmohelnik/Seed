@@ -361,7 +361,7 @@ void RenderingPipeline::RenderShadowMap(const Light& light)
         shader->SetUniformMat4Array("viewProjectionMatrices", views);
        
         RenderQueue shadowRenderQueue;
-        shadowRenderQueue.SetCollisionFunction([light](const AABB& aabb) { return aabb.TestSphere(light.dataBlock.Pos, light.dataBlock.Range); });
+        shadowRenderQueue.SetCollisionFunction([&light](const AABB& aabb) { return aabb.TestSphere(light.dataBlock.Pos, light.dataBlock.Range); });
         for (auto renderer : renderers)
         {
             renderer->AddToRenderQueueDeferred(shadowRenderQueue);

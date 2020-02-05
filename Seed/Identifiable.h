@@ -4,6 +4,7 @@ class Identifiable
 {
 public:
     Identifiable();
+    Identifiable(const Identifiable& identifiable);
     virtual ~Identifiable() = default;
 
     void SetName(std::string name_);

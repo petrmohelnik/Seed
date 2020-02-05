@@ -6,7 +6,7 @@ class Camera final : public Component
 {
 public:
     Camera(Object* object);
-
+    
     struct CameraBlock
     {
         glm::mat4 view = glm::mat4(1.0f);
@@ -32,6 +32,8 @@ protected:
     Frustum const& GetFrustum() const;
 
 private:
+    Camera* Clone() override;
+
     CameraBlock dataBlock;
 
     Frustum frustum;

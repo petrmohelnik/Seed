@@ -4,6 +4,8 @@
 
 class SkyboxSwitcherScript : public Script
 {
+private:
+    inline SkyboxSwitcherScript* Clone() { return new SkyboxSwitcherScript(*this); }
 public:
     using Script::Script;
 

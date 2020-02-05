@@ -12,7 +12,7 @@ public:
     Material(const Material&) = delete;
     Material& operator=(Material&&) = default;
     Material& operator=(const Material&) = delete;
-    std::shared_ptr<Material> Clone();
+    std::shared_ptr<Material> Copy();
 
     void Load();
     void Unload();

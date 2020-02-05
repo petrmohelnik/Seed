@@ -1,7 +1,23 @@
 #include "Collider.h"
-#include "Object.h"
 #include "Transform.h"
 #include "Engine.h"
+
+Collider::Collider(const Collider& collider)
+    : Component(collider)
+    , isKinematic(collider.isKinematic)
+    , isTrigger(collider.isTrigger)
+    , dirty(collider.dirty)
+    , margin(collider.margin)
+    , gravity(collider.gravity)
+    , mass(collider.mass)
+    , bounciness(collider.bounciness)
+    , friction(collider.friction)
+    , linearDamping(collider.linearDamping)
+    , angularDamping(collider.angularDamping)
+    , ccdDistanceThreshold(collider.ccdDistanceThreshold)
+    , ccdBoundingSphereRadius(collider.ccdBoundingSphereRadius)
+{
+}
 
 void Collider::SetIsKinematic(bool isKinematic_)
 {

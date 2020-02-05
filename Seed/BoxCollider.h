@@ -11,6 +11,7 @@ public:
     glm::vec3 GetSize();
 
 private:
+    BoxCollider* Clone() override;
     glm::vec3 GetPosition() const override;
     void SetPosition(glm::vec3 position) override;
 

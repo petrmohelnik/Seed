@@ -4,14 +4,10 @@
 #include "ShaderFactory.h"
 #include "AABB.h"
 
-class Input;
-class Time;
-
 class Renderer : public Component
 {
 public:
-    Renderer(Object* object);
-    virtual ~Renderer() = default;
+    using Component::Component;
 
     virtual AABB GetAABB(int index) = 0;
     virtual void AddToRenderQueueDeferred(RenderQueue& queue) = 0;
@@ -22,8 +18,5 @@ public:
     bool GetCastShadow();
 
 private:
-    Input& input;
-    Time& time;
-
     bool castShadow = true;
 };

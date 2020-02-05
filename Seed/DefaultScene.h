@@ -3,6 +3,7 @@
 #include "PlayerObject.h"
 #include "SkyboxSwitcherScript.h"
 #include "LightScript.h"
+#include "TargetScript.h"
 
 void DefaultScene(Objects& objects, FileSystem& fileSystem)
 {
@@ -97,12 +98,13 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     roughblock->AddComponent<BoxCollider>(glm::vec3(0.0f), glm::vec3(1.0f));
     roughblock->GetComponent<BoxCollider>()->SetMass(100.0f);
 
-    auto targets = objects.GetObjectsByName("TargetDummy");
-    auto targetMesh = fileSystem.LoadMesh("TargetDummy/TargetDummy.gltf");
+    auto targets = objects.GetObjectsByName([](std::string const& name) { return name.rfind("TargetDummy", 0) == 0;});
+    auto targetMesh = fileSystem.LoadMesh("TargetDummy/TargetDummy.gltf", false);
     for (auto& target : targets)
     {
         target->AddComponent<MeshCollider>(targetMesh, false);
         target->GetComponent<Collider>()->SetMass(30.0f);
+        target->AddComponent<TargetScript>();
     }
 
     for (auto& light : objects.GetComponents<Light>())
@@ -122,7 +124,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
         float xPos = (i % 5) * 0.4f - 3.0f;
         float yPos = (i / 5) * 0.4f + 0.4f;
         auto sphere = objects.CreateObjectWithMesh("sphere", "sphere_flat.obj", glm::vec3(xPos, yPos, 1.0f));
-        sphere->GetComponent<MeshRenderer>()->SetMaterial(0, sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Clone());
+        sphere->GetComponent<MeshRenderer>()->SetMaterial(0, sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Copy());
         sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->SetSpecularWorkflow();
         sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Metallic->SetColor(
             glm::vec4(0.2f, 0.2f, 0.2f, i * 0.25f));
@@ -136,7 +138,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
         float xPos = (i % 5) * 0.4f - 3.0f;
         float yPos = (i / 5) * 0.4f + 0.8f;
         auto sphere = objects.CreateObjectWithMesh("sphere", "sphere.obj", glm::vec3(xPos, yPos, 1.0f));
-        sphere->GetComponent<MeshRenderer>()->SetMaterial(0, sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Clone());
+        sphere->GetComponent<MeshRenderer>()->SetMaterial(0, sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Copy());
         sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->SetMetallicWorkflow();
         sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Metallic->SetColor(
             glm::vec3(1.0f, ((14 - i) / 5) * 0.5, (i % 5) * 0.25f));

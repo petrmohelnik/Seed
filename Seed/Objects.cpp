@@ -1,5 +1,4 @@
 #include "Objects.h"
-#include "Object.h"
 #include "Components.h"
 #include "Transform.h"
 #include "FileSystem.h"
@@ -19,9 +18,14 @@ Object* Objects::CreateObjectWithMesh(const std::string& name, const std::string
     return object;
 }
 
-void Objects::CreateObjectsFromScene(const std::string& path) const
+Object* Objects::CreateObjectsFromScene(const std::string& path) const
 {
-    fileSystem.LoadObjects(path);
+    std::string sceneName;
+    auto folderEnd = path.find_last_of("\\/");
+    if (folderEnd != std::string::npos)
+        sceneName = path.substr(folderEnd + 1);
+
+    return fileSystem.LoadObjects(path, sceneName);
 }
 
 Object* Objects::GetObjectByName(const std::string& name)
@@ -40,6 +44,17 @@ std::vector<Object*> Objects::GetObjectsByName(const std::string& name)
     for (const auto& object : objects)
     {
         if (object.second->GetName() == name)
+            result.push_back(object.second.get());
+    }
+    return result;
+}
+
+std::vector<Object*> Objects::GetObjectsByName(std::function<bool(std::string const& name)> comparisonFunction)
+{
+    std::vector<Object*> result;
+    for (const auto& object : objects)
+    {
+        if (comparisonFunction(object.second->GetName()))
             result.push_back(object.second.get());
     }
     return result;

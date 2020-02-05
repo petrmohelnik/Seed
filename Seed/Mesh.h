@@ -12,7 +12,7 @@ public:
     Mesh(const Mesh&) = delete;
     Mesh& operator=(Mesh&&) = default;
     Mesh& operator=(const Mesh&) = delete;
-    std::shared_ptr<Mesh> Clone();
+    std::shared_ptr<Mesh> Copy();
 
     int NumberOfSubmeshes();
     void DeleteDataAfterColliderLoad(bool deleteAfterLoad);

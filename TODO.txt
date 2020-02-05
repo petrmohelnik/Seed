@@ -1,12 +1,16 @@
-GetFullNameHash do inputu v imgui? kvuli spheram napr.
-rozbity panak musi byt nacteny stylem load scene, kde kazdy ma center of mass v origin a k tomu transform
+vyresit nejak opozdenou akci? - vazat na komponentu, ta to muze drzet v sobe v kolekci a provolavat v ni, jenom kdyz existuje
+	po update
+invoke
+invokeRepeating
 
 zkusit udelat jednoduchy bounding mesh sceny
 https://blenderartists.org/t/creating-a-simple-collision-mesh/546298
 napr. pokud ma node dite s nazvem collider tak se pouzije jako collisionmesh, vice deti tvori compound mesh
 metadata na weight?
 zhecknout po exportu range - nacitat je taky z metadat?
+loadovat tagy objektu z metadat? - misto parsovani object namu...
 ty drobny objekty nebudou staticky, ale dynamicky - treba je prirazovat ke colliderum podle jmena
+vybrat libovolnej objekt a ten strilet
 
 https://www.thoughtspike.com/friction-coefficients-for-bullet-physics/
 =======================================================================================================================
@@ -37,9 +41,6 @@ directional - ortogonalni porjekce - asi taky muzu pouzit frustum culling, ale v
 
 reflection probe
 https://chetanjags.wordpress.com/2015/08/26/image-based-lighting/
-
-vytvaret kopie objektu
-https://stackoverflow.com/questions/5027456/copying-derived-entities-using-only-base-class-pointers-without-exhaustive-tes
 
 teren - https://victorbush.com/2015/01/tessellated-terrain/
 

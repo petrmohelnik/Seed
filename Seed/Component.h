@@ -8,6 +8,7 @@ class Component : public Identifiable
 {
 public:
     Component(Object* object);
+    Component(const Component& component);
     virtual ~Component() = default;
 
     Object* GetObject() const;
@@ -20,12 +21,15 @@ protected:
     friend class RenderingPipeline;
     friend class PhysicsEngine;
     friend class Input;
+
+    virtual Component* Clone() = 0;
     bool UpdateForDestruction();
     bool ToBeDestroyed();
     virtual void OnInputGraphUpdate() {};
+    
+    Object* object;
 
 private:
-    Object* object;
     float timeToDestruction = std::numeric_limits<float>::max();
     bool registeredForDestruction = false;
 };

@@ -9,6 +9,11 @@ CharacterController::CharacterController(Object* object, glm::vec3 center, float
     mass = 80.0f;
 }
 
+CharacterController::CharacterController(const CharacterController& characterController)
+    : CapsuleCollider(characterController)
+{
+}
+
 void CharacterController::Move(glm::vec2 direction)
 {
     if(dynamicCharacterController)
@@ -27,6 +32,11 @@ bool CharacterController::IsGrounded() const
         return dynamicCharacterController->IsOnGround();
     else
         return false;
+}
+
+CharacterController* CharacterController::Clone()
+{
+    return new CharacterController(*this);
 }
 
 void CharacterController::InitializePhysics()

@@ -5,13 +5,6 @@
 #include "ShaderFactory.h"
 #include "Engine.h"
 
-MeshRenderer::MeshRenderer(Object* object)
-    : Renderer(object)
-{
-    materials.push_back(std::make_shared<Material>());
-    mesh = std::make_shared<Mesh>();
-}
-
 AABB MeshRenderer::GetAABB(int index)
 {
     return mesh->subMeshes[index]->GetAABB().GetTransformedAABB(GetTransform()->GetModelMatrix());
@@ -59,6 +52,11 @@ void MeshRenderer::Render(int index, ShaderFactory::Type shaderType)
     shader->draw(mesh->SubmeshIndicesCount(index));
 }
 
+MeshRenderer* MeshRenderer::Clone()
+{
+     return new MeshRenderer(*this);
+}
+
 void MeshRenderer::SetMesh(std::shared_ptr<Mesh> mesh_)
 {
     mesh = mesh_;
@@ -67,7 +65,7 @@ void MeshRenderer::SetMesh(std::shared_ptr<Mesh> mesh_)
 
 std::shared_ptr<Mesh> MeshRenderer::GetMesh()
 {
-    mesh = mesh->Clone();
+    mesh = mesh->Copy();
     return mesh;
 }
 
@@ -95,7 +93,7 @@ void MeshRenderer::SetMaterials(std::vector<std::shared_ptr<Material>> materials
 
 std::shared_ptr<Material> MeshRenderer::GetMaterial()
 {
-    materials[0] = materials[0]->Clone();
+    materials[0] = materials[0]->Copy();
     return materials[0];
 }
 
@@ -107,7 +105,7 @@ std::shared_ptr<Material> MeshRenderer::GetSharedMaterial()
 std::vector<std::shared_ptr<Material>> MeshRenderer::GetMaterials()
 {
     for (auto& material : materials)
-        material = material->Clone();
+        material = material->Copy();
     return materials;
 }
 

@@ -16,6 +16,18 @@ Transform* Transform::GetParent()
     return parent;
 }
 
+void Transform::Clone(Transform* transform)
+{
+    position = transform->position;
+    orientation = transform->orientation;
+    scale = transform->scale;
+}
+
+void Transform::Clone(Object* object)
+{
+    Clone(object->GetComponent<Transform>());
+}
+
 bool Transform::IsParentRoot() const
 {
     return parent && parent->isRoot;
@@ -119,6 +131,12 @@ void Transform::DisconnectChildrenFromParent()
     {
         child->parent = nullptr;
     }
+}
+
+Transform* Transform::Clone()
+{
+    throw std::runtime_error("Cannot clone Transform component");
+    return nullptr;
 }
 
 void Transform::AddChild(Transform* child)

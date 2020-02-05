@@ -24,6 +24,11 @@ float SphereCollider::GetRadius()
     return radius;
 }
 
+SphereCollider* SphereCollider::Clone()
+{
+    return new SphereCollider(*this);
+}
+
 glm::vec3 SphereCollider::GetPosition() const
 {
     return GetTransform()->GetLocalToWorldMatrix() * glm::vec4(GetTransform()->GetLocalPosition() + center, 1.0f);

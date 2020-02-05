@@ -3,6 +3,8 @@
 
 class LightScript : public Script
 {
+private:
+    inline LightScript* Clone() { return new LightScript(*this); }
 public:
     using Script::Script;
 

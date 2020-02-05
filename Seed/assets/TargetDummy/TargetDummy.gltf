@@ -1,6 +1,6 @@
 {
     "asset" : {
-        "generator" : "Khronos glTF Blender I/O v0.9.53",
+        "generator" : "Khronos glTF Blender I/O v1.1.41",
         "version" : "2.0"
     },
     "scene" : 0,
@@ -15,29 +15,18 @@
     "nodes" : [
         {
             "mesh" : 0,
-            "name" : "TargetDummy",
-            "rotation" : [
-                0.7071068286895752,
-                0,
-                0,
-                0.7071067094802856
-            ],
-            "scale" : [
-                0.04968000948429108,
-                0.049680013209581375,
-                0.4613257050514221
-            ],
-            "translation" : [
-                -2.0214171409606934,
-                0,
-                0
-            ]
+            "name" : "TargetDummy"
         }
     ],
     "materials" : [
         {
             "doubleSided" : true,
-            "name" : "Material.001",
+            "emissiveFactor" : [
+                0,
+                0,
+                0
+            ],
+            "name" : "Material.008",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
                     1,
@@ -52,7 +41,7 @@
     ],
     "meshes" : [
         {
-            "name" : "Cylinder.001",
+            "name" : "Cylinder.007",
             "primitives" : [
                 {
                     "attributes" : {
@@ -71,14 +60,14 @@
             "componentType" : 5126,
             "count" : 303,
             "max" : [
-                5.0378193855285645,
-                7.673990249633789,
-                -0.028293728828430176
+                0.25007545948028564,
+                0.42781615257263184,
+                0.3808498978614807
             ],
             "min" : [
-                -4.967114448547363,
-                -7.673989772796631,
-                -3.8043155670166016
+                -0.24696972966194153,
+                -1.3141601085662842,
+                -0.3816380798816681
             ],
             "type" : "VEC3"
         },

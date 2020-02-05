@@ -32,6 +32,26 @@ Object::~Object()
 {
 }
 
+std::vector<Object*> Object::GetAllChildren()
+{
+    std::vector<Object*> children;
+
+    GetAllChildren(children);
+
+    return children;
+}
+
+void Object::GetAllChildren(std::vector<Object*>& children)
+{
+    auto transform = GetComponent<Transform>();
+    for (int childIndex = 0; childIndex < transform->GetChildCount(); childIndex++)
+    {
+        auto child = transform->GetChild(childIndex)->GetObject();
+        child->GetAllChildren(children);
+        children.push_back(child);
+    }
+}
+
 void Object::Destroy(float delay)
 {
     if(timeToDestruction >= delay)
@@ -79,8 +99,9 @@ bool Object::UpdateForDestruction()
             audio->Destroy();
         if (collider)
             collider->Destroy();
-        for (const auto& script : scripts)
+        for (int i = 0; i < scripts.size(); i++)
         {
+            auto script = scripts[i].get();
             script->OnDestroy();
             script->Destroy();
         }
@@ -171,8 +192,8 @@ void Object::UpdateActivationInChildren()
             childObject->isActive = true;
             childObject->isActiveDirty = true;
 
-            for (auto const& script : childObject->scripts)
-                script->OnEnable();
+            for (int i = 0; i < childObject->scripts.size(); i++)
+                childObject->scripts[i]->OnEnable();
 
             components.AddComponentsOfObject(childObject);
         }
@@ -181,8 +202,8 @@ void Object::UpdateActivationInChildren()
             childObject->isActive = false;
             childObject->isActiveDirty = true;
 
-            for (auto const& script : childObject->scripts)
-                script->OnDisable();
+            for (int i = 0; i < childObject->scripts.size(); i++)
+                childObject->scripts[i]->OnDisable();
         }
         else
             childObject->isActiveDirty = false;

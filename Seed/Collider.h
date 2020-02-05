@@ -23,6 +23,7 @@ class Collider : public Component
 {
 public:
     using Component::Component;
+    Collider(const Collider& collider);
     virtual ~Collider() = default;
 
     enum class Type

@@ -3,6 +3,8 @@
 
 class CameraMovementScript : public Script
 {
+private:
+    inline CameraMovementScript* Clone() { return new CameraMovementScript(*this, object); }
 public:
     using Script::Script;
 
@@ -10,8 +12,6 @@ public:
 
     float RotationSensitivity = 0.5f;
     float MoveSensitivity = 10.0f;
-
-    Light* flashLight;
 };
 
 void CameraMovementScript::Update()

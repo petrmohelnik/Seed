@@ -18,28 +18,28 @@ Texture::~Texture()
     Unload();
 }
 
-std::shared_ptr<Texture> Texture::Clone()
+std::shared_ptr<Texture> Texture::Copy()
 {
-    auto clonedTexture = std::make_shared<Texture>();
+    auto copiedTexture = std::make_shared<Texture>();
 
-    clonedTexture->data = data;
-    clonedTexture->width = width;
-    clonedTexture->height = height;
-    clonedTexture->bytesPerPixel = bytesPerPixel;
-    clonedTexture->deleteAfterLoad = deleteAfterLoad;
-    clonedTexture->isSRGB = isSRGB;
-    clonedTexture->isRGB = isRGB;
+    copiedTexture->data = data;
+    copiedTexture->width = width;
+    copiedTexture->height = height;
+    copiedTexture->bytesPerPixel = bytesPerPixel;
+    copiedTexture->deleteAfterLoad = deleteAfterLoad;
+    copiedTexture->isSRGB = isSRGB;
+    copiedTexture->isRGB = isRGB;
 
     if (texture != 0)
     {
-        clonedTexture->GenerateTexture(GL_REPEAT, GetInternalFormat(), width, height, true);
+        copiedTexture->GenerateTexture(GL_REPEAT, GetInternalFormat(), width, height, true);
         glCopyImageSubData(texture, GL_TEXTURE_2D, 0, 0, 0, 0,
-            clonedTexture->texture, GL_TEXTURE_2D, 0, 0, 0, 0,
+            copiedTexture->texture, GL_TEXTURE_2D, 0, 0, 0, 0,
             width, height, 1);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
 
-    return clonedTexture;
+    return copiedTexture;
 }
 
 void Texture::Load()

@@ -65,6 +65,7 @@ private:
         alignas(4) unsigned int Type = LightTypeMask::Directional;
     };
 
+    Light* Clone() override;
     void SetSpotAngleToDataBlock();
     void SetLightTypeToDataBlock();
     void CalculateOptimumViewPortScale(const Camera& camera);

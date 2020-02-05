@@ -9,8 +9,18 @@ Script::Script(Object* object, PhysicsEngine& physics)
     , input(Engine::GetInput())
     , time(Engine::GetTime())
     , objects(Engine::GetObjects())
+    , fileSystem(Engine::GetFileSystem())
     , physics(physics)
-    , object(object)
 {
     transform = object->GetComponent<Transform>();
+}
+
+Script::Script(Script& script) 
+    : Component(script)
+    , input(script.input)
+    , time(script.time)
+    , objects(script.objects)
+    , fileSystem(script.fileSystem)
+    , physics(script.physics)
+{
 }

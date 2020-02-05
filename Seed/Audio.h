@@ -7,5 +7,6 @@ public:
     using Component::Component;
 
 private:
+    Audio* Clone() override;
 };
 

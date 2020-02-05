@@ -19,6 +19,7 @@ protected:
     void AssignBtCollisionShape(btCollisionShape* collisionShape);
 
 private:
+    MeshCollider* Clone() override;
     glm::vec3 GetPosition() const override;
     void SetPosition(glm::vec3 position) override;
 

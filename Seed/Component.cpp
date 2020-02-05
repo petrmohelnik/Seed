@@ -8,6 +8,11 @@ Component::Component(Object* object) : object(object)
 {
 }
 
+Component::Component(const Component& component)
+    : Identifiable(component)
+{
+}
+
 Object* Component::GetObject() const
 {
     return object;

@@ -10,7 +10,7 @@ public:
     SubMesh(const SubMesh&) = delete;
     SubMesh& operator=(SubMesh&&) = default;
     SubMesh& operator=(const SubMesh&) = delete;
-    std::shared_ptr<SubMesh> Clone();
+    std::shared_ptr<SubMesh> Copy();
 
     void Load();
     void Unload();

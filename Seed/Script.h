@@ -5,6 +5,7 @@ class Input;
 class Time;
 class Objects;
 class PhysicsEngine;
+class FileSystem;
 
 struct Collision;
 
@@ -12,6 +13,7 @@ class Script : public Component
 {
 public:
     Script(Object* object, PhysicsEngine& physics);
+    Script(Script& script);
     virtual ~Script() = default;
 
 protected:
@@ -39,8 +41,8 @@ protected:
     Time& time;
     Objects& objects;
     PhysicsEngine& physics;
+    FileSystem& fileSystem;
     Transform* transform;
-    Object* object;
 
 private:
     bool initialized = false;

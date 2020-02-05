@@ -34,6 +34,11 @@ bool MeshCollider::IsConvex() const
     return convex;
 }
 
+MeshCollider* MeshCollider::Clone()
+{
+    return new MeshCollider(*this);
+}
+
 glm::vec3 MeshCollider::GetPosition() const
 {
     return GetTransform()->GetPosition();

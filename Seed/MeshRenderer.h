@@ -7,7 +7,7 @@
 class MeshRenderer : public Renderer
 {
 public:
-    MeshRenderer(Object* object);
+    using Renderer::Renderer;
 
     void SetMesh(std::shared_ptr<Mesh> mesh_);
     std::shared_ptr<Mesh> GetMesh();
@@ -31,12 +31,14 @@ protected:
     void Render(int index, ShaderFactory::Type shaderType) override;
 
 private:
+    MeshRenderer* Clone() override;
+
     struct ModelBlock
     {
         glm::mat4 model;
         glm::mat4 tiModel;
     };
 
-    std::shared_ptr<Mesh> mesh;
-    std::vector<std::shared_ptr<Material>> materials;
+    std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+    std::vector<std::shared_ptr<Material>> materials = std::vector<std::shared_ptr<Material>>{ std::make_shared<Material>() };
 };

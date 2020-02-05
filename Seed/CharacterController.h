@@ -7,6 +7,7 @@ class CharacterController : public CapsuleCollider, public PhysicsObject
 {
 public:
     CharacterController(Object* object, glm::vec3 center, float height, float radius);
+    CharacterController(const CharacterController& characterController);
 
     void Move(glm::vec2 direction);
     void Jump();
@@ -20,6 +21,8 @@ protected:
     void AfterSimulationUpdate() override;
 
 private:
+    CharacterController* Clone() override;
+
     std::unique_ptr<DynamicCharacterController> dynamicCharacterController;
 };
 

@@ -417,8 +417,9 @@ void PhysicsEngine::OnCollisionUpdate()
         AddContactManifold(dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(manifoldNumber));
     }
 
-    for (auto collider : colliders)
+    for (int i = 0; i < colliders.size(); i++)
     {
+        auto collider = colliders[i];
         ProcessCollisionExit(collider);
         ProcessCollisionEnterAndStay(collider);
     }

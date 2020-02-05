@@ -24,6 +24,11 @@ glm::vec3 BoxCollider::GetSize()
     return size;
 }
 
+BoxCollider* BoxCollider::Clone()
+{
+    return new BoxCollider(*this);
+}
+
 glm::vec3 BoxCollider::GetPosition() const
 {
     return GetTransform()->GetLocalToWorldMatrix() * glm::vec4(GetTransform()->GetLocalPosition() + center, 1.0f);
