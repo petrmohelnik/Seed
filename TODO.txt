@@ -1,11 +1,5 @@
-vyresit nejak opozdenou akci? - vazat na komponentu, ta to muze drzet v sobe v kolekci a provolavat v ni, jenom kdyz existuje
-	po update
-invoke
-invokeRepeating
-
 zkusit udelat jednoduchy bounding mesh sceny
-https://blenderartists.org/t/creating-a-simple-collision-mesh/546298
-napr. pokud ma node dite s nazvem collider tak se pouzije jako collisionmesh, vice deti tvori compound mesh
+pokud ma node dite s nazvem collider tak se pouzije jako collisionmesh, vsechny se davaj do jendoho meshe
 metadata na weight?
 zhecknout po exportu range - nacitat je taky z metadat?
 loadovat tagy objektu z metadat? - misto parsovani object namu...
@@ -53,6 +47,11 @@ https://docs.unity3d.com/Manual/SL-SubShaderTags.html -- inspirace poradi
 
 submesh bude drzet vao, aby ho kdyztak mohl modifikovat pri updatu vertices? glMapBuffer
 shader bude drzet lokace?
+
+vyresit nejak opozdenou akci? - vazat na komponentu, ta to muze drzet v sobe v kolekci a provolavat v ni, jenom kdyz existuje
+	po update
+invoke
+invokeRepeating
 
 https://learn.unity.com/tutorial/physics-best-practices#5c7f8528edbc2a002053b5b4
 

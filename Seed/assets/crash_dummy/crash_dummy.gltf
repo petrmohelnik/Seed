@@ -1,0 +1,181 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.1.41",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "CrashDummy"
+        }
+    ],
+    "materials" : [
+        {
+            "emissiveFactor" : [
+                1,
+                1,
+                1
+            ],
+            "emissiveTexture" : {
+                "index" : 0,
+                "texCoord" : 0
+            },
+            "name" : "default_COLOR_0.001",
+            "normalTexture" : {
+                "index" : 1,
+                "texCoord" : 0
+            },
+            "occlusionTexture" : {
+                "index" : 2,
+                "texCoord" : 0
+            },
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 3,
+                    "texCoord" : 0
+                },
+                "metallicRoughnessTexture" : {
+                    "index" : 2,
+                    "texCoord" : 0
+                }
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Mesh_0.001",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2,
+                        "COLOR_0" : 3
+                    },
+                    "indices" : 4,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "source" : 0
+        },
+        {
+            "source" : 1
+        },
+        {
+            "source" : 2
+        },
+        {
+            "source" : 3
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/png",
+            "name" : "default_emissive",
+            "uri" : "default_emissive.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "default_normal",
+            "uri" : "default_normal.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "default_metallicRoughness",
+            "uri" : "default_metallicRoughness.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "default_baseColor",
+            "uri" : "default_baseColor.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 26952,
+            "max" : [
+                0.6936599016189575,
+                0.7621707916259766,
+                0.16436034440994263
+            ],
+            "min" : [
+                -0.6936600208282471,
+                -1.05403733253479,
+                -0.14194777607917786
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 26952,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 26952,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5126,
+            "count" : 26952,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5123,
+            "count" : 27030,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 323424,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 323424,
+            "byteOffset" : 323424
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 215616,
+            "byteOffset" : 646848
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 431232,
+            "byteOffset" : 862464
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 54060,
+            "byteOffset" : 1293696
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 1347756,
+            "uri" : "crash_dummy.bin"
+        }
+    ]
+}

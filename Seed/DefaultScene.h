@@ -45,6 +45,15 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));
     spheres->GetComponent<MeshRenderer>()->GetSharedMaterial()->UseOcclusionMap();
 
+    auto crashDummy = objects.CreateObjectWithMesh("CrashDummy", "crash_dummy/crash_dummy.gltf", glm::vec3(0.0f, 1.1f, -2.0f), false);
+    auto crashDummyCollider = fileSystem.LoadMesh("crash_dummy/crash_dummy_collider.gltf", false);
+    crashDummy->AddComponent<MeshCollider>(crashDummyCollider, true);
+    crashDummy->GetComponent<MeshRenderer>()->GetSharedMesh()->DeleteDataAfterColliderLoad(true);
+    crashDummy->GetComponent<Collider>()->SetMass(80.0f);
+    crashDummy->AddComponent<TargetScript>();
+    crashDummy->GetComponent<TargetScript>()->TargetPath = "crash_dummy/crash_dummy_broken.gltf";
+    crashDummy->GetComponent<TargetScript>()->TargetName = "CrashDummyBroken";
+
     auto cobblestoneMaterial = std::make_shared<Material>();
     cobblestoneMaterial->Albedo = fileSystem.LoadTexture("cobblestone/albedo.png", 24, 24);
     cobblestoneMaterial->Normal = fileSystem.LoadTexture("cobblestone/normal.png", 24, 24);
@@ -100,11 +109,14 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
 
     auto targets = objects.GetObjectsByName([](std::string const& name) { return name.rfind("TargetDummy", 0) == 0;});
     auto targetMesh = fileSystem.LoadMesh("TargetDummy/TargetDummy.gltf", false);
+    targetMesh->DeleteDataAfterColliderLoad(true);
     for (auto& target : targets)
     {
         target->AddComponent<MeshCollider>(targetMesh, false);
         target->GetComponent<Collider>()->SetMass(30.0f);
         target->AddComponent<TargetScript>();
+        target->GetComponent<TargetScript>()->TargetPath = "TargetDummyBroken/TargetDummyBroken.gltf";
+        target->GetComponent<TargetScript>()->TargetName = "TargetDummyBroken";
     }
 
     for (auto& light : objects.GetComponents<Light>())

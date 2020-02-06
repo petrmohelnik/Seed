@@ -35,8 +35,10 @@ void FileSystem::LoadScene(const std::string& path)
         | aiProcess_FindInvalidData
         | aiProcess_JoinIdenticalVertices
         | aiProcess_RemoveRedundantMaterials
-        //| aiProcess_ValidateDataStructure
         | aiProcess_GenBoundingBoxes
+        | aiProcess_FindInstances
+        | aiProcess_FindDegenerates
+        //| aiProcess_ValidateDataStructure
     );
 
     if (!scene)

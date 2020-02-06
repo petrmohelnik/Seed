@@ -98,7 +98,7 @@ inline void PlayerScript::FixedUpdate()
         auto rayDirection = glm::normalize(toPos - fromPos);
         if (physics.Raycast(fromPos, rayDirection, hit, camera->GetFarPlane() - camera->GetNearPlane()))
         {
-            hit.Collider->AddForceAtPosition(rayDirection * 10.0f, Collider::ForceType::Acceleration, hit.Point);
+            hit.Collider->AddForceAtPosition(rayDirection * 50.0f, Collider::ForceType::Acceleration, hit.Point);
         }
     }
 
