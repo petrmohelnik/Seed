@@ -3,12 +3,12 @@
 #include "Time.h"
 #include "Engine.h"
 
-void Renderer::SetCastShadow(bool castShadow_)
+void Renderer::SetCastsShadow(bool castsShadow_)
 {
-    castShadow = castShadow_;
+    castsShadow = castsShadow_;
 }
 
-bool Renderer::GetCastShadow()
+bool Renderer::CastsShadow()
 {
-    return castShadow;
+    return castsShadow;
 }

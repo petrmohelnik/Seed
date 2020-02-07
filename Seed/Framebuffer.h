@@ -23,7 +23,7 @@ private:
     int width, height;
 
     GLuint fbo = 0;
-	GLuint depthRbo = 0;
-	GLuint stencilRbo = 0;
+    GLuint depthRbo = 0;
+    GLuint stencilRbo = 0;
 };
 

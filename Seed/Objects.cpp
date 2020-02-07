@@ -18,14 +18,9 @@ Object* Objects::CreateObjectWithMesh(const std::string& name, const std::string
     return object;
 }
 
-Object* Objects::CreateObjectsFromScene(const std::string& path) const
+Object* Objects::CreateObjectsFromScene(const std::string& path, const std::string rootName) const
 {
-    std::string sceneName;
-    auto folderEnd = path.find_last_of("\\/");
-    if (folderEnd != std::string::npos)
-        sceneName = path.substr(folderEnd + 1);
-
-    return fileSystem.LoadObjects(path, sceneName);
+    return fileSystem.LoadObjects(path, rootName);
 }
 
 Object* Objects::GetObjectByName(const std::string& name)

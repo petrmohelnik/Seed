@@ -26,6 +26,7 @@ private:
     const aiScene* GetScene(const std::string& path);
     Object* LoadNode(const aiScene* scene, aiNode* node, Object* parent, 
         const std::vector<std::shared_ptr<SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials);
+    bool LoadCollider(aiNode* node, Object* parent, const std::vector<std::shared_ptr<SubMesh>>& subMeshes);
     void LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials);
     void LoadLight(const aiScene* scene, aiNode* node, Object* object);
     void LoadCamera(const aiScene* scene, Object* object);

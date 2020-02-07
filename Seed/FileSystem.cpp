@@ -36,7 +36,6 @@ void FileSystem::LoadScene(const std::string& path)
         | aiProcess_JoinIdenticalVertices
         | aiProcess_RemoveRedundantMaterials
         | aiProcess_GenBoundingBoxes
-        | aiProcess_FindInstances
         | aiProcess_FindDegenerates
         //| aiProcess_ValidateDataStructure
     );
@@ -71,6 +70,9 @@ Object* FileSystem::LoadObjects(const std::string& path, const std::string& root
 Object* FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent,
     const std::vector<std::shared_ptr<SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials)
 {
+    if (LoadCollider(node, parent, subMeshes))
+        return nullptr;
+
     auto object = Engine::GetObjects().CreateObject<Object>(node->mName.C_Str());
     if(parent != nullptr)
         object->GetComponent<Transform>()->SetParent(parent);
@@ -91,6 +93,35 @@ Object* FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent,
     }
 
     return object;
+}
+
+bool FileSystem::LoadCollider(aiNode* node, Object* parent, const std::vector<std::shared_ptr<SubMesh>>& subMeshes_)
+{
+    auto nodeNameStart = std::string(node->mName.C_Str()).substr(0, 8);
+
+    if (nodeNameStart == "collider" || nodeNameStart == "Collider")
+    {
+        if (node->mNumMeshes != 0)
+        {
+            std::vector<std::shared_ptr<SubMesh>> subMeshes; subMeshes.reserve(node->mNumMeshes);
+            for (unsigned int index = 0; index < node->mNumMeshes; index++)
+                subMeshes.push_back(subMeshes_[node->mMeshes[index]]);
+
+            if (!parent->GetComponent<MeshCollider>())
+            {
+                auto mesh = std::make_shared<Mesh>();
+                mesh->DeleteDataAfterColliderLoad(true);
+                parent->AddComponent<MeshCollider>(mesh, true);
+            }
+
+            auto mesh = parent->GetComponent<MeshCollider>()->mesh.get();
+            mesh->subMeshes.insert(std::end(mesh->subMeshes), std::begin(subMeshes), std::end(subMeshes));
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 void FileSystem::LoadMesh(const aiScene* scene, aiNode* node, Object* object, const std::vector<std::shared_ptr<SubMesh>>& subMeshes, const std::vector<std::shared_ptr<Material>>& materials)

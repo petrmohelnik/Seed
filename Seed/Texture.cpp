@@ -207,7 +207,7 @@ void Texture::GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapParam);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapParam);
 
-	auto mipMapLevels = generateMipMaps ? static_cast<int>(std::floor(std::log2(std::max(width, height)))) + 1 : 1;
+    auto mipMapLevels = generateMipMaps ? static_cast<int>(std::floor(std::log2(std::max(width, height)))) + 1 : 1;
     AllocateTexture(internalFormat, mipMapLevels, width, height, format, type, pixels);
 
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -215,8 +215,8 @@ void Texture::GenerateTexture(GLuint wrapParam, GLuint internalFormat, int width
 
 void Texture::AllocateTexture(GLuint internalFormat, int mipMapLevels, int width, int height, GLuint format, GLuint type, const void* pixels)
 {
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexStorage2D(GL_TEXTURE_2D, mipMapLevels, internalFormat, width, height);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, mipMapLevels, internalFormat, width, height);
     if (pixels)
     {
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, type, pixels);

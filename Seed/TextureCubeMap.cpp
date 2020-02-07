@@ -41,8 +41,8 @@ void TextureCubeMap::LoadFromEquirectangular(float* data, int width, int height)
     if (texture != 0)
         throw std::runtime_error("Texture is already loaded");
 
-	Texture equirectangularTexture;
-	equirectangularTexture.GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height, false, data, GL_RGB, GL_FLOAT);
+    Texture equirectangularTexture;
+    equirectangularTexture.GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height, false, data, GL_RGB, GL_FLOAT);
     
     RenderIntoHDRCubeMapFromTexture(2048, ShaderFactory::Type::EquirectangularToCubemap, RenderingPipeline::TextureSlot::Environmental, GL_TEXTURE_2D, equirectangularTexture.texture, true, false);
 
@@ -207,7 +207,7 @@ void TextureCubeMap::RenderViewsIntoCubeMapWithMipMaps(Shader* shader, Framebuff
         framebuffer.Bind();
 
         float mipLevelUniform = static_cast<float>(mipLevel) / static_cast<float>(mipLevels - 1);
-		shader->SetUniformFloat("roughness", mipLevelUniform);
+        shader->SetUniformFloat("roughness", mipLevelUniform);
 
         for (unsigned int i = 0; i < 6; i++)
         {

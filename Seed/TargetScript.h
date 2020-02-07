@@ -29,7 +29,7 @@ void TargetScript::OnCreate()
         {
             auto mesh = shard->GetComponent<MeshRenderer>()->GetSharedMesh();
             mesh->DeleteDataAfterColliderLoad(true);
-            shard->GetComponent<MeshRenderer>()->SetCastShadow(false);
+            shard->GetComponent<MeshRenderer>()->SetCastsShadow(false);
             shard->AddComponent<MeshCollider>(shard->GetComponent<MeshRenderer>()->GetSharedMesh(), true);
             shard->GetComponent<MeshCollider>()->SetMass(0.1f);
         }

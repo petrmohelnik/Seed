@@ -15,6 +15,7 @@ public:
 
 protected:
     friend class PhysicsEngine;
+    friend class FileSystem;
 
     void AssignBtCollisionShape(btCollisionShape* collisionShape);
 

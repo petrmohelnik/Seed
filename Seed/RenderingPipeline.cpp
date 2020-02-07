@@ -333,14 +333,16 @@ void RenderingPipeline::RenderShadowMap(const Light& light)
         RenderQueue shadowRenderQueue(&cameraFromLight);
         for (auto renderer : renderers)
         {
-            renderer->AddToRenderQueueDeferred(shadowRenderQueue);
-            renderer->AddToRenderQueueForward(shadowRenderQueue);
+            if (renderer->CastsShadow())
+            {
+                renderer->AddToRenderQueueDeferred(shadowRenderQueue);
+                renderer->AddToRenderQueueForward(shadowRenderQueue);
+            }
         }
 
         for (const auto& renderTarget : shadowRenderQueue.queue)
         {
-            if (renderTarget.meshRenderer->GetCastShadow())
-                renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::SimplePositionModel);
+            renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::SimplePositionModel);
         }
     }
     else if (light.type == Light::Type::Point)
@@ -364,14 +366,16 @@ void RenderingPipeline::RenderShadowMap(const Light& light)
         shadowRenderQueue.SetCollisionFunction([&light](const AABB& aabb) { return aabb.TestSphere(light.dataBlock.Pos, light.dataBlock.Range); });
         for (auto renderer : renderers)
         {
-            renderer->AddToRenderQueueDeferred(shadowRenderQueue);
-            renderer->AddToRenderQueueForward(shadowRenderQueue);
+            if (renderer->CastsShadow())
+            {
+                renderer->AddToRenderQueueDeferred(shadowRenderQueue);
+                renderer->AddToRenderQueueForward(shadowRenderQueue);
+            }
         }
 
         for (const auto& renderTarget : shadowRenderQueue.queue)
         {
-            if(renderTarget.meshRenderer->GetCastShadow())
-                renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::PointLightShadow);
+            renderTarget.meshRenderer->Render(renderTarget.submeshIndex, ShaderFactory::Type::PointLightShadow);
         }
     }
     

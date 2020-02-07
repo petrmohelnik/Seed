@@ -66,17 +66,11 @@ void PhysicsEngine::RunSimulationStep()
 
 void PhysicsEngine::Initialize()
 {
-    ///btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
     overlappingPairCache = std::make_unique<btDbvtBroadphase>();
-    ///collision configuration contains default setup for memory, collision setup. Advanced users can create their own configuration.
     collisionConfiguration = std::make_unique<btSoftBodyRigidBodyCollisionConfiguration>();
-    ///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
     dispatcher = std::make_unique<btCollisionDispatcher>(collisionConfiguration.get());
-    ///the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
     solver = std::make_unique<btSequentialImpulseConstraintSolver>();
-
     dynamicsWorld = std::make_unique<btSoftRigidDynamicsWorld>(dispatcher.get(), overlappingPairCache.get(), solver.get(), collisionConfiguration.get());
-    
     btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher.get());
 
     dynamicsWorld->getSolverInfo().m_solverMode |= SOLVER_RANDMIZE_ORDER;
@@ -326,9 +320,8 @@ void PhysicsEngine::Simulate()
 
 void PhysicsEngine::InsertContactPoint(Collider* thisCollider, Collider* otherCollider, ContactPoint contactPoint)
 {
-    if (thisCollider->contactPoints.count(otherCollider) == 0)
-        thisCollider->contactPoints.insert({ otherCollider , std::vector<ContactPoint>() });
-    thisCollider->contactPoints[otherCollider].push_back(std::move(contactPoint));
+    auto& otherColliderContactPoints = thisCollider->contactPoints.try_emplace(otherCollider , std::vector<ContactPoint>()).first->second;
+    otherColliderContactPoints.push_back(std::move(contactPoint));
 }
 
 void PhysicsEngine::AddContactManifold(btPersistentManifold* contactManifold)

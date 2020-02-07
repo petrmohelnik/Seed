@@ -7,26 +7,25 @@ AABB::AABB(glm::vec3 min, glm::vec3 max) : min(min), max(max)
 
 AABB AABB::GetTransformedAABB(glm::mat4 const& transformation) const
 {
-    auto vertices = GetBoxVertices();
-    for (auto& vertex : vertices)
-        vertex = transformation * glm::vec4(vertex, 1.0f);
+    AABB transformedAABB(transformation[3], transformation[3]);
 
-    AABB transformedAABB;
-    for (auto const& vertex : vertices)
+    for (int i = 0; i < 3; i++)
     {
-        if (vertex.x < transformedAABB.min.x)
-            transformedAABB.min.x = vertex.x;
-        if (vertex.y < transformedAABB.min.y)
-            transformedAABB.min.y = vertex.y;
-        if (vertex.z < transformedAABB.min.z)
-            transformedAABB.min.z = vertex.z;
-
-        if (vertex.x > transformedAABB.max.x)
-            transformedAABB.max.x = vertex.x;
-        if (vertex.y > transformedAABB.max.y)
-            transformedAABB.max.y = vertex.y;
-        if (vertex.z > transformedAABB.max.z)
-            transformedAABB.max.z = vertex.z;
+        for (int j = 0; j < 3; j++)
+        {
+            auto a = transformation[j][i] * min[j];
+            auto b = transformation[j][i] * max[j];
+            if (a < b)
+            {
+                transformedAABB.min[i] += a;
+                transformedAABB.max[i] += b;
+            }
+            else
+            {
+                transformedAABB.min[i] += b;
+                transformedAABB.max[i] += a;
+            }
+        }
     }
 
     return transformedAABB;

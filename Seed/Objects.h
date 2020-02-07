@@ -16,7 +16,7 @@ public:
     template<typename T>
     T* CloneObject(T* object);
     Object* CreateObjectWithMesh(const std::string& name, const std::string& meshFilePath, glm::vec3 position = glm::vec3(0.0f), bool deleteAfterLoad = true);
-    Object* CreateObjectsFromScene(const std::string& path) const;
+    Object* CreateObjectsFromScene(const std::string& path, const std::string rootName) const;
     Object* GetObjectByName(const std::string& name);
     std::vector<Object*> GetObjectsByName(const std::string& name);
     std::vector<Object*> GetObjectsByName(std::function<bool(std::string const& name)> comparisonFunction);

@@ -40,19 +40,11 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     skyboxSwitcher->AddSkybox("Protospace.hdr");
     skyboxSwitcher->AddSkybox("Milkyway.hdr");
 
-    objects.CreateObjectsFromScene("scene/scene.gltf");
-
+    objects.CreateObjectsFromScene("scene/scene.gltf", "Scene");
+    objects.CreateObjectsFromScene("crash_dummy/crash_dummy.gltf", "CrashDummy");
+    
     auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));
     spheres->GetComponent<MeshRenderer>()->GetSharedMaterial()->UseOcclusionMap();
-
-    auto crashDummy = objects.CreateObjectWithMesh("CrashDummy", "crash_dummy/crash_dummy.gltf", glm::vec3(0.0f, 1.1f, -2.0f), false);
-    auto crashDummyCollider = fileSystem.LoadMesh("crash_dummy/crash_dummy_collider.gltf", false);
-    crashDummy->AddComponent<MeshCollider>(crashDummyCollider, true);
-    crashDummy->GetComponent<MeshRenderer>()->GetSharedMesh()->DeleteDataAfterColliderLoad(true);
-    crashDummy->GetComponent<Collider>()->SetMass(80.0f);
-    crashDummy->AddComponent<TargetScript>();
-    crashDummy->GetComponent<TargetScript>()->TargetPath = "crash_dummy/crash_dummy_broken.gltf";
-    crashDummy->GetComponent<TargetScript>()->TargetName = "CrashDummyBroken";
 
     auto cobblestoneMaterial = std::make_shared<Material>();
     cobblestoneMaterial->Albedo = fileSystem.LoadTexture("cobblestone/albedo.png", 24, 24);
@@ -106,6 +98,16 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     roughblock->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
     roughblock->AddComponent<BoxCollider>(glm::vec3(0.0f), glm::vec3(1.0f));
     roughblock->GetComponent<BoxCollider>()->SetMass(100.0f);
+
+    auto crashDummies = objects.GetObjectsByName([](std::string const& name) { return name.rfind("CrashDummy", 0) == 0;});
+    for (auto& crashDummy : crashDummies)
+    {
+        crashDummy->GetComponent<Collider>()->SetMass(80.0f);
+        crashDummy->GetComponent<Transform>()->Translate(glm::vec3(0.0f, 1.1f, -2.0f));
+        crashDummy->AddComponent<TargetScript>();
+        crashDummy->GetComponent<TargetScript>()->TargetPath = "crash_dummy/crash_dummy_broken.gltf";
+        crashDummy->GetComponent<TargetScript>()->TargetName = "CrashDummyBroken";
+    }
 
     auto targets = objects.GetObjectsByName([](std::string const& name) { return name.rfind("TargetDummy", 0) == 0;});
     auto targetMesh = fileSystem.LoadMesh("TargetDummy/TargetDummy.gltf", false);

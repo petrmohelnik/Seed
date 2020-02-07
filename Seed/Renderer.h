@@ -14,9 +14,9 @@ public:
     virtual void AddToRenderQueueForward(RenderQueue& queue) = 0;
     virtual void Render(int index) = 0;
     virtual void Render(int index, ShaderFactory::Type shaderType) = 0;
-    void SetCastShadow(bool castShadow);
-    bool GetCastShadow();
+    void SetCastsShadow(bool castsShadow);
+    bool CastsShadow();
 
 private:
-    bool castShadow = true;
+    bool castsShadow = true;
 };
