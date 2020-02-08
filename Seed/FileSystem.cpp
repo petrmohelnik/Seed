@@ -37,7 +37,7 @@ void FileSystem::LoadScene(const std::string& path)
         | aiProcess_RemoveRedundantMaterials
         | aiProcess_GenBoundingBoxes
         | aiProcess_FindDegenerates
-        //| aiProcess_ValidateDataStructure
+        | aiProcess_ValidateDataStructure
     );
 
     if (!scene)

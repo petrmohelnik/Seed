@@ -41,7 +41,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     skyboxSwitcher->AddSkybox("Milkyway.hdr");
 
     objects.CreateObjectsFromScene("scene/scene.gltf", "Scene");
-    objects.CreateObjectsFromScene("crash_dummy/crash_dummy.gltf", "CrashDummy");
     
     auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));
     spheres->GetComponent<MeshRenderer>()->GetSharedMaterial()->UseOcclusionMap();
@@ -103,22 +102,9 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     for (auto& crashDummy : crashDummies)
     {
         crashDummy->GetComponent<Collider>()->SetMass(80.0f);
-        crashDummy->GetComponent<Transform>()->Translate(glm::vec3(0.0f, 1.1f, -2.0f));
         crashDummy->AddComponent<TargetScript>();
         crashDummy->GetComponent<TargetScript>()->TargetPath = "crash_dummy/crash_dummy_broken.gltf";
         crashDummy->GetComponent<TargetScript>()->TargetName = "CrashDummyBroken";
-    }
-
-    auto targets = objects.GetObjectsByName([](std::string const& name) { return name.rfind("TargetDummy", 0) == 0;});
-    auto targetMesh = fileSystem.LoadMesh("TargetDummy/TargetDummy.gltf", false);
-    targetMesh->DeleteDataAfterColliderLoad(true);
-    for (auto& target : targets)
-    {
-        target->AddComponent<MeshCollider>(targetMesh, false);
-        target->GetComponent<Collider>()->SetMass(30.0f);
-        target->AddComponent<TargetScript>();
-        target->GetComponent<TargetScript>()->TargetPath = "TargetDummyBroken/TargetDummyBroken.gltf";
-        target->GetComponent<TargetScript>()->TargetName = "TargetDummyBroken";
     }
 
     for (auto& light : objects.GetComponents<Light>())

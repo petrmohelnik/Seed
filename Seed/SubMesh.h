@@ -24,6 +24,7 @@ protected:
     friend class FileSystem;
     friend class Mesh;
     friend class MeshCollider;
+    friend class PhysicsEngine;
 
     void DeleteData();
 
@@ -39,6 +40,8 @@ private:
     GLuint vbo[6];
 
     AABB aabb;
+
+    std::weak_ptr<btCollisionShape> btCollisionShape;
 
     bool deleteAfterLoad = true;
 };

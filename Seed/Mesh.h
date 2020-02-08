@@ -34,6 +34,5 @@ protected:
 private:
     std::vector<std::shared_ptr<SubMesh>> subMeshes;
 
-    std::weak_ptr<btCollisionShape> btCollisionShape;
     bool deleteAfterColliderLoad = false;
 };

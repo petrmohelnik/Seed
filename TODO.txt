@@ -2,7 +2,6 @@ metadata na weight?
 loadovat tagy objektu z metadat? - misto parsovani object namu...
 
 zkusit udelat jednoduchy bounding mesh sceny
-zhecknout po exportu range - nacitat je taky z metadat?
 
 vybrat libovolnej objekt a ten strilet
 

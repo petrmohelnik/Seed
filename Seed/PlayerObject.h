@@ -24,7 +24,7 @@ void PlayerObject::Initialize()
     flashLight->AddComponent<Light>();
     flashLight->GetComponent<Light>()->SetColor(glm::vec3(1.0f, 1.0f, 0.9f));
     flashLight->GetComponent<Light>()->SetSpotLight(glm::vec3(-0.05f, 0.05f, -1.0f), 30.0f, 100.0f, 0.5f, 0.4f);
-    flashLight->GetComponent<Transform>()->SetPosition(glm::vec3(0.2f, -0.3f, 0.2f));
+    flashLight->GetComponent<Transform>()->SetPosition(glm::vec3(0.2f, -0.3f, 0.0f));
     flashLight->GetComponent<Transform>()->SetParent(camera);
     
     AddComponent<PlayerScript>();

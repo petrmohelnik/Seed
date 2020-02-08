@@ -11,7 +11,7 @@ MeshCollider::MeshCollider(Object* object, std::shared_ptr<Mesh> mesh, bool conv
 
 Collider::Type MeshCollider::GetType()
 {
-    return mesh->NumberOfSubmeshes() == 0 ? Type::Mesh : Type::CompoundMesh;
+    return mesh->NumberOfSubmeshes() > 1 ? Type::CompoundMesh : Type::Mesh;
 }
 
 int MeshCollider::NumberOfSubmeshes()
@@ -49,39 +49,25 @@ void MeshCollider::SetPosition(glm::vec3 position)
     GetTransform()->SetPosition(position, Transform::Space::World);
 }
 
-void DeleteBtSubShape(btCollisionShape* collisionSubShape)
+void MeshCollider::AssignBtCollisionShape(btCollisionShape* collisionShape, int subMeshIndex)
 {
-    auto shapeType = collisionSubShape->getShapeType();
-    if (shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE || shapeType == GIMPACT_SHAPE_PROXYTYPE)
+    btSubMeshShapes.push_back(std::shared_ptr<btCollisionShape>(collisionShape, [collisionShape](btCollisionShape* btShape)
     {
-        btTriangleIndexVertexArray* triangleMeshData = nullptr;
-        if (collisionSubShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE)
-            triangleMeshData = static_cast<btTriangleIndexVertexArray*>(static_cast<btTriangleMeshShape*>(collisionSubShape)->getMeshInterface());
-        if (collisionSubShape->getShapeType() == GIMPACT_SHAPE_PROXYTYPE)
-            triangleMeshData = static_cast<btTriangleIndexVertexArray*>(static_cast<btGImpactMeshShape*>(collisionSubShape)->getMeshInterface());
-
-        auto indexedVerticesArray = triangleMeshData->getIndexedMeshArray();
-
-        delete triangleMeshData;
-    }
-    delete collisionSubShape;
-}
-
-void MeshCollider::AssignBtCollisionShape(btCollisionShape* collisionShape)
-{
-    btShape = std::shared_ptr<btCollisionShape>(collisionShape, [collisionShape](btCollisionShape* btShape)
-    {
-        if (btShape->getShapeType() == COMPOUND_SHAPE_PROXYTYPE)
+        auto shapeType = collisionShape->getShapeType();
+        if (shapeType == TRIANGLE_MESH_SHAPE_PROXYTYPE || shapeType == GIMPACT_SHAPE_PROXYTYPE)
         {
-            auto compoundShape = static_cast<btCompoundShape*>(btShape);
-            for (int i = 0; i < compoundShape->getNumChildShapes(); i++)
-                DeleteBtSubShape(compoundShape->getChildShape(i));
+            btTriangleIndexVertexArray* triangleMeshData = nullptr;
+            if (collisionShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE)
+                triangleMeshData = static_cast<btTriangleIndexVertexArray*>(static_cast<btTriangleMeshShape*>(collisionShape)->getMeshInterface());
+            if (collisionShape->getShapeType() == GIMPACT_SHAPE_PROXYTYPE)
+                triangleMeshData = static_cast<btTriangleIndexVertexArray*>(static_cast<btGImpactMeshShape*>(collisionShape)->getMeshInterface());
+
+            delete triangleMeshData;
         }
-        else
-            DeleteBtSubShape(collisionShape);
-    });
-    mesh->btCollisionShape = btShape;
+        delete collisionShape;
+    }));
+    mesh->subMeshes[subMeshIndex]->btCollisionShape = btSubMeshShapes.back();
 
     if (mesh->deleteAfterColliderLoad)
-        mesh->DeleteData();
+        mesh->subMeshes[subMeshIndex]->DeleteData();
 }

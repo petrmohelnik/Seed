@@ -17,7 +17,7 @@ protected:
     friend class PhysicsEngine;
     friend class FileSystem;
 
-    void AssignBtCollisionShape(btCollisionShape* collisionShape);
+    void AssignBtCollisionShape(btCollisionShape* collisionShape, int subMeshIndex);
 
 private:
     MeshCollider* Clone() override;
@@ -27,6 +27,6 @@ private:
     std::shared_ptr<Mesh> mesh;
     bool convex;
 
-    std::shared_ptr<btCollisionShape> btShape;
+    std::vector<std::shared_ptr< btCollisionShape>> btSubMeshShapes;
 };
 

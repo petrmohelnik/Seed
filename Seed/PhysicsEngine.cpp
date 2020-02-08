@@ -142,15 +142,25 @@ btCollisionShape* PhysicsEngine::CreateTriangleMeshShape(MeshCollider* meshColli
 
 btCollisionShape* PhysicsEngine::CreateMeshCollisionSubShape(MeshCollider* meshCollider, int submeshIndex)
 {
+    if (!meshCollider->mesh->subMeshes[submeshIndex]->btCollisionShape.expired())
+    {
+        meshCollider->btSubMeshShapes.push_back(meshCollider->mesh->subMeshes[submeshIndex]->btCollisionShape.lock());
+        return meshCollider->btSubMeshShapes.back().get();
+    }
+
+    btCollisionShape* newMesh;
     if (meshCollider->GetMass() != 0.0f)
     {
         if (meshCollider->IsConvex())
-            return CreateConvexHullShape(meshCollider, submeshIndex);
+            newMesh = CreateConvexHullShape(meshCollider, submeshIndex);
         else
-            return CreateGImpactShape(meshCollider, submeshIndex);
+            newMesh = CreateGImpactShape(meshCollider, submeshIndex);
     }
     else
-        return CreateTriangleMeshShape(meshCollider, submeshIndex);
+        newMesh = CreateTriangleMeshShape(meshCollider, submeshIndex);
+
+    meshCollider->AssignBtCollisionShape(newMesh, submeshIndex);
+    return newMesh;
 }
 
 btCollisionShape* PhysicsEngine::CreateMeshCollisionShape(MeshCollider* meshCollider)
@@ -175,17 +185,7 @@ btCollisionShape* PhysicsEngine::CreateCollisionShape(Collider* collider)
     if (collider->GetType() == Collider::Type::Mesh || collider->GetType() == Collider::Type::CompoundMesh)
     {
         auto meshCollider = static_cast<MeshCollider*>(collider);
-        if (!meshCollider->mesh->btCollisionShape.expired())
-        {
-            meshCollider->btShape = meshCollider->mesh->btCollisionShape.lock();
-            btShape = meshCollider->btShape.get();
-        }
-        else
-        {
-            btShape = CreateMeshCollisionShape(meshCollider);
-            meshCollider->AssignBtCollisionShape(btShape);
-        }
-
+        btShape = CreateMeshCollisionShape(meshCollider);
     }
     else if (collider->GetType() == Collider::Type::Box)
     {
@@ -506,7 +506,7 @@ void PhysicsEngine::CleanComponents()
     {
         if (collider->ToBeDestroyed() && collider->btRigidbody)
         {
-            if (collider->GetType() != Collider::Type::Mesh && collider->GetType() != Collider::Type::CompoundMesh)
+            if (collider->GetType() != Collider::Type::Mesh)
                 delete collider->btRigidbody->getCollisionShape();
 
             if (collider->btRigidbody->getMotionState())
