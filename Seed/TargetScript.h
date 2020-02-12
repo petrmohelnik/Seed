@@ -48,8 +48,7 @@ void TargetScript::OnCollisionEnter(Collision const& collision)
         {
             auto explosionDirection = glm::normalize(shard->GetComponent<Transform>()->GetPosition() - collision.ContactPoints[0].Point);
             shard->GetComponent<Collider>()->InitializeRigidbody();
-            shard->GetComponent<Collider>()->AddForce(explosionDirection * 0.5f, Collider::ForceType::Impulse);
-            //shard->GetComponent<Collider>()->Destroy(5.0f);
+            shard->GetComponent<Collider>()->AddForce(explosionDirection * collision.TotalImpulse * collision.TotalImpulse * 0.0001f, Collider::ForceType::Impulse);
         }
 
         object->Destroy();

@@ -23,14 +23,6 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     light->GetComponent<Collider>()->SetBounciness(1.0f);
     light->GetComponent<Collider>()->SetMass(1.0f);
 
-    auto ground = objects.CreateObject("ground");
-    ground->GetComponent<Transform>()->SetScale(glm::vec3(8.0f, 2.0f, 10.0f));
-    ground->GetComponent<Transform>()->TranslateY(2.0f);
-    auto cubeMesh = fileSystem.LoadMesh("cube.dae", false);
-    cubeMesh->DeleteDataAfterColliderLoad(true);
-    ground->AddComponent<MeshCollider>(cubeMesh, false);
-    ground->GetComponent<Collider>()->SetBounciness(1.0f);
-
     objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
     auto skyboxSwitcher = objects.CreateObject("skyboxSwitcher")->AddComponent<SkyboxSwitcherScript>();
     skyboxSwitcher->AddSkybox("Newport_Loft.hdr");
