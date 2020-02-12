@@ -19,7 +19,7 @@ void BulletObject::Initialize()
     bulletBody->GetComponent<MeshRenderer>()->GetSharedMesh()->DeleteDataAfterColliderLoad(true);
     bulletBody->GetComponent<Collider>()->SetMass(5.0f);
     bulletBody->GetComponent<Collider>()->SetBounciness(0.0f);
-    bulletBody->GetComponent<Collider>()->SetContinuousCollisionDetection(0.1f, 0.3f);
+    bulletBody->GetComponent<Collider>()->SetContinuousCollisionDetection(0.1f, 0.04);
     bulletBody->GetComponent<Transform>()->TranslateZ(-0.35f);
     bulletBody->GetComponent<Transform>()->SetParent(this);
     auto bulletLight = objects.CreateObject("BulletLight");
@@ -28,12 +28,6 @@ void BulletObject::Initialize()
     bulletLight->GetComponent<Light>()->SetColor(glm::vec3(0.9f, 0.35f, 0.15f));
     bulletLight->GetComponent<Transform>()->TranslateZ(0.33f);
     bulletLight->GetComponent<Transform>()->SetParent(bulletBody);
-
-    //auto bulletMaterial = std::make_shared<Material>();
-    //bulletMaterial->SetMetallicWorkflow();
-    //bulletMaterial->Albedo->SetColor(glm::vec3(0.8f, 0.67f, 0.45f));
-    //bulletMaterial->Metallic->SetColor(glm::vec3(1.0f, 0.4f, 1.0f));
-    //GetComponent<MeshRenderer>()->SetMaterial(0, bulletMaterial);
 }
 
 Object* BulletObject::GetBody()
