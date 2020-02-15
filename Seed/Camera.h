@@ -20,6 +20,8 @@ public:
     float GetFarPlane();
 
     glm::vec3 ScreenPositionToWorld(glm::vec3 position);
+    glm::vec3 RayDirectionFromScreenPosition(glm::vec2 screenPosition);
+    glm::vec3 RayDirectionFromScreenPosition(glm::vec2 screenPosition, glm::vec3& fromPosition);
     
 protected:
     friend class RenderingPipeline;

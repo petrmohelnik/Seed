@@ -3,8 +3,6 @@ loadovat tagy objektu z metadat? - misto parsovani object namu...
 
 zkusit udelat jednoduchy bounding mesh sceny
 
-vybrat libovolnej objekt a ten strilet
-
 https://www.thoughtspike.com/friction-coefficients-for-bullet-physics/
 =======================================================================================================================
 
@@ -13,10 +11,6 @@ SSAO
 Bloom
 Screen Space Reflections
 AA
-
-odkomentovat aiProcess_ValidateDataStructure az prejdu na novejsi gltf exporter
-
-https://github.com/gszauer/GamePhysicsCookbook
 
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf
@@ -39,8 +33,6 @@ teren - https://victorbush.com/2015/01/tessellated-terrain/
 
 sun podle frostbite
 
-http://antongerdelan.net/opengl/raycasting.html
-
 v render queue se budou radit objekty prioritne podle vrstvy materialu, potom podle programu
 https://docs.unity3d.com/Manual/SL-SubShaderTags.html -- inspirace poradi
 
@@ -56,28 +48,6 @@ https://learn.unity.com/tutorial/physics-best-practices#5c7f8528edbc2a002053b5b4
 
 textura nebo mesh by si meli drzet path, aby pri loadu na gpu, kdyz maji smazany data si ho mohly naloadovat,
 ale uz na primo, zadny sdileni pres file system
-
-!!!!!!!
-https://unity3d.com/learn/tutorials/temas/performance-optimization/optimizing-graphics-rendering-unity-games
-
-https://hero.handmade.network/forums/code-discussion/t/2479-using_opengl_uniforms_attributes_outputs_in_more_efficient_way
-https://gamedev.stackexchange.com/questions/57108/what-is-the-best-method-to-update-shader-uniforms
-https://blender.stackexchange.com/questions/32677/how-to-combine-two-different-textures-into-one
-https://github.com/assimp/assimp/wiki/Embedded-Textures-References
-https://stackoverflow.com/a/27895283
-https://www.haroldserrano.com/blog/books-i-used-to-develop-a-game-engine
-http://www.gameenginegems.net/geg1.php
-https://prideout.net/
-https://en.wikipedia.org/wiki/Collision_detection
-https://gamedev.stackexchange.com/questions/26501/how-does-a-collision-engine-work/26506#26506
-http://mmmovania.blogspot.com/2011/04/physx-basics-tutorial-simple-bouncing.html
-http://alextardif.com/Particles.html
-http://alextardif.com/eden.html
-https://github.com/NVIDIAGameWorks/WaveWorks
-https://github.com/NVIDIAGameWorks/GraphicsSamples/tree/master/samples/gl4-maxwell
-https://github.com/NVIDIAGameWorks/VolumetricLighting
-
-https://stackoverflow.com/questions/16005952/opengl-gradient-banding-artifacts
 
 kdybych chtel ukladat data submeshu do jednoho vektoru, samostatne mi staci jenom indices
 https://computergraphics.stackexchange.com/questions/4623/multiple-vao-share-a-vbo

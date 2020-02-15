@@ -28,6 +28,11 @@ https://www.gamedev.net/articles/programming/graphics/contact-hardening-soft-sha
 tone mapping:
 https://64.github.io/tonemapping/
 
+opengl:
+https://gamedev.stackexchange.com/questions/57108/what-is-the-best-method-to-update-shader-uniforms
+https://hero.handmade.network/forums/code-discussion/t/2479-using_opengl_uniforms_attributes_outputs_in_more_efficient_way
+https://stackoverflow.com/questions/16005952/opengl-gradient-banding-artifacts
+
 hdri:
 https://www.daz3d.com/forums/discussion/57531/list-of-sites-with-free-hdri
 https://hdrihaven.com/hdris/
@@ -41,3 +46,12 @@ https://github.com/turanszkij/WickedEngine/blob/master/WickedEngine/wiPhysicsEng
 https://github.com/222464/EvolvedVirtualCreaturesRepo/blob/master/VirtualCreatures/Volumetric_SDL/Source/SceneObjects/Physics/DynamicCharacterController.cpp
 https://gamedev.stackexchange.com/questions/26501/how-does-a-collision-engine-work/26506#26506
 https://github.com/gszauer/GamePhysicsCookbook
+
+general:
+https://www.haroldserrano.com/blog/books-i-used-to-develop-a-game-engine
+https://prideout.net/
+http://alextardif.com/Particles.html
+http://alextardif.com/eden.html
+https://github.com/NVIDIAGameWorks/WaveWorks
+https://github.com/NVIDIAGameWorks/GraphicsSamples/tree/master/samples/gl4-maxwell
+https://github.com/NVIDIAGameWorks/VolumetricLighting

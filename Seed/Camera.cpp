@@ -63,6 +63,20 @@ glm::vec3 Camera::ScreenPositionToWorld(glm::vec3 position)
     return glm::unProject(position, dataBlock.view, dataBlock.projection, glm::vec4(0.0f, 0.0f, windowSize));
 }
 
+glm::vec3 Camera::RayDirectionFromScreenPosition(glm::vec2 screenPosition)
+{
+    glm::vec3 fromPosition;
+    return RayDirectionFromScreenPosition(screenPosition, fromPosition);
+}
+
+glm::vec3 Camera::RayDirectionFromScreenPosition(glm::vec2 screenPosition, glm::vec3& fromPosition)
+{
+    fromPosition = ScreenPositionToWorld(glm::vec3(screenPosition, GetNearPlane()));
+    auto toPosition = ScreenPositionToWorld(glm::vec3(screenPosition, GetFarPlane()));
+    
+    return glm::normalize(toPosition - fromPosition);
+}
+
 Frustum const& Camera::GetFrustum() const
 {
     return frustum;

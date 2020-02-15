@@ -19,7 +19,7 @@ void BulletObject::Initialize()
     bulletBody->GetComponent<MeshRenderer>()->GetSharedMesh()->DeleteDataAfterColliderLoad(true);
     bulletBody->GetComponent<Collider>()->SetMass(5.0f);
     bulletBody->GetComponent<Collider>()->SetBounciness(0.0f);
-    bulletBody->GetComponent<Collider>()->SetContinuousCollisionDetection(0.1f, 0.04);
+    bulletBody->GetComponent<Collider>()->SetContinuousCollisionDetection(0.1f, 0.04f);
     bulletBody->GetComponent<Transform>()->TranslateZ(-0.35f);
     bulletBody->GetComponent<Transform>()->SetParent(this);
     auto bulletLight = objects.CreateObject("BulletLight");

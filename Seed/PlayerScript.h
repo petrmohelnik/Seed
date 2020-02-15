@@ -24,6 +24,7 @@ private:
     Camera* camera;
     CharacterController* characterController;
     BulletObject* bulletDataHolder;
+    Object* chosenBullet = nullptr;
 
     float verticalRotation = 0.0f;
     float bulletForce = 0.0f;
@@ -70,44 +71,79 @@ inline void PlayerScript::FixedUpdate()
 
     if (input.MouseButton(SDL_BUTTON_LEFT))
     {
-        bulletForce += 200.0f * time.FixedDeltaTime();
+        bulletForce += 50.0f * time.FixedDeltaTime();
     }
     else if (bulletForce != 0.0f)
     {
-        auto bullet = objects.CreateObject<BulletObject>("Bullet");
-        bullet->SetPhysicsMaterial(bulletMass, bulletBounciness, bulletFriction, bulletLinearDamping, bulletAngularDamping);
+        Transform* bulletTransform;
+        Collider* bulletCollider;
+        if (chosenBullet)
+        {
+            auto bullet = objects.CloneObject(chosenBullet);
+            bulletTransform = bullet->GetComponent<Transform>();
+            bulletCollider = bullet->GetComponent<Collider>();
+        }
+        else
+        {
+            auto bullet = objects.CreateObject<BulletObject>("Bullet");
+            bullet->SetPhysicsMaterial(bulletMass, bulletBounciness, bulletFriction, bulletLinearDamping, bulletAngularDamping);
+            bulletTransform = bullet->GetComponent<Transform>();
+            bulletCollider = bullet->GetBody()->GetComponent<Collider>();
+        }
+        
+        bulletTransform->SetRotation(camera->GetTransform()->GetRotation(), Transform::Space::World);
+        bulletTransform->RotateX(0.05f);
+        auto initialPosition = camera->GetTransform()->GetPosition() + bulletTransform->GetForwardAxis() * 0.25f;
+        bulletTransform->SetPosition(initialPosition);
+        bulletTransform->TranslateY(-0.1f);
+        bulletCollider->InitializeRigidbody();
+        bulletCollider->AddForce(bulletTransform->GetForwardAxis() * bulletForce, Collider::ForceType::VelocityChange);
+        bulletTransform->GetObject()->Destroy(15.0f);
 
-
-        bullet->GetComponent<Transform>()->SetRotation(camera->GetTransform()->GetRotation(), Transform::Space::World);
-        bullet->GetComponent<Transform>()->RotateX(0.05f);
-        auto initialPosition = camera->GetTransform()->GetPosition() + bullet->GetComponent<Transform>()->GetForwardAxis() * 0.25f;
-        bullet->GetComponent<Transform>()->SetPosition(initialPosition);
-        bullet->GetComponent<Transform>()->TranslateY(-0.1f);
-        bullet->GetBody()->GetComponent<Collider>()->InitializeRigidbody();
-        bullet->GetBody()->GetComponent<Collider>()->AddForce(bullet->GetComponent<Transform>()->GetForwardAxis() * bulletForce, Collider::ForceType::Impulse);
-        bullet->Destroy(15.0f);
         bulletForce = 0.0f;
     }
 
     if (input.MouseButton(SDL_BUTTON_MIDDLE))
     {
         PhysicsEngine::RaycastHit hit;
-        input.MousePosition();
-        auto fromPos = camera->ScreenPositionToWorld(glm::vec3(input.MousePosition(), camera->GetNearPlane()));
-        auto toPos = camera->ScreenPositionToWorld(glm::vec3(input.MousePosition(), camera->GetFarPlane()));
-        auto rayDirection = glm::normalize(toPos - fromPos);
+        glm::vec3 fromPos;
+        auto rayDirection = camera->RayDirectionFromScreenPosition(input.MousePosition(), fromPos);
         if (physics.Raycast(fromPos, rayDirection, hit, camera->GetFarPlane() - camera->GetNearPlane()))
         {
             hit.Collider->AddForceAtPosition(rayDirection * 50.0f, Collider::ForceType::Acceleration, hit.Point);
         }
     }
 
+    if (input.KeyDown(SDLK_r))
+    {
+        PhysicsEngine::RaycastHit hit;
+        glm::vec3 fromPos;
+        auto rayDirection = camera->RayDirectionFromScreenPosition(input.MousePosition(), fromPos);
+        if (physics.Raycast(fromPos, rayDirection, hit, camera->GetFarPlane() - camera->GetNearPlane()))
+        {
+            if (hit.Collider->GetMass() != 0.0f)
+            {
+                chosenBullet = hit.Collider->GetObject();
+            }
+        }
+    }
+    if (input.KeyDown(SDLK_t))
+    {
+        chosenBullet = nullptr;
+    }
+
     if (input.Key(SDLK_e))
     {
         PhysicsEngine::RaycastHit hit;
         auto rayDirection = camera->GetTransform()->GetForwardAxis();
+        auto upDirection = camera->GetTransform()->GetUpAxis();
+        auto rightDirection = camera->GetTransform()->GetRightAxis();
         auto cameraPosition = camera->GetTransform()->GetPosition();
-        if (physics.Raycast(cameraPosition, rayDirection, hit))
+        if (physics.Raycast(cameraPosition, rayDirection, hit)
+            || physics.Raycast(cameraPosition + upDirection * 0.2f, rayDirection, hit)
+            || physics.Raycast(cameraPosition - upDirection * 0.2f, rayDirection, hit)
+            || physics.Raycast(cameraPosition + rightDirection * 0.2f, rayDirection, hit)
+            || physics.Raycast(cameraPosition - rightDirection * 0.2f, rayDirection, hit))
         {
             hit.Collider->AddForce((cameraPosition - hit.Point) * 5.0f, Collider::ForceType::Acceleration);
         }
