@@ -92,6 +92,13 @@ Object* FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent,
         LoadNode(scene, node->mChildren[childIndex], object, subMeshes, materials);
     }
 
+    if (auto collider = object->GetComponent<Collider>())
+    {
+        float mass;
+        if (node->mMetaData && node->mMetaData->Get("mass", mass))
+            collider->SetMass(mass);
+    }
+
     return object;
 }
 

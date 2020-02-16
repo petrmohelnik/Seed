@@ -71,7 +71,7 @@ inline void PlayerScript::FixedUpdate()
 
     if (input.MouseButton(SDL_BUTTON_LEFT))
     {
-        bulletForce += 50.0f * time.FixedDeltaTime();
+        bulletForce += 200.0f * time.FixedDeltaTime();
     }
     else if (bulletForce != 0.0f)
     {
@@ -97,7 +97,7 @@ inline void PlayerScript::FixedUpdate()
         bulletTransform->SetPosition(initialPosition);
         bulletTransform->TranslateY(-0.1f);
         bulletCollider->InitializeRigidbody();
-        bulletCollider->AddForce(bulletTransform->GetForwardAxis() * bulletForce, Collider::ForceType::VelocityChange);
+        bulletCollider->AddForce(bulletTransform->GetForwardAxis() * bulletForce, Collider::ForceType::Impulse);
         bulletTransform->GetObject()->Destroy(15.0f);
 
         bulletForce = 0.0f;
@@ -112,24 +112,6 @@ inline void PlayerScript::FixedUpdate()
         {
             hit.Collider->AddForceAtPosition(rayDirection * 50.0f, Collider::ForceType::Acceleration, hit.Point);
         }
-    }
-
-    if (input.KeyDown(SDLK_r))
-    {
-        PhysicsEngine::RaycastHit hit;
-        glm::vec3 fromPos;
-        auto rayDirection = camera->RayDirectionFromScreenPosition(input.MousePosition(), fromPos);
-        if (physics.Raycast(fromPos, rayDirection, hit, camera->GetFarPlane() - camera->GetNearPlane()))
-        {
-            if (hit.Collider->GetMass() != 0.0f)
-            {
-                chosenBullet = hit.Collider->GetObject();
-            }
-        }
-    }
-    if (input.KeyDown(SDLK_t))
-    {
-        chosenBullet = nullptr;
     }
 
     if (input.Key(SDLK_e))
@@ -179,6 +161,24 @@ void PlayerScript::Update()
             flashLight->SetIntensity(0.0);
         else
             flashLight->SetIntensity(100.0);
+    }
+
+    if (input.KeyDown(SDLK_r))
+    {
+        PhysicsEngine::RaycastHit hit;
+        glm::vec3 fromPos;
+        auto rayDirection = camera->RayDirectionFromScreenPosition(input.MousePosition(), fromPos);
+        if (physics.Raycast(fromPos, rayDirection, hit, camera->GetFarPlane() - camera->GetNearPlane()))
+        {
+            if (hit.Collider->GetMass() != 0.0f)
+            {
+                chosenBullet = hit.Collider->GetObject();
+            }
+        }
+    }
+    if (input.KeyDown(SDLK_t))
+    {
+        chosenBullet = nullptr;
     }
 
     input.PushWindow("Bullet attributes");

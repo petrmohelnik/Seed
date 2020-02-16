@@ -123,7 +123,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
         sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Albedo->SetColor(glm::vec4(1.0f));
         sphere->GetComponent<Transform>()->SetScale(0.2f);
         sphere->AddComponent<SphereCollider>(glm::vec3(0.0f), 1.0f);
-        sphere->GetComponent<Collider>()->SetMass(1.0f);
+        sphere->GetComponent<Collider>()->SetMass(10.0f);
     }
     for (int i = 0; i < 15; i++)
     {
@@ -137,7 +137,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
         sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Albedo->SetColor(glm::vec4(1.0f));
         sphere->GetComponent<Transform>()->SetScale(0.2f);
         sphere->AddComponent<SphereCollider>(glm::vec3(0.0f), 1.0f);
-        sphere->GetComponent<Collider>()->SetMass(1.0f);
+        sphere->GetComponent<Collider>()->SetMass(10.0f);
     }
 
     RenderingPipeline::SetMainCamera(objects.GetObjectByName("PlayerCamera")->GetComponent<Camera>());

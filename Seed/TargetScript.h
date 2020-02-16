@@ -31,7 +31,7 @@ void TargetScript::OnCreate()
             mesh->DeleteDataAfterColliderLoad(true);
             shard->GetComponent<MeshRenderer>()->SetCastsShadow(false);
             shard->AddComponent<MeshCollider>(shard->GetComponent<MeshRenderer>()->GetSharedMesh(), true);
-            shard->GetComponent<MeshCollider>()->SetMass(0.1f);
+            shard->GetComponent<MeshCollider>()->SetMass(1.0f);
         }
         brokenDummies.insert({ TargetPath, brokenDummy });
     }
