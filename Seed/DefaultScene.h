@@ -20,8 +20,9 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     light->AddComponent<MeshRenderer>()->Load("sphere.obj");
     light->GetComponent<MeshRenderer>()->GetMaterial()->Emission->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
     light->AddComponent<SphereCollider>(glm::vec3(0.0f), 1.0f);
-    light->GetComponent<Collider>()->SetBounciness(1.0f);
-    light->GetComponent<Collider>()->SetMass(1.0f);
+    light->GetComponent<Collider>()->SetBounciness(2.0f);
+    light->GetComponent<Collider>()->SetFriction(0.9f);
+    light->GetComponent<Collider>()->SetMass(10.0f);
 
     objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
     auto skyboxSwitcher = objects.CreateObject("skyboxSwitcher")->AddComponent<SkyboxSwitcherScript>();
@@ -52,6 +53,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     cobblestone->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
     cobblestone->GetComponent<Transform>()->Translate(glm::vec3(3.0f, 0.5f, 7.0f));
     cobblestone->AddComponent<BoxCollider>(glm::vec3(0.0f), glm::vec3(1.0f));
+    cobblestone->GetComponent<BoxCollider>()->SetBounciness(0.1f);
+    cobblestone->GetComponent<BoxCollider>()->SetFriction(0.55f);
     cobblestone->GetComponent<BoxCollider>()->SetMass(100.0f);
 
     auto redbricksMaterial = std::make_shared<Material>();
@@ -70,6 +73,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     redbricks->GetComponent<Transform>()->Translate(glm::vec3(1.9f, 0.5f, 7.0f));
     redbricks->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
     redbricks->AddComponent<BoxCollider>(glm::vec3(0.0f), glm::vec3(1.0f));
+    redbricks->GetComponent<BoxCollider>()->SetBounciness(0.1f);
+    redbricks->GetComponent<BoxCollider>()->SetFriction(0.55f);
     redbricks->GetComponent<BoxCollider>()->SetMass(100.0f);
 
     auto roughblockMaterial = std::make_shared<Material>();
@@ -88,12 +93,13 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     roughblock->GetComponent<Transform>()->Translate(glm::vec3(2.5f, 1.6f, 7.0f));
     roughblock->GetComponent<Transform>()->SetScale(glm::vec3(0.5f));
     roughblock->AddComponent<BoxCollider>(glm::vec3(0.0f), glm::vec3(1.0f));
+    roughblock->GetComponent<BoxCollider>()->SetBounciness(0.1f);
+    roughblock->GetComponent<BoxCollider>()->SetFriction(0.55f);
     roughblock->GetComponent<BoxCollider>()->SetMass(100.0f);
 
     auto crashDummies = objects.GetObjectsByName([](std::string const& name) { return name.rfind("CrashDummy", 0) == 0;});
     for (auto& crashDummy : crashDummies)
     {
-        crashDummy->GetComponent<Collider>()->SetMass(80.0f);
         crashDummy->AddComponent<TargetScript>();
         crashDummy->GetComponent<TargetScript>()->TargetPath = "crash_dummy/crash_dummy_broken.gltf";
         crashDummy->GetComponent<TargetScript>()->TargetName = "CrashDummyBroken";
@@ -123,6 +129,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
         sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Albedo->SetColor(glm::vec4(1.0f));
         sphere->GetComponent<Transform>()->SetScale(0.2f);
         sphere->AddComponent<SphereCollider>(glm::vec3(0.0f), 1.0f);
+        sphere->GetComponent<SphereCollider>()->SetBounciness(0.8f);
+        sphere->GetComponent<SphereCollider>()->SetFriction(0.9f);
         sphere->GetComponent<Collider>()->SetMass(10.0f);
     }
     for (int i = 0; i < 15; i++)
@@ -137,6 +145,8 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
         sphere->GetComponent<MeshRenderer>()->GetSharedMaterial()->Albedo->SetColor(glm::vec4(1.0f));
         sphere->GetComponent<Transform>()->SetScale(0.2f);
         sphere->AddComponent<SphereCollider>(glm::vec3(0.0f), 1.0f);
+        sphere->GetComponent<SphereCollider>()->SetBounciness(0.8f);
+        sphere->GetComponent<SphereCollider>()->SetFriction(0.9f);
         sphere->GetComponent<Collider>()->SetMass(10.0f);
     }
 

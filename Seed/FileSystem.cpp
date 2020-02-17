@@ -94,9 +94,16 @@ Object* FileSystem::LoadNode(const aiScene* scene, aiNode* node, Object* parent,
 
     if (auto collider = object->GetComponent<Collider>())
     {
-        float mass;
-        if (node->mMetaData && node->mMetaData->Get("mass", mass))
-            collider->SetMass(mass);
+        if (node->mMetaData)
+        {
+            float mass, bounciness, friction;
+            if (node->mMetaData->Get("Mass", mass) || node->mMetaData->Get("mass", mass))
+                collider->SetMass(mass);
+            if (node->mMetaData->Get("Bounciness", bounciness) || node->mMetaData->Get("bounciness", bounciness))
+                collider->SetBounciness(bounciness);
+            if (node->mMetaData->Get("Friction", friction) || node->mMetaData->Get("friction", friction))
+                collider->SetFriction(friction);
+        }
     }
 
     return object;

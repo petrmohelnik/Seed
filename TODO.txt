@@ -1,9 +1,8 @@
-metadata na weight?
 loadovat tagy objektu z metadat? - misto parsovani object namu...
 
 zkusit udelat jednoduchy bounding mesh sceny
-
 https://www.thoughtspike.com/friction-coefficients-for-bullet-physics/
+
 =======================================================================================================================
 
 Depth Of Field - http://www.adriancourreges.com/blog/2018/12/02/ue4-optimized-post-effects/
