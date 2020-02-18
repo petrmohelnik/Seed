@@ -81,6 +81,11 @@ void Collider::InitializeRigidbody()
         createRigidbody(this);
 }
 
+bool Collider::IsRigidbodyInitialized()
+{
+    return btRigidbody;
+}
+
 void Collider::SetIsTrigger(bool isTrigger_)
 {
     isTrigger = isTrigger_;

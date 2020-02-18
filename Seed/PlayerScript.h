@@ -108,7 +108,7 @@ inline void PlayerScript::FixedUpdate()
         PhysicsEngine::RaycastHit hit;
         glm::vec3 fromPos;
         auto rayDirection = camera->RayDirectionFromScreenPosition(input.MousePosition(), fromPos);
-        if (physics.Raycast(fromPos, rayDirection, hit, camera->GetFarPlane() - camera->GetNearPlane()))
+        if (physics.Raycast(fromPos, rayDirection, hit, camera->GetFarPlane() - camera->GetNearPlane()) && hit.Collider->IsRigidbodyInitialized())
         {
             hit.Collider->AddForceAtPosition(rayDirection * 40.0f, Collider::ForceType::Acceleration, hit.Point);
         }
@@ -121,15 +121,15 @@ inline void PlayerScript::FixedUpdate()
         auto upDirection = camera->GetTransform()->GetUpAxis();
         auto rightDirection = camera->GetTransform()->GetRightAxis();
         auto cameraPosition = camera->GetTransform()->GetPosition();
-        if (physics.Raycast(cameraPosition, rayDirection, hit))
+        if (physics.Raycast(cameraPosition, rayDirection, hit) && hit.Collider->IsRigidbodyInitialized())
             hit.Collider->AddForce((cameraPosition - hit.Point) * 1.0f, Collider::ForceType::Acceleration);
-        if (physics.Raycast(cameraPosition + upDirection * 0.3f, rayDirection, hit))
+        if (physics.Raycast(cameraPosition + upDirection * 0.3f, rayDirection, hit) && hit.Collider->IsRigidbodyInitialized())
             hit.Collider->AddForce((cameraPosition - hit.Point) * 1.0f, Collider::ForceType::Acceleration);
-        if (physics.Raycast(cameraPosition - upDirection * 0.3f, rayDirection, hit))
+        if (physics.Raycast(cameraPosition - upDirection * 0.3f, rayDirection, hit) && hit.Collider->IsRigidbodyInitialized())
             hit.Collider->AddForce((cameraPosition - hit.Point) * 1.0f, Collider::ForceType::Acceleration);
-        if (physics.Raycast(cameraPosition + rightDirection * 0.3f, rayDirection, hit))
+        if (physics.Raycast(cameraPosition + rightDirection * 0.3f, rayDirection, hit) && hit.Collider->IsRigidbodyInitialized())
             hit.Collider->AddForce((cameraPosition - hit.Point) * 1.0f, Collider::ForceType::Acceleration);
-        if (physics.Raycast(cameraPosition - rightDirection * 0.3f, rayDirection, hit))
+        if (physics.Raycast(cameraPosition - rightDirection * 0.3f, rayDirection, hit) && hit.Collider->IsRigidbodyInitialized())
             hit.Collider->AddForce((cameraPosition - hit.Point) * 1.0f, Collider::ForceType::Acceleration);
     }
 }

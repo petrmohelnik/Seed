@@ -55,6 +55,7 @@ public:
     float GetMargin();
     bool IsSleeping();
     void InitializeRigidbody();
+    bool IsRigidbodyInitialized();
 
     void SetMass(float mass);
     float GetMass() const;
