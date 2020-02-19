@@ -28,12 +28,29 @@ glm::quat PhysicsEngine::ToGlmQuat(btQuaternion const& quaternion)
     return glm::quat(quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z());
 }
 
+class IgnoreNullUserPointerClosestRayResultCallback : public btCollisionWorld::ClosestRayResultCallback
+{
+public:
+    IgnoreNullUserPointerClosestRayResultCallback(const btVector3& rayFromWorld, const btVector3& rayToWorld)
+        : btCollisionWorld::ClosestRayResultCallback(rayFromWorld, rayToWorld)
+    {
+    }
+
+    btScalar addSingleResult(btCollisionWorld::LocalRayResult& rayResult, bool normalInWorldSpace)
+    {
+        if (!rayResult.m_collisionObject->getUserPointer())
+            return 1.0f;
+
+        return ClosestRayResultCallback::addSingleResult(rayResult, normalInWorldSpace);
+    }
+};
+
 bool PhysicsEngine::Raycast(glm::vec3 fromPosition, glm::vec3 direction, RaycastHit& hitInfo, float maxDistance)
 {
     auto btFromPosition = ToBtVector3(fromPosition);
     auto btToPosition = ToBtVector3(glm::normalize(direction) * maxDistance);
 
-    btCollisionWorld::ClosestRayResultCallback closestResultCallback(btFromPosition, btToPosition);
+    IgnoreNullUserPointerClosestRayResultCallback closestResultCallback(btFromPosition, btToPosition);
     dynamicsWorld->rayTest(btFromPosition, btToPosition, closestResultCallback);
     if (closestResultCallback.hasHit())
     {
@@ -240,6 +257,7 @@ void PhysicsEngine::CreateRigidbody(Collider* collider)
 {
     auto btShape = CreateCollisionShape(collider);
     btShape->setLocalScaling(GetLocalScaling(collider));
+    btShape->setMargin(collider->GetMargin());
     auto localInertia = CalculateLocalInertia(collider, btShape);
 
     auto btMotionState = new btDefaultMotionState(GetBtTransform(collider));
@@ -447,7 +465,7 @@ Collider* PhysicsEngine::ClosestColliderUnderMouse()
     auto fromPosition = ToBtVector3(mainCamera->ScreenPositionToWorld(glm::vec3(Engine::GetInput().MousePosition(), mainCamera->GetNearPlane())));
     auto toPosition = ToBtVector3(mainCamera->ScreenPositionToWorld(glm::vec3(Engine::GetInput().MousePosition(), mainCamera->GetFarPlane())));
 
-    btCollisionWorld::ClosestRayResultCallback closestResultCallback(fromPosition, toPosition);
+    IgnoreNullUserPointerClosestRayResultCallback closestResultCallback(fromPosition, toPosition);
     dynamicsWorld->rayTest(fromPosition, toPosition, closestResultCallback);
     if (closestResultCallback.hasHit())
     {

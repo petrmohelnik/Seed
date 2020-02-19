@@ -1,4 +1,3 @@
-marginy malych objektu?
 zkusit udelat jednoduchy bounding mesh sceny
 https://www.thoughtspike.com/friction-coefficients-for-bullet-physics/
 
