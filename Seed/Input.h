@@ -17,11 +17,15 @@ public:
     glm::ivec2 MousePosition();
     void SliderFloat(const std::string& name, float& value, float min, float max);
     void SliderFloatLog(const std::string& name, float& value, float min, float max, float power = 4.0f);
+    void SliderFloat3(const std::string& name, glm::vec3& value, float min, float max);
+    void Text(const std::string& text);
     void BulletText(const std::string& text);
     bool Button(const std::string& text);
+    bool CheckBox(const std::string& name, bool& value);
     void PushWindow(const std::string& title, ImGuiWindowFlags flags = 0);
     void PopWindow();
     void InputFloat(const std::string& name, float& value, const std::function<void()>& onEnterPressed);
+    bool ColorPicker(const std::string& name, glm::vec3& value);
 
     static std::string GetFullNameHash(Identifiable* object, const std::string& name); //use to indenitfy imgui object when on the same position
 

@@ -293,9 +293,10 @@ glm::vec3 Collider::GetVelocityInPoint(glm::vec3 point, Transform::Space space)
 
 void Collider::OnInputGraphUpdate()
 {
-    Engine::GetInput().InputFloat("mass", mass, [this] { SetMass(mass); });
-    Engine::GetInput().InputFloat("bounciness", bounciness, [this] { SetBounciness(bounciness); });
-    Engine::GetInput().InputFloat("friction", friction, [this] { SetFriction(friction); });
-    Engine::GetInput().InputFloat("linearDamping", linearDamping, [this] { SetLinearDamping(linearDamping); });
-    Engine::GetInput().InputFloat("angularDamping", angularDamping, [this] { SetAngularDamping(angularDamping); });
+    Engine::GetInput().Text("Collider:");
+    Engine::GetInput().InputFloat("Mass", mass, [this] { SetMass(mass); });
+    Engine::GetInput().InputFloat("Bounciness", bounciness, [this] { SetBounciness(bounciness); });
+    Engine::GetInput().InputFloat("Friction", friction, [this] { SetFriction(friction); });
+    Engine::GetInput().InputFloat("LinearDamping", linearDamping, [this] { SetLinearDamping(linearDamping); });
+    Engine::GetInput().InputFloat("AngularDamping", angularDamping, [this] { SetAngularDamping(angularDamping); });
 }

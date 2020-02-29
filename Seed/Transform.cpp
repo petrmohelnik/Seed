@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include "Object.h"
+#include "Engine.h"
 
 Transform::Transform(Object* object, Transform* root)
     : Component(object)
@@ -366,4 +367,10 @@ void Transform::RotateAround(float angle, glm::vec3 worldAxis, glm::vec3 worldPo
 {
     auto const worldTransformationMatrix = glm::translate(worldPoint) * glm::toMat4(glm::angleAxis(angle, worldAxis)) * glm::translate(-worldPoint);
     TransformInWorldAndDecompose(worldTransformationMatrix, position, orientation, scale);
+}
+
+void Transform::OnInputGraphUpdate()
+{
+    Engine::GetInput().Text("Transform:");
+    Engine::GetInput().SliderFloat3("Position", position, -10, 10);
 }

@@ -33,6 +33,8 @@ protected:
     void UpdateFrustum();
     Frustum const& GetFrustum() const;
 
+    void OnInputGraphUpdate() override;
+
 private:
     Camera* Clone() override;
 
@@ -40,6 +42,7 @@ private:
 
     Frustum frustum;
     float fieldOfView = glm::radians(45.0f);
+    float aspectRatio = 1.0f;
     float nearPlane = 0.1f;
     float farPlane = 1000.0f;
 };

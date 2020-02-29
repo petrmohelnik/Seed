@@ -18,6 +18,7 @@ void Camera::BindCamera()
 {
     RenderingPipeline::BindCameraUniform();
 
+    dataBlock.projection = glm::perspective(fieldOfView, aspectRatio, nearPlane, farPlane);
     dataBlock.view = glm::inverse(GetTransform()->GetModelMatrix());
     dataBlock.viewPos = GetTransform()->GetPosition();
     glBufferData(GL_UNIFORM_BUFFER, sizeof(dataBlock), &dataBlock, GL_DYNAMIC_DRAW);
@@ -29,12 +30,12 @@ void Camera::UpdateFrustum()
     frustum.Update(viewProjection);
 }
 
-void Camera::SetProjectionMatrix(float fieldOfView_, float aspectRatio, float clipPlaneNear, float clipPlaneFar)
+void Camera::SetProjectionMatrix(float fieldOfView_, float aspectRatio_, float clipPlaneNear, float clipPlaneFar)
 {
     fieldOfView = fieldOfView_;
+    aspectRatio = aspectRatio_;
     nearPlane = clipPlaneNear;
     farPlane = clipPlaneFar;
-    dataBlock.projection = glm::perspective(fieldOfView, aspectRatio, clipPlaneNear, clipPlaneFar);
 }
 
 float Camera::GetFieldOfView()
@@ -80,4 +81,10 @@ glm::vec3 Camera::RayDirectionFromScreenPosition(glm::vec2 screenPosition, glm::
 Frustum const& Camera::GetFrustum() const
 {
     return frustum;
+}
+
+void Camera::OnInputGraphUpdate()
+{
+    Engine::GetInput().Text("Camera:");
+    Engine::GetInput().SliderFloat("FieldOfView", fieldOfView, 0.5f, 3.14f);
 }

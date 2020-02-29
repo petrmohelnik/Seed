@@ -12,3 +12,9 @@ bool Renderer::CastsShadow()
 {
     return castsShadow;
 }
+
+void Renderer::OnInputGraphUpdate()
+{
+    Engine::GetInput().Text("Renderer:");
+    Engine::GetInput().CheckBox("IsShadowCaster", castsShadow);
+}

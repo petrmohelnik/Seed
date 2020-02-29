@@ -17,6 +17,9 @@ public:
     void SetCastsShadow(bool castsShadow);
     bool CastsShadow();
 
+protected:
+    void OnInputGraphUpdate() override;
+
 private:
     bool castsShadow = true;
 };

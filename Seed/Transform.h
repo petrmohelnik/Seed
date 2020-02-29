@@ -65,6 +65,8 @@ protected:
     void DisconnectChildrenFromParent();
     void UpdateModelMatrix();
 
+    void OnInputGraphUpdate() override;
+
 private:
     Transform* Clone() override;
     void AddChild(Transform* child);

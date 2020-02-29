@@ -16,6 +16,8 @@ public:
     void OnCollisionExit(Collision const& collision) override;
     void Update() override;
 
+    void OnInputGraphUpdate() override;
+
     float RotationSensitivity = 0.003f;
     float MoveSensitivity = 1.0f;
 
@@ -190,4 +192,14 @@ void PlayerScript::Update()
     input.SliderFloat("LinearDamping", bulletLinearDamping, 0.0f, 1.0f);
     input.SliderFloat("AngularDamping", bulletAngularDamping, 0.0f, 1.0f);
     input.PopWindow();
+}
+
+inline void PlayerScript::OnInputGraphUpdate()
+{
+    input.Text("Bullet attributes:");
+    input.SliderFloat("Mass", bulletMass, 0.0f, 10.0f);
+    input.SliderFloat("Bounciness", bulletBounciness, 0.0f, 1.0f);
+    input.SliderFloat("Friction", bulletFriction, 0.0f, 1.0f);
+    input.SliderFloat("LinearDamping", bulletLinearDamping, 0.0f, 1.0f);
+    input.SliderFloat("AngularDamping", bulletAngularDamping, 0.0f, 1.0f);
 }

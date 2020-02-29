@@ -110,6 +110,16 @@ void Input::SliderFloatLog(const std::string& name, float& value, float min, flo
     ImGui::SliderFloat(name.c_str(), &value, min, max, "%.3f", power);
 }
 
+void Input::SliderFloat3(const std::string& name, glm::vec3& value, float min, float max)
+{
+    ImGui::SliderFloat3(name.c_str(), glm::value_ptr(value), min, max);
+}
+
+void Input::Text(const std::string& text)
+{
+    ImGui::Text(text.c_str());
+}
+
 void Input::BulletText(const std::string& text)
 {
     ImGui::BulletText(text.c_str());
@@ -118,6 +128,11 @@ void Input::BulletText(const std::string& text)
 bool Input::Button(const std::string& text)
 {
     return ImGui::Button(text.c_str());
+}
+
+bool Input::CheckBox(const std::string& name, bool& value)
+{
+    return ImGui::Checkbox(name.c_str(), &value);
 }
 
 void Input::PushWindow(const std::string& title, ImGuiWindowFlags flags)
@@ -132,8 +147,13 @@ void Input::PopWindow()
 
 void Input::InputFloat(const std::string& name, float& value, const std::function<void()>& onEnterPressed)
 {
-    if(ImGui::InputFloat(std::string(name + ": ").c_str(), &value, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+    if(ImGui::InputFloat(name.c_str(), &value, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
         onEnterPressed();
+}
+
+bool Input::ColorPicker(const std::string& name, glm::vec3& value)
+{
+    return ImGui::ColorEdit3(name.c_str(), glm::value_ptr(value));
 }
 
 void Input::CreateSceneGraph()
@@ -149,20 +169,12 @@ void Input::CreateSceneGraph()
 void Input::CreateSceneGraphNode(Object* object)
 {
     auto transform = object->GetComponent<Transform>();
-    if (object->GetComponent<Transform>()->GetChildCount() == 0)
-    {
-        if (ImGui::TreeNode(GetFullNameHash(object, object->GetName()).c_str()))
-        {
-            for (const auto& component : object->GetAllComponents())
-                component->OnInputGraphUpdate();
-            ImGui::TreePop();
-        }
-        return;
-    }
     if (ImGui::TreeNode(GetFullNameHash(object, object->GetName()).c_str()))
     {
         for (int index = 0; index < transform->GetChildCount(); index++)
             CreateSceneGraphNode(transform->GetChild(index)->GetObject());
+        for (const auto& component : object->GetAllComponents())
+            component->OnInputGraphUpdate();
         ImGui::TreePop();
     }
 }

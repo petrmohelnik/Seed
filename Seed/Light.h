@@ -36,6 +36,7 @@ public:
 protected:
     friend class FileSystem;
     friend class RenderingPipeline;
+
     void OnInputGraphUpdate() override;
 
 private:
