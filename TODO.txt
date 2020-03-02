@@ -1,5 +1,4 @@
-zkusit udelat jednoduchy bounding mesh sceny
-
+fixnout bug v table_lamp, ze svetlo zustava na miste
 =======================================================================================================================
 
 Depth Of Field - http://www.adriancourreges.com/blog/2018/12/02/ue4-optimized-post-effects/

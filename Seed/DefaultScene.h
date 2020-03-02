@@ -24,7 +24,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     light->GetComponent<Collider>()->SetFriction(0.9f);
     light->GetComponent<Collider>()->SetMass(10.0f);
 
-    //objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
+    objects.SetSkybox(fileSystem.LoadCubeMapHDR("Newport_Loft.hdr"));
     auto skyboxSwitcher = objects.CreateObject("skyboxSwitcher")->AddComponent<SkyboxSwitcherScript>();
     skyboxSwitcher->AddSkybox("Newport_Loft.hdr");
     skyboxSwitcher->AddSkybox("sunrise.hdr");
