@@ -444,7 +444,7 @@ void PhysicsEngine::RigidbodyUpdate()
         {
             auto collider = reinterpret_cast<Collider*>(btRigidbody->getUserPointer());
 
-            if (!collider->IsKinematic())
+            if (collider->IsDynamic())
             {
                 btTransform btTransform;
                 btRigidbody->getMotionState()->getWorldTransform(btTransform);

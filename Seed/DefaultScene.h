@@ -113,6 +113,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
         {
             light->GetObject()->AddComponent<SphereCollider>(glm::vec3(0.0f), 0.3f / glm::length(light->GetTransform()->GetScale()));
             light->GetObject()->GetComponent<Collider>()->SetIsTrigger(true);
+            light->GetObject()->GetComponent<Collider>()->SetIsKinematic(true);
         }
         light->GetObject()->AddComponent<LightScript>();
     }
