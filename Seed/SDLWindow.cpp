@@ -1,7 +1,6 @@
 #include "SDLWindow.h"
 #include "Engine.h"
 
-
 void GLAPIENTRY
 MessageCallback(GLenum source,
     GLenum type,

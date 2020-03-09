@@ -206,7 +206,7 @@ void TextureCubeMap::RenderViewsIntoCubeMapWithMipMaps(Shader* shader, Framebuff
         framebuffer.ChangeSize(mipWidth, mipWidth);
         framebuffer.Bind();
 
-        float mipLevelUniform = static_cast<float>(mipLevel) / static_cast<float>(mipLevels - 1);
+        float mipLevelUniform = mipLevels > 1 ? static_cast<float>(mipLevel) / static_cast<float>(mipLevels - 1) : 0.5f;
         shader->SetUniformFloat("roughness", mipLevelUniform);
 
         for (unsigned int i = 0; i < 6; i++)
