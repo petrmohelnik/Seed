@@ -17,7 +17,9 @@ gui using ImGui
 
 various file formats support (uses Assimp)
 
+
 Video example:
+
 [![Video example](http://img.youtube.com/vi/YkCr0hM3Kks/0.jpg)](http://www.youtube.com/watch?v=YkCr0hM3Kks "Video example")
 
 ![example scene](https://github.com/petrmohelnik/Seed/raw/master/images/example1.png "example scene")
