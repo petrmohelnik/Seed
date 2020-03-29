@@ -73,7 +73,7 @@ inline void PlayerScript::FixedUpdate()
 
     if (input.MouseButton(SDL_BUTTON_LEFT))
     {
-        bulletForce += 200.0f * time.FixedDeltaTime();
+        bulletForce += 400.0f * time.FixedDeltaTime();
     }
     else if (bulletForce != 0.0f)
     {
