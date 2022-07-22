@@ -2,7 +2,7 @@
 
 in vec2 fTexCoords;
 
-layout(location = 0) out vec2 gl_FragColor;
+layout(location = 0) out vec2 FragColor;
 
 const float PI = 3.14159265359;
 
@@ -101,5 +101,5 @@ void main()
     A /= float(SAMPLE_COUNT);
     B /= float(SAMPLE_COUNT);
 
-    gl_FragColor = vec2(A, B);
+    FragColor = vec2(A, B);
 }

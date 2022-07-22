@@ -3,6 +3,7 @@
 #include "Components.h"
 #include "Engine.h"
 #include "DefaultScene.h"
+#include "HeightMapScene.h"
 
 SceneDefinition::SceneDefinition()
     : objects(Engine::GetObjects())
@@ -14,6 +15,8 @@ void SceneDefinition::InitializeScene(std::string scene)
 {
     if (scene == "Default")
         DefaultScene(objects, fileSystem);
+    if (scene == "HeightMap")
+        HeightMapScene(objects, fileSystem);
     else
         throw std::exception("Scene does not exist");
 }

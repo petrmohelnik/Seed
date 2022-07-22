@@ -82,10 +82,13 @@
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="BulletObject.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraAroundObjectScript.h" />
     <ClInclude Include="CameraMovementScript.h" />
     <ClInclude Include="CharacterController.h" />
     <ClInclude Include="DynamicCharacterController.h" />
+    <ClInclude Include="HeightMapScene.h" />
     <ClInclude Include="LightScript.h" />
+    <ClInclude Include="ObjectRotationScript.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="PlayerScript.h" />
@@ -168,32 +171,32 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{542C1185-EEAE-45E5-986A-BE77FED34649}</ProjectGuid>
     <RootNamespace>Seed</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>

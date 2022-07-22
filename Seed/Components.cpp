@@ -115,11 +115,11 @@ void Components::CleanComponents()
     renderingPipeline.CleanComponents();
     physicsEngine.CleanComponents();
 
-    std::experimental::erase_if(audios, [](const auto audio)
+    std::erase_if(audios, [](const auto audio)
     {
         return audio->ToBeDestroyed() || !audio->GetObject()->IsActive();
     });
-    std::experimental::erase_if(scripts, [] (const auto script)
+    std::erase_if(scripts, [] (const auto script)
     {
         return script->ToBeDestroyed() || !script->GetObject()->IsActive();
     });

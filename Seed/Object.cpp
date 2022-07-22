@@ -145,13 +145,13 @@ bool Object::DoDestruction()
         camera.reset();
     if (light && light->ToBeDestroyed())
         light.reset();
-    std::experimental::erase_if(audios, [](const std::unique_ptr<Audio>& audio)
+    std::erase_if(audios, [](const std::unique_ptr<Audio>& audio)
     {
         return audio->ToBeDestroyed();
     });
     if (collider && collider->ToBeDestroyed())
         collider.reset();
-    std::experimental::erase_if(scripts, [](const std::unique_ptr<Script>& script)
+    std::erase_if(scripts, [](const std::unique_ptr<Script>& script)
     {
         return script->ToBeDestroyed();
     });

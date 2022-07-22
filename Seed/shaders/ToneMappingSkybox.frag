@@ -4,7 +4,7 @@ layout(binding = 11) uniform samplerCube texScene;
 
 in vec3 fPos;
 
-layout(location = 0) out vec4 gl_FragColor;
+layout(location = 0) out vec4 FragColor;
 
 vec3 ToneMapping(vec3 color)
 {
@@ -48,5 +48,5 @@ void main()
     color = ACESFitted(color);
     color = GammaCorrection(color);
 
-    gl_FragColor = vec4(color, 1.0);
+    FragColor = vec4(color, 1.0);
 }

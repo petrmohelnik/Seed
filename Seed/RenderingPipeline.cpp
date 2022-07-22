@@ -224,15 +224,15 @@ Camera* RenderingPipeline::MainCamera()
 
 void RenderingPipeline::CleanComponents()
 {
-    std::experimental::erase_if(renderers, [](const auto renderer)
+    std::erase_if(renderers, [](const auto renderer)
     {
         return renderer->ToBeDestroyed() || !renderer->GetObject()->IsActive();
     });
-    std::experimental::erase_if(lights, [](const auto light)
+    std::erase_if(lights, [](const auto light)
     {
         return light->ToBeDestroyed() || !light->GetObject()->IsActive();
     });
-    std::experimental::erase_if(cameras, [](const auto camera)
+    std::erase_if(cameras, [](const auto camera)
     {
         return camera->ToBeDestroyed() || !camera->GetObject()->IsActive();
     });

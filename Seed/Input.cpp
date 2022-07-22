@@ -60,6 +60,8 @@ void Input::AddInput(SDL_Event event)
         mouseDeltaPosition = glm::ivec2(event.motion.xrel, event.motion.yrel);
         mousePosition = glm::ivec2(event.motion.x, event.motion.y);
         break;
+    case SDL_MOUSEWHEEL:
+        mouseDeltaWheelPosition = glm::ivec2(event.wheel.x, event.wheel.y);
     }
 }
 
@@ -68,6 +70,7 @@ void Input::ClearInputs()
     keyPressedDown.clear();
     mousePressedDown.clear();
     mouseDeltaPosition = glm::ivec2(0, 0);
+    mouseDeltaWheelPosition = glm::ivec2(0, 0);
 }
 
 bool Input::Key(SDL_Keycode key)
@@ -93,6 +96,11 @@ bool Input::MouseButtonDown(Uint8 button)
 glm::ivec2 Input::MouseDeltaPosition()
 {
     return mouseDeltaPosition;
+}
+
+glm::ivec2 Input::MouseDeltaWheelPosition()
+{
+    return mouseDeltaWheelPosition;
 }
 
 glm::ivec2 Input::MousePosition()

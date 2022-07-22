@@ -388,6 +388,15 @@
     <ClInclude Include="TargetScript.h">
       <Filter>Scripts</Filter>
     </ClInclude>
+    <ClInclude Include="HeightMapScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectRotationScript.h">
+      <Filter>Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraAroundObjectScript.h">
+      <Filter>Scripts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\Skybox.frag">

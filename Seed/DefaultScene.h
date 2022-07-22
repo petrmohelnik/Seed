@@ -38,7 +38,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     auto spheres = objects.CreateObjectWithMesh("spheres", "MetalRoughSpheres/scene.gltf", glm::vec3(5.0f, 0.0f, 10.0f));
     spheres->GetComponent<MeshRenderer>()->GetSharedMaterial()->UseOcclusionMap();
 
-    auto cobblestoneMaterial = std::make_shared<Material>();
+ /*   auto cobblestoneMaterial = std::make_shared<Material>();
     cobblestoneMaterial->Albedo = fileSystem.LoadTexture("cobblestone/albedo.png", 24, 24);
     cobblestoneMaterial->Normal = fileSystem.LoadTexture("cobblestone/normal.png", 24, 24);
     cobblestoneMaterial->Height = fileSystem.LoadTexture("cobblestone/height.png", 8, 8);
@@ -95,7 +95,7 @@ void DefaultScene(Objects& objects, FileSystem& fileSystem)
     roughblock->AddComponent<BoxCollider>(glm::vec3(0.0f), glm::vec3(1.0f));
     roughblock->GetComponent<BoxCollider>()->SetBounciness(0.1f);
     roughblock->GetComponent<BoxCollider>()->SetFriction(0.55f);
-    roughblock->GetComponent<BoxCollider>()->SetMass(100.0f);
+    roughblock->GetComponent<BoxCollider>()->SetMass(100.0f);*/
 
     auto crashDummies = objects.GetObjectsByName([](std::string const& name) { return name.rfind("CrashDummy", 0) == 0;});
     for (auto& crashDummy : crashDummies)

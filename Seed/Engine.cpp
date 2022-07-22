@@ -58,7 +58,8 @@ void Engine::CreateWindow()
 void Engine::Work()
 {
     components.Initialize();
-    scene.Initialize("Default");
+    //scene.Initialize("Default");
+    scene.Initialize("HeightMap");
     time.InitializeTime();
 
     while (input.IsGameRunning() && !input.Key(SDLK_ESCAPE))

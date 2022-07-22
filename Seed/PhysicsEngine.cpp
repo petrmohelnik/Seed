@@ -520,7 +520,7 @@ void PhysicsEngine::CallScriptCallbackOnCollider(Collider* collider, std::functi
 
 void PhysicsEngine::CleanComponents()
 {
-    std::experimental::erase_if(colliders, [this](const auto collider)
+    std::erase_if(colliders, [this](const auto collider)
     {
         if (collider->ToBeDestroyed() && collider->btRigidbody)
         {

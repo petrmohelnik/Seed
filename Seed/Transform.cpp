@@ -80,7 +80,7 @@ void Transform::TransformInWorldAndDecompose(glm::mat4 worldTransformation, glm:
 
 void Transform::SetParent(Transform* parent_)
 {
-    std::experimental::erase_if(parent->children, [this](const Transform* parentChild)
+    std::erase_if(parent->children, [this](const Transform* parentChild)
     {
         return parentChild == this;
     });
@@ -120,7 +120,7 @@ void Transform::CleanChildren()
 {
     if (children.empty())
         return;
-    std::experimental::erase_if(children, [](const auto& child)
+    std::erase_if(children, [](const auto& child)
     {
         return child->ToBeDestroyed();
     });

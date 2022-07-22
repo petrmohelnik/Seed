@@ -4,7 +4,7 @@ layout(binding = 11) uniform samplerCube texEnvironmental;
 
 in vec3 fPos;
 
-layout(location = 0) out vec4 gl_FragColor;
+layout(location = 0) out vec4 FragColor;
 
 const float PI = 3.14159265359;
 
@@ -35,5 +35,5 @@ void main()
     }
     irradiance = PI * irradiance * (1.0 / float(numberOfSamples));
   
-    gl_FragColor = vec4(irradiance, 1.0);
+    FragColor = vec4(irradiance, 1.0);
 }

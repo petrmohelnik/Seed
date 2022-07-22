@@ -5,7 +5,7 @@ layout(location = 0) uniform float roughness;
 
 in vec3 fPos;
 
-layout(location = 0) out vec4 gl_FragColor;
+layout(location = 0) out vec4 FragColor;
 
 const float PI = 3.14159265359;
 
@@ -93,5 +93,5 @@ void main()
     }
     prefilteredColor /= totalWeight;
 
-    gl_FragColor = vec4(prefilteredColor, 1.0);
+    FragColor = vec4(prefilteredColor, 1.0);
 }

@@ -14,6 +14,7 @@ public:
     bool MouseButton(Uint8 button); //SDL_BUTTON_RIGHT, SDL_BUTTON_LEFT
     bool MouseButtonDown(Uint8 button); //SDL_BUTTON_RIGHT, SDL_BUTTON_LEFT
     glm::ivec2 MouseDeltaPosition();
+    glm::ivec2 MouseDeltaWheelPosition();
     glm::ivec2 MousePosition();
     void SliderFloat(const std::string& name, float& value, float min, float max);
     void SliderFloatLog(const std::string& name, float& value, float min, float max, float power = 4.0f);
@@ -46,6 +47,7 @@ private:
     std::set<Uint8> mouseHoldDown;
     std::set<Uint8> mousePressedDown;
     glm::ivec2 mouseDeltaPosition;
+    glm::ivec2 mouseDeltaWheelPosition;
     glm::ivec2 mousePosition;
     Uint32 mouseState;
     bool quit = false;

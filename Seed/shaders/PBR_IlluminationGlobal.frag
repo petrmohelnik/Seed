@@ -14,7 +14,7 @@ layout(location = 0) uniform ivec2 screenSize;
 in vec3 fViewPos;
 in mat4 fViewProjectionInverseMatrix;
 
-layout(location = 0) out vec4 gl_FragColor;
+layout(location = 0) out vec4 FragColor;
 
 const float PI = 3.14159265359;
 
@@ -70,5 +70,5 @@ void main()
     
     vec3 ambientColor = CalculateAmbient(NdotV, roughness, metallic, ambientOclussion, F0, normal, reflectionVector, albedo);
 
-    gl_FragColor = vec4(ambientColor, 1.0);
+    FragColor = vec4(ambientColor, 1.0);
 }
