@@ -70,6 +70,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SubMesh.cpp" />
+    <ClCompile Include="TessellationShader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureCubeMap.cpp" />
     <ClCompile Include="Time.cpp" />
@@ -87,6 +88,7 @@
     <ClInclude Include="CharacterController.h" />
     <ClInclude Include="DynamicCharacterController.h" />
     <ClInclude Include="HeightMapScene.h" />
+    <ClInclude Include="HeightMapSettingsScript.h" />
     <ClInclude Include="LightScript.h" />
     <ClInclude Include="ObjectRotationScript.h" />
     <ClInclude Include="PhysicsObject.h" />
@@ -137,15 +139,20 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SubMesh.h" />
     <ClInclude Include="TargetScript.h" />
+    <ClInclude Include="TessellationShader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureCubeMap.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="HeightMapGBuffer.vert" />
     <None Include="shaders\Gbuffer.frag" />
     <None Include="shaders\GBuffer.vert" />
     <None Include="shaders\EquirectangularToCubemap.frag" />
+    <None Include="shaders\HeightMap.tcs" />
+    <None Include="shaders\HeightMap.tes" />
+    <None Include="shaders\HeightMapGBuffer.frag" />
     <None Include="shaders\PBR_IlluminationGlobal.frag" />
     <None Include="shaders\PBR_IlluminationLights.frag" />
     <None Include="shaders\PBR_IlluminationQuad.vert" />

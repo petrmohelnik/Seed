@@ -15,6 +15,7 @@ public:
     std::unique_ptr<TextureCubeMap> LoadCubeMap(const std::string& path, const std::string& format);
     std::unique_ptr<TextureCubeMap> LoadCubeMapHDR(const std::string& path);
     std::shared_ptr<Texture> LoadTexture(const std::string& path, int bitsMinimum = 0, int bitsMaximum = 0, bool flipHorizontal = false);
+    std::shared_ptr<Mesh> LoadHeightMap(const std::string& path, bool deleteAfterLoad = true);
 
 protected:
     friend class MeshRenderer;

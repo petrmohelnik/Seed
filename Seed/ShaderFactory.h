@@ -19,7 +19,8 @@ public:
         ToneMapping,
         SkyboxToneMapping,
         SimpleCopy,
-        PointLightShadow
+        PointLightShadow,
+        HeightMapTessellation
     };
 
     ShaderFactory();

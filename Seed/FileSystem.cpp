@@ -1,6 +1,8 @@
 #include "FileSystem.h"
 #include <FreeImage.h> //needs to be here because of clash with imgui
 #define STB_IMAGE_IMPLEMENTATION
+#include <map>
+
 #include "stb/stb_image.h"
 #include "Engine.h"
 #include <numeric>
@@ -269,6 +271,7 @@ std::shared_ptr<SubMesh> FileSystem::LoadSubMeshData(aiMesh* assimpMesh)
     subMesh->vertices.reserve(assimpMesh->mNumVertices);
     subMesh->normals.reserve(assimpMesh->mNumVertices);
     subMesh->tangents.reserve(assimpMesh->mNumVertices);
+    subMesh->bitangents.reserve(assimpMesh->mNumVertices);
     subMesh->texCoords.reserve(assimpMesh->mNumVertices);
     subMesh->indices.reserve(assimpMesh->mNumFaces);
 
@@ -559,6 +562,76 @@ std::shared_ptr<Texture> FileSystem::LoadTexture(const std::string& path, int bi
     loadedTextures.insert_or_assign(path, texture);
 
     return texture;
+}
+
+glm::vec3 CalculateFaceNormal(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3)
+{
+    auto e1 = v2 - v1;
+    auto e2 = v3 - v1;
+
+    return glm::cross(e1, e2);
+}
+
+std::shared_ptr<Mesh> FileSystem::LoadHeightMap(const std::string& path, bool deleteAfterLoad)
+{
+    auto texture = LoadTexture(path);
+
+    auto subMesh = std::make_shared<SubMesh>();
+
+    assert(texture->width == texture->height);
+    assert(texture->GetInternalFormat() == GL_R8);
+    auto size = texture->width;
+    auto numVertices = texture->width * texture->height;
+    subMesh->vertices.reserve(numVertices);
+    subMesh->normals.reserve(numVertices);
+    subMesh->tangents.reserve(numVertices);
+    subMesh->bitangents.reserve(numVertices);
+    subMesh->texCoords.reserve(numVertices);
+    subMesh->indices.reserve((size - 1) * (size - 1) * 2);
+
+    std::map<unsigned, std::vector<unsigned>> facesMap;
+
+    for (unsigned y = 0; y < size; y++)
+    {
+        for (unsigned x = 0; x < size; x++)
+        {
+            auto height = texture->data[x + y * size] / 255.0;
+            subMesh->vertices.push_back(glm::vec3(-1.0f + 2.0f * x / static_cast<float>(size - 1), height, 1.0f - 2.0f * y / static_cast<float>(size - 1)));
+            subMesh->texCoords.push_back(glm::vec2(x / static_cast<float>(size - 1), y / static_cast<float>(size - 1)));
+            if (x != size - 1 && y != size - 1)
+            {
+                auto vSize = subMesh->vertices.size() - 1;
+                subMesh->indices.push_back(glm::uvec3(vSize, vSize + 1, vSize + size));
+                facesMap[vSize].push_back(subMesh->indices.size() - 1);
+                facesMap[vSize + 1].push_back(subMesh->indices.size() - 1);
+                facesMap[vSize + size].push_back(subMesh->indices.size() - 1);
+                subMesh->indices.push_back(glm::uvec3(vSize + 1, vSize + size + 1, vSize + size));
+                facesMap[vSize + 1].push_back(subMesh->indices.size() - 1);
+                facesMap[vSize + size + 1].push_back(subMesh->indices.size() - 1);
+                facesMap[vSize + size].push_back(subMesh->indices.size() - 1);
+            }
+        }
+    }
+
+    for(unsigned v = 0; v < subMesh->vertices.size(); v++)
+    {
+        auto normal = glm::vec3(0.0f);
+
+        for(auto const& face : facesMap[v])
+        {
+            normal += CalculateFaceNormal(subMesh->vertices[subMesh->indices[face].x], subMesh->vertices[subMesh->indices[face].y], subMesh->vertices[subMesh->indices[face].z]);
+        }
+
+        subMesh->normals.push_back(glm::normalize(normal));
+        subMesh->tangents.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+        subMesh->bitangents.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+    }
+
+    auto mesh = std::make_shared<Mesh>();
+    mesh->subMeshes.push_back(subMesh);
+    mesh->subMeshes.back()->deleteAfterLoad = deleteAfterLoad;
+
+    return mesh;
 }
 
 glm::vec3 FileSystem::ToGlmVec3(const aiVector3D& aiVector)

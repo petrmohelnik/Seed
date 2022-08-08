@@ -1,5 +1,6 @@
 #include "ShaderFactory.h"
 #include "BasicShader.h"
+#include "TessellationShader.h"
 
 ShaderFactory::ShaderFactory()
 {
@@ -72,6 +73,10 @@ void ShaderFactory::CreateShader(Type type)
     else if (type == Type::PointLightShadow)
     {
         shaders.insert({ type , std::make_unique<BasicShader>(ShaderCompiler::Compile("SimplePositionWorld.vert", "PointLightShadow.geom", "PointLightShadow.frag")) });
+    }
+    else if (type == Type::HeightMapTessellation)
+    {
+        shaders.insert({ type , std::make_unique<TessellationShader>(ShaderCompiler::Compile("HeightMapGBuffer.vert", "HeightMap.tcs", "HeightMap.tes", "HeightMapGBuffer.frag")) });
     }
     else
     {

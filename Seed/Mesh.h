@@ -16,6 +16,9 @@ public:
 
     int NumberOfSubmeshes();
     void DeleteDataAfterColliderLoad(bool deleteAfterLoad);
+    bool Tessellation = false;
+    void Load();
+    void Unload();
 
 protected:
     friend class FileSystem;
@@ -23,8 +26,6 @@ protected:
     friend class MeshCollider;
     friend class PhysicsEngine;
 
-    void Load();
-    void Unload();
     void DeleteData();
 
     void BindSubMesh(int index);

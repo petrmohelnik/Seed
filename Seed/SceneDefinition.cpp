@@ -15,7 +15,7 @@ void SceneDefinition::InitializeScene(std::string scene)
 {
     if (scene == "Default")
         DefaultScene(objects, fileSystem);
-    if (scene == "HeightMap")
+    else if (scene == "HeightMap")
         HeightMapScene(objects, fileSystem);
     else
         throw std::exception("Scene does not exist");

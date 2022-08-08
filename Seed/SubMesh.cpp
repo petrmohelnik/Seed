@@ -78,6 +78,80 @@ void SubMesh::Load()
     }
 }
 
+void SubMesh::LoadTessellation()
+{
+    if (vao != 0)
+        return;
+
+    glGenBuffers(6, &vbo[0]);
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    unsigned subdivision = 25;
+
+    std::vector<glm::vec3> v;
+    std::vector<glm::vec3> n;
+    std::vector<glm::vec3> t;
+    std::vector<glm::vec3> b;
+    std::vector<glm::vec2> tt;
+    std::vector<glm::uvec4> ii;
+
+    for (unsigned j = 0; j <= subdivision; j++)
+    {
+        for (unsigned i = 0; i <= subdivision; i++)
+        {
+            v.push_back(glm::vec3(-1.0f + 2.0f * i / static_cast<float>(subdivision), 0.0f, 1.0f - 2.0f * j / static_cast<float>(subdivision)));
+            n.push_back(normals[0]);
+            t.push_back(tangents[0]);
+            b.push_back(bitangents[0]);
+            tt.push_back(glm::vec2(i / static_cast<float>(subdivision), j / static_cast<float>(subdivision)));
+            if(i != subdivision && j != subdivision)
+            {
+                auto size = v.size() - 1;
+                ii.push_back(glm::uvec4(size, size + 1, size + subdivision + 1, size + subdivision + 2));
+            }
+        }
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+    glBufferData(GL_ARRAY_BUFFER, v.size() * sizeof(float) * 3, &v[0].x, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+    glBufferData(GL_ARRAY_BUFFER, n.size() * sizeof(float) * 3, &n[0].x, GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+    glBufferData(GL_ARRAY_BUFFER, t.size() * sizeof(float) * 3, &t[0].x, GL_STATIC_DRAW);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(2);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
+    glBufferData(GL_ARRAY_BUFFER, b.size() * sizeof(float) * 3, &b[0].x, GL_STATIC_DRAW);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(3);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[4]);
+    glBufferData(GL_ARRAY_BUFFER, tt.size() * sizeof(float) * 2, &tt[0].x, GL_STATIC_DRAW);
+    glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(4);
+
+    std::vector<glm::uvec4> indicesTes;
+    indicesTes.push_back(glm::uvec4(0, 1, 3, 2));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[5]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, ii.size() * sizeof(Uint32) * 4, &ii[0].x, GL_STATIC_DRAW);
+    indicesCount = static_cast<int>(ii.size()) * 4;
+
+    glBindVertexArray(0);
+
+    if (deleteAfterLoad)
+    {
+        DeleteData();
+    }
+}
+
 void SubMesh::Unload()
 {
     glDeleteBuffers(6, &vbo[0]);

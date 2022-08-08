@@ -44,7 +44,7 @@ void TextureCubeMap::LoadFromEquirectangular(float* data, int width, int height)
     Texture equirectangularTexture;
     equirectangularTexture.GenerateTexture(GL_CLAMP_TO_EDGE, GL_RGB16F, width, height, false, data, GL_RGB, GL_FLOAT);
     
-    RenderIntoHDRCubeMapFromTexture(2048, ShaderFactory::Type::EquirectangularToCubemap, RenderingPipeline::TextureSlot::Environmental, GL_TEXTURE_2D, equirectangularTexture.texture, true, false);
+    RenderIntoHDRCubeMapFromTexture(1024, ShaderFactory::Type::EquirectangularToCubemap, RenderingPipeline::TextureSlot::Environmental, GL_TEXTURE_2D, equirectangularTexture.texture, true, false);
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);

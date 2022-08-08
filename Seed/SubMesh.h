@@ -13,6 +13,7 @@ public:
     std::shared_ptr<SubMesh> Copy();
 
     void Load();
+    void LoadTessellation();
     void Unload();
 
     void Bind();

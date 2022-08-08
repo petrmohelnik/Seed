@@ -22,6 +22,18 @@ GLuint ShaderCompiler::Compile(const std::string& vertexShader, const std::strin
     return program;
 }
 
+GLuint ShaderCompiler::Compile(const std::string& vertexShader, const std::string& tessellationControlShader, const std::string& tessellationEvaluationShader, const std::string& fragmentShader)
+{
+    GLuint program = glCreateProgram();
+    CompileShader(vertexShader, GL_VERTEX_SHADER, program);
+    CompileShader(tessellationControlShader, GL_TESS_CONTROL_SHADER, program);
+    CompileShader(tessellationEvaluationShader, GL_TESS_EVALUATION_SHADER, program);
+    CompileShader(fragmentShader, GL_FRAGMENT_SHADER, program);
+    LinkProgram(program);
+
+    return program;
+}
+
 void ShaderCompiler::CompileShader(const std::string& path, GLuint shaderType, GLuint program)
 {
     auto file = Engine::GetFileSystem().LoadTextFile("Shaders/" + path);
